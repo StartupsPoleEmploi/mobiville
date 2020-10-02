@@ -8,8 +8,6 @@ services:
     cpus: '0.50'
     mem_limit: 300M
     volumes:
-      - './front:/home/front'
-      #- './front-admin:/home/front-admin'
       - './nginx/dev.conf:/etc/nginx/conf.d/default.conf'
       - './logs/nginx:/var/log/nginx'
     environment:
@@ -41,6 +39,8 @@ services:
       - EMPLOI_STORE_ID=${EMPLOI_STORE_ID}
       - EMPLOI_STORE_SECRET=${EMPLOI_STORE_SECRET}
       - API_CITIES=${API_CITIES}
+      - API_LOI_LITTORAL=${API_LOI_LITTORAL}
+    stdin_open: true
   
   front:
     restart: unless-stopped
