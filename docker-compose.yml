@@ -8,7 +8,7 @@ services:
     cpus: '0.50'
     mem_limit: 300M
     volumes:
-      #- './front:/home/front'
+      - './front:/home/front'
       #- './front-admin:/home/front-admin'
       - './nginx/dev.conf:/etc/nginx/conf.d/default.conf'
       - './logs/nginx:/var/log/nginx'
@@ -42,35 +42,41 @@ services:
       - EMPLOI_STORE_SECRET=${EMPLOI_STORE_SECRET}
       - API_CITIES=${API_CITIES}
   
-  # front:
-   #  restart: unless-stopped
-    # image: node:12.18.4
-    # cpus: '0.50'
-    # mem_limit: 2G
-    # volumes:
-     #  - './front:/home/front'
-   #  expose:
-   #    - '3000'
-  #   environment:
-   #    - TZ=Europe/Paris
-   #  networks:
-  #     mobiville_network:
-  #       ipv4_address: 172.0.0.110
+  front:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: dockerfile_front
+    cpus: '0.50'
+    mem_limit: 2G
+    volumes:
+      - './front:/home/front'
+    expose:
+      - '3000'
+    environment:
+      - TZ=Europe/Paris
+    networks:
+      mobiville_network:
+        ipv4_address: 172.0.0.110
+    stdin_open: true
 
-  # front-admin:
-   #  restart: unless-stopped
-  #   image: node:12.18.4
-  #   cpus: '0.50'
-  #   mem_limit: 2G
-  #   volumes:
-   #    - './front-admin:/home/front'
- #    expose:
-   #    - '3000'
-   #  environment:
-  #     - TZ=Europe/Paris
-   #  networks:
-   #    mobiville_network:
-   #      ipv4_address: 172.0.0.111
+  front-admin:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: dockerfile_front
+    cpus: '0.50'
+    mem_limit: 2G
+    volumes:
+      - './front-admin:/home/front'
+    expose:
+      - '3000'
+    environment:
+      - TZ=Europe/Paris
+    networks:
+      mobiville_network:
+        ipv4_address: 172.0.0.111
+    stdin_open: true
 
   db:
     image: postgres:10.4
