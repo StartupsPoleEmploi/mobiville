@@ -1,12 +1,12 @@
-import Route from './Route';
-import packageJson from '../../package.json';
+import Route from './Route'
+import packageJson from '../../package.json'
 
 @Route.Route({
   routeBase: '',
 })
 export default class RouteIndex extends Route {
   constructor(params) {
-    super({ ...params });
+    super({ ...params })
   }
 
   // http://localhost:3000/
@@ -15,6 +15,6 @@ export default class RouteIndex extends Route {
     this.sendOk(ctx, {
       name: packageJson.name,
       version: packageJson.version,
-    });
+    })
   }
 }

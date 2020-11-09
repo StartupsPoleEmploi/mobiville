@@ -79,52 +79,19 @@ services:
     stdin_open: true
 
   db:
-    image: postgres:10.4
+    image: mariadb:10
     restart: always
     cpus: '4.0'
     mem_limit: 8G
     networks:
       mobiville_network:
         ipv4_address: 172.0.0.150
-    volumes:
-      - postgres-data:/var/lib/postgresql
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
       - TZ=Europe/Paris
-    command:
-      - 'postgres'
-      - '-c'
-      - 'max_connections=200'
-      - '-c'
-      - 'shared_buffers=2GB'
-      - '-c'
-      - 'effective_cache_size=6GB'
-      - '-c'
-      - 'maintenance_work_mem=512MB'
-      - '-c'
-      - 'checkpoint_completion_target=0.7'
-      - '-c'
-      - 'wal_buffers=16MB'
-      - '-c'
-      - 'default_statistics_target=100'
-      - '-c'
-      - 'random_page_cost=4'
-      - '-c'
-      - 'effective_io_concurrency=2'
-      - '-c'
-      - 'work_mem=5242kB'
-      - '-c'
-      - 'min_wal_size=1GB'
-      - '-c'
-      - 'max_wal_size=4GB'
-      - '-c'
-      - 'max_worker_processes=4'
-      - '-c'
-      - 'max_parallel_workers_per_gather=2'
-      - '-c'
-      - 'max_parallel_workers=4'
        
        
 networks:
@@ -134,6 +101,3 @@ networks:
       config:
         - subnet: 172.0.0.0/16
           gateway: 172.0.0.1
-
-volumes:
-  postgres-data:

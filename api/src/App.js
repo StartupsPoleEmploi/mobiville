@@ -1,10 +1,10 @@
-import { join } from 'path';
-import { App as AppBase } from 'koa-smart';
-const koaBody = require('koa-body');
-import { i18n, compress, cors, helmet, addDefaultBody, logger } from 'koa-smart/middlewares';
-import config from 'config';
+import { join } from 'path'
+import { App as AppBase } from 'koa-smart'
+const koaBody = require('koa-body')
+import { i18n, compress, cors, helmet, addDefaultBody, logger } from 'koa-smart/middlewares'
+import config from 'config'
 
-import db from './models';
+import db from './models'
 
 export default class App extends AppBase {
   // the starting class must extend appBase, provided by koa-smart
@@ -14,19 +14,19 @@ export default class App extends AppBase {
       // routeParam is an object and it will be give as parametter to all routes
       // so for example you can give models to all your route so you can access on route
       routeParam: {},
-    });
+    })
   }
 
   async start() {
     db.migrations().then(() => {
-      db.seeders();
-    });
+      db.seeders()
+    })
 
-    this.models = db.initModels();
-    this.routeParam.models = this.models;
-    this.routeParam.replicaModels = this.replicaModels;
-    this.koaApp.context.sequelize = db.instance;
-    this.koaApp.context.models = this.models;
+    this.models = db.initModels()
+    this.routeParam.models = this.models
+    this.routeParam.replicaModels = this.replicaModels
+    this.koaApp.context.sequelize = db.instance
+    this.koaApp.context.models = this.models
 
     super.addMiddlewares([
       // we add the relevant middlewares to our API
@@ -42,9 +42,9 @@ export default class App extends AppBase {
       logger(), // gives detailed logs of each request made on the API
       addDefaultBody(), // if no body is present, put an empty object "{}" in its place.
       compress({}), // compresses requests made to the API
-    ]);
+    ])
 
-    super.mountFolder(join(__dirname, 'routes'), '/'); // adds a folder to scan for route files
-    return super.start();
+    super.mountFolder(join(__dirname, 'routes'), '/') // adds a folder to scan for route files
+    return super.start()
   }
 }

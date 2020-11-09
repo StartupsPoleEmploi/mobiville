@@ -1,5 +1,5 @@
-import config from 'config';
-import axios from 'axios';
+import config from 'config'
+import axios from 'axios'
 
 export function getAccessToken() {
   return axios.post(`${config.ENTERPRISE_URL}/connexion/oauth2/access_token`, {
