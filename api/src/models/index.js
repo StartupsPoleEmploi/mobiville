@@ -7,7 +7,7 @@ import db from '../db'
 import { addUtilsFunctionInTable } from './addUtilsFunctionInTable'
 import { ucFirst } from '../utils/utils'
 
-const dbInstance = new Sequelize(config.database.url, config.database)
+const dbInstance = new Sequelize(config.database.url, {...config.database, logging: console.log})
 
 function initModelsByPath(sequelizeInstance, folderPath, globalName) {
   if (global[globalName]) {

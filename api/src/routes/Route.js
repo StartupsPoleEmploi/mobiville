@@ -1,4 +1,5 @@
 import { Route as RouteBase } from 'koa-smart'
+import winston from '../utils/log'
 
 export default class Route extends RouteBase {
   constructor(params) {
@@ -11,7 +12,7 @@ export default class Route extends RouteBase {
     try {
       await super.beforeRoute(ctx, infos, next)
     } catch (e) {
-      console.log(e)
+      winston.info(e)
       throw e
     }
   }
