@@ -21,5 +21,7 @@ module.exports = {
     quotes: ['error', 'single'],
     'comma-dangle': ['error', 'always-multiline'],
     semi: ['error', 'never'],
+    'space-infix-ops': ['error', { 'int32Hint': false }],
+    'block-spacing': ['error', 'always'],
   },
-};
+}
