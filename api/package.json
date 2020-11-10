@@ -11,7 +11,7 @@
     "async": "^3.2.0",
     "axios": "0.21.0",
     "config": "^3.3.2",
-    "csv-parser": "^2.3.3",
+    "csv-parse": "^4.14.0",
     "dotenv": "^8.2.0",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.3.0",

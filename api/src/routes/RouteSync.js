@@ -10,9 +10,9 @@ export default class RouteSync extends Route {
   @Route.Get()
   async syncCities(ctx) {
     const cities = await getAllCities()
-    log(cities.length, cities[0], cities[1], cities[2], cities[3], cities[4])
-    // await this.model.syncCities({cities: cities.map(c => (c.fields))})
+    log(cities.length, cities[0])
+    const status = await this.model.syncCities({cities})
 
-    this.sendOk(ctx, 'Done')
+    this.sendOk(ctx, status)
   }
 }
