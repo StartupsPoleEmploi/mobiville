@@ -32,6 +32,6 @@ export default class RouteCities extends Route {
 
   @Route.Get()
   async criterions(ctx) {
-    this.sendOk(ctx, {criterions: CRITERIONS})
+    this.sendOk(ctx, {criterions: CRITERIONS, regions: await this.model.regions()})
   }
 }

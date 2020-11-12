@@ -37,6 +37,15 @@ export default (sequelizeInstance, Model) => {
     }
   }
 
+  Model.regions = async () => {
+    const list = await Model.findAll({
+      group: ['code_reg'],
+      raw: true,
+    })
+
+    return list.map(r => ({id: r.code_reg, label: r.nom_region}))
+  }
+
   Model.search = async ({code_region = [], code_criterion = []}) => {
     const list = []
 
