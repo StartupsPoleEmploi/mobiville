@@ -24,7 +24,19 @@ export function getAllTensions() {
         resolve(csvToArrayJson(data))
       }
     })
-  }).then(list => (list.map(item => ({...item, rome: (item.libfap || ':').split(':')[0].trim()}))))
+  })
+}
+
+export function getAllBassins() {
+  return new Promise((resolve, reject) => {
+    readFile(__dirname + '/../assets/datas/Bassin_BMO19.csv', (err, data) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(csvToArrayJson(data, {delimiter: ','}))
+      }
+    })
+  })
 }
 
 export function getAllCitiesWithLittoral() {

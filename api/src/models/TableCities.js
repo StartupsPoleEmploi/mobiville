@@ -47,6 +47,15 @@ export default (sequelizeInstance, Model) => {
   }
 
   Model.search = async ({code_region = [], code_criterion = []}) => {
+
+
+    /*
+TODO ajouter jointure 
+1. bassins.code_commune_insee = cities.insee_com
+2. bassins.be19 = tenssions.bassin
+
+*/
+
     const list = []
 
     // criterions
@@ -103,8 +112,6 @@ export default (sequelizeInstance, Model) => {
         raw: true,
       })).map(c => ({...c, tags: ['reg_' + reg]})))
     }
-
-
 
     // merge lists
     const mergedList = []

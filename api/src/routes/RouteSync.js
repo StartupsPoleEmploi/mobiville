@@ -1,4 +1,4 @@
-import { getAllCities, getAllTensions } from '../utils/api'
+import { getAllBassins, getAllCities, getAllTensions } from '../utils/api'
 import Route from './Route'
 
 export default class RouteSync extends Route {
@@ -17,9 +17,12 @@ export default class RouteSync extends Route {
   @Route.Get()
   async syncProfessionInTension(ctx) {
     const tensions = await getAllTensions()
-    const status = await this.models.tensions.syncTensions({tensions})
+    const statusTensions = await this.models.tensions.syncTensions({tensions})
 
-    this.sendOk(ctx, status)
+    const bassins = await getAllBassins()
+    const statusBassins = await this.models.bassins.sync({bassins})
+
+    this.sendOk(ctx, {tensions: statusTensions, bassins: statusBassins})
   }
 
 }
