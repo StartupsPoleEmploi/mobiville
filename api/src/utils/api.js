@@ -5,7 +5,7 @@ import {readFile} from 'fs'
 
 export function getAllCities() {
   return new Promise((resolve, reject) => {
-    readFile(__dirname+'/../assets/datas/correspondance-code-insee-code-postal.csv', (err, data) => {
+    readFile(__dirname + '/../assets/datas/correspondance-code-insee-code-postal.csv', (err, data) => {
       if(err) {
         reject(err)
       } else {
@@ -13,6 +13,18 @@ export function getAllCities() {
       }
     })
   })
+}
+
+export function getAllTensions() {
+  return new Promise((resolve, reject) => {
+    readFile(__dirname + '/../assets/datas/tension.csv', (err, data) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(csvToArrayJson(data))
+      }
+    })
+  }).then(list => (list.map(item => ({...item, rome: (item.libfap || ':').split(':')[0].trim()}))))
 }
 
 export function getAllCitiesWithLittoral() {

@@ -120,4 +120,11 @@ export function addUtilsFunctionInTable(Table, sequelizeInstance) {
       obj.dataValues[name] = value
     }
   }
+
+  Table.deleteAll = () => {
+    return Table.destroy({
+      where: {},
+      force: true,
+    })
+  }
 }

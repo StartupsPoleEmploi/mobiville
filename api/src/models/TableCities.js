@@ -1,10 +1,13 @@
+import { Op } from 'sequelize'
+import { orderBy } from 'lodash'
+import { ALT_IS_MOUNTAIN, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SMALL_CITY, IS_LARGE_CITY, IS_SMALL_CITY } from '../constants/criterion'
+
 export default (sequelizeInstance, Model) => {
   Model.syncCities = async ({cities}) => {
-    let nbUpdated = 0
-    let nbInserted = 0
+    await Model.deleteAll()
+
     for(let i = 0; i < cities.length; i++) {
       const city = cities[i]
-      const findedCity = await Model.findOne({where: {code_comm: city.code_commune}, raw: true})
 
       const jsonToUpdate = {
         code_comm: city.code_commune,
@@ -26,20 +29,90 @@ export default (sequelizeInstance, Model) => {
         population: city.population,
       }
 
-      if(findedCity) {
-        nbUpdated ++
-        await Model.update(jsonToUpdate, {where: {id: findedCity.id}})
-      } else {
-        nbInserted ++
-        await Model.create(jsonToUpdate)
-      }
+      await Model.create(jsonToUpdate)
     }
 
     return {
       'nb read': cities.length,
-      'nb updated': nbUpdated,
-      'nb inserted': nbInserted,
     }
+  }
+
+  Model.search = async ({code_region = [], code_criterion = []}) => {
+    const list = []
+
+    // criterions
+    for(let i = 0; i < code_criterion.length; i++) {
+      const crit = code_criterion[i]
+
+      switch(crit) {
+      case CRIT_MOUNTAIN:
+        list.push((await Model.findAll({
+          where: {
+            z_moyen : {[Op.gte]: ALT_IS_MOUNTAIN},
+          },
+          raw: true,
+        })).map(c => ({...c, tags: [crit]})))
+        break
+      case CRIT_SMALL_CITY:
+        list.push((await Model.findAll({
+          where: {
+            population : {[Op.lte]: IS_SMALL_CITY},
+          },
+          raw: true,
+        })).map(c => ({...c, tags: [crit]})))
+        break
+      case CRIT_MEDIUM_CITY:
+        list.push((await Model.findAll({
+          where: {
+            [Op.and]: [{
+              population : {[Op.gt]: IS_SMALL_CITY},
+            }, {
+              population : {[Op.lt]: IS_LARGE_CITY},
+            }]},
+          raw: true,
+        })).map(c => ({...c, tags: [crit]})))
+        break
+      case CRIT_LARGE_CITY:
+        list.push((await Model.findAll({
+          where: {
+            population : {[Op.gte]: IS_LARGE_CITY},
+          },
+          raw: true,
+        })).map(c => ({...c, tags: [crit]})))
+        break
+      }
+    }
+
+    // all regions
+    for(let i = 0; i < code_region.length; i++) {
+      const reg = code_region[i]
+
+      list.push((await Model.findAll({
+        where: {
+          code_reg : reg,
+        },
+        raw: true,
+      })).map(c => ({...c, tags: ['reg_' + reg]})))
+    }
+
+
+
+    // merge lists
+    const mergedList = []
+    const totalTags = code_criterion.length + code_region.length
+    list.map(typeOfList => {
+      typeOfList.map(city => {
+        const findIndex = mergedList.findIndex(c => c.id === city.id)
+        if(findIndex !== -1) {
+          mergedList[findIndex].tags = mergedList[findIndex].tags.concat(city.tags)
+          mergedList[findIndex].match = mergedList[findIndex].tags.length * 100 / totalTags
+        } else {
+          mergedList.push({...city, match: city.tags.length * 100 / totalTags})
+        }
+      })
+    })
+
+    return orderBy(mergedList, ['match'], ['desc'])
   }
   
   return Model

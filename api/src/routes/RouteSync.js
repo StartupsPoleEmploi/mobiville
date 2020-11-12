@@ -1,6 +1,5 @@
-import { getAllCities } from '../utils/api'
+import { getAllCities, getAllTensions } from '../utils/api'
 import Route from './Route'
-import { log } from '../utils/log'
 
 export default class RouteSync extends Route {
   constructor(params) {
@@ -10,9 +9,17 @@ export default class RouteSync extends Route {
   @Route.Get()
   async syncCities(ctx) {
     const cities = await getAllCities()
-    log(cities.length, cities[0])
     const status = await this.model.syncCities({cities})
 
     this.sendOk(ctx, status)
   }
+
+  @Route.Get()
+  async syncProfessionInTension(ctx) {
+    const tensions = await getAllTensions()
+    const status = await this.models.tensions.syncTensions({tensions})
+
+    this.sendOk(ctx, status)
+  }
+
 }

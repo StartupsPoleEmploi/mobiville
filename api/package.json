@@ -17,7 +17,7 @@
     "jsonwebtoken": "^8.3.0",
     "koa-body": "^4.0.6",
     "koa-smart": "^2.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "mariadb": "^2.5.1",
     "moment": "^2.29.1",
     "path": "^0.12.7",

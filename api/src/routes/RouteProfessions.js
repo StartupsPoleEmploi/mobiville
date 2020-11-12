@@ -9,14 +9,12 @@ export default class RouteProfessions extends Route {
 
   /**
    * @body {[string]} [code_rome]
-   * @body {[int]} [code_region]
-   * @body {[string]} [code_criterion]
+   * @body {[int]} [postal_code]
    */
   @Route.Post({
     bodyType: Types.object().keys({
       code_rome: Types.array().type(Types.string()).required(),
-      code_region: Types.array().type(Types.number()),
-      code_criterion: Types.array().type(Types.string()),
+      postal_code: Types.array().type(Types.number()).required(),
     }),
   })
   async search(ctx) {
