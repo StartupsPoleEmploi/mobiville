@@ -13,7 +13,7 @@ export default sequelizeInstance => {
       },
       code_commune_insee: {
         type: Sequelize.STRING(255),
-        allowNull: true,
+        allowNull: false,
       },
       reg_credoc: {
         type: Sequelize.STRING(255),
@@ -27,19 +27,19 @@ export default sequelizeInstance => {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      ccommune: {
+      code_commune: {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      nomcom: {
+      nom_com: {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      be19: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
+      bassin_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
-      nombe19: {
+      bassin_name: {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
@@ -61,10 +61,13 @@ export default sequelizeInstance => {
       timestamps: true,
       paranoid: true,
       underscored: true,
+      indexes: [{ unique: true, fields: ['code_commune_insee'] }],
     }
   )
 
   Model.associate = function(models) {
+    Model.belongsTo(models.cities, { foreignKey: 'code_commune_insee' })
+
     return models
   }
 

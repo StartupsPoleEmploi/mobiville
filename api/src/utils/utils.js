@@ -1,4 +1,5 @@
 import moment from 'moment'
+import _ from 'lodash'
 
 export function arrayToObjectByKey(data, key, keepRef = true) {
   const object = data.reduce((acc, cur) => {
@@ -137,4 +138,8 @@ export function csvToJson(csv, separator = ',') {
   })
 
   return toJSON
+}
+
+export function arrayIsEqual(arr1, arr2) {
+  _.isEqual(_.sortBy(arr1), _.sortBy(arr2))
 }

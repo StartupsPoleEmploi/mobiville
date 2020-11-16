@@ -15,17 +15,19 @@ export default class RouteCities extends Route {
   /**
    * @body {[int]} [code_region]
    * @body {[string]} [code_criterion]
+   * @body {[string]} [code_rome]
    */
   @Route.Post({
     bodyType: Types.object().keys({
       code_region: Types.array().type(Types.number()),
       code_criterion: Types.array().type(Types.string()),
+      code_rome: Types.array().type(Types.string()),
     }),
   })
   async search(ctx) {
-    const {code_region, code_criterion} = this.body(ctx)
+    const {code_region, code_criterion, code_rome} = this.body(ctx)
 
-    const result = await this.model.search({code_region, code_criterion})
+    const result = await this.model.search({code_region, code_criterion, code_rome})
 
     this.sendOk(ctx, result)
   }

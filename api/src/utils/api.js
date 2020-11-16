@@ -24,7 +24,7 @@ export function getAllTensions() {
         resolve(csvToArrayJson(data))
       }
     })
-  })
+  }).then(list => (list.map(c => ({...c, bassin_id: c.bassin}))))
 }
 
 export function getAllBassins() {
@@ -36,7 +36,7 @@ export function getAllBassins() {
         resolve(csvToArrayJson(data, {delimiter: ','}))
       }
     })
-  })
+  }).then(list => (list.map(c => ({...c, code_commune: c.ccommune, nom_com: c.nomcom, bassin_id: c.be19, bassin_name: c.nombre19}))))
 }
 
 export function getAllCitiesWithLittoral() {

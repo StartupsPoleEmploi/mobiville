@@ -20,9 +20,9 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      bassin: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
+      bassin_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       bassin_lib: {
         type: Sequelize.STRING(255),
@@ -66,6 +66,9 @@ module.exports = {
         type: Sequelize.DATE,
       },
     })
+
+
+    await queryInterface.addIndex('tensions', ['bassin_id'], {})
   },
   down: (queryInterface /*, Sequelize*/) => {
     return queryInterface.dropTable('tensions')

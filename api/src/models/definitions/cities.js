@@ -37,7 +37,8 @@ export default sequelizeInstance => {
       },
       insee_com: {
         type: Sequelize.STRING(255),
-        allowNull: true,
+        allowNull: false,
+        unique: true,
       },
       code_dept: {
         type: Sequelize.STRING(255),

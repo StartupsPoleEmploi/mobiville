@@ -16,11 +16,11 @@ export default class RouteSync extends Route {
 
   @Route.Get()
   async syncProfessionInTension(ctx) {
-    const tensions = await getAllTensions()
-    const statusTensions = await this.models.tensions.syncTensions({tensions})
-
     const bassins = await getAllBassins()
     const statusBassins = await this.models.bassins.sync({bassins})
+
+    const tensions = await getAllTensions()
+    const statusTensions = await this.models.tensions.syncTensions({tensions})
 
     this.sendOk(ctx, {tensions: statusTensions, bassins: statusBassins})
   }

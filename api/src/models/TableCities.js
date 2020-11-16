@@ -1,8 +1,12 @@
 import { Op } from 'sequelize'
 import { orderBy } from 'lodash'
 import { ALT_IS_MOUNTAIN, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SMALL_CITY, IS_LARGE_CITY, IS_SMALL_CITY } from '../constants/criterion'
+import { arrayIsEqual } from '../utils/utils'
 
 export default (sequelizeInstance, Model) => {
+  Model.citiesId = []
+  Model.lastCodeRome = []
+
   Model.syncCities = async ({cities}) => {
     await Model.deleteAll()
 
@@ -46,16 +50,29 @@ export default (sequelizeInstance, Model) => {
     return list.map(r => ({id: r.code_reg, label: r.nom_region}))
   }
 
-  Model.search = async ({code_region = [], code_criterion = []}) => {
+  Model.getAllCitiesId = async (codeRome = []) => {
+    if(Model.citiesId.length === 0 || arrayIsEqual(Model.lastCodeRome, codeRome)) {
+      const tensions = await Model.models.tensions.allCitiesId(codeRome)
+      Model.citiesId = tensions
+      Model.lastCodeRome = codeRome
+    }
 
+    return Model.citiesId
+  }
 
-    /*
-TODO ajouter jointure 
-1. bassins.code_commune_insee = cities.insee_com
-2. bassins.be19 = tenssions.bassin
+  Model.allTensionsCities = async ({where, code_rome}) => {
+    const list = await Model.getAllCitiesId(code_rome)
 
-*/
+    return await Model.findAll({
+      where: {
+        ...where,
+        insee_com: list,
+      },
+      raw: true,
+    })
+  }
 
+  Model.search = async ({code_region = [], code_criterion = [], code_rome = []}) => {
     const list = []
 
     // criterions
@@ -64,38 +81,38 @@ TODO ajouter jointure
 
       switch(crit) {
       case CRIT_MOUNTAIN:
-        list.push((await Model.findAll({
+        list.push((await Model.allTensionsCities({
           where: {
             z_moyen : {[Op.gte]: ALT_IS_MOUNTAIN},
           },
-          raw: true,
+          code_rome,
         })).map(c => ({...c, tags: [crit]})))
         break
       case CRIT_SMALL_CITY:
-        list.push((await Model.findAll({
+        list.push((await Model.allTensionsCities({
           where: {
             population : {[Op.lte]: IS_SMALL_CITY},
           },
-          raw: true,
+          code_rome,
         })).map(c => ({...c, tags: [crit]})))
         break
       case CRIT_MEDIUM_CITY:
-        list.push((await Model.findAll({
+        list.push((await Model.allTensionsCities({
           where: {
             [Op.and]: [{
               population : {[Op.gt]: IS_SMALL_CITY},
             }, {
               population : {[Op.lt]: IS_LARGE_CITY},
             }]},
-          raw: true,
+          code_rome,
         })).map(c => ({...c, tags: [crit]})))
         break
       case CRIT_LARGE_CITY:
-        list.push((await Model.findAll({
+        list.push((await Model.allTensionsCities({
           where: {
             population : {[Op.gte]: IS_LARGE_CITY},
           },
-          raw: true,
+          code_rome,
         })).map(c => ({...c, tags: [crit]})))
         break
       }
@@ -105,11 +122,11 @@ TODO ajouter jointure
     for(let i = 0; i < code_region.length; i++) {
       const reg = code_region[i]
 
-      list.push((await Model.findAll({
+      list.push((await Model.allTensionsCities({
         where: {
           code_reg : reg,
         },
-        raw: true,
+        code_rome,
       })).map(c => ({...c, tags: ['reg_' + reg]})))
     }
 

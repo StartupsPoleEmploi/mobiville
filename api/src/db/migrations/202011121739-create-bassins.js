@@ -10,7 +10,7 @@ module.exports = {
       },
       code_commune_insee: {
         type: Sequelize.STRING(255),
-        allowNull: true,
+        allowNull: false,
       },
       reg_credoc: {
         type: Sequelize.STRING(255),
@@ -24,19 +24,19 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      ccommune: {
+      code_commune: {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      nomcom: {
+      nom_com: {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      be19: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
+      bassin_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
-      nombe19: {
+      bassin_name: {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
@@ -54,6 +54,9 @@ module.exports = {
         type: Sequelize.DATE,
       },
     })
+
+    await queryInterface.addIndex('bassins', ['code_commune_insee'], {})
+    await queryInterface.addIndex('bassins', ['bassin_id'], {})
   },
   down: (queryInterface /*, Sequelize*/) => {
     return queryInterface.dropTable('bassins')

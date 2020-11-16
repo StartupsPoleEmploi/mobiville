@@ -13,5 +13,10 @@ yarn start
 
 ```
 // populate all cities in France
-GET http://localhost/api/sync/sync-cities 
+GET http://localhost/api/sync/sync-cities   ~ 71000ms
+```
+
+```
+// populate all cities in tension
+GET http://localhost/api/sync/sync-profession-in-tension   ~ 65000ms
 ```
