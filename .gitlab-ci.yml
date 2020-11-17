@@ -1,0 +1,10 @@
+stages:
+    - build-application
+
+build_application :
+    stage: build-application
+    script:
+      - echo "coucou"
+    
+        
+    
