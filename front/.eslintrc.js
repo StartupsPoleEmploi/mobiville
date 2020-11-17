@@ -1,49 +1,35 @@
 module.exports = {
-  parser: 'babel-eslint',
-  extends: ['airbnb', 'airbnb/hooks'],
   env: {
     browser: true,
+    es2021: true
   },
+  extends: [
+    'plugin:react/recommended',
+    'airbnb'
+  ],
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaFeatures: {
+      jsx: true
+    },
+    ecmaVersion: 12,
+    sourceType: 'module'
   },
+  plugins: [
+    'react'
+  ],
   rules: {
-    'react/jsx-filename-extension': [2, { extensions: ['.js'] }],
-    'react/no-unescaped-entities': 0,
-    'max-len': ['error', {
-      ignoreComments: true,
-      ignoreRegExpLiterals: true,
-      ignoreStrings: true,
-      ignoreTemplateLiterals: true,
-      code: 100,
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'comma-dangle': ['error', {
+      arrays: 'never',
+      objects: 'never',
+      imports: 'never',
+      exports: 'never',
+      functions: 'never'
     }],
-    'react/jsx-props-no-spreading': 0,
-    'react/static-property-placement': 0,
-    'react/state-in-constructor': 0,
-    'implicit-arrow-linebreak': 0,
-    'class-methods-use-this': 0,
-    'consistent-return': 0, // Often bothering with early returns
-    'no-restricted-syntax': 0,
-    'operator-linebreak': ['error', 'after'],
-
-    curly: [2, 'multi-line'],
-    'import/no-extraneous-dependencies': [
-      'error',
-      {
-        devDependencies: [
-          '**/__tests__/*.js',
-          '**/__stories__/*.js',
-          '**/*.test.js',
-          '**/tests/*.{js,jsx,mjs}',
-        ],
-      },
-    ],
-    'import/no-named-as-default': 0,
-    'import/prefer-default-export': 0,
-    'no-nested-ternary': 0, // TODO remove and correct code
-    'react/require-default-props': 0, // TODO remove and correct code
-    'react/forbid-prop-types': 0, // TODO remove and correct code
-    'react/destructuring-assignment': 0, // TODO remove and correct code
-    semi: ['error', 'never'],
-  },
-};
+    semi: [2, 'never'],
+    'import/prefer-default-export': 'off',
+    'newline-per-chained-call': ['error', { ignoreChainWithDepth: 2 }],
+    'react/jsx-props-no-spreading': ['off'],
+    'react/forbid-prop-types': [0]
+  }
+}
