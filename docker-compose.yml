@@ -16,7 +16,7 @@ services:
       mobiville_network:
         ipv4_address: 172.0.0.10
 
-  node:
+  api:
     restart: unless-stopped
     cpus: '2.5'
     mem_limit: 4G

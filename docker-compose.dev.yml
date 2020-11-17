@@ -1,6 +1,6 @@
 version: "2.4"
 services:
-  node:
+  api:
     environment:
       - NODE_ENV=development
 
