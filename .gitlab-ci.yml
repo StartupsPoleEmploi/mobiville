@@ -5,6 +5,7 @@ build_application :
     stage: build-application
     script:
       - echo "coucou"
+      - ls -l
     
         
     
