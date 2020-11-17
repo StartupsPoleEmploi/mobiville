@@ -27,7 +27,7 @@ export default class RouteCities extends Route {
   async search(ctx) {
     const {code_region, code_criterion, code_rome} = this.body(ctx)
 
-    const result = await this.model.search({code_region, code_criterion, code_rome})
+    const result = await this.model.search({codeRegion: code_region, codeCriterion: code_criterion, codeRome: code_rome})
 
     this.sendOk(ctx, result)
   }

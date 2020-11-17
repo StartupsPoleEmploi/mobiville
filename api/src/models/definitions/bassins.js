@@ -61,12 +61,11 @@ export default sequelizeInstance => {
       timestamps: true,
       paranoid: true,
       underscored: true,
-      indexes: [{ unique: true, fields: ['code_commune_insee'] }],
     }
   )
 
   Model.associate = function(models) {
-    Model.belongsTo(models.cities, { foreignKey: 'code_commune_insee' })
+    Model.hasMany(models.tensions, { foreignKey: 'bassin_id', sourceKey: 'bassin_id' })
 
     return models
   }

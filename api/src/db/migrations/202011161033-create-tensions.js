@@ -67,7 +67,6 @@ module.exports = {
       },
     })
 
-
     await queryInterface.addIndex('tensions', ['bassin_id'], {})
   },
   down: (queryInterface /*, Sequelize*/) => {

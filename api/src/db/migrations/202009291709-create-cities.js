@@ -91,6 +91,8 @@ module.exports = {
         type: Sequelize.DATE,
       },
     })
+
+    await queryInterface.addIndex('cities', ['insee_com'], {})
   },
   down: (queryInterface /*, Sequelize*/) => {
     return queryInterface.dropTable('cities')

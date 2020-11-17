@@ -1,11 +1,8 @@
 import { Op } from 'sequelize'
 import { orderBy } from 'lodash'
 import { ALT_IS_MOUNTAIN, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SMALL_CITY, IS_LARGE_CITY, IS_SMALL_CITY } from '../constants/criterion'
-import { arrayIsEqual } from '../utils/utils'
 
 export default (sequelizeInstance, Model) => {
-  Model.citiesId = []
-  Model.lastCodeRome = []
 
   Model.syncCities = async ({cities}) => {
     await Model.deleteAll()
@@ -50,34 +47,32 @@ export default (sequelizeInstance, Model) => {
     return list.map(r => ({id: r.code_reg, label: r.nom_region}))
   }
 
-  Model.getAllCitiesId = async (codeRome = []) => {
-    if(Model.citiesId.length === 0 || arrayIsEqual(Model.lastCodeRome, codeRome)) {
-      const tensions = await Model.models.tensions.allCitiesId(codeRome)
-      Model.citiesId = tensions
-      Model.lastCodeRome = codeRome
-    }
-
-    return Model.citiesId
-  }
-
-  Model.allTensionsCities = async ({where, code_rome}) => {
-    const list = await Model.getAllCitiesId(code_rome)
-
+  Model.allTensionsCities = async ({where, codeRome}) => {
     return await Model.findAll({
       where: {
         ...where,
-        insee_com: list,
       },
+      include: [{
+        attributes: [],
+        model: Model.models.bassins,
+        required: true,
+        include: [{
+          attributes: [],
+          model: Model.models.tensions,
+          require: true,
+          where: {rome: codeRome},
+        }],
+      }],
       raw: true,
     })
   }
 
-  Model.search = async ({code_region = [], code_criterion = [], code_rome = []}) => {
+  Model.search = async ({codeRegion = [], codeCriterion = [], codeRome = []}) => {
     const list = []
 
     // criterions
-    for(let i = 0; i < code_criterion.length; i++) {
-      const crit = code_criterion[i]
+    for(let i = 0; i < codeCriterion.length; i++) {
+      const crit = codeCriterion[i]
 
       switch(crit) {
       case CRIT_MOUNTAIN:
@@ -85,7 +80,7 @@ export default (sequelizeInstance, Model) => {
           where: {
             z_moyen : {[Op.gte]: ALT_IS_MOUNTAIN},
           },
-          code_rome,
+          codeRome,
         })).map(c => ({...c, tags: [crit]})))
         break
       case CRIT_SMALL_CITY:
@@ -93,7 +88,7 @@ export default (sequelizeInstance, Model) => {
           where: {
             population : {[Op.lte]: IS_SMALL_CITY},
           },
-          code_rome,
+          codeRome,
         })).map(c => ({...c, tags: [crit]})))
         break
       case CRIT_MEDIUM_CITY:
@@ -104,7 +99,7 @@ export default (sequelizeInstance, Model) => {
             }, {
               population : {[Op.lt]: IS_LARGE_CITY},
             }]},
-          code_rome,
+          codeRome,
         })).map(c => ({...c, tags: [crit]})))
         break
       case CRIT_LARGE_CITY:
@@ -112,27 +107,27 @@ export default (sequelizeInstance, Model) => {
           where: {
             population : {[Op.gte]: IS_LARGE_CITY},
           },
-          code_rome,
+          codeRome,
         })).map(c => ({...c, tags: [crit]})))
         break
       }
     }
 
     // all regions
-    for(let i = 0; i < code_region.length; i++) {
-      const reg = code_region[i]
+    for(let i = 0; i < codeRegion.length; i++) {
+      const reg = codeRegion[i]
 
       list.push((await Model.allTensionsCities({
         where: {
           code_reg : reg,
         },
-        code_rome,
+        codeRome,
       })).map(c => ({...c, tags: ['reg_' + reg]})))
     }
 
     // merge lists
     const mergedList = []
-    const totalTags = code_criterion.length + code_region.length
+    const totalTags = codeCriterion.length + codeRegion.length
     list.map(typeOfList => {
       typeOfList.map(city => {
         const findIndex = mergedList.findIndex(c => c.id === city.id)

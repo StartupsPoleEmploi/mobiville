@@ -102,6 +102,8 @@ export default sequelizeInstance => {
   )
 
   Model.associate = function(models) {
+    Model.hasOne(models.bassins, { foreignKey: 'code_commune_insee', sourceKey: 'insee_com' })
+
     return models
   }
 

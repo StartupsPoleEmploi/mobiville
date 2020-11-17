@@ -17,7 +17,7 @@ export default sequelizeInstance => {
       },
       rome: {
         type: Sequelize.STRING(255),
-        allowNull: true,
+        allowNull: false,
       },
       fap: {
         type: Sequelize.STRING(255),
@@ -73,6 +73,7 @@ export default sequelizeInstance => {
       timestamps: true,
       paranoid: true,
       underscored: true,
+      indexes: [{ unique: true, fields: ['bassin_id', 'rome'] }],
     }
   )
 
