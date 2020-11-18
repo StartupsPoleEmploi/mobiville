@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useCallback, useEffect } from 'react'
-import { getCriterions, searchCities } from '../../api/cities.api'
+import { getCriterions, loadCity, searchCities } from '../../api/cities.api'
 
 const CitiesContext = React.createContext()
 
@@ -8,12 +8,19 @@ export function CitiesProvider(props) {
   const [cities, _setCities] = useState([])
   const [criterions, _setCriterions] = useState(null)
   const [isLoading, _setIsLoading] = useState(false)
+  const [isLoadingCity, _setIsLoadingCity] = useState(false)
 
-  const onSearch = useCallback(async (params) => {
+  const onSearch = useCallback((params) => {
     _setIsLoading(true)
     searchCities(params).then(_setCities)
       .then(() => _setIsLoading(false))
   }, [])
+
+  const onLoadCity = useCallback((id) => {
+    _setIsLoadingCity(true)
+    loadCity(id).then(_setCities)
+      .then(() => _setIsLoadingCity(false))
+  })
 
   useEffect(() => {
     getCriterions().then(_setCriterions)
@@ -26,8 +33,10 @@ export function CitiesProvider(props) {
         cities,
         criterions,
         isLoading,
+        isLoadingCity,
         // function
-        onSearch
+        onSearch,
+        onLoadCity
       }}
     />
   )

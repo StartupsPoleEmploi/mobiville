@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
 import { paramUrlToObject } from '../../utils/url'
@@ -17,40 +18,42 @@ const CitiesPage = ({ location: { search } }) => {
       {isLoading && (<p>Loading...</p>)}
       {cities.map((c) => (
         <div key={c.id}>
-          <ul>
-            <li>
-              commune:
-              {' '}
-              {c.nom_comm}
-            </li>
-            <li>
-              nom_dept:
-              {' '}
-              {c.nom_dept}
-            </li>
-            <li>
-              altitude:
-              {' '}
-              {c.z_moyen}
-            </li>
-            <li>
-              nom_region:
-              {' '}
-              {c.nom_region}
-            </li>
-            <li>
-              population:
-              {' '}
-              {c.population}
-            </li>
-            <li>
-              match:
-              {' '}
-              {c.match}
-              %
-            </li>
-            <hr />
-          </ul>
+          <Link to={`/city/${c.insee_com}-${c.nom_comm}`}>
+            <ul>
+              <li>
+                commune:
+                {' '}
+                {c.nom_comm}
+              </li>
+              <li>
+                nom_dept:
+                {' '}
+                {c.nom_dept}
+              </li>
+              <li>
+                altitude:
+                {' '}
+                {c.z_moyen}
+              </li>
+              <li>
+                nom_region:
+                {' '}
+                {c.nom_region}
+              </li>
+              <li>
+                population:
+                {' '}
+                {c.population}
+              </li>
+              <li>
+                match:
+                {' '}
+                {c.match}
+                %
+              </li>
+              <hr />
+            </ul>
+          </Link>
         </div>
       ))}
     </MainLayout>
