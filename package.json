@@ -1,0 +1,19 @@
+{
+	"name": "mobiville",
+	"version": "0.0.1",
+	"description": "",
+	"scripts": {
+		"start": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d",
+		"build:recette": "docker-compose -f docker-compose.yml -f docker-compose.recette.yml build && rm -rf images-docker && mkdir images-docker && docker save -o ./images-docker/nginx_recette nginx_recette:latest && docker save -o ./images-docker/api_recette api_recette:latest"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/StartupsPoleEmploi/actualisation.git"
+	},
+	"author": "François-Xavier Montigny <fxaviermontigny@gmail.com>",
+	"license": "AGPL-3.0",
+	"bugs": {
+		"url": "https://github.com/StartupsPoleEmploi/actualisation/issues"
+	},
+	"homepage": "https://github.com/StartupsPoleEmploi/actualisation#readme"
+}

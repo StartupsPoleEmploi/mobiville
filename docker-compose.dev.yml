@@ -1,0 +1,17 @@
+version: "3.3"
+services:
+  api:
+    environment:
+      - NODE_ENV=development
+
+  db:
+    ports:
+      - "3306:3306"
+
+  front:
+    environment:
+      - NODE_ENV=development
+
+  front-admin:
+    environment:
+      - NODE_ENV=development

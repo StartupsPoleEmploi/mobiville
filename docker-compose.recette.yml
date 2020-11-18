@@ -1,0 +1,16 @@
+version: "2.4"
+services:
+  nginx:
+    image: nginx_recette
+    volumes:
+      - './var/log/nginx:/var/log/nginx'
+    build:
+      context: .
+      dockerfile: ./dockerfile_nginx_prod
+      args:
+        ENV: recette
+
+  api:
+    image: api_recette
+    environment:
+      - NODE_ENV=recette

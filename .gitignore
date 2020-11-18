@@ -1,2 +1,4 @@
-/logs
 .env
+logs
+.env.recette
+images-docker

@@ -1,0 +1,13 @@
+version: '2.4'
+services:
+  node:
+    environment:
+      - NODE_ENV=production
+
+  front:
+    environment:
+      - NODE_ENV=production
+
+  front-admin:
+    environment:
+      - NODE_ENV=production

@@ -1,5 +1,9 @@
-# dependencies 
-/node_modules
-
-# production 
-/build
+node_modules
+.idea/
+dist
+.DS_Store
+.env.local
+.env
+public/img/generators
+IGNORE/
+config/local*
