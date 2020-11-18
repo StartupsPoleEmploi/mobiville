@@ -5,7 +5,7 @@ import { MainLayout } from '../../components/main-layout'
 import { paramUrlToObject } from '../../utils/url'
 
 const CitiesPage = ({ location: { search } }) => {
-  const { onSearch, cities } = useCities()
+  const { onSearch, cities, isLoading } = useCities()
 
   useEffect(() => {
     onSearch(paramUrlToObject(search))
@@ -14,6 +14,7 @@ const CitiesPage = ({ location: { search } }) => {
   return (
     <MainLayout>
       <p>Cities</p>
+      {isLoading && (<p>Loading...</p>)}
       {cities.map((c) => (
         <div key={c.id}>
           <ul>

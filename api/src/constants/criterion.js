@@ -8,7 +8,7 @@ export const ALT_IS_MOUNTAIN = 1000
 
 export const CRITERIONS = [{
   label: 'Montagne',
-  tag: 'environement',
+  tag: 'environment',
   key: CRIT_MOUNTAIN,
 }, {
   label: 'Petite ville',
