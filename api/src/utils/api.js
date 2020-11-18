@@ -5,7 +5,7 @@ import {readFile} from 'fs'
 
 export function getAllCities() {
   return new Promise((resolve, reject) => {
-    readFile(__dirname + '/../assets/datas/correspondance-code-insee-code-postal.csv', (err, data) => {
+    readFile(__dirname + '/../assets/datas/cities-france.csv', (err, data) => {
       if(err) {
         reject(err)
       } else {
@@ -17,7 +17,7 @@ export function getAllCities() {
 
 export function getAllTensions() {
   return new Promise((resolve, reject) => {
-    readFile(__dirname + '/../assets/datas/tension.csv', (err, data) => {
+    readFile(__dirname + '/../assets/datas/cities-tension.csv', (err, data) => {
       if(err) {
         reject(err)
       } else {
@@ -29,7 +29,7 @@ export function getAllTensions() {
 
 export function getAllBassins() {
   return new Promise((resolve, reject) => {
-    readFile(__dirname + '/../assets/datas/Bassin_BMO19.csv', (err, data) => {
+    readFile(__dirname + '/../assets/datas/lexique-bassins.csv', (err, data) => {
       if(err) {
         reject(err)
       } else {
