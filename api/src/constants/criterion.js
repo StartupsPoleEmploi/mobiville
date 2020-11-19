@@ -3,15 +3,21 @@ export const CRIT_SMALL_CITY = 'small-city'
 export const CRIT_MEDIUM_CITY = 'medium-city'
 export const CRIT_LARGE_CITY = 'big-city'
 export const CRIT_EXTRA_LARGE_CITY = 'extra-big-city'
+export const CRIT_SIDE_SEA = 'side-sea'
 export const IS_SMALL_CITY = 20 // / 1000
 export const IS_MEDIUM_CITY = 50 // / 1000
 export const IS_LARGE_CITY = 200 // / 1000
 export const ALT_IS_MOUNTAIN = 200
+export const SIDE_SEA = 10 // in km
 
 export const CRITERIONS = [{
   label: 'Montagne',
   tag: 'environment',
   key: CRIT_MOUNTAIN,
+}, {
+  label: 'Mer',
+  tag: 'environment',
+  key: CRIT_SIDE_SEA,
 }, {
   label: 'Petite ville',
   tag: 'city',

@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { orderBy } from 'lodash'
-import { ALT_IS_MOUNTAIN, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SMALL_CITY, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY } from '../constants/criterion'
+import { ALT_IS_MOUNTAIN, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, SIDE_SEA } from '../constants/criterion'
 import { getFranceShape } from '../utils/api'
 import { distanceBetweenToCoordinates } from '../utils/utils'
 
@@ -124,6 +124,14 @@ export default (sequelizeInstance, Model) => {
           codeRome,
         })).map(c => ({...c, tags: [crit]})))
         break
+      case CRIT_SIDE_SEA:
+        list.push((await Model.allTensionsCities({
+          where: {
+            distance_from_sea : {[Op.lte]: SIDE_SEA},
+          },
+          codeRome,
+        })).map(c => ({...c, tags: [crit]})))
+        break
       }
     }
 
@@ -161,6 +169,7 @@ export default (sequelizeInstance, Model) => {
     const city = await Model.findOne({where: {insee_com: insee}, raw: true})
 
     if(city) {
+      // OTHER TASK
 
 
       return city
