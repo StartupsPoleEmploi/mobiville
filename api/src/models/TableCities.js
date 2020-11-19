@@ -1,8 +1,11 @@
 import { Op } from 'sequelize'
 import { orderBy } from 'lodash'
 import { ALT_IS_MOUNTAIN, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SMALL_CITY, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY } from '../constants/criterion'
+import { getFranceShape } from '../utils/api'
+import { distanceBetweenToCoordinates } from '../utils/utils'
 
 export default (sequelizeInstance, Model) => {
+  Model.franceShape = null
 
   Model.syncCities = async ({cities}) => {
     await Model.deleteAll()
@@ -164,6 +167,39 @@ export default (sequelizeInstance, Model) => {
     }
 
     return null
+  }
+
+  Model.syncOneCity = async () => {
+    const city = await Model.findOne({where: {distance_from_sea: null}, raw: true})
+
+    if(city) {
+      const options = {}
+      if(city.distance_from_sea === null) {
+        options.distance_from_sea = Model.distanceFromSea(city.geo_point_2d_x, city.geo_point_2d_y)
+      }
+
+      await Model.updateOne(options, { where: { id: city.id }})
+      console.log(`sync city id ${city.id} : Done`, options)
+    }
+  }
+
+  Model.distanceFromSea = (lat, long) => {
+    if(!Model.franceShape) {
+      Model.franceShape = getFranceShape()
+    }
+    let minDistance = null
+    Model.franceShape.map(coordinate => {
+      let dist = distanceBetweenToCoordinates(coordinate[1], coordinate[0], lat, long, 'K')
+      if(dist < 0) {
+        dist *= -1
+      }
+
+      if(dist < minDistance || !minDistance)  {
+        minDistance = dist
+      }
+    })
+
+    return minDistance
   }
   
   return Model

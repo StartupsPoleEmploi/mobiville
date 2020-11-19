@@ -80,6 +80,10 @@ export default sequelizeInstance => {
         type: Sequelize.FLOAT,
         allowNull: true,
       },
+      distance_from_sea: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
