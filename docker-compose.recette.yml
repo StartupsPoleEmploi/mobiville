@@ -1,16 +1,23 @@
-version: "2.4"
+version: "3.3"
 services:
-  nginx:
-    image: nginx_recette
-    volumes:
-      - './var/log/nginx:/var/log/nginx'
-    build:
-      context: .
-      dockerfile: ./dockerfile_nginx_prod
-      args:
-        ENV: recette
+  # nginx:
+  #   image: nginx_recette
+  #   volumes:
+  #     - './var/log/nginx:/var/log/nginx'
+  #   build:
+  #     context: .
+  #     dockerfile: ./dockerfile_nginx_prod
+  #     args:
+  #       ENV: recette
 
-  api:
-    image: api_recette
+  # api:
+  #   image: api_recette
+  #   environment:
+  #     - NODE_ENV=recette
+  front:
+    image: registry.beta.pole-emploi.fr/mobiville/mobiville
     environment:
-      - NODE_ENV=recette
+      - TZ=Europe/Paris
+    expose:
+      - '3000'
+

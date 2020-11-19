@@ -7,11 +7,15 @@ build_application :
         name: gcr.io/kaniko-project/executor:debug
         entrypoint: [""]
     script:
-      - export
       - echo $NODE_ENV
       # build estime-backend docker image and push it in containers registry
       - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
       - /kaniko/executor --dockerfile $CI_PROJECT_DIR/dockerfile_front --destination $CI_REGISTRY_IMAGE
+
+deploy_application:
+  stage: deploy-application
+  script:
+   - ssh 192.168.4.35
 
     
         
