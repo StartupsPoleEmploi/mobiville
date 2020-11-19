@@ -8,7 +8,7 @@ export const IS_SMALL_CITY = 20 // / 1000
 export const IS_MEDIUM_CITY = 50 // / 1000
 export const IS_LARGE_CITY = 200 // / 1000
 export const ALT_IS_MOUNTAIN = 200
-export const SIDE_SEA = 10 // in km
+export const SIDE_SEA = 30 // in km
 
 export const CRITERIONS = [{
   label: 'Montagne',
