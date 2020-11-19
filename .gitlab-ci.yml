@@ -4,9 +4,8 @@ stages:
 build_application :
     stage: build-application
     image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
-
+        name: gcr.io/kaniko-project/executor:debug
+        entrypoint: [""]
     script:
       - echo "coucou"
       - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}"
