@@ -6,6 +6,7 @@ const CitiesContext = React.createContext()
 
 export function CitiesProvider(props) {
   const [cities, _setCities] = useState([])
+  const [city, _setCity] = useState(null)
   const [criterions, _setCriterions] = useState(null)
   const [isLoading, _setIsLoading] = useState(false)
   const [isLoadingCity, _setIsLoadingCity] = useState(false)
@@ -18,7 +19,7 @@ export function CitiesProvider(props) {
 
   const onLoadCity = useCallback((id) => {
     _setIsLoadingCity(true)
-    loadCity(id).then(_setCities)
+    loadCity(id).then(_setCity)
       .then(() => _setIsLoadingCity(false))
   })
 
@@ -31,6 +32,7 @@ export function CitiesProvider(props) {
       {...props}
       value={{
         cities,
+        city,
         criterions,
         isLoading,
         isLoadingCity,

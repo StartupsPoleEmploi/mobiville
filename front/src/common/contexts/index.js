@@ -1,6 +1,11 @@
 import React from 'react'
 import { CitiesProvider } from './citiesContext'
+import { ProfessionsProvider } from './professionsContext'
 
 export default function Providers(props) {
-  return <CitiesProvider {...props} />
+  return (
+    <ProfessionsProvider>
+      <CitiesProvider {...props} />
+    </ProfessionsProvider>
+  )
 }

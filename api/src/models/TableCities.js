@@ -142,6 +142,18 @@ export default (sequelizeInstance, Model) => {
 
     return orderBy(mergedList, ['match'], ['desc'])
   }
+
+  Model.getCity = async ({insee}) => {
+    const city = await Model.findOne({where: {insee_com: insee}, raw: true})
+
+    if(city) {
+
+
+      return city
+    }
+
+    return null
+  }
   
   return Model
 }

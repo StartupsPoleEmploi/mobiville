@@ -36,4 +36,16 @@ export default class RouteCities extends Route {
   async criterions(ctx) {
     this.sendOk(ctx, {criterions: CRITERIONS, regions: await this.model.regions()})
   }
+
+  @Route.Get({
+    path: 'load/:insee',
+  })
+  async loadCity(ctx) {
+    const {insee} = ctx.params
+    const details = await this.model.getCity({insee})
+
+
+    this.sendOk(ctx, details)
+  }
+
 }
