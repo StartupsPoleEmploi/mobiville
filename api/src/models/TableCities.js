@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { orderBy } from 'lodash'
-import { ALT_IS_MOUNTAIN, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SMALL_CITY, IS_LARGE_CITY, IS_SMALL_CITY } from '../constants/criterion'
+import { ALT_IS_MOUNTAIN, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SMALL_CITY, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY } from '../constants/criterion'
 
 export default (sequelizeInstance, Model) => {
 
@@ -97,12 +97,23 @@ export default (sequelizeInstance, Model) => {
             [Op.and]: [{
               population : {[Op.gt]: IS_SMALL_CITY},
             }, {
-              population : {[Op.lt]: IS_LARGE_CITY},
+              population : {[Op.lt]: IS_MEDIUM_CITY},
             }]},
           codeRome,
         })).map(c => ({...c, tags: [crit]})))
         break
       case CRIT_LARGE_CITY:
+        list.push((await Model.allTensionsCities({
+          where: {
+            [Op.and]: [{
+              population : {[Op.gt]: IS_MEDIUM_CITY},
+            }, {
+              population : {[Op.lt]: IS_LARGE_CITY},
+            }]},
+          codeRome,
+        })).map(c => ({...c, tags: [crit]})))
+        break
+      case CRIT_EXTRA_LARGE_CITY:
         list.push((await Model.allTensionsCities({
           where: {
             population : {[Op.gte]: IS_LARGE_CITY},
