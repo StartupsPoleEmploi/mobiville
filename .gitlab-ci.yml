@@ -25,7 +25,7 @@ deploy_application:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
   script:
-   - scp -o StrictHostKeyChecking=no README.md gitlab@192.168.4.135:.
+   - scp -o StrictHostKeyChecking=no README.md gitlab@192.168.4.135:/home/docker/
 
     
         
