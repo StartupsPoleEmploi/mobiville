@@ -84,6 +84,10 @@ export default sequelizeInstance => {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
+      average_temperature: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

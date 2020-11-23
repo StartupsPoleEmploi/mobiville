@@ -1,11 +1,13 @@
 import { Op } from 'sequelize'
-import { orderBy } from 'lodash'
+import { mean, orderBy } from 'lodash'
 import { ALT_IS_MOUNTAIN, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, SIDE_SEA } from '../constants/criterion'
-import { getFranceShape } from '../utils/api'
+import { getFranceShape, getFrenchWeatherStation, loadWeatherFile } from '../utils/api'
 import { distanceBetweenToCoordinates } from '../utils/utils'
 
 export default (sequelizeInstance, Model) => {
   Model.franceShape = null
+  Model.weatherStationList = null
+  Model.averageTemperatureCache = {}
 
   Model.syncCities = async ({cities}) => {
     await Model.deleteAll()
@@ -179,15 +181,23 @@ export default (sequelizeInstance, Model) => {
   }
 
   Model.syncOneCity = async () => {
-    const city = await Model.findOne({where: {distance_from_sea: null}, raw: true})
+    const city = await Model.findOne({where: {[Op.or]: [
+      {distance_from_sea: null}, 
+      {average_temperature: null}],
+    }, logging: false})
 
     if(city) {
       const options = {}
-      if(city.distance_from_sea === null) {
-        options.distance_from_sea = Model.distanceFromSea(city.geo_point_2d_x, city.geo_point_2d_y)
+      console.log(`start sync city ${city.dataValues.id}`)
+      if(city.dataValues.distance_from_sea === null) {
+        options.distance_from_sea = Model.distanceFromSea(city.dataValues.geo_point_2d_x, city.dataValues.geo_point_2d_y)
       }
 
-      await Model.updateOne(options, { where: { id: city.id }})
+      if(city.dataValues.average_temperature === null) {
+        options.average_temperature = await Model.averageTemperature(city.dataValues.geo_point_2d_x, city.dataValues.geo_point_2d_y)
+      }
+
+      await city.update(options)
       console.log(`sync city id ${city.id} : Done`, options)
     }
   }
@@ -209,6 +219,62 @@ export default (sequelizeInstance, Model) => {
     })
 
     return minDistance
+  }
+
+  Model.averageTemperature = async (lat, long) => {
+    if(!Model.weatherStationList) {
+      Model.weatherStationList = await getFrenchWeatherStation()
+    }
+
+    let minDistance = null
+    let stationId = null
+    let stationIndex = null
+    Model.weatherStationList.map((station, index) => {
+      let dist = distanceBetweenToCoordinates(+station.latitude.replace(',', '.'), +station.longitude.replace(',', '.'), lat, long, 'K')
+      if(dist < 0) {
+        dist *= -1
+      }
+
+      if(dist < minDistance || !minDistance)  {
+        minDistance = dist
+        stationId = station.numero
+        stationIndex = index
+      }
+    })
+
+    // cache http and calcul
+    if(Model.averageTemperatureCache[stationId]) {
+      return Model.averageTemperatureCache[stationId]
+    }
+
+    try {
+      console.log(`load station file => id: ${stationId}`)
+      const file = await loadWeatherFile(stationId)
+      const findLineIndex = file.findIndex(l => l.indexOf('Température moyenne') !== -1)
+      let temperatureLine = file[findLineIndex + 1]
+      if(temperatureLine.indexOf('Statistiques') !== -1) {
+        // escape information line
+        temperatureLine = file[findLineIndex + 2]
+      }
+
+      const allTemps = []
+      temperatureLine.replace(/(\r\n|\n|\r)/gm, '').split(';').map(temp => {
+        if(+temp) {
+          allTemps.push(+temp)
+        }
+      })
+      const meanCalc = mean(allTemps)
+      Model.averageTemperatureCache[stationId] = meanCalc
+      if((meanCalc || null) === null) {
+        throw 'File not found'
+      } else {
+        return meanCalc
+      }
+    } catch(err) {
+      // if file is broken or not exist
+      Model.weatherStationList.splice(stationIndex, 1)
+      return await Model.averageTemperature(lat, long)
+    }
   }
   
   return Model

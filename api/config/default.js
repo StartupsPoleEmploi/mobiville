@@ -6,9 +6,9 @@ module.exports = {
   ENTERPRISE_URL: process.env.ENTERPRISE_URL,
   EMPLOI_STORE_ID: process.env.EMPLOI_STORE_ID,
   EMPLOI_STORE_SECRET: process.env.EMPLOI_STORE_SECRET,
-  API_CITIES: process.env.API_CITIES,
   database: {
     url: process.env.DATABASE_URL,
     dialect: 'mariadb',
   },
+  weatherFile: (code) => `https://donneespubliques.meteofrance.fr/FichesClim/FICHECLIM_${(code + '').padStart(8, '0')}.data`,
 }

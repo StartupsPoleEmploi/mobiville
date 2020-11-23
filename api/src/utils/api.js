@@ -39,12 +39,23 @@ export function getAllBassins() {
   }).then(list => (list.map(c => ({...c, code_commune: c.ccommune, nom_com: c.nomcom, bassin_id: c.be19, bassin_name: c.nombre19}))))
 }
 
-export function getAllCitiesWithLittoral() {
-  return axios.get(config.API_LOI_LITTORAL)
-    .then(result => (result.data))
-}
-
 export function getFranceShape() {
   let rawdata = readFileSync(__dirname + '/../assets/datas/france-shape.geo.json')
   return JSON.parse(rawdata).features[0].geometry.coordinates.flat(2)
+}
+
+export function getFrenchWeatherStation() {
+  return new Promise((resolve, reject) => {
+    readFile(__dirname + '/../assets/datas/french-weather-station-list.csv', (err, data) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(csvToArrayJson(data, {delimiter: ','}))
+      }
+    })
+  })
+}
+
+export function loadWeatherFile(stationId) {
+  return axios.get(config.weatherFile(stationId)).then(data => data.data.split('\r\n'))
 }
