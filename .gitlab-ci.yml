@@ -11,7 +11,7 @@ build_application :
       - echo $NODE_ENV
       # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
       - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-      - /kaniko/executor --dockerfile $CI_PROJECT_DIR/dockerfile_front --destination $CI_REGISTRY_IMAGE
+      - /kaniko/executor --dockerfile $CI_PROJECT_DIR/dockerfile_front --destination $CI_REGISTRY_IMAGE:front
     only:
       - b
 
@@ -26,7 +26,8 @@ deploy_application_on_recette:
     - mkdir -p ~/.ssh
   script:
     #- ssh -o StrictHostKeyChecking=no gitlab@192.168.4.135:. 
-    - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.recette.yml gitlab@192.168.4.135:/home/docker/mobiville
+    - scp -o StrictHostKeyChecking=no docker-compose.yml docker-compose.recette.yml gitlab@192.168.4.135:$WORKDIR_SERVER
+    - ssh -o StrictHostKeyChecking=no gitlab@192.168.4.135 "cd $WORKDIR_SERVER && ./deploy.sh"
 
     
         
