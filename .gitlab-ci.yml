@@ -29,7 +29,6 @@ deploy_application:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - echo $SSH_PRIVATE_KEY
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
    - ssh -o StrictHostKeyChecking=no gitlab@192.168.4.135
 
