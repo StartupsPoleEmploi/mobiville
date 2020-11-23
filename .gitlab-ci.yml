@@ -13,7 +13,7 @@ build_application :
       - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
       - /kaniko/executor --dockerfile $CI_PROJECT_DIR/dockerfile_front --destination $CI_REGISTRY_IMAGE
     only:
-      - develop
+      - b
 
 deploy_application:
   stage: deploy-application
@@ -29,7 +29,7 @@ deploy_application:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
   script:
-   - ssh jracine@192.168.4.135
+   - ssh -o StrictHostKeyChecking=no jracine@192.168.4.135
 
     
         
