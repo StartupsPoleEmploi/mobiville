@@ -20,17 +20,12 @@ deploy_application:
   before_script:
     - apt-get update -qq
     - apt-get install -y -qq openssh-client 
-    # add target server in known_hosts
-    # - mkdir ~/.ssh
-    # - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
-    # - chmod 644 ~/.ssh/known_hosts
     # add SSH_PRIVATE_KEY in agent store
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
-    - echo $SSH_PRIVATE_KEY
   script:
-   - ssh -o StrictHostKeyChecking=no gitlab@192.168.4.135
+   - scp -o StrictHostKeyChecking=no README.md gitlab@192.168.4.135:.
 
     
         
