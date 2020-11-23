@@ -49,16 +49,16 @@ services:
   
   front:
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: dockerfile_front
-    deploy: 
-      resources:
-        limits:
-          memory: 2G
-          cpus: '0.50'
-    volumes:
-      - './front:/home/front'
+    # build:
+    #   context: .
+    #   dockerfile: dockerfile_front
+    # deploy: 
+    #   resources:
+    #     limits:
+    #       memory: 2G
+    #       cpus: '0.50'
+    # volumes:
+    #   - './front:/home/front'
     expose:
       - '3000'
     environment:

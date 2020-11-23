@@ -16,8 +16,9 @@ services:
   #     - NODE_ENV=recette
   front:
     image: registry.beta.pole-emploi.fr/mobiville/mobiville
-    environment:
-      - TZ=Europe/Paris
-    expose:
-      - '3000'
+    deploy: 
+      resources:
+        limits:
+          memory: 2G
+          cpus: '0.50'
 
