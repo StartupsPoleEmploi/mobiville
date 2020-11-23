@@ -1,4 +1,5 @@
 stages:
+    - build-application
     - deploy-application
 
 build_application :
@@ -11,6 +12,8 @@ build_application :
       # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
       - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
       - /kaniko/executor --dockerfile $CI_PROJECT_DIR/dockerfile_front --destination $CI_REGISTRY_IMAGE
+    only:
+      - develop
 
 deploy_application:
   stage: deploy-application
