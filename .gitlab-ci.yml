@@ -9,14 +9,25 @@ build_application :
         entrypoint: [""]
     script:
       - echo $NODE_ENV
-      # build estime-backend docker image and push it in containers registry
+      # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
       - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
       - /kaniko/executor --dockerfile $CI_PROJECT_DIR/dockerfile_front --destination $CI_REGISTRY_IMAGE
 
 deploy_application:
   stage: deploy-application
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client 
+    # add target server in known_hosts
+    # - mkdir ~/.ssh
+    # - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    # - chmod 644 ~/.ssh/known_hosts
+    # add SSH_PRIVATE_KEY in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
   script:
-   - ssh 192.168.4.35
+   - ssh 192.168.4.135
 
     
         
