@@ -23,6 +23,7 @@ deploy_application:
     # - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
     # - chmod 644 ~/.ssh/known_hosts
     # add SSH_PRIVATE_KEY in agent store
+    - echo $SSH_PRIVATE_KEY
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
