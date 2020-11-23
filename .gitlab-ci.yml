@@ -27,7 +27,7 @@ deploy_application:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
   script:
-   - ssh -o StrictHostKeyChecking=no 192.168.4.135
+   - ssh -o StrictHostKeyChecking=no jracine@192.168.4.135
 
     
         
