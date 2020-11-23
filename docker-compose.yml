@@ -57,8 +57,6 @@ services:
     #     limits:
     #       memory: 2G
     #       cpus: '0.50'
-    # volumes:
-    #   - './front:/home/front'
     expose:
       - '3000'
     environment:

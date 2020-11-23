@@ -14,8 +14,9 @@ services:
     build:
       context: .
       dockerfile: dockerfile_front
+    volumes:
+      - './front:/home/front'
 
-
-  front-admin:
-    environment:
-      - NODE_ENV=development
+  #front-admin:
+  #  environment:
+  #    - NODE_ENV=development
