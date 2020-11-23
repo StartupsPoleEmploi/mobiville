@@ -1,6 +1,6 @@
 stages:
     - build-application
-    - deploy-application
+    - deploy-application-on-recette
 
 build_application :
     stage: build-application
@@ -15,8 +15,8 @@ build_application :
     only:
       - b
 
-deploy_application:
-  stage: deploy-application
+deploy_application_on_recette:
+  stage: deploy-application-on-recette
   before_script:
     - apt-get update -qq
     - apt-get install -y -qq openssh-client 
@@ -26,7 +26,7 @@ deploy_application:
     - mkdir -p ~/.ssh
   script:
     #- ssh -o StrictHostKeyChecking=no gitlab@192.168.4.135:. 
-    - scp -o StrictHostKeyChecking=no README.md gitlab@192.168.4.135:/home/docker/mobiville
+    - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.recette.yml gitlab@192.168.4.135:/home/docker/mobiville
 
     
         
