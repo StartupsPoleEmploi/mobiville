@@ -12,6 +12,8 @@ build_front_image :
       # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
       - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
       - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_front --destination $CI_REGISTRY_IMAGE:front
+    only :
+      - b
 
 build_api_image :
     stage: build-api-image
@@ -22,6 +24,8 @@ build_api_image :
       # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
       - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
       - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_api --destination $CI_REGISTRY_IMAGE:api
+    only :
+      - b
 
 deploy_application_on_recette:
   stage: deploy-application-on-recette
@@ -34,7 +38,7 @@ deploy_application_on_recette:
     - mkdir -p ~/.ssh
   script:
     #- ssh -o StrictHostKeyChecking=no gitlab@192.168.4.135:. 
-    - scp -o StrictHostKeyChecking=no docker-compose.yml docker-compose.recette.yml gitlab@$IP_RECETTE:$WORKDIR_SERVER
+    - scp -o StrictHostKeyChecking=no docker-compose.yml docker-compose.recette.yml .env nginx gitlab@$IP_RECETTE:$WORKDIR_SERVER
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "
                 cd $WORKDIR_SERVER && 
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
