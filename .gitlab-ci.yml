@@ -1,9 +1,9 @@
 stages:
-    - build-application
+    - build-front-image
     - deploy-application-on-recette
 
-build_application :
-    stage: build-application
+build_front_image :
+    stage: build-front-image
     image:
         name: gcr.io/kaniko-project/executor:debug
         entrypoint: [""]
@@ -12,8 +12,8 @@ build_application :
       # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
       - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
       - /kaniko/executor --dockerfile $CI_PROJECT_DIR/dockerfile_front --destination $CI_REGISTRY_IMAGE:front
-    only:
-      - b
+    #only:
+    #  - b
 
 deploy_application_on_recette:
   stage: deploy-application-on-recette
@@ -27,6 +27,8 @@ deploy_application_on_recette:
   script:
     #- ssh -o StrictHostKeyChecking=no gitlab@192.168.4.135:. 
     - scp -o StrictHostKeyChecking=no docker-compose.yml docker-compose.recette.yml gitlab@$IP_RECETTE:$WORKDIR_SERVER
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "cd $WORKDIR_SERVER && 
-                docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD"
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "
+                cd $WORKDIR_SERVER && 
+                docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
+                docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d"
     

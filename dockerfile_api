@@ -1,12 +1,17 @@
 FROM node:12.18.4
 
+ARG NODE_ENV
+
+COPY ./api /home/api
 WORKDIR /home/api
 
 CMD (which yarn || npm i -g yarn@1.15.2) && \
     if [ "$NODE_ENV" = "production" ] || [ "$NODE_ENV" = "qa" ]; then \
+        echo "prod/recette"; \
         yarn install --production && \
         yarn run start:production; \
     else \
+        echo "local"; \
         yarn install && \
         yarn start; \
     fi
