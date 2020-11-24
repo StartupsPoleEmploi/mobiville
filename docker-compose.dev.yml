@@ -16,7 +16,7 @@ services:
       context: .
       dockerfile: dockerfile_front
       args:
-        - NODE_ENV=development
+        - NODE_ENV=recette
 
   # front-admin:
   #   build:

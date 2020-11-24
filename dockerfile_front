@@ -7,15 +7,11 @@ COPY ./front /home/front
 
 WORKDIR /home/front
 
-# Note: we npm install in prod because build tools are dev dependencies
-CMD (which yarn || npm i -g yarn@1.15.2) && \
-    if [ "$NODE_ENV" = "production" ] || [ "$NODE_ENV" = "recette" ]; then \
-        echo "prod/recette"; \
-        yarn install --production && \
-        yarn run build && \
-        cp -RT build dist; \
-    else \
-        echo "local"; \
-        yarn && \
-        yarn start; \
-    fi
+#RUN yarn install
+
+RUN yarn install && \
+    yarn run build && \
+    cp -RT build dist; 
+
+CMD yarn start; 
+    
