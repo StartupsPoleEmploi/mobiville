@@ -1,9 +1,8 @@
 FROM node:12.18.0
 
-ARG SRCDIR
 ARG NODE_ENV
 
-COPY $SRCDIR /home/front
+COPY ./front /home/front
 
 WORKDIR /home/front
 

@@ -11,22 +11,16 @@ services:
       args:
         - NODE_ENV=development
 
-  db:
-    ports:
-      - "3306:3306"
-
   front:   
     build:
       context: .
       dockerfile: dockerfile_front
       args:
-        - SRCDIR=./front
         - NODE_ENV=development
 
   front-admin:
-    environment:
-      - NODE_ENV=development
-      - SRCDIR=./front-admin
     build:
       context: .
-      dockerfile: dockerfile_front
+      dockerfile: dockerfile_front-admin
+      args:
+        - NODE_ENV=development

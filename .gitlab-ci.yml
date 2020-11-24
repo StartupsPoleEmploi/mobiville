@@ -8,7 +8,6 @@ build_front_image :
         name: gcr.io/kaniko-project/executor:debug
         entrypoint: [""]
     script:
-      - echo $NODE_ENV
       # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
       - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
       - /kaniko/executor --dockerfile $CI_PROJECT_DIR/dockerfile_front --destination $CI_REGISTRY_IMAGE:front
