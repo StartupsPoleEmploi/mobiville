@@ -6,6 +6,7 @@ module.exports = {
   ENTERPRISE_URL: process.env.ENTERPRISE_URL,
   EMPLOI_STORE_ID: process.env.EMPLOI_STORE_ID,
   EMPLOI_STORE_SECRET: process.env.EMPLOI_STORE_SECRET,
+  nb_sync_cities_same_time: 2,
   database: {
     url: process.env.DATABASE_URL,
     dialect: 'mariadb',

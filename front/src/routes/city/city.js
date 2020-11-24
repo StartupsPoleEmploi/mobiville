@@ -88,7 +88,9 @@ const CityPage = () => {
             </li>
             <li>
               population:
-              {city.population}
+              {city.population * 1000}
+              {' '}
+              habitants
             </li>
             <li>
               postal_code:
@@ -105,6 +107,17 @@ const CityPage = () => {
             <li>
               z_moyen:
               {city.z_moyen}
+            </li>
+            <li>
+              average_temperature:
+              {city.average_temperature}
+              °
+            </li>
+            <li>
+              distance_from_sea:
+              {city.distance_from_sea}
+              {' '}
+              km
             </li>
           </ul>
 

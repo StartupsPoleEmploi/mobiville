@@ -40,7 +40,7 @@ export function getAllBassins() {
 }
 
 export function getFranceShape() {
-  let rawdata = readFileSync(__dirname + '/../assets/datas/france-shape.geo.json')
+  let rawdata = readFileSync(__dirname + '/../assets/datas/france-shape-side-sea.geo.json')
   return JSON.parse(rawdata).features[0].geometry.coordinates.flat(2)
 }
 

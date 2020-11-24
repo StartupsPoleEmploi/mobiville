@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { mean, orderBy } from 'lodash'
-import { ALT_IS_MOUNTAIN, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, SIDE_SEA } from '../constants/criterion'
+import { ALT_IS_MOUNTAIN, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA } from '../constants/criterion'
 import { getFranceShape, getFrenchWeatherStation, loadWeatherFile } from '../utils/api'
 import { distanceBetweenToCoordinates } from '../utils/utils'
 
@@ -130,6 +130,14 @@ export default (sequelizeInstance, Model) => {
         list.push((await Model.allTensionsCities({
           where: {
             distance_from_sea : {[Op.lte]: SIDE_SEA},
+          },
+          codeRome,
+        })).map(c => ({...c, tags: [crit]})))
+        break
+      case CRIT_SUN:
+        list.push((await Model.allTensionsCities({
+          where: {
+            average_temperature : {[Op.lte]: IS_SUNNY},
           },
           codeRome,
         })).map(c => ({...c, tags: [crit]})))
