@@ -26,9 +26,6 @@ deploy_application_on_recette:
     - mkdir -p ~/.ssh
   script:
     #- ssh -o StrictHostKeyChecking=no gitlab@192.168.4.135:. 
-    - scp -o StrictHostKeyChecking=no docker-compose.yml docker-compose.recette.yml gitlab@192.168.4.135:$WORKDIR_SERVER
-    - ssh -o StrictHostKeyChecking=no gitlab@192.168.4.135 "cd $WORKDIR_SERVER && ./deploy.sh $CI_REGISTRY $CI_REGISTRY_USER $CI_REGISTRY_PASSWORD"
-
-    
-        
+    - scp -o StrictHostKeyChecking=no docker-compose.yml docker-compose.recette.yml gitlab@$IP_RECETTE:$WORKDIR_SERVER
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "cd $WORKDIR_SERVER && ./deploy.sh $CI_REGISTRY $CI_REGISTRY_USER $CI_REGISTRY_PASSWORD"
     

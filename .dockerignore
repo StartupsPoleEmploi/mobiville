@@ -1,0 +1,5 @@
+.git/
+.vscode/
+./api/node_modules/
+./front/node_modules/
+./front-admin/node_modules/

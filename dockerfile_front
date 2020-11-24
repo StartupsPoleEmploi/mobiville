@@ -1,5 +1,6 @@
 FROM node:12.18.0
 
+COPY ./front /home/front
 WORKDIR /home/front
 
 # Note: we npm install in prod because build tools are dev dependencies

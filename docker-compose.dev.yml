@@ -3,6 +3,11 @@ services:
   api:
     environment:
       - NODE_ENV=development
+    build:
+      context: .
+      dockerfile: dockerfile_api
+    volumes:
+      - './api:/home/api'
 
   db:
     ports:
@@ -14,9 +19,12 @@ services:
     build:
       context: .
       dockerfile: dockerfile_front
-    volumes:
-      - './front:/home/front'
 
-  #front-admin:
-  #  environment:
-  #    - NODE_ENV=development
+  front-admin:
+    environment:
+      - NODE_ENV=development
+    build:
+      context: .
+      dockerfile: dockerfile_front
+    volumes:
+      - './front-admin:/home/front'
