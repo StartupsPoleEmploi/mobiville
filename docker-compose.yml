@@ -42,16 +42,16 @@ services:
         ipv4_address: 173.0.0.30
     stdin_open: true
 
-  front-admin:
-    restart: unless-stopped
-    expose:
-      - '3000'
-    environment:
-      - TZ=Europe/Paris
-    networks:
-      mobiville_network:
-        ipv4_address: 173.0.0.40
-    stdin_open: true
+  # front-admin:
+  #   restart: unless-stopped
+  #   expose:
+  #     - '3000'
+  #   environment:
+  #     - TZ=Europe/Paris
+  #   networks:
+  #     mobiville_network:
+  #       ipv4_address: 173.0.0.40
+  #   stdin_open: true
 
   db:
     image: mariadb:10

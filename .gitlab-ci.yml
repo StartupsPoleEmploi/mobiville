@@ -1,5 +1,6 @@
 stages:
     - build-front-image
+    - build-api-image
     - deploy-application-on-recette
 
 build_front_image :
@@ -11,6 +12,16 @@ build_front_image :
       # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
       - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
       - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_front --destination $CI_REGISTRY_IMAGE:front
+
+build_api_image :
+    stage: build-api-image
+    image:
+        name: gcr.io/kaniko-project/executor:debug
+        entrypoint: [""]
+    script:
+      # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
+      - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+      - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_api --destination $CI_REGISTRY_IMAGE:api
 
 deploy_application_on_recette:
   stage: deploy-application-on-recette

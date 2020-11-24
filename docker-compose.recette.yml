@@ -1,13 +1,5 @@
 version: "3.3"
 services:
-  front:
-    image: registry.beta.pole-emploi.fr/mobiville/mobiville:front
-    deploy: 
-      resources:
-        limits:
-          memory: 2G
-          cpus: '0.50'
-
   nginx:
     volumes:
       - './nginx/recette.conf:/etc/nginx/conf.d/default.conf'
@@ -17,19 +9,28 @@ services:
           memory: 300M
           cpus: '0.5'
 
+  front:
+    image: registry.beta.pole-emploi.fr/mobiville/mobiville:front
+    deploy: 
+      resources:
+        limits:
+          memory: 2G
+          cpus: '0.50'
+
   api:
+    image: registry.beta.pole-emploi.fr/mobiville/mobiville:api
     deploy:
       resources:
         limits:
           memory: 4G
           cpus: '2.5'
 
-  front-admin:
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-          cpus: '0.50'
+  # front-admin:
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 2G
+  #         cpus: '0.50'
 
   db:
     deploy:
