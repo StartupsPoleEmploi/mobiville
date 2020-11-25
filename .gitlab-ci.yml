@@ -1,5 +1,6 @@
 stages:
   - build-front-image
+  - deploy-front-into-recette
   - build-api-image
   - deploy-application-on-recette
 
@@ -17,6 +18,20 @@ build_front_image :
       - ./front/dist 
   only: 
     - master
+
+deploy_front_into_recette:
+  stage: deploy-front-into-recette
+  depedencies:
+    - build_front_image
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client 
+    # add SSH_PRIVATE_KEY in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+  script:
+    - scp -o StrictHostKeyChecking=no   gitlab@$IP_RECETTE:$WORKDIR_SERVER
 
 build_api_image :
   stage: build-api-image
