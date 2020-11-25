@@ -1,11 +1,11 @@
 stages:
-  - build-front-image
+  - build-front
   - deploy-front-into-recette
   - build-api-image
   - deploy-application-on-recette
 
-build_front_image :
-  stage: build-front-image
+build_front :
+  stage: build-front
   image: node:12.18.0
   script:
     # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
@@ -22,7 +22,7 @@ build_front_image :
 deploy_front_into_recette:
   stage: deploy-front-into-recette
   dependencies:
-    - build_front_image
+    - build_front
   before_script:
     - apt-get update -qq
     - apt-get install -y -qq openssh-client 
@@ -44,7 +44,7 @@ build_api_image :
     # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_api --destination $CI_REGISTRY_IMAGE:api
-  when: manual
+  #when: manual
 
 deploy_application_on_recette:
   stage: deploy-application-on-recette
@@ -65,7 +65,7 @@ deploy_application_on_recette:
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml stop && 
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d"
-  when: manual
+  #when: manual
             
     
     
