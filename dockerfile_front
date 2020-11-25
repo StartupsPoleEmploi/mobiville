@@ -1,17 +1,9 @@
 FROM node:12.18.0
 
-ARG NODE_ENV
-RUN echo $NODE_ENV
-
 COPY ./front /home/front
-
 WORKDIR /home/front
 
-#RUN yarn install
-
-RUN yarn install && \
-    yarn run build && \
-    cp -RT build dist; 
-
-CMD yarn start; 
+CMD (which yarn || npm i -g yarn@1.15.2) && \
+        yarn install && \
+        yarn start; \
     

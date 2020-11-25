@@ -8,15 +8,13 @@ services:
     build:
       context: .
       dockerfile: dockerfile_api
-      args:
-        - NODE_ENV=development
+    environment: 
+      - NODE_ENV=development
 
   front:   
     build:
       context: .
       dockerfile: dockerfile_front
-      args:
-        - NODE_ENV=recette
 
   # front-admin:
   #   build:
