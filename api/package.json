@@ -7,9 +7,9 @@
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",
     "start:production": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 dist/index.js",
+    "build:production": "npm run _rm-build-prod && npm run _build-prod",
     "_build-prod": "babel src --out-dir dist --copy-files",
-    "_rm-build-prod": "rimraf dist",
-    "build-prod": "npm run _rm-build-prod && npm run _build-prod"
+    "_rm-build-prod": "rimraf dist"
   },
   "dependencies": {
     "async": "^3.2.0",

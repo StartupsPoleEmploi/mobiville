@@ -7,8 +7,8 @@ CMD (which yarn || npm i -g yarn@1.15.2) && \
     if [ "$NODE_ENV" = "production" ] || [ "$NODE_ENV" = "recette" ]; then \
         echo "$NODE_ENV"; \
         yarn --production && \
-        yarn build-prod && \ 
-	yarn run start:production; \
+        yarn build:production && \ 
+	    yarn start:production; \
     else \
         echo "$NODE_ENV"; \
         yarn install && \
