@@ -1,33 +1,33 @@
 stages:
-    - build-front-image
-    - build-api-image
-    - deploy-application-on-recette
+  - build-front-image
+  - build-api-image
+  - deploy-application-on-recette
 
 build_front_image :
-    stage: build-front-image
-    script:
-      # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
-      - apt-get update && apt-get install -y npm 
-      - npm i -g yarn@1.15.2
-      - cd ./front && ls -l
-      - yarn install 
-      - yarn run build && cp -RT build dist
-    artifacts:
-      paths:
-        - ./front/dist 
-    only: 
-      - master
+  stage: build-front-image
+  script:
+    # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
+    - apt-get update && apt-get install -y npm 
+    - npm i -g yarn@1.15.2
+    - cd ./front && ls -l
+    - yarn install 
+    - yarn run build && cp -RT build dist
+  artifacts:
+    paths:
+      - ./front/dist 
+  only: 
+    - master
 
 build_api_image :
-    stage: build-api-image
-    image:
-        name: gcr.io/kaniko-project/executor:debug
-        entrypoint: [""]
-    script:
-      # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
-      - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-      - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_api --destination $CI_REGISTRY_IMAGE:api
-    when: manual
+  stage: build-api-image
+  image:
+      name: gcr.io/kaniko-project/executor:debug
+      entrypoint: [""]
+  script:
+    # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_api --destination $CI_REGISTRY_IMAGE:api
+  when: manual
 
 deploy_application_on_recette:
   stage: deploy-application-on-recette
@@ -47,7 +47,7 @@ deploy_application_on_recette:
                 cd $WORKDIR_SERVER && 
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d"
-    when: manual
+  when: manual
             
     
     
