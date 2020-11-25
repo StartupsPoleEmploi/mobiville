@@ -21,7 +21,7 @@ build_front_image :
 
 deploy_front_into_recette:
   stage: deploy-front-into-recette
-  depedencies:
+  dependencies:
     - build_front_image
   before_script:
     - apt-get update -qq
