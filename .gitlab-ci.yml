@@ -30,7 +30,7 @@ deploy_front_into_recette:
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
-    - ls -la
+    - ls -la ./front
   script:
     - scp -o StrictHostKeyChecking=no ./front/dist gitlab@$IP_RECETTE:$WORKDIR_SERVER
 
