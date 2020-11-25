@@ -5,6 +5,7 @@ stages:
 
 build_front_image :
   stage: build-front-image
+  image: node:12.18.0
   script:
     # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
     - apt-get update && apt-get install -y npm 
