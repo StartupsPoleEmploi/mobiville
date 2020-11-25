@@ -15,7 +15,7 @@ build_front_image :
     - yarn run build && cp -RT build dist
   artifacts:
     paths:
-      - ./dist 
+      - ./front/dist 
   only: 
     - master
 
@@ -31,7 +31,7 @@ deploy_front_into_recette:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
   script:
-    - scp -o StrictHostKeyChecking=no ./dist gitlab@$IP_RECETTE:$WORKDIR_SERVER
+    - scp -o StrictHostKeyChecking=no ./front/dist gitlab@$IP_RECETTE:$WORKDIR_SERVER
 
 build_api_image :
   stage: build-api-image
