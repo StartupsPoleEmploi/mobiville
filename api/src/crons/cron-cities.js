@@ -1,14 +1,15 @@
-var CronJob = require('cron').CronJob
-import config from 'config'
+import { CronJob } from 'cron'
 
-const citiesCron = (env) => {
-  var syncOneCity = new CronJob('* * * * * *', async function() {
-    for(let i = 0; i < config.nb_sync_cities_same_time; i++) {
-      await env.models.cities.syncOneCity()
-    }
-  }, null, true)
-
+const citiesCron = async (env) => {
   console.log('START CRONS : CITIES')
+
+  // check day at midnight
+  const syncOneCity = new CronJob('0 0 * * * *', async function() {
+    await env.models.cities.checkAndStartSyncCity()
+  })
+
+
+  await env.models.cities.checkAndStartSyncCity()
   syncOneCity.start()
 }
 

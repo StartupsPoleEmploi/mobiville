@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { useProfessions } from '../../common/contexts/professionsContext'
 import { MainLayout } from '../../components/main-layout'
+import { CODE_ROMES } from '../../contants/romes'
 
 const CityPage = () => {
   const { onLoadCity, isLoadingCity, city } = useCities()
@@ -22,7 +23,7 @@ const CityPage = () => {
 
   useEffect(() => {
     if (city) {
-      onSearchProfessions({ code_rome: ['A1407'], insee: [city.insee_com] })
+      onSearchProfessions({ code_rome: CODE_ROMES, insee: [city.insee_com] })
     }
   }, [city])
 

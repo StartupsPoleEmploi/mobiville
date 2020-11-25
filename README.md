@@ -25,6 +25,13 @@ GET http://localhost/api/sync/sync-profession-in-tension   ~ 65000ms
 
 Create / save an image docker to push to the server.
 ```
-npm run build:recette // generate save image docker
+yarn build:recette // generate save image docker
 and scp images-docker // to endpoint server
+```
+
+## Logs
+
+View api logs
+```
+yarn logs:api
 ```

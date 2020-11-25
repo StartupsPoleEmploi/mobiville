@@ -165,3 +165,9 @@ export function distanceBetweenToCoordinates(lat1, lon1, lat2, lon2, unit = 'K')
     return dist
   }
 }
+
+export function sleep(duration = 1000) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, duration)
+  })
+}

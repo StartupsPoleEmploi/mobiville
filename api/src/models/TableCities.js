@@ -1,13 +1,15 @@
 import { Op } from 'sequelize'
 import { mean, orderBy } from 'lodash'
 import { ALT_IS_MOUNTAIN, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA } from '../constants/criterion'
-import { getFranceShape, getFrenchWeatherStation, loadWeatherFile } from '../utils/api'
-import { distanceBetweenToCoordinates } from '../utils/utils'
+import { getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity } from '../utils/api'
+import { distanceBetweenToCoordinates, sleep } from '../utils/utils'
+import { NO_DESCRIPTION_MSG } from '../constants/messages'
 
 export default (sequelizeInstance, Model) => {
   Model.franceShape = null
   Model.weatherStationList = null
   Model.averageTemperatureCache = {}
+  Model.cityOnSync = false
 
   Model.syncCities = async ({cities}) => {
     await Model.deleteAll()
@@ -188,15 +190,29 @@ export default (sequelizeInstance, Model) => {
     return null
   }
 
+  Model.checkAndStartSyncCity = () => {
+    if(!Model.cityOnSync) {
+      Model.syncOneCity()
+    }
+  }
+
   Model.syncOneCity = async () => {
-    const city = await Model.findOne({where: {[Op.or]: [
-      {distance_from_sea: null}, 
-      {average_temperature: null}],
-    }, logging: false})
+    Model.cityOnSync = true
+
+    const city = await Model.findOne({
+      where: {[Op.or]: [
+        {distance_from_sea: null}, 
+        {average_temperature: null},
+        {description: null},
+      ],
+      },
+      order: [['population', 'DESC']],
+      logging: false,
+    })
 
     if(city) {
       const options = {}
-      console.log(`start sync city ${city.dataValues.id}`)
+      console.log(`[START] Sync city ${city.dataValues.id} - ${city.dataValues.nom_comm}`)
       if(city.dataValues.distance_from_sea === null) {
         options.distance_from_sea = Model.distanceFromSea(city.dataValues.geo_point_2d_x, city.dataValues.geo_point_2d_y)
       }
@@ -205,8 +221,17 @@ export default (sequelizeInstance, Model) => {
         options.average_temperature = await Model.averageTemperature(city.dataValues.geo_point_2d_x, city.dataValues.geo_point_2d_y)
       }
 
+      if(city.dataValues.description === null) {
+        options.description = await Model.getDescription(city.nom_comm)
+      }
+
       await city.update(options)
-      console.log(`sync city id ${city.id} : Done`, options)
+      console.log(`[DONE] Sync city ${city.id}`, options)
+      
+      await sleep(1000) // wait and restart command
+      Model.syncOneCity()
+    } else {
+      Model.cityOnSync = false
     }
   }
 
@@ -283,6 +308,24 @@ export default (sequelizeInstance, Model) => {
       Model.weatherStationList.splice(stationIndex, 1)
       return await Model.averageTemperature(lat, long)
     }
+  }
+
+  Model.getDescription = async(cityName) => {
+    const listCity = await wikipediaSearchCity(cityName)
+    const firstItem = listCity.length ? listCity[0] : null
+    
+    if(firstItem && firstItem.title) {
+      try {
+        const description = await wikipediaDetails(firstItem.title)
+        if(description) {
+          return description
+        }
+      } catch(err) {
+        console.log(err)
+      }
+    }
+
+    return NO_DESCRIPTION_MSG
   }
   
   return Model

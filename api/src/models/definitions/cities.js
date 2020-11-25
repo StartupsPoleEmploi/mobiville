@@ -88,6 +88,10 @@ export default sequelizeInstance => {
         type: Sequelize.FLOAT,
         allowNull: true,
       },
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

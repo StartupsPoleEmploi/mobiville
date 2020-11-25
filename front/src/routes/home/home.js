@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
+import { CODE_ROMES } from '../../contants/romes'
 
 const HomePage = () => {
   const {
@@ -13,7 +14,7 @@ const HomePage = () => {
 
   const onSubmit = (data) => {
     let params = {
-      code_rome: ['A1407']
+      code_rome: CODE_ROMES
     }
 
     if (data.regions) {
