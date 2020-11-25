@@ -4,9 +4,10 @@ WORKDIR /home/api
 
 CMD (which yarn || npm i -g yarn@1.15.2) && \
     if [ "$NODE_ENV" = "production" ] || [ "$NODE_ENV" = "qa" ]; then \
-        yarn install --production && \
-        yarn run start:production; \
+        yarn --production && \
+        yarn build-prod && \
+        yarn start:production; \
     else \
-        yarn install && \
+        yarn && \
         yarn start; \
     fi
