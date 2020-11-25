@@ -10,12 +10,13 @@ build_front_image :
       - apt-get update && apt-get install -y npm 
       - npm i -g yarn@1.15.2
       - cd ./front && ls -l
-      - sudo yarn install 
-      - sudo yarn run build && cp -RT build dist
+      - yarn install 
+      - yarn run build && cp -RT build dist
     artifacts:
       paths:
         - ./front/dist 
-    when: manual
+    only: 
+      - master
 
 build_api_image :
     stage: build-api-image
@@ -46,5 +47,7 @@ deploy_application_on_recette:
                 cd $WORKDIR_SERVER && 
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d"
+    when: manual
+            
     
     
