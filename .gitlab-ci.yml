@@ -9,7 +9,7 @@ build_front_image :
       # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
       - apt-get update && apt-get install -y npm 
       - npm i -g yarn@1.15.2
-      - cd ./front && yarn install --production && yarn run build && cp -RT build dist
+      - cd ./front && yarn install && yarn run build && cp -RT build dist
     artifacts:
       paths:
         - ./front/dist 

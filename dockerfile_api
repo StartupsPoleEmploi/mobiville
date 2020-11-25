@@ -6,7 +6,7 @@ WORKDIR /home/api
 CMD (which yarn || npm i -g yarn@1.15.2) && \
     if [ "$NODE_ENV" = "production" ] || [ "$NODE_ENV" = "recette" ]; then \
         echo "$NODE_ENV"; \
-        yarn --production && \
+        yarn install && \
         yarn build:production && \ 
 	    yarn start:production; \
     else \

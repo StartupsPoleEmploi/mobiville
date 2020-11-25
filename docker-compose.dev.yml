@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: dockerfile_api
     environment: 
-      - NODE_ENV=development
+      - NODE_ENV=recette
 
   front:   
     build:

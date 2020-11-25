@@ -29,6 +29,7 @@
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"lint": "npm run eslint src",
+		"build:production" : "yarn install && yarn run build && cp -RT build dist",
 		"eslint": "eslint"
 	},
 	"eslintConfig": {
