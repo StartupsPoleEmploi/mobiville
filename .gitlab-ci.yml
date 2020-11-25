@@ -17,7 +17,7 @@ build_front_image :
     paths:
       - ./front/dist 
   only: 
-    - coucou
+    - master
 
 deploy_front_into_recette:
   stage: deploy-front-into-recette
