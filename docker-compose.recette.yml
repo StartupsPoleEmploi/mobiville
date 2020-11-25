@@ -19,6 +19,8 @@ services:
 
   api:
     image: registry.beta.pole-emploi.fr/mobiville/mobiville:api
+    environment: 
+      - NODE_ENV=recette
     deploy:
       resources:
         limits:
