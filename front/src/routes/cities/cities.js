@@ -16,6 +16,13 @@ const CitiesPage = ({ location: { search } }) => {
     <MainLayout>
       <p>Cities</p>
       {isLoading && (<p>Loading...</p>)}
+      {!isLoading && (
+      <p>
+        Total
+        {' '}
+        {cities.length}
+      </p>
+      )}
       {cities.map((c) => (
         <div key={c.id}>
           <Link to={`/city/${c.insee_com}-${c.nom_comm}`}>

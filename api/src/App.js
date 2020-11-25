@@ -3,6 +3,7 @@ import { App as AppBase } from 'koa-smart'
 const koaBody = require('koa-body')
 import { i18n, compress, cors, helmet, addDefaultBody, logger } from 'koa-smart/middlewares'
 import config from 'config'
+import {start as startCrons} from './crons'
 
 import db from './models'
 
@@ -19,7 +20,9 @@ export default class App extends AppBase {
 
   async start() {
     db.migrations().then(() => {
-      db.seeders()
+      db.seeders().then(() => {
+        startCrons(this) // start crons 
+      })      
     })
 
     this.models = db.initModels()
@@ -45,6 +48,7 @@ export default class App extends AppBase {
     ])
 
     super.mountFolder(join(__dirname, 'routes'), '/') // adds a folder to scan for route files
+
     return super.start()
   }
 }

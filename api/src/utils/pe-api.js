@@ -16,12 +16,13 @@ export function getAccessToken() {
     .then(data => data.access_token || null)
 }
 
-export async function searchJob({codeRome = []}) {
+export async function searchJob({codeRome = [], insee = [], distance = 10}) {
   const token = await getAccessToken()
   return axios.get('https://api.emploi-store.fr/partenaire/offresdemploi/v2/offres/search', {
     params: {
       codeROME: codeRome.join(','),
-      departement: '93',
+      commune: insee.join(','),
+      distance,
     },
     headers: {Authorization: `Bearer ${token}`},
   }).then(result => (result.data))

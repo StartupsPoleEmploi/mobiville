@@ -80,6 +80,18 @@ export default sequelizeInstance => {
         type: Sequelize.FLOAT,
         allowNull: true,
       },
+      distance_from_sea: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      average_temperature: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
+      },
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

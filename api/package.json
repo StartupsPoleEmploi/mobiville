@@ -5,15 +5,21 @@
     "node": "12.18.4"
   },
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js"
+    "start": "nodemon --exec babel-node src/index.js",
+    "start:production": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 dist/index.js",
+    "_build-prod": "babel src --out-dir dist --copy-files",
+    "_rm-build-prod": "rimraf dist",
+    "build-prod": "npm run _rm-build-prod && npm run _build-prod"
   },
   "dependencies": {
     "async": "^3.2.0",
     "axios": "0.21.0",
     "config": "^3.3.2",
+    "cron": "^1.8.2",
     "csv-parse": "^4.14.0",
     "dotenv": "^8.2.0",
     "fs": "0.0.1-security",
+    "html-entities": "^1.3.1",
     "jsonwebtoken": "^8.3.0",
     "koa-body": "^4.0.6",
     "koa-smart": "^2.2.0",
@@ -25,6 +31,8 @@
     "sequelize": "^6.3.5",
     "sequelize-cli": "^6.2.0",
     "sequelize-transforms": "^2.0.0",
+    "slugify": "^1.4.6",
+    "string-strip-html": "^6.3.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {

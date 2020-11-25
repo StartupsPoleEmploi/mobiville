@@ -9,21 +9,22 @@ export default class RouteProfessions extends Route {
 
   /**
    * @body {[string]} [code_rome]
-   * @body {[int]} [postal_code]
+   * @body {[string]} [insee]
    */
   @Route.Post({
     bodyType: Types.object().keys({
       code_rome: Types.array().type(Types.string()).required(),
-      postal_code: Types.array().type(Types.number()).required(),
+      insee: Types.array().type(Types.string()).required(),
     }),
   })
   async search(ctx) {
-    const {code_rome: codeRome} = this.body(ctx)
+    const {code_rome: codeRome, insee} = this.body(ctx)
 
-    // const cp
-
-    const result = await searchJob({codeRome})
-
-    this.sendOk(ctx, result)
+    const result = await searchJob({codeRome, insee, distance: 10})
+    if(result) {
+      this.sendOk(ctx, result.resultats)  
+    } else {
+      this.sendOk(ctx, [])
+    }    
   }
 }
