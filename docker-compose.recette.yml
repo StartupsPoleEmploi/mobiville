@@ -9,13 +9,6 @@ services:
           memory: 300M
           cpus: '0.5'
 
-  front:
-    deploy: 
-      resources:
-        limits:
-          memory: 2G
-          cpus: '0.50'
-
   api:
     image: registry.beta.pole-emploi.fr/mobiville/mobiville:api
     environment: 
@@ -26,16 +19,16 @@ services:
           memory: 4G
           cpus: '2.5'
 
-  # front-admin:
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         memory: 2G
-  #         cpus: '0.50'
-
   db:
     deploy:
       resources:
         limits:
           memory: 8G
           cpus: '4.0'
+  
+  # front-admin:
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 2G
+  #         cpus: '0.50'

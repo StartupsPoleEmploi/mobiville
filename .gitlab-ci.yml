@@ -17,7 +17,7 @@ build_front_image :
     paths:
       - ./front/dist 
   only: 
-    - master
+    - coucou
 
 deploy_front_into_recette:
   stage: deploy-front-into-recette
@@ -31,7 +31,9 @@ deploy_front_into_recette:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
   script:
-    - scp -o StrictHostKeyChecking=no -r ./front/dist gitlab@$IP_RECETTE:$WORKDIR_SERVER
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front"
+    # On récupère l'artifact du build et on l'envoie sur le serveur de recette
+    - scp -o StrictHostKeyChecking=no -r ./front/dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front
 
 build_api_image :
   stage: build-api-image
