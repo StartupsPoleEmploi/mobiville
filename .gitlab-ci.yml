@@ -10,7 +10,7 @@ build_front_image :
   script:
     # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
     - (which yarn || npm i -g yarn@1.15.2)
-    - cd ./front && ls -l
+    - cd ./front
     - yarn install 
     - yarn run build && cp -RT build dist
   artifacts:
@@ -30,9 +30,8 @@ deploy_front_into_recette:
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
-    - ls -la ./front
   script:
-    - scp -o StrictHostKeyChecking=no ./front/dist gitlab@$IP_RECETTE:$WORKDIR_SERVER
+    - scp -o StrictHostKeyChecking=no -r ./front/dist gitlab@$IP_RECETTE:$WORKDIR_SERVER
 
 build_api_image :
   stage: build-api-image

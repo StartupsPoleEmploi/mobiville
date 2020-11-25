@@ -15,6 +15,15 @@ services:
     build:
       context: .
       dockerfile: dockerfile_front
+    restart: unless-stopped
+    expose:
+      - '3000'
+    environment:
+      - TZ=Europe/Paris
+    networks:
+      mobiville_network:
+        ipv4_address: 173.0.0.30
+    stdin_open: true
 
   # front-admin:
   #   build:

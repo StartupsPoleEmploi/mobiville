@@ -29,28 +29,6 @@ services:
       - EMPLOI_STORE_ID=${EMPLOI_STORE_ID}
       - EMPLOI_STORE_SECRET=${EMPLOI_STORE_SECRET}
     stdin_open: true
-  
-  front:
-    restart: unless-stopped
-    expose:
-      - '3000'
-    environment:
-      - TZ=Europe/Paris
-    networks:
-      mobiville_network:
-        ipv4_address: 173.0.0.30
-    stdin_open: true
-
-  # front-admin:
-  #   restart: unless-stopped
-  #   expose:
-  #     - '3000'
-  #   environment:
-  #     - TZ=Europe/Paris
-  #   networks:
-  #     mobiville_network:
-  #       ipv4_address: 173.0.0.40
-  #   stdin_open: true
 
   db:
     image: mariadb:10
@@ -66,7 +44,18 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
       - TZ=Europe/Paris     
-       
+
+  # front-admin:
+  #   restart: unless-stopped
+  #   expose:
+  #     - '3000'
+  #   environment:
+  #     - TZ=Europe/Paris
+  #   networks:
+  #     mobiville_network:
+  #       ipv4_address: 173.0.0.40
+  #   stdin_open: true
+  
 networks:
   mobiville_network:
     driver: bridge
