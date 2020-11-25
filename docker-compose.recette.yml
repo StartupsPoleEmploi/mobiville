@@ -1,6 +1,6 @@
 version: "3.3"
 services:
-  nginx:
+  nginx-front:
     volumes:
       - './nginx/recette.conf:/etc/nginx/conf.d/default.conf'
       - './nginx/front/dist:/home/front'
@@ -13,7 +13,7 @@ services:
   api:
     image: registry.beta.pole-emploi.fr/mobiville/mobiville:api
     environment: 
-      - NODE_ENV=recette
+      - NODE_ENV=development
     deploy:
       resources:
         limits:
