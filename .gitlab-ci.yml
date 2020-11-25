@@ -7,7 +7,8 @@ build_front_image :
     stage: build-front-image
     script:
       # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
-      - apt-get update && apt-get install npm && npm i -g yarn@1.15.2
+      - apt-get update && apt-get install -y npm 
+      - npm i -g yarn@1.15.2
       - cd ./front && yarn install --production && yarn run build && cp -RT build dist
     artifacts:
       paths:
