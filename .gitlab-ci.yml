@@ -4,7 +4,7 @@ stages:
   - build-api-image
   - deploy-application-on-recette
 
-build_front :
+build_front:
   stage: build-front
   image: node:12.18.0
   script:
@@ -16,7 +16,7 @@ build_front :
   artifacts:
     paths:
       - ./front/dist 
-   rules:
+  rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
       changes:
         - front/**/*
