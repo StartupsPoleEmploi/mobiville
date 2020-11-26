@@ -1,11 +1,10 @@
 stages:
-  - build-front
-  - deploy-front-into-recette
-  - build-api-image
+  - build
+  - liv
   - deploy-application-on-recette
 
 build_front:
-  stage: build-front
+  stage: build
   image: node:12.18.0
   script:
     # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
@@ -23,8 +22,8 @@ build_front:
   #     changes:
   #       - front/**/*
 
-deploy_front_into_recette:
-  stage: deploy-front-into-recette
+liv_front_into_recette:
+  stage: liv
   dependencies:
     - build_front
   before_script:
@@ -44,7 +43,7 @@ deploy_front_into_recette:
   #       - front/**/*
 
 build_api_image :
-  stage: build-api-image
+  stage: build
   image:
       name: gcr.io/kaniko-project/executor:debug
       entrypoint: [""]
@@ -77,6 +76,3 @@ deploy_application_on_recette:
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d"
   #when: manual
-            
-    
-    
