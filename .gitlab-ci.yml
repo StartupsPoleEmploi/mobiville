@@ -22,8 +22,9 @@ build_front:
   #     changes:
   #       - front/**/*
 
-liv_front_into_recette:
+liv_front_on_recette:
   stage: liv
+  needs: [build_front]
   dependencies:
     - build_front
   before_script:
@@ -39,6 +40,7 @@ liv_front_into_recette:
     - scp -o StrictHostKeyChecking=no -r ./front/dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front
   only:
     - master
+  when: on_success # s'exécutera uniquement si le job `build_front` passe
     # rules:
   #   - if: '$CI_COMMIT_BRANCH == "master"'
   #     changes:
@@ -81,4 +83,5 @@ deploy_application_on_recette:
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d"
   only:
     - master
+  when: on_success # s'exécutera uniquement si le job `build` passe
   #when: manual
