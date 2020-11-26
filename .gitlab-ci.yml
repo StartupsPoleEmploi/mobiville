@@ -77,7 +77,8 @@ deploy_application_on_recette:
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx"
     - scp -o StrictHostKeyChecking=no nginx/recette.conf gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "
-                cd $WORKDIR_SERVER && 
+                cd $WORKDIR_SERVER &&
+                echo -e 'DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD' > .env &&
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml stop && 
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d"
