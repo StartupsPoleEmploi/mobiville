@@ -68,6 +68,9 @@ build_api_image :
 
 deploy_application_on_recette:
   stage: deploy
+  dependencies:
+    - build_api_image
+    - liv_front_on_recette
   before_script:
     - apt-get update -qq
     - apt-get install -y -qq openssh-client 
