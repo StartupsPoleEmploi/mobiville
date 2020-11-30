@@ -12,9 +12,9 @@ const Container = styled.div`
   width: 100%;
 `
 
-export const MainLayout = ({ children }) => (
+export const MainLayout = ({ children, menu }) => (
   <Main>
-    <Menu />
+    <Menu {...menu} />
     <Container>
       {children}
     </Container>
@@ -25,5 +25,12 @@ MainLayout.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ]).isRequired
+  ]).isRequired,
+  menu: PropTypes.oneOfType([
+    PropTypes.object
+  ])
+}
+
+MainLayout.defaultProps = {
+  menu: {}
 }
