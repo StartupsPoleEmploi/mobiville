@@ -4,7 +4,9 @@
 	"scripts": {
 		"build": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml build",
 		"start": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d",
-		"log:api": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs -f --tail=200 api"
+		"build:recette": "docker-compose -f docker-compose.yml -f docker-compose.recette.yml build && rm -rf images-docker && mkdir images-docker && docker save -o ./images-docker/nginx_recette nginx_recette:latest && docker save -o ./images-docker/api_recette api_recette:latest",
+		"log:api": "docker-compose logs -f --tail=200 api",
+		"log:front": "docker-compose logs -f --tail=200 front"
 	},
 	"repository": {
 		"type": "git",

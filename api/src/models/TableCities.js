@@ -59,6 +59,7 @@ export default (sequelizeInstance, Model) => {
       where: {
         ...where,
       },
+      group: ['id'],
       include: [{
         attributes: [],
         model: Model.models.bassins,
@@ -67,7 +68,9 @@ export default (sequelizeInstance, Model) => {
           attributes: [],
           model: Model.models.tensions,
           require: true,
-          where: {rome: codeRome},
+          where: {
+            rome: codeRome,
+          },
         }],
       }],
       raw: true,
@@ -159,12 +162,21 @@ export default (sequelizeInstance, Model) => {
       })).map(c => ({...c, tags: ['reg_' + reg]})))
     }
 
+    let totalTags = codeCriterion.length + codeRegion.length
+    if(totalTags === 0) {
+      // no criterions
+      list.push((await Model.allTensionsCities({
+        codeRome,
+      })).map(c => ({...c, tags: ['default']})))
+      totalTags = 1
+    }
+
     // merge lists
     const mergedList = []
-    const totalTags = codeCriterion.length + codeRegion.length
     list.map(typeOfList => {
       typeOfList.map(city => {
         const findIndex = mergedList.findIndex(c => c.id === city.id)
+        console.log(city.id, city.tags, findIndex)
         if(findIndex !== -1) {
           mergedList[findIndex].tags = mergedList[findIndex].tags.concat(city.tags)
           mergedList[findIndex].match = mergedList[findIndex].tags.length * 100 / totalTags
