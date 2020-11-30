@@ -4,12 +4,20 @@ import PropTypes from 'prop-types'
 import { Menu } from './menu'
 
 const Main = styled.div`
+  height: 100%;
+`
+
+const Container = styled.div`
+  display: inline-block;
+  width: 100%;
 `
 
 export const MainLayout = ({ children }) => (
   <Main>
     <Menu />
-    {children}
+    <Container>
+      {children}
+    </Container>
   </Main>
 )
 
