@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { Redirect } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
+import { CODE_ROMES } from '../../contants/romes'
 
 const SearchPage = () => {
+  const {
+    register, handleSubmit
+  } = useForm()
   const { criterions } = useCities()
-  // const [stepIndex, setStepIndex] = useState(0)
+  const [onSearch, setOnSearch] = useState(null)
 
-  /* const onSubmit = (data) => {
+  const onSubmit = (data) => {
     let params = {
       code_rome: CODE_ROMES
     }
@@ -26,30 +32,63 @@ const SearchPage = () => {
     }
 
     setOnSearch(params)
-  } */
+  }
 
   if (!criterions) {
     return <p>Loading...</p>
   }
 
-  /* if (onSearch) {
+  if (onSearch) {
     const params = []
     Object.entries(onSearch).forEach(([key, value]) => {
       params.push(`${key}:${value.join(',')}`)
     })
 
     return <Redirect to={`/cities?${params.join(';')}`} />
-  } */
+  }
 
-  // const environmentVars = (criterions.criterions || []).filter((e) => e.tag === 'environment')
-  // const citiesVars = (criterions.criterions || []).filter((e) => e.tag === 'city')
+  const environmentVars = (criterions.criterions || []).filter((e) => e.tag === 'environment')
+  const citiesVars = (criterions.criterions || []).filter((e) => e.tag === 'city')
 
   return (
     <MainLayout menu={{
       mainStyle: { backgroundColor: '#00B9B6' }, title: 'Ma recherche', logo: false, mainHeight: 56, secondWrapper: true, secondTitle: 'Etape XXX', backButton: '/'
     }}
     >
-      Recherche
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {environmentVars && environmentVars.length && (
+        <div>
+          <p>Environment</p>
+          <select name="environment" ref={register}>
+            <option value="">-- Pas de choix</option>
+            {environmentVars.map((r) => <option key={r.key} value={r.key}>{r.label}</option>)}
+          </select>
+        </div>
+        )}
+
+        {citiesVars && citiesVars.length && (
+        <div>
+          <p>Ville</p>
+          <select name="city" ref={register}>
+            <option value="">-- Pas de choix</option>
+            {citiesVars.map((r) => <option key={r.key} value={r.key}>{r.label}</option>)}
+          </select>
+        </div>
+        )}
+
+        {criterions.regions && (
+        <div>
+          <p>Regions</p>
+          <select name="regions" ref={register}>
+            <option value="">-- Pas de region</option>
+            {criterions.regions.map((r) => <option key={r.id} value={r.id}>{r.label}</option>)}
+          </select>
+        </div>
+        )}
+        <div>
+          <input type="submit" value="Lancer un test de recherche" />
+        </div>
+      </form>
     </MainLayout>
   )
 }

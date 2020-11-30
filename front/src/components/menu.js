@@ -36,6 +36,13 @@ const LogoImage = styled.img`
   height: 40px;
 `
 
+const LogoBt = styled(Link)`
+  && {
+    position: absolute;
+    left: 16px;
+  }
+`
+
 const Title = styled(Typography)`
   && {
     font-weight: 500;
@@ -63,7 +70,7 @@ export const Menu = ({
     <Wrapper>
       <MainWrapper style={{ ...mainStyle, height: mainHeight }}>
         {backButton && <BackBt to={backButton}><i className="material-icons">arrow_back</i></BackBt>}
-        {logo && <Link to="/"><LogoImage src={LOGO} alt="logo" /></Link>}
+        {logo && <LogoBt to="/"><LogoImage src={LOGO} alt="logo" /></LogoBt>}
         {title && <Title>{title}</Title>}
       </MainWrapper>
       {secondWrapper && (
