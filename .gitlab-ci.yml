@@ -23,6 +23,13 @@ stages:
 build_liv_front_on_recette:
   stage: build
   image: node:12.18.0
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client 
+    # add SSH_PRIVATE_KEY in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
   script:
     # On minifie les src node ds le livrable dist
     - (which yarn || npm i -g yarn@1.15.2)
