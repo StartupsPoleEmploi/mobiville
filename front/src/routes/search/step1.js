@@ -50,13 +50,13 @@ const Step1Component = ({ onNext }) => {
   const locateMe = () => {
     setLoadingLocalisation(true)
     getPosition()
-      .then((coordinates) => {
+      .then(() => {
         setLoadingLocalisation(false)
-        console.log(coordinates)
+        // console.log(coordinates)
       })
-      .catch((error) => {
+      .catch(() => {
         setLoadingLocalisation(false)
-        console.log(error)
+        // console.log(error)
       })
   }
 
