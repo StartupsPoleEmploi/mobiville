@@ -44,6 +44,8 @@ liv_front_on_recette:
   only:
     refs:
       - master
+    changes:
+      - ./front/**/*
   when: on_success # s'exécutera uniquement si le job `build_front` passe
     # rules:
   #   - if: '$CI_COMMIT_BRANCH == "master"'
