@@ -3,7 +3,7 @@ stages:
   - liv
   - deploy
 
-build_front:
+build_front_src:
   stage: build
   image: node:12.18.0
   script:
@@ -27,9 +27,9 @@ build_front:
 
 liv_front_on_recette:
   stage: liv
-  needs: [build_front]
+  needs: [build_front_src]
   dependencies:
-    - build_front
+    - build_front_src
   before_script:
     - apt-get update -qq
     - apt-get install -y -qq openssh-client 
@@ -52,8 +52,8 @@ liv_front_on_recette:
   #     changes:
   #       - front/**/*
 
-build_api_image :
-  stage: build
+build_api_image:
+  stage: build 
   image:
       name: gcr.io/kaniko-project/executor:debug
       entrypoint: [""]
@@ -71,6 +71,11 @@ build_api_image :
   #   - if: '$CI_COMMIT_BRANCH == "master"'
   #     changes:
   #       - api/**/*
+
+liv_api_on_recette:
+  stage: liv
+  dependencies:
+    - build_api_image
 
 deploy_application_on_recette:
   stage: deploy
@@ -97,8 +102,8 @@ deploy_application_on_recette:
   only:
     refs:
       - master
-    changes:
-      - docker-compose.yml
-      - docker-compose.recette.yml
+    # changes:
+    #   - docker-compose.yml
+    #   - docker-compose.recette.yml
   when: on_success # s'exécutera uniquement si le job `build` passe
   #when: manual
