@@ -52,32 +52,6 @@ liv_front_on_recette:
   #     changes:
   #       - front/**/*
 
-build_api_image:
-  stage: build 
-  image:
-      name: gcr.io/kaniko-project/executor:debug
-      entrypoint: [""]
-  script:
-    # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
-    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_api --destination $CI_REGISTRY_IMAGE:api
-  only:
-    refs:
-      - master
-    # changes:
-    #   - ./api/**/*
-    #when: manual
-  # rules:
-  #   - if: '$CI_COMMIT_BRANCH == "master"'
-  #     changes:
-  #       - api/**/*
-
-liv_api_on_recette:
-  stage: liv
-  needs: [build_api_image]
-  script:
-    - echo "déjà livré dans le registry "
-
 deploy_application_on_recette:
   stage: deploy
   needs: 
