@@ -18,8 +18,8 @@ build_front:
   only:
     refs:
       - master
-    changes:
-      - ./front/**/*
+    # changes:
+    #   - ./front/**/*
   # rules:
   #   - if: '$CI_COMMIT_BRANCH == "master"'
   #     changes:
@@ -44,8 +44,8 @@ liv_front_on_recette:
   only:
     refs:
       - master
-    changes:
-      - ./front/**/*
+    # changes:
+    #   - ./front/**/*
   when: on_success # s'exécutera uniquement si le job `build_front` passe
     # rules:
   #   - if: '$CI_COMMIT_BRANCH == "master"'
@@ -64,8 +64,8 @@ build_api_image :
   only:
     refs:
       - master
-    changes:
-      - ./api/**/*
+    # changes:
+    #   - ./api/**/*
     #when: manual
   # rules:
   #   - if: '$CI_COMMIT_BRANCH == "master"'
