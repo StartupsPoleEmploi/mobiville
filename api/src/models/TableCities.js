@@ -176,7 +176,6 @@ export default (sequelizeInstance, Model) => {
     list.map(typeOfList => {
       typeOfList.map(city => {
         const findIndex = mergedList.findIndex(c => c.id === city.id)
-        console.log(city.id, city.tags, findIndex)
         if(findIndex !== -1) {
           mergedList[findIndex].tags = mergedList[findIndex].tags.concat(city.tags)
           mergedList[findIndex].match = mergedList[findIndex].tags.length * 100 / totalTags

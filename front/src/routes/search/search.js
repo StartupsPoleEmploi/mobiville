@@ -1,41 +1,64 @@
-import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import React, { lazy, useState } from 'react'
 import { Redirect } from 'react-router-dom'
+import styled from 'styled-components'
+import { Typography } from '@material-ui/core'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
 import { CODE_ROMES } from '../../contants/romes'
 
-const SearchPage = () => {
-  const {
-    register, handleSubmit
-  } = useForm()
-  const { criterions } = useCities()
-  const [onSearch, setOnSearch] = useState(null)
-
-  const onSubmit = (data) => {
-    let params = {
-      code_rome: CODE_ROMES
-    }
-
-    if (data.regions) {
-      params = { ...params, code_region: [data.regions] }
-    }
-    if (data.environment) {
-      const tab = (params.code_criterion || [])
-      tab.push(data.environment)
-      params = { ...params, code_criterion: tab }
-    }
-    if (data.city) {
-      const tab = (params.code_criterion || [])
-      tab.push(data.city)
-      params = { ...params, code_criterion: tab }
-    }
-
-    setOnSearch(params)
+const StepBlock = styled(Typography)`
+  && {
+    margin: 28px 16px 48px 16px;
+    font-size: 12px;
+    font-weight: bold;
   }
+`
+
+const ALL_STEPS = [{
+  components: lazy(() => import('./step1'))
+}, {
+  components: lazy(() => import('./step2'))
+}, {
+  components: lazy(() => import('./step3'))
+}, {
+  components: lazy(() => import('./step4'))
+}, {
+  components: lazy(() => import('./step5'))
+}]
+
+const SearchPage = () => {
+  const { criterions } = useCities()
+  const [index, setIndex] = useState(0)
+  const [onSearch, setOnSearch] = useState(null)
 
   if (!criterions) {
     return <p>Loading...</p>
+  }
+
+  const onNextStep = () => {
+    if (index + 1 >= ALL_STEPS.length) {
+      const params = {
+        code_rome: CODE_ROMES
+      }
+
+      /* if (data.regions) {
+        params = { ...params, code_region: [data.regions] }
+      }
+      if (data.environment) {
+        const tab = (params.code_criterion || [])
+        tab.push(data.environment)
+        params = { ...params, code_criterion: tab }
+      }
+      if (data.city) {
+        const tab = (params.code_criterion || [])
+        tab.push(data.city)
+        params = { ...params, code_criterion: tab }
+      } */
+
+      setOnSearch(params)
+    } else {
+      setIndex(index + 1)
+    }
   }
 
   if (onSearch) {
@@ -47,48 +70,21 @@ const SearchPage = () => {
     return <Redirect to={`/cities?${params.join(';')}`} />
   }
 
-  const environmentVars = (criterions.criterions || []).filter((e) => e.tag === 'environment')
-  const citiesVars = (criterions.criterions || []).filter((e) => e.tag === 'city')
+  const Component = ALL_STEPS[index].components
 
   return (
     <MainLayout menu={{
-      mainStyle: { backgroundColor: '#00B9B6' }, title: 'Ma recherche', logo: false, mainHeight: 56, secondWrapper: true, secondTitle: 'Etape XXX', backButton: '/'
+      title: 'Ma recherche', logo: false, mainHeight: 56, backButton: '/'
     }}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {environmentVars && environmentVars.length && (
-        <div>
-          <p>Environment</p>
-          <select name="environment" ref={register}>
-            <option value="">-- Pas de choix</option>
-            {environmentVars.map((r) => <option key={r.key} value={r.key}>{r.label}</option>)}
-          </select>
-        </div>
-        )}
-
-        {citiesVars && citiesVars.length && (
-        <div>
-          <p>Ville</p>
-          <select name="city" ref={register}>
-            <option value="">-- Pas de choix</option>
-            {citiesVars.map((r) => <option key={r.key} value={r.key}>{r.label}</option>)}
-          </select>
-        </div>
-        )}
-
-        {criterions.regions && (
-        <div>
-          <p>Regions</p>
-          <select name="regions" ref={register}>
-            <option value="">-- Pas de region</option>
-            {criterions.regions.map((r) => <option key={r.id} value={r.id}>{r.label}</option>)}
-          </select>
-        </div>
-        )}
-        <div>
-          <input type="submit" value="Lancer un test de recherche" />
-        </div>
-      </form>
+      <StepBlock>
+        Etape
+        {' '}
+        {index + 1}
+        /
+        {ALL_STEPS.length}
+      </StepBlock>
+      <Component onNext={onNextStep} />
     </MainLayout>
   )
 }
