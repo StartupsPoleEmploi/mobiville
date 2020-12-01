@@ -19,11 +19,23 @@ const Bt = styled(ButtonUI)`
   }
 `
 
-export const Button = ({ children, style }) => (
-  <Bt style={style}>
-    {children}
-  </Bt>
-)
+export const Button = ({
+  children, style, light, onClick
+}) => {
+  const lightStyle = {
+    backgroundColor: '#E4E9ED', borderColor: '#00B9B6', borderRadius: '8px', fontWeight: 'normal'
+  }
+  let newStyle = style
+  if (light) {
+    newStyle = { ...newStyle, ...lightStyle }
+  }
+
+  return (
+    <Bt style={newStyle} onClick={onClick}>
+      {children}
+    </Bt>
+  )
+}
 
 Button.propTypes = {
   children: PropTypes.oneOfType([
@@ -33,9 +45,13 @@ Button.propTypes = {
   style: PropTypes.oneOfType([
     PropTypes.object,
     PropTypes.number
-  ])
+  ]),
+  light: PropTypes.bool,
+  onClick: PropTypes.func
 }
 
 Button.defaultProps = {
-  style: {}
+  style: {},
+  light: false,
+  onClick: () => {}
 }
