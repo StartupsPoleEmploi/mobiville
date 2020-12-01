@@ -74,15 +74,14 @@ build_api_image:
 
 liv_api_on_recette:
   stage: liv
-  dependencies:
-    - build_api_image
+  needs: [build_api_image]
   script:
     - echo "déjà livré dans le registry"
 
 deploy_application_on_recette:
   stage: deploy
-  dependencies:
-    - build_api_image
+  needs: 
+    - liv_api_on_recette
     - liv_front_on_recette
   before_script:
     - apt-get update -qq
