@@ -27,7 +27,6 @@ build_front_src:
 
 liv_front_on_recette:
   stage: liv
-  needs: [build_front_src]
   dependencies:
     - build_front_src
   before_script:
@@ -54,9 +53,6 @@ liv_front_on_recette:
 
 deploy_application_on_recette:
   stage: deploy
-  needs: 
-    - liv_api_on_recette
-    - liv_front_on_recette
   before_script:
     - apt-get update -qq
     - apt-get install -y -qq openssh-client 
