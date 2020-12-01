@@ -1,9 +1,8 @@
 stages:
   - build
-  - liv
   - deploy
 
-build_front_src:
+.build_front_src:
   stage: build
   image: node:12.18.0
   script:
@@ -20,12 +19,26 @@ build_front_src:
       - master
     # changes:
     #   - ./front/**/*
-  # rules:
-  #   - if: '$CI_COMMIT_BRANCH == "master"'
-  #     changes:
-  #       - front/**/*
 
-liv_front_on_recette:
+build_liv_front_on_recette:
+  stage: build
+  image: node:12.18.0
+  script:
+    # On minifie les src node ds le livrable dist
+    - (which yarn || npm i -g yarn@1.15.2)
+    - cd ./front
+    - yarn install 
+    - yarn run build && cp -RT build dist
+    # On livre le livrable dist sur le 
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front"
+    - scp -o StrictHostKeyChecking=no -r ./front/dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front
+  only:
+    refs:
+      - master
+    # changes:
+    #   - ./front/**/*
+
+.liv_front_on_recette:
   stage: liv
   needs: [build_front_src]
   dependencies:
@@ -66,23 +79,9 @@ build_api_image:
       - master
     # changes:
     #   - ./api/**/*
-    #when: manual
-  # rules:
-  #   - if: '$CI_COMMIT_BRANCH == "master"'
-  #     changes:
-  #       - api/**/*
-
-liv_api_on_recette:
-  stage: liv
-  needs: [build_api_image]
-  script:
-    - echo "déjà livré dans le registry"
 
 deploy_application_on_recette:
   stage: deploy
-  needs: 
-    - liv_api_on_recette
-    - liv_front_on_recette
   before_script:
     - apt-get update -qq
     - apt-get install -y -qq openssh-client 
@@ -103,8 +102,4 @@ deploy_application_on_recette:
   only:
     refs:
       - master
-    # changes:
-    #   - docker-compose.yml
-    #   - docker-compose.recette.yml
   when: on_success # s'exécutera uniquement si le job `build` passe
-  #when: manual
