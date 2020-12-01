@@ -76,6 +76,8 @@ liv_api_on_recette:
   stage: liv
   dependencies:
     - build_api_image
+  script:
+    - echo "déjà livré dans le registry"
 
 deploy_application_on_recette:
   stage: deploy
