@@ -18,6 +18,8 @@ build_front:
   only:
     refs:
       - master
+    changes:
+      - ./front/**/*
   # rules:
   #   - if: '$CI_COMMIT_BRANCH == "master"'
   #     changes:
@@ -60,6 +62,8 @@ build_api_image :
   only:
     refs:
       - master
+    changes:
+      - ./api/**/*
     #when: manual
   # rules:
   #   - if: '$CI_COMMIT_BRANCH == "master"'
@@ -91,5 +95,8 @@ deploy_application_on_recette:
   only:
     refs:
       - master
+    changes:
+      - docker-compose.yml
+      - docker-compose.recette.yml
   when: on_success # s'exécutera uniquement si le job `build` passe
   #when: manual
