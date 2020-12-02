@@ -338,6 +338,47 @@ export default (sequelizeInstance, Model) => {
 
     return NO_DESCRIPTION_MSG
   }
+
+  Model.searchByLocation = async ({latitude, longitude})  => {
+    const cities = await Model.findAll({
+      where: {[Op.and]: [
+        {geo_point_2d_x: {[Op.lt]: latitude + 0.5}},
+        {geo_point_2d_x: {[Op.gt]: latitude - 0.5}},
+        {geo_point_2d_y: {[Op.lt]: longitude + 0.5}},
+        {geo_point_2d_y: {[Op.gt]: longitude - 0.5}},
+      ]},
+      raw: true,
+    })
+
+    let minDistance = null
+    let city = null
+    cities.map(c => {
+      let dist = distanceBetweenToCoordinates(c.geo_point_2d_x, c.geo_point_2d_y, latitude, longitude, 'K')
+      if(dist < 0) {
+        dist *= -1
+      }
+
+      if(dist < minDistance || !minDistance)  {
+        minDistance = dist
+        city = c
+      }
+    })
+
+    return city
+  }  
+
+  Model.searchByName = async ({name})  => {
+    const cities = await Model.findAll({
+      where: {[Op.or]: [
+        {nom_comm: {[Op.like]: `%${name}%`}},
+        {postal_code: {[Op.like]: `%${name}%`}},
+      ]},
+      limit: 5,
+      raw: true,
+    })
+
+    return cities
+  }  
   
   return Model
 }

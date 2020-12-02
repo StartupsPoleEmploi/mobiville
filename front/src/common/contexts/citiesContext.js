@@ -1,15 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useCallback, useEffect } from 'react'
-import { getCriterions, loadCity, searchCities } from '../../api/cities.api'
+import {
+  getCriterions, loadCity, searchCities, searchCityByLocation, searchCityByName
+} from '../../api/cities.api'
 
 const CitiesContext = React.createContext()
 
 export function CitiesProvider(props) {
   const [cities, _setCities] = useState([])
-  const [city, _setCity] = useState(null)
+  const [city, setCity] = useState(null)
   const [criterions, _setCriterions] = useState(null)
   const [isLoading, _setIsLoading] = useState(false)
   const [isLoadingCity, _setIsLoadingCity] = useState(false)
+  const [isLoadingLocation, _setIsLoadingLocation] = useState(false)
 
   const onSearch = useCallback((params) => {
     _setIsLoading(true)
@@ -19,8 +22,20 @@ export function CitiesProvider(props) {
 
   const onLoadCity = useCallback((id) => {
     _setIsLoadingCity(true)
-    loadCity(id).then(_setCity)
+    loadCity(id).then(setCity)
       .then(() => _setIsLoadingCity(false))
+  })
+
+  const onSearchByLocation = useCallback(({ latitude, longitude }) => {
+    _setIsLoadingLocation(true)
+    searchCityByLocation({ latitude, longitude }).then(setCity)
+      .then(() => _setIsLoadingLocation(false))
+  })
+
+  const onSearchByName = useCallback(({ name }) => {
+    _setIsLoadingLocation(true)
+    searchCityByName({ name }).then(_setCities)
+      .then(() => _setIsLoadingLocation(false))
   })
 
   useEffect(() => {
@@ -36,9 +51,13 @@ export function CitiesProvider(props) {
         criterions,
         isLoading,
         isLoadingCity,
+        isLoadingLocation,
         // function
+        setCity,
         onSearch,
-        onLoadCity
+        onLoadCity,
+        onSearchByLocation,
+        onSearchByName
       }}
     />
   )

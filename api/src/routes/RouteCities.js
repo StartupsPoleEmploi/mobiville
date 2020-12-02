@@ -48,4 +48,39 @@ export default class RouteCities extends Route {
     this.sendOk(ctx, details)
   }
 
+  /**
+   * @body {[number]} [latitude]
+   * @body {[number]} [longitude]
+   */
+  @Route.Post({
+    bodyType: Types.object().keys({
+      latitude: Types.number().required(),
+      longitude: Types.number().required(),
+    }),
+  })
+  async searchByLocation(ctx) {
+    const {latitude, longitude} = this.body(ctx)
+
+    const result = await this.model.searchByLocation({latitude, longitude})
+
+    this.sendOk(ctx, result)
+  }
+
+  /**
+   * @body {[number]} [latitude]
+   * @body {[number]} [longitude]
+   */
+  @Route.Post({
+    bodyType: Types.object().keys({
+      name: Types.string().required(),
+    }),
+  })
+  async searchByName(ctx) {
+    const {name} = this.body(ctx)
+
+    const result = await this.model.searchByName({name})
+
+    this.sendOk(ctx, result)
+  }
+
 }
