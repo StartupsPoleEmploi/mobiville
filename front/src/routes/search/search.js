@@ -14,6 +14,13 @@ const StepBlock = styled(Typography)`
   }
 `
 
+const ProgressBar = styled.div`
+  background-color: #00A4E8;
+  position: absolute;
+  height: 4px;
+  left: 0;
+`
+
 const ALL_STEPS = [{
   components: lazy(() => import('./step1'))
 }, {
@@ -30,12 +37,15 @@ const SearchPage = () => {
   const { criterions } = useCities()
   const [index, setIndex] = useState(0)
   const [onSearch, setOnSearch] = useState(null)
+  const [values, setValues] = useState({})
 
   if (!criterions) {
     return <p>Loading...</p>
   }
 
-  const onNextStep = () => {
+  const onNextStep = (val) => {
+    setValues({ ...values, ...val })
+
     if (index + 1 >= ALL_STEPS.length) {
       const params = {
         code_rome: CODE_ROMES
@@ -71,12 +81,14 @@ const SearchPage = () => {
   }
 
   const Component = ALL_STEPS[index].components
+  console.log('values', values)
 
   return (
     <MainLayout menu={{
       title: 'Ma recherche', logo: false, mainHeight: 56, backButton: '/'
     }}
     >
+      <ProgressBar style={{ width: `${((index + 1) * 100) / ALL_STEPS.length}%` }} />
       <StepBlock>
         Etape
         {' '}

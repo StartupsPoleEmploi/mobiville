@@ -5,15 +5,18 @@ import {
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Controller, useForm } from 'react-hook-form'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Button } from '../../components/button'
 import { getPosition } from '../../utils/navigator'
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'
+import { Espace } from '../../components/espace'
 
 const Wrapper = styled.div`
   margin: 0 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `
 
 const Title = styled(Typography)`
@@ -39,8 +42,7 @@ const Input = styled(TextField)`
     background-color: white;
 
     input {
-      padding-left: 8px;
-      padding-right: 8px;
+      padding-left: 8px !important;
     }
   }
 `
@@ -62,13 +64,12 @@ const Step1Component = ({ onNext }) => {
   const {
     onSearchByLocation, setCity, onSearchByName, city, cities, isLoadingLocation
   } = useCities()
-  const {
-    handleSubmit, setValue, control
-  } = useForm()
+  const [inputValue, setInputValue] = useState('')
 
-  const formatedCity = () => {
-    if (city) {
-      return ucFirst(city.nom_comm.toLowerCase())
+  const formatedCity = (c) => {
+    const nc = c || city
+    if (nc) {
+      return ucFirst(nc.nom_comm.toLowerCase())
     }
 
     return ''
@@ -84,53 +85,47 @@ const Step1Component = ({ onNext }) => {
 
   const searchNewCities = (event) => onSearchByName({ name: event.target.value })
 
-  const onSubmit = () => {
-    console.log(city)
-  }
-
   useEffect(() => {
     if (city) {
-      setValue('city', formatedCity())
+      setInputValue(formatedCity())
     }
   }, [city])
 
-  console.log('cities', cities)
-  // add empty value
-  cities.push({ id: '', nom_comm: '' })
-
   return (
     <Wrapper>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Title>Où habitez vous ?</Title>
-        <FormLine fullWidth>
-          <Controller
-            render={({ onChange, ...props }) => (
-              <Autocomplete
-                onChange={(event, newValue) => {
-                  // setValue(newValue);
-                  console.log(newValue)
-                }}
-                getOptionSelected={(option, value) => option.id === value.id}
-                getOptionLabel={(option) => ucFirst(option.nom_comm)}
-                options={cities}
-                loading={isLoadingLocation}
-                renderInput={(params) => <Input {...params} onKeyUp={searchNewCities} label="Villes" />}
-                {...props}
-              />
-            )}
-            onChange={([, data]) => { setCity(data) }}
-            name="city"
-            control={control}
-            defaultValue=""
-          />
-        </FormLine>
-        <Button light onClick={locateMe}>
-          {!loadingLocalisation && <GpsIcon className="material-icons">gps_fixed</GpsIcon>}
-          {loadingLocalisation && <Waiting size={22} />}
-          Me localiser
-        </Button>
-        {city && <Button onClick={() => onNext()}>Suivant</Button>}
-      </form>
+      <Title>Où habitez vous ?</Title>
+      <FormLine fullWidth>
+        <Autocomplete
+          onChange={(event, newValue) => {
+            setCity(newValue)
+          }}
+          inputValue={inputValue}
+          onInputChange={(event, newInputValue) => {
+            setInputValue(newInputValue)
+          }}
+          getOptionSelected={(option, value) => option.id === value.id}
+          getOptionLabel={formatedCity}
+          options={cities}
+          loading={isLoadingLocation}
+          renderInput={(params) => <Input {...params} onKeyUp={searchNewCities} label="Villes" />}
+        />
+      </FormLine>
+      <Button light onClick={locateMe}>
+        {!loadingLocalisation && <GpsIcon className="material-icons">gps_fixed</GpsIcon>}
+        {loadingLocalisation && <Waiting size={22} />}
+        Me localiser
+      </Button>
+      <Espace />
+      {city && (
+      <Button
+        style={{
+          backgroundColor: '#00B9B6', border: 'none', fontWeight: 'normal', margin: '16px 0', boxShadow: '0 4px 5px 0 rgba(0,0,0,0.2)'
+        }}
+        onClick={() => onNext({ from: city })}
+      >
+        Suivant
+      </Button>
+      )}
     </Wrapper>
   )
 }

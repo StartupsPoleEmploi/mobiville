@@ -5,11 +5,16 @@ import { Menu } from './menu'
 
 const Main = styled.div`
   height: 100%;
+  display: flex;
+  flex-direction: column;
 `
 
 const Container = styled.div`
   display: inline-block;
   width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `
 
 export const MainLayout = ({ children, menu }) => (
