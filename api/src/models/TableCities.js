@@ -10,6 +10,7 @@ export default (sequelizeInstance, Model) => {
   Model.weatherStationList = null
   Model.averageTemperatureCache = {}
   Model.cityOnSync = false
+  Model.cacheSearchCities = {}
 
   Model.syncCities = async ({cities}) => {
     await Model.deleteAll()
@@ -79,87 +80,104 @@ export default (sequelizeInstance, Model) => {
 
   Model.search = async ({codeRegion = [], codeCriterion = [], codeRome = []}) => {
     const list = []
+    if(Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})]) {
+      return Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})]
+    }
 
     // criterions
     for(let i = 0; i < codeCriterion.length; i++) {
       const crit = codeCriterion[i]
+      if(Model.cacheSearchCities[JSON.stringify({crit, codeRome})]) {
+        list.push(Model.cacheSearchCities[JSON.stringify({crit, codeRome})])
+      } else {
+        let l = []
 
-      switch(crit) {
-      case CRIT_MOUNTAIN:
-        list.push((await Model.allTensionsCities({
-          where: {
-            z_moyen : {[Op.gte]: ALT_IS_MOUNTAIN},
-          },
-          codeRome,
-        })).map(c => ({...c, tags: [crit]})))
-        break
-      case CRIT_SMALL_CITY:
-        list.push((await Model.allTensionsCities({
-          where: {
-            population : {[Op.lte]: IS_SMALL_CITY},
-          },
-          codeRome,
-        })).map(c => ({...c, tags: [crit]})))
-        break
-      case CRIT_MEDIUM_CITY:
-        list.push((await Model.allTensionsCities({
-          where: {
-            [Op.and]: [{
-              population : {[Op.gt]: IS_SMALL_CITY},
-            }, {
-              population : {[Op.lt]: IS_MEDIUM_CITY},
-            }]},
-          codeRome,
-        })).map(c => ({...c, tags: [crit]})))
-        break
-      case CRIT_LARGE_CITY:
-        list.push((await Model.allTensionsCities({
-          where: {
-            [Op.and]: [{
-              population : {[Op.gt]: IS_MEDIUM_CITY},
-            }, {
-              population : {[Op.lt]: IS_LARGE_CITY},
-            }]},
-          codeRome,
-        })).map(c => ({...c, tags: [crit]})))
-        break
-      case CRIT_EXTRA_LARGE_CITY:
-        list.push((await Model.allTensionsCities({
-          where: {
-            population : {[Op.gte]: IS_LARGE_CITY},
-          },
-          codeRome,
-        })).map(c => ({...c, tags: [crit]})))
-        break
-      case CRIT_SIDE_SEA:
-        list.push((await Model.allTensionsCities({
-          where: {
-            distance_from_sea : {[Op.lte]: SIDE_SEA},
-          },
-          codeRome,
-        })).map(c => ({...c, tags: [crit]})))
-        break
-      case CRIT_SUN:
-        list.push((await Model.allTensionsCities({
-          where: {
-            average_temperature : {[Op.lte]: IS_SUNNY},
-          },
-          codeRome,
-        })).map(c => ({...c, tags: [crit]})))
-        break
+        switch(crit) {
+        case CRIT_MOUNTAIN:
+          l = await Model.allTensionsCities({
+            where: {
+              z_moyen : {[Op.gte]: ALT_IS_MOUNTAIN},
+            },
+            codeRome,
+          }).map(c => ({...c, tags: [crit]}))
+          break
+        case CRIT_SMALL_CITY:
+          l = await Model.allTensionsCities({
+            where: {
+              population : {[Op.lte]: IS_SMALL_CITY},
+            },
+            codeRome,
+          }).map(c => ({...c, tags: [crit]}))
+          break
+        case CRIT_MEDIUM_CITY:
+          l = await Model.allTensionsCities({
+            where: {
+              [Op.and]: [{
+                population : {[Op.gt]: IS_SMALL_CITY},
+              }, {
+                population : {[Op.lt]: IS_MEDIUM_CITY},
+              }]},
+            codeRome,
+          }).map(c => ({...c, tags: [crit]}))
+          break
+        case CRIT_LARGE_CITY:
+          l = await Model.allTensionsCities({
+            where: {
+              [Op.and]: [{
+                population : {[Op.gt]: IS_MEDIUM_CITY},
+              }, {
+                population : {[Op.lt]: IS_LARGE_CITY},
+              }]},
+            codeRome,
+          }).map(c => ({...c, tags: [crit]}))
+          break
+        case CRIT_EXTRA_LARGE_CITY:
+          l = await Model.allTensionsCities({
+            where: {
+              population : {[Op.gte]: IS_LARGE_CITY},
+            },
+            codeRome,
+          }).map(c => ({...c, tags: [crit]}))
+          break
+        case CRIT_SIDE_SEA:
+          l = await Model.allTensionsCities({
+            where: {
+              distance_from_sea : {[Op.lte]: SIDE_SEA},
+            },
+            codeRome,
+          }).map(c => ({...c, tags: [crit]}))
+          break
+        case CRIT_SUN:
+          l = await Model.allTensionsCities({
+            where: {
+              average_temperature : {[Op.lte]: IS_SUNNY},
+            },
+            codeRome,
+          }).map(c => ({...c, tags: [crit]}))
+          break
+        }
+
+        Model.cacheSearchCities[JSON.stringify({crit, codeRome})] = l
+        list.push(Model.cacheSearchCities[JSON.stringify({crit, codeRome})])
       }
     }
 
     // all regions
     for(let i = 0; i < codeRegion.length; i++) {
       const reg = codeRegion[i]
+      if(Model.cacheSearchCities[JSON.stringify({reg, codeRome})]) {
+        list.push(Model.cacheSearchCities[JSON.stringify({reg, codeRome})])
+      } else {
+        const l = await Model.allTensionsCities({
+          where: {
+            code_reg : reg,
+          },
+          codeRome,
+        }).map(c => ({...c, tags: ['reg_' + reg]}))
 
-      list.push((await Model.allTensionsCities({
-        where: {
-          code_reg : reg,
-        },
-        codeRome,
-      })).map(c => ({...c, tags: ['reg_' + reg]})))
+        Model.cacheSearchCities[JSON.stringify({reg, codeRome})] = l
+        list.push(Model.cacheSearchCities[JSON.stringify({reg, codeRome})])
+      }
     }
 
     let totalTags = codeCriterion.length + codeRegion.length
@@ -185,7 +203,8 @@ export default (sequelizeInstance, Model) => {
       })
     })
 
-    return orderBy(mergedList, ['match'], ['desc'])
+    Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})] = orderBy(mergedList, ['match'], ['desc']).slice(0,500)
+    return Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})]
   }
 
   Model.getCity = async ({insee}) => {
