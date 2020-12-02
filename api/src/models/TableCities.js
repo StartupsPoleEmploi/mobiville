@@ -203,6 +203,7 @@ export default (sequelizeInstance, Model) => {
       })
     })
 
+    // limit to 500 results
     Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})] = orderBy(mergedList, ['match'], ['desc']).slice(0,500)
     return Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})]
   }

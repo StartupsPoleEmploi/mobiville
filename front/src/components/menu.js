@@ -65,22 +65,26 @@ const BackBt = styled(Link)`
 
 export const Menu = ({
   logo, mainStyle, mainHeight, title, secondWrapper, secondTitle, secondHeight, backButton
-}) => (
-  <MainSpace style={{ height: secondWrapper ? mainHeight + secondHeight : mainHeight }}>
-    <Wrapper>
-      <MainWrapper style={{ ...mainStyle, height: mainHeight }}>
-        {backButton && <BackBt to={backButton}><i className="material-icons">arrow_back</i></BackBt>}
-        {logo && <LogoBt to="/"><LogoImage src={LOGO} alt="logo" /></LogoBt>}
-        {title && <Title>{title}</Title>}
-      </MainWrapper>
-      {secondWrapper && (
-      <SecondWrapper style={{ height: secondHeight }}>
-        {secondTitle && <SecondTitle>{secondTitle}</SecondTitle>}
-      </SecondWrapper>
-      )}
-    </Wrapper>
-  </MainSpace>
-)
+}) => {
+  const totalHeight = secondWrapper ? mainHeight + secondHeight : mainHeight
+
+  return (
+    <MainSpace style={{ height: totalHeight, minHeight: totalHeight }}>
+      <Wrapper>
+        <MainWrapper style={{ ...mainStyle, height: mainHeight }}>
+          {backButton && <BackBt to={backButton}><i className="material-icons">arrow_back</i></BackBt>}
+          {logo && <LogoBt to="/"><LogoImage src={LOGO} alt="logo" /></LogoBt>}
+          {title && <Title>{title}</Title>}
+        </MainWrapper>
+        {secondWrapper && (
+        <SecondWrapper style={{ height: secondHeight }}>
+          {secondTitle && <SecondTitle>{secondTitle}</SecondTitle>}
+        </SecondWrapper>
+        )}
+      </Wrapper>
+    </MainSpace>
+  )
+}
 
 Menu.propTypes = {
   logo: PropTypes.bool,
