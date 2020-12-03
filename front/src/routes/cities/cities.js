@@ -1,9 +1,19 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
 import { paramUrlToObject } from '../../utils/url'
+import CriterionsPanel from './criterions-panel'
+import CityItem from './city-item'
+
+const Items = styled(Link)`
+  && {
+    color: inherit;
+    text-decoration: none;
+  }
+`
 
 const CitiesPage = ({ location: { search } }) => {
   const { onSearch, cities, isLoading } = useCities()
@@ -14,54 +24,10 @@ const CitiesPage = ({ location: { search } }) => {
 
   return (
     <MainLayout>
-      <p>Cities</p>
+      <CriterionsPanel criterions={paramUrlToObject(search)} total={cities.length} />
       {isLoading && (<p>Loading...</p>)}
-      {!isLoading && (
-      <p>
-        Total
-        {' '}
-        {cities.length}
-      </p>
-      )}
       {cities.map((c) => (
-        <div key={c.id}>
-          <Link to={`/city/${c.insee_com}-${c.nom_comm}`}>
-            <ul>
-              <li>
-                commune:
-                {' '}
-                {c.nom_comm}
-              </li>
-              <li>
-                nom_dept:
-                {' '}
-                {c.nom_dept}
-              </li>
-              <li>
-                altitude:
-                {' '}
-                {c.z_moyen}
-              </li>
-              <li>
-                nom_region:
-                {' '}
-                {c.nom_region}
-              </li>
-              <li>
-                population:
-                {' '}
-                {c.population}
-              </li>
-              <li>
-                match:
-                {' '}
-                {c.match}
-                %
-              </li>
-              <hr />
-            </ul>
-          </Link>
-        </div>
+        <Items key={c.id} to={`/city/${c.insee_com}-${c.nom_comm}`}><CityItem city={c} /></Items>
       ))}
     </MainLayout>
   )
