@@ -24,13 +24,13 @@ export const CODE_ROMES = [{
 }]
 
 export const CRITERIONS = [{
-  label: 'Montagne',
-  tag: 'environment',
-  key: CRIT_MOUNTAIN,
-}, {
   label: 'Mer',
   tag: 'environment',
   key: CRIT_SIDE_SEA,
+}, {
+  label: 'Montagne',
+  tag: 'environment',
+  key: CRIT_MOUNTAIN,
 }, {
   label: 'Soleil',
   tag: 'environment',

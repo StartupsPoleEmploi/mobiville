@@ -21,6 +21,7 @@
 		"react-hook-form": "^6.11.3",
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "4.0.0",
+		"react-toastify": "^6.1.0",
 		"styled-components": "^5.2.1",
 		"web-vitals": "^0.2.4"
 	},
@@ -30,7 +31,7 @@
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"lint": "npm run eslint src",
-		"build:production" : "yarn install && yarn run build && cp -RT build dist",
+		"build:production": "yarn install && yarn run build && cp -RT build dist",
 		"eslint": "eslint"
 	},
 	"eslintConfig": {

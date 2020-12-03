@@ -2,6 +2,7 @@ import {
   CircularProgress,
   FormControl, TextField, Typography
 } from '@material-ui/core'
+import { toast } from 'react-toastify'
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
@@ -80,7 +81,12 @@ const Step1Component = ({ onNext }) => {
     getPosition()
       .then(onSearchByLocation)
       .then(() => setLoadingLocalisation(false))
-      .catch(() => setLoadingLocalisation(false))
+      .catch(() => {
+        toast.warn('Impossible de vous localiser !', {
+          autoClose: 5000
+        })
+        setLoadingLocalisation(false)
+      })
   }
 
   const searchNewCities = (event) => onSearchByName({ name: event.target.value })

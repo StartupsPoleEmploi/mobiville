@@ -23,11 +23,11 @@ export const Button = ({
   children, style, light, onClick
 }) => {
   const lightStyle = {
-    backgroundColor: '#E4E9ED', borderColor: '#00B9B6', borderRadius: '8px', fontWeight: 'normal'
+    backgroundColor: '#E4E9ED', borderColor: '#00B9B6', borderRadius: '8px', fontWeight: 'normal', fontSize: 14
   }
   let newStyle = style
   if (light) {
-    newStyle = { ...newStyle, ...lightStyle }
+    newStyle = { ...lightStyle, ...newStyle }
   }
 
   return (

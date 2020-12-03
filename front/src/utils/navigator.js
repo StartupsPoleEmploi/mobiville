@@ -1,7 +1,7 @@
 export const getPosition = () => new Promise((resolve, reject) => {
   const timeout = setTimeout(() => {
     reject(new Error('no permissions'))
-  }, 10000)
+  }, 15000)
   navigator.geolocation.getCurrentPosition((result) => {
     resolve(result.coords)
     clearTimeout(timeout)

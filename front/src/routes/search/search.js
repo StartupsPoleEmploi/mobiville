@@ -1,4 +1,4 @@
-import React, { lazy, useState } from 'react'
+import React, { lazy, memo, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import styled from 'styled-components'
 import { Typography } from '@material-ui/core'
@@ -44,8 +44,8 @@ const SearchPage = () => {
   }
 
   const onNextStep = (val) => {
-    setValues({ ...values, ...val })
-
+    const newValues = { ...values, ...val }
+    // console.log('newValues', newValues)
     if (index + 1 >= ALL_STEPS.length) {
       const params = {
         code_rome: CODE_ROMES
@@ -67,6 +67,7 @@ const SearchPage = () => {
 
       setOnSearch(params)
     } else {
+      setValues(newValues)
       setIndex(index + 1)
     }
   }
@@ -81,7 +82,6 @@ const SearchPage = () => {
   }
 
   const Component = ALL_STEPS[index].components
-  console.log('values', values)
 
   return (
     <MainLayout menu={{
@@ -101,4 +101,4 @@ const SearchPage = () => {
   )
 }
 
-export default SearchPage
+export default memo(SearchPage)
