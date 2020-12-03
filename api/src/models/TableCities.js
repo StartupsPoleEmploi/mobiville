@@ -94,23 +94,23 @@ export default (sequelizeInstance, Model) => {
 
         switch(crit) {
         case CRIT_MOUNTAIN:
-          l = await Model.allTensionsCities({
+          l = (await Model.allTensionsCities({
             where: {
               z_moyen : {[Op.gte]: ALT_IS_MOUNTAIN},
             },
             codeRome,
-          }).map(c => ({...c, tags: [crit]}))
+          })).map(c => ({...c, tags: [crit]}))
           break
         case CRIT_SMALL_CITY:
-          l = await Model.allTensionsCities({
+          l = (await Model.allTensionsCities({
             where: {
               population : {[Op.lte]: IS_SMALL_CITY},
             },
             codeRome,
-          }).map(c => ({...c, tags: [crit]}))
+          })).map(c => ({...c, tags: [crit]}))
           break
         case CRIT_MEDIUM_CITY:
-          l = await Model.allTensionsCities({
+          l = (await Model.allTensionsCities({
             where: {
               [Op.and]: [{
                 population : {[Op.gt]: IS_SMALL_CITY},
@@ -118,10 +118,10 @@ export default (sequelizeInstance, Model) => {
                 population : {[Op.lt]: IS_MEDIUM_CITY},
               }]},
             codeRome,
-          }).map(c => ({...c, tags: [crit]}))
+          })).map(c => ({...c, tags: [crit]}))
           break
         case CRIT_LARGE_CITY:
-          l = await Model.allTensionsCities({
+          l = (await Model.allTensionsCities({
             where: {
               [Op.and]: [{
                 population : {[Op.gt]: IS_MEDIUM_CITY},
@@ -129,31 +129,31 @@ export default (sequelizeInstance, Model) => {
                 population : {[Op.lt]: IS_LARGE_CITY},
               }]},
             codeRome,
-          }).map(c => ({...c, tags: [crit]}))
+          })).map(c => ({...c, tags: [crit]}))
           break
         case CRIT_EXTRA_LARGE_CITY:
-          l = await Model.allTensionsCities({
+          l = (await Model.allTensionsCities({
             where: {
               population : {[Op.gte]: IS_LARGE_CITY},
             },
             codeRome,
-          }).map(c => ({...c, tags: [crit]}))
+          })).map(c => ({...c, tags: [crit]}))
           break
         case CRIT_SIDE_SEA:
-          l = await Model.allTensionsCities({
+          l = (await Model.allTensionsCities({
             where: {
               distance_from_sea : {[Op.lte]: SIDE_SEA},
             },
             codeRome,
-          }).map(c => ({...c, tags: [crit]}))
+          })).map(c => ({...c, tags: [crit]}))
           break
         case CRIT_SUN:
-          l = await Model.allTensionsCities({
+          l = (await Model.allTensionsCities({
             where: {
               average_temperature : {[Op.lte]: IS_SUNNY},
             },
             codeRome,
-          }).map(c => ({...c, tags: [crit]}))
+          })).map(c => ({...c, tags: [crit]}))
           break
         }
 
@@ -168,12 +168,12 @@ export default (sequelizeInstance, Model) => {
       if(Model.cacheSearchCities[JSON.stringify({reg, codeRome})]) {
         list.push(Model.cacheSearchCities[JSON.stringify({reg, codeRome})])
       } else {
-        const l = await Model.allTensionsCities({
+        const l = (await Model.allTensionsCities({
           where: {
             code_reg : reg,
           },
           codeRome,
-        }).map(c => ({...c, tags: ['reg_' + reg]}))
+        })).map(c => ({...c, tags: ['reg_' + reg]}))
 
         Model.cacheSearchCities[JSON.stringify({reg, codeRome})] = l
         list.push(Model.cacheSearchCities[JSON.stringify({reg, codeRome})])

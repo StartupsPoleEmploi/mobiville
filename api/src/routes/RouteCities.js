@@ -1,10 +1,27 @@
-import { CRITERIONS } from '../constants/criterion'
+import { CODE_ROMES, CRITERIONS } from '../constants/criterion'
 import { Types } from '../utils/types'
 import Route from './Route'
+import config from 'config'
 
 export default class RouteCities extends Route {
   constructor(params) {
     super({ ...params, model: 'cities' })
+
+    this.preloadSearch()
+  }
+
+  async preloadSearch() {
+    if(config.preloadSearch) {
+      console.log('PRELOAD SEARCH - Start')
+      const regions = await this.model.regions()
+      for(let i = 0; i < CODE_ROMES.length; i++) {
+        const code = CODE_ROMES[i]
+        console.log('PRELOAD SEARCH - Code rome ' + code.key)
+        await this.model.search({codeRome: [code.key]})
+        await this.model.search({codeRegion: regions.map(r => (r.id)), codeCriterion: CRITERIONS.map(c => (c.key)), codeRome: [code.key]})
+      }
+      console.log('PRELOAD SEARCH - Done')
+    }
   }
 
   @Route.Get()
@@ -34,7 +51,7 @@ export default class RouteCities extends Route {
 
   @Route.Get()
   async criterions(ctx) {
-    this.sendOk(ctx, {criterions: CRITERIONS, regions: await this.model.regions()})
+    this.sendOk(ctx, {criterions: CRITERIONS, regions: await this.model.regions(), codeRomes: CODE_ROMES})
   }
 
   @Route.Get({

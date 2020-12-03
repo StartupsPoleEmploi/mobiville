@@ -11,6 +11,17 @@ export const IS_LARGE_CITY = 200 // / 1000
 export const ALT_IS_MOUNTAIN = 200
 export const SIDE_SEA = 30 // in km
 export const IS_SUNNY = 15 // in degres
+export const CAREGIVER_ROME_CODE = 'J1501'
+export const COMPUTER_MAINTENANCE_TECHNICIAN_ROME_CODE = 'I1401'
+
+
+export const CODE_ROMES = [{
+  label: 'Aide soignant',
+  key: CAREGIVER_ROME_CODE,
+}, {
+  label: 'Technicien maintenance informatique',
+  key: COMPUTER_MAINTENANCE_TECHNICIAN_ROME_CODE,
+}]
 
 export const CRITERIONS = [{
   label: 'Montagne',
