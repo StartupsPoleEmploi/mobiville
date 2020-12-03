@@ -103,8 +103,8 @@ deploy_application_on_recette:
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "
                 cd $WORKDIR_SERVER &&
                 echo -e 'DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET' > .env &&
-                docker-compose -f docker-compose.yml -f docker-compose.recette.yml pull && 
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
+                docker-compose -f docker-compose.yml -f docker-compose.recette.yml pull && 
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d"
   only:
     refs:
