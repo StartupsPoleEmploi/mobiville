@@ -90,7 +90,7 @@ const Step3Component = ({ onNext }) => {
         >
           Suivant
           {' '}
-          {regions.length >= 2 ? `(${NB_MAX_REGION} max)` : ''}
+          {regions.length >= 2 ? `(max ${NB_MAX_REGION})` : ''}
         </Button>
       </FixBlock>
     </Wrapper>

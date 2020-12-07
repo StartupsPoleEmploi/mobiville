@@ -16,11 +16,21 @@ const Bt = styled(ButtonUI)`
     width: 100%;
     font-weight: bold;
     font-size: 18px;
+
+    &.column {
+      height: auto;
+      line-height: inherit;
+
+      span.MuiButton-label {
+        display: flex;
+        flex-direction: column;
+      }
+    }
   }
 `
 
 export const Button = ({
-  children, style, light, onClick
+  children, style, light, onClick, column
 }) => {
   const lightStyle = {
     backgroundColor: '#E4E9ED', borderColor: '#00B9B6', borderRadius: '8px', fontWeight: 'normal', fontSize: 14
@@ -31,7 +41,7 @@ export const Button = ({
   }
 
   return (
-    <Bt style={newStyle} onClick={onClick}>
+    <Bt style={newStyle} onClick={onClick} className={column ? 'column' : ''}>
       {children}
     </Bt>
   )
@@ -47,11 +57,13 @@ Button.propTypes = {
     PropTypes.number
   ]),
   light: PropTypes.bool,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  column: PropTypes.bool
 }
 
 Button.defaultProps = {
   style: {},
   light: false,
-  onClick: () => {}
+  onClick: () => {},
+  column: false
 }
