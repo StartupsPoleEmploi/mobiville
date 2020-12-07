@@ -2,3 +2,4 @@
 logs
 .env.recette
 images-docker
+node_modules
