@@ -20,6 +20,8 @@ services:
       - '3000'
     environment:
       - TZ=Europe/Paris
+    volumes:
+      - './front:/home/front'
     networks:
       mobiville_network:
         ipv4_address: 173.0.0.30

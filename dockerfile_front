@@ -1,6 +1,5 @@
 FROM node:12.18.0
 
-COPY ./front /home/front
 WORKDIR /home/front
 
 CMD (which yarn || npm i -g yarn@1.15.2) && \
