@@ -1,7 +1,7 @@
 import React, { lazy, memo, useState } from 'react'
-import { Redirect } from 'react-router-dom'
 import styled from 'styled-components'
 import { Typography } from '@material-ui/core'
+import { Redirect } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
 import { CODE_ROMES } from '../../contants/romes'
@@ -45,25 +45,30 @@ const SearchPage = () => {
 
   const onNextStep = (val = {}) => {
     const newValues = { ...values, ...val }
-    console.log('newValues', newValues)
     if (index + 1 >= ALL_STEPS.length) {
-      const params = {
+      let params = {
         code_rome: CODE_ROMES
       }
 
-      /* if (data.regions) {
-        params = { ...params, code_region: [data.regions] }
-      }
-      if (data.environment) {
+      if (newValues.city) {
         const tab = (params.code_criterion || [])
-        tab.push(data.environment)
+        tab.push(newValues.city)
         params = { ...params, code_criterion: tab }
       }
-      if (data.city) {
+
+      if (newValues.environment) {
         const tab = (params.code_criterion || [])
-        tab.push(data.city)
+        tab.push(newValues.environment)
         params = { ...params, code_criterion: tab }
-      } */
+      }
+
+      if (newValues.regions) {
+        params = { ...params, code_region: newValues.regions.map((r) => (r.id)) }
+      }
+
+      if (newValues.from) {
+        params = { ...params, from: [newValues.from.id] }
+      }
 
       setOnSearch(params)
     } else {
