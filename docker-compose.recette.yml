@@ -26,10 +26,3 @@ services:
         limits:
           memory: 8G
           cpus: '4.0'
-  
-  # front-admin:
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         memory: 2G
-  #         cpus: '0.50'

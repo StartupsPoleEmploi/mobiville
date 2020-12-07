@@ -28,10 +28,21 @@ services:
       mobiville_network:
         ipv4_address: 173.0.0.30
     stdin_open: true
+    environment:
+      - NODE_ENV=development
 
-  # front-admin:
-  #   build:
-  #     context: .
-  #     dockerfile: dockerfile_front-admin
-  #     args:
-  #       - NODE_ENV=development
+  front-admin:
+    build:
+      context: .
+      dockerfile: dockerfile_front-admin
+    restart: unless-stopped
+    expose:
+      - '3000'
+    environment:
+      - TZ=Europe/Paris
+    networks:
+      mobiville_network:
+        ipv4_address: 173.0.0.40
+    stdin_open: true
+    environment:
+      - NODE_ENV=development

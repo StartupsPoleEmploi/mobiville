@@ -44,17 +44,6 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
       - TZ=Europe/Paris     
-
-  # front-admin:
-  #   restart: unless-stopped
-  #   expose:
-  #     - '3000'
-  #   environment:
-  #     - TZ=Europe/Paris
-  #   networks:
-  #     mobiville_network:
-  #       ipv4_address: 173.0.0.40
-  #   stdin_open: true
   
 networks:
   mobiville_network:
