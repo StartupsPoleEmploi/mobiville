@@ -43,9 +43,9 @@ const SearchPage = () => {
     return <p>Loading...</p>
   }
 
-  const onNextStep = (val) => {
+  const onNextStep = (val = {}) => {
     const newValues = { ...values, ...val }
-    // console.log('newValues', newValues)
+    console.log('newValues', newValues)
     if (index + 1 >= ALL_STEPS.length) {
       const params = {
         code_rome: CODE_ROMES

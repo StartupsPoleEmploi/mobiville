@@ -5,6 +5,7 @@ export const CRIT_LARGE_CITY = 'big-city'
 export const CRIT_EXTRA_LARGE_CITY = 'extra-big-city'
 export const CRIT_SIDE_SEA = 'side-sea'
 export const CRIT_SUN = 'need-sun'
+export const CRIT_CAMPAGNE = 'campagne'
 export const IS_SMALL_CITY = 20 // / 1000
 export const IS_MEDIUM_CITY = 50 // / 1000
 export const IS_LARGE_CITY = 200 // / 1000
@@ -26,29 +27,40 @@ export const CODE_ROMES = [{
 export const CRITERIONS = [{
   label: 'Mer',
   tag: 'environment',
+  icon: 'waves',
   key: CRIT_SIDE_SEA,
 }, {
   label: 'Montagne',
   tag: 'environment',
+  icon: 'terrain',
   key: CRIT_MOUNTAIN,
 }, {
-  label: 'Soleil',
+  label: 'Campagne',
   tag: 'environment',
-  key: CRIT_SUN,
+  icon: 'nature',
+  key: CRIT_CAMPAGNE,
 }, {
   label: 'Petite ville',
   tag: 'city',
+  icon: 'person',
+  subLabel: `- ${IS_SMALL_CITY} 000 habitants`,
   key: CRIT_SMALL_CITY,
 }, {
   label: 'Ville moyenne',
   tag: 'city',
+  icon: 'people_alt',
+  subLabel: `+ ${IS_MEDIUM_CITY} 000 habitants`,
   key: CRIT_MEDIUM_CITY,
 }, {
   label: 'Grande ville',
   tag: 'city',
+  icon: 'groups',
+  subLabel: `- ${IS_LARGE_CITY} 000 habitants`,
   key: CRIT_LARGE_CITY,
 }, {
   label: 'Métropole',
   tag: 'city',
+  icon: 'apartment',
+  subLabel: `+ ${IS_LARGE_CITY} 000 habitants`,
   key: CRIT_EXTRA_LARGE_CITY,
 }]
