@@ -34,25 +34,34 @@ const GroupBlock = styled.div`
   margin-right: -15px;
 `
 
-const Step5Component = ({ onNext }) => {
+const Step5Component = ({ onNext, values }) => {
   const { criterions } = useCities()
 
   const Icon = (props) => <IconBlock className="material-icons" {...props} />
-  const buttonStyle = {
-    width: 'calc(50% - 15px)', height: 80, marginRight: 15, marginBottom: 15
+
+  const getStyleOfButton = (r) => {
+    const style = {
+      width: 'calc(50% - 15px)', height: 80, marginRight: 15, marginBottom: 15
+    }
+
+    if (r && values && values.city && values.city === r.key) {
+      style.backgroundColor = '#5EECE8'
+    }
+
+    return style
   }
 
   return (
     <Wrapper>
-      <Title>Quelle taille de ville ?</Title>
+      <Title>Lieu de travail ?</Title>
       <GroupBlock>
         {criterions.criterions.filter((f) => f.tag === 'city').map((c) => (
           <Button
             key={c.key}
             light
             column
-            onClick={() => onNext({ city: [c.key] })}
-            style={buttonStyle}
+            onClick={() => onNext({ city: c.key })}
+            style={getStyleOfButton(c)}
           >
             <Icon>{c.icon}</Icon>
             {c.label}
@@ -64,11 +73,13 @@ const Step5Component = ({ onNext }) => {
 }
 
 Step5Component.propTypes = {
-  onNext: PropTypes.func
+  onNext: PropTypes.func,
+  values: PropTypes.object
 }
 
 Step5Component.defaultProps = {
-  onNext: {}
+  onNext: () => {},
+  values: {}
 }
 
 export default Step5Component

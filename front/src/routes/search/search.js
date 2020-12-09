@@ -4,7 +4,6 @@ import { Typography } from '@material-ui/core'
 import { Redirect } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
-import { CODE_ROMES } from '../../contants/romes'
 
 const StepBlock = styled(Typography)`
   && {
@@ -46,8 +45,10 @@ const SearchPage = () => {
   const onNextStep = (val = {}) => {
     const newValues = { ...values, ...val }
     if (index + 1 >= ALL_STEPS.length) {
-      let params = {
-        code_rome: CODE_ROMES
+      let params = { }
+
+      if (newValues.rome) {
+        params = { ...params, code_rome: [newValues.rome] }
       }
 
       if (newValues.city) {
@@ -86,11 +87,15 @@ const SearchPage = () => {
     return <Redirect to={`/cities?${params.join(';')}`} />
   }
 
+  const onBack = () => {
+    setIndex(index - 1)
+  }
+
   const Component = ALL_STEPS[index].components
 
   return (
     <MainLayout menu={{
-      title: 'Ma recherche', logo: false, mainHeight: 56, backButton: '/'
+      title: 'Ma recherche', logo: false, mainHeight: 56, backButton: index === 0 ? '/' : onBack
     }}
     >
       <ProgressBar style={{ width: `${((index + 1) * 100) / ALL_STEPS.length}%` }} />
@@ -101,7 +106,7 @@ const SearchPage = () => {
         /
         {ALL_STEPS.length}
       </StepBlock>
-      <Component onNext={onNextStep} />
+      <Component onNext={onNextStep} values={values} />
     </MainLayout>
   )
 }

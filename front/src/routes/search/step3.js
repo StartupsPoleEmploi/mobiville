@@ -1,7 +1,7 @@
 import {
   Typography
 } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { toast } from 'react-toastify'
@@ -33,7 +33,7 @@ const FixBlock = styled.div`
   right: 16px;
 `
 
-const Step3Component = ({ onNext }) => {
+const Step3Component = ({ onNext, values }) => {
   const {
     criterions
   } = useCities()
@@ -67,6 +67,12 @@ const Step3Component = ({ onNext }) => {
     return style
   }
 
+  useEffect(() => {
+    if (values.regions) {
+      setRegions(values.regions)
+    }
+  }, [values])
+
   return (
     <Wrapper>
       <Title>Dans quelle région ?</Title>
@@ -98,11 +104,13 @@ const Step3Component = ({ onNext }) => {
 }
 
 Step3Component.propTypes = {
-  onNext: PropTypes.func
+  onNext: PropTypes.func,
+  values: PropTypes.object
 }
 
 Step3Component.defaultProps = {
-  onNext: {}
+  onNext: () => {},
+  values: {}
 }
 
 export default Step3Component

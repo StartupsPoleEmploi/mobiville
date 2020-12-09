@@ -28,6 +28,7 @@ const Tag = styled.div`
   padding: 4px;
   font-size: 12px;
   margin-right: 8px;
+  margin-bottom: 8px;
   font-weight: 500;
 `
 
@@ -47,13 +48,15 @@ const CriterionsPanel = ({ criterions, total }) => {
   const { criterions: allCriterios } = useCities()
 
   const findCriterionsValue = (val) => {
-    let findedLabel = ''
-    Object.values(allCriterios).forEach((allCrit) => {
-      const find = allCrit.find((c) => (c.key && c.key === val) || (c.id && c.id === val))
-      if (find) {
-        findedLabel = ucFirst(find.label.toLowerCase())
-      }
-    })
+    let findedLabel = null
+    if (allCriterios) {
+      Object.values(allCriterios).forEach((allCrit) => {
+        const find = allCrit.find((c) => (c.key && c.key === val) || (c.id && c.id === val))
+        if (find) {
+          findedLabel = ucFirst(find.label.toLowerCase())
+        }
+      })
+    }
 
     return findedLabel
   }
@@ -61,7 +64,10 @@ const CriterionsPanel = ({ criterions, total }) => {
   const tagsList = []
   Object.values(criterions).forEach((crit) => {
     crit.forEach((val) => {
-      tagsList.push(findCriterionsValue(val))
+      const searchValue = findCriterionsValue(val)
+      if (searchValue) {
+        tagsList.push(searchValue)
+      }
     })
   })
 

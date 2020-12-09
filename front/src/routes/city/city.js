@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { useProfessions } from '../../common/contexts/professionsContext'
 import { MainLayout } from '../../components/main-layout'
-import { CODE_ROMES } from '../../contants/romes'
+import { paramUrlToObject } from '../../utils/url'
 
-const CityPage = () => {
+const CityPage = ({ location: { search } }) => {
   const { onLoadCity, isLoadingCity, city } = useCities()
   const {
     isLoading: isLoadingProfessions,
@@ -13,6 +14,7 @@ const CityPage = () => {
     professions
   } = useProfessions()
   const { insee } = useParams()
+  const params = paramUrlToObject(search)
 
   useEffect(() => {
     const extract = insee.split('-')
@@ -22,8 +24,8 @@ const CityPage = () => {
   }, [])
 
   useEffect(() => {
-    if (city) {
-      onSearchProfessions({ code_rome: CODE_ROMES, insee: [city.insee_com] })
+    if (city && params && params.code_rome) {
+      onSearchProfessions({ code_rome: params.code_rome, insee: [city.insee_com] })
     }
   }, [city])
 
@@ -122,34 +124,50 @@ const CityPage = () => {
             </li>
           </ul>
 
-          {isLoadingProfessions && <p>Loading jobs</p>}
-          {!isLoadingProfessions && (
-          <div>
-            <h2>Jobs dans la ville (rayon de 10km autour de la ville)</h2>
-            {professions.map((p) => (
-              <div key={p.id}>
-                <a href={p.origineOffre.urlOrigine} target="_blank" rel="noreferrer">
-                  <ul>
-                    {Object.entries(p).map(([key, value]) => (
-                      <li key={key}>
-                        {key}
-                        {' '}
-                        :
-                        {' '}
-                        {JSON.stringify(value)}
-                      </li>
-                    ))}
-                  </ul>
-                </a>
-                <hr />
-              </div>
-            ))}
-          </div>
+          {params.code_rome && (
+          <>
+            {isLoadingProfessions && <p>Loading jobs</p>}
+            {!isLoadingProfessions && (
+            <div>
+              <h2>Jobs dans la ville (rayon de 10km autour de la ville)</h2>
+              {professions.map((p) => (
+                <div key={p.id}>
+                  <a href={p.origineOffre.urlOrigine} target="_blank" rel="noreferrer">
+                    <ul>
+                      {Object.entries(p).map(([key, value]) => (
+                        <li key={key}>
+                          {key}
+                          {' '}
+                          :
+                          {' '}
+                          {JSON.stringify(value)}
+                        </li>
+                      ))}
+                    </ul>
+                  </a>
+                  <hr />
+                </div>
+              ))}
+            </div>
+            )}
+          </>
           )}
         </>
       )}
     </MainLayout>
   )
+}
+
+CityPage.propTypes = {
+  location: PropTypes.shape({
+    search: PropTypes.string.isRequired
+  })
+}
+
+CityPage.defaultProps = {
+  location: {
+    search: ''
+  }
 }
 
 export default CityPage

@@ -34,12 +34,21 @@ const GroupBlock = styled.div`
   margin-right: -15px;
 `
 
-const Step4Component = ({ onNext }) => {
+const Step4Component = ({ onNext, values }) => {
   const { criterions } = useCities()
 
   const Icon = (props) => <IconBlock className="material-icons" {...props} />
-  const buttonStyle = {
-    width: 'calc(50% - 15px)', height: 80, marginRight: 15, marginBottom: 15
+
+  const getStyleOfButton = (r) => {
+    const style = {
+      width: 'calc(50% - 15px)', height: 80, marginRight: 15, marginBottom: 15
+    }
+
+    if (r && values && values.environment && values.environment === r.key) {
+      style.backgroundColor = '#5EECE8'
+    }
+
+    return style
   }
 
   return (
@@ -51,8 +60,8 @@ const Step4Component = ({ onNext }) => {
             key={c.key}
             light
             column
-            onClick={() => onNext({ environment: [c.key] })}
-            style={buttonStyle}
+            onClick={() => onNext({ environment: c.key })}
+            style={getStyleOfButton(c)}
           >
             <Icon>{c.icon}</Icon>
             {c.label}
@@ -62,7 +71,7 @@ const Step4Component = ({ onNext }) => {
           light
           column
           onClick={() => onNext()}
-          style={buttonStyle}
+          style={getStyleOfButton(null)}
         >
           Tout les environnements
         </Button>
@@ -72,11 +81,13 @@ const Step4Component = ({ onNext }) => {
 }
 
 Step4Component.propTypes = {
-  onNext: PropTypes.func
+  onNext: PropTypes.func,
+  values: PropTypes.object
 }
 
 Step4Component.defaultProps = {
-  onNext: {}
+  onNext: () => {},
+  values: {}
 }
 
 export default Step4Component

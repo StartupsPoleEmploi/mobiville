@@ -17,17 +17,28 @@ const Items = styled(Link)`
 
 const CitiesPage = ({ location: { search } }) => {
   const { onSearch, cities, isLoading } = useCities()
+  const params = paramUrlToObject(search)
 
   useEffect(() => {
-    onSearch(paramUrlToObject(search))
+    onSearch(params)
   }, [])
+
+  const getCityUrl = (city) => {
+    let url = `/city/${city.insee_com}-${city.nom_comm}`
+
+    if (params.code_rome) {
+      url += `?code_rome=${params.code_rome.join(',')}`
+    }
+
+    return url
+  }
 
   return (
     <MainLayout>
-      <CriterionsPanel criterions={paramUrlToObject(search)} total={cities.length} />
+      <CriterionsPanel criterions={params} total={cities.length} />
       {isLoading && (<p>Loading...</p>)}
       {cities.map((c) => (
-        <Items key={c.id} to={`/city/${c.insee_com}-${c.nom_comm}`}><CityItem city={c} /></Items>
+        <Items key={c.id} to={getCityUrl(c)}><CityItem city={c} /></Items>
       ))}
     </MainLayout>
   )

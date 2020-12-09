@@ -60,7 +60,7 @@ const Waiting = styled(CircularProgress)`
   }
 `
 
-const Step1Component = ({ onNext }) => {
+const Step1Component = ({ onNext, values }) => {
   const [loadingLocalisation, setLoadingLocalisation] = useState(false)
   const {
     onSearchByLocation, setCity, onSearchByName, city, cities, isLoadingLocation
@@ -96,6 +96,12 @@ const Step1Component = ({ onNext }) => {
       setInputValue(formatedCity())
     }
   }, [city])
+
+  useEffect(() => {
+    if (values && values.from) {
+      setCity(values.from)
+    }
+  }, [values])
 
   return (
     <Wrapper>
@@ -137,11 +143,13 @@ const Step1Component = ({ onNext }) => {
 }
 
 Step1Component.propTypes = {
-  onNext: PropTypes.func
+  onNext: PropTypes.func,
+  values: PropTypes.object
 }
 
 Step1Component.defaultProps = {
-  onNext: {}
+  onNext: () => {},
+  values: {}
 }
 
 export default Step1Component

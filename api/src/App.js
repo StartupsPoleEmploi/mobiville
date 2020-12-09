@@ -4,6 +4,7 @@ const koaBody = require('koa-body')
 import { i18n, compress, cors, helmet, addDefaultBody, logger } from 'koa-smart/middlewares'
 import config from 'config'
 import {start as startCrons} from './crons'
+import session from 'koa-session'
 
 import db from './models'
 
@@ -30,6 +31,7 @@ export default class App extends AppBase {
     this.routeParam.replicaModels = this.replicaModels
     this.koaApp.context.sequelize = db.instance
     this.koaApp.context.models = this.models
+    this.koaApp.keys = config.koaKeys
 
     super.addMiddlewares([
       // we add the relevant middlewares to our API
@@ -45,6 +47,7 @@ export default class App extends AppBase {
       logger(), // gives detailed logs of each request made on the API
       addDefaultBody(), // if no body is present, put an empty object "{}" in its place.
       compress({}), // compresses requests made to the API
+      session(config.SESSION_CONFIG, this.koaApp),
     ])
 
     super.mountFolder(join(__dirname, 'routes'), '/') // adds a folder to scan for route files
