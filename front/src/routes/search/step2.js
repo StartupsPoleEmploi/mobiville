@@ -22,10 +22,20 @@ const Title = styled(Typography)`
   }
 `
 
-const Step2Component = ({ onNext }) => {
+const Step2Component = ({ onNext, values }) => {
   const {
     criterions
   } = useCities()
+
+  const getStyleOfButton = (r) => {
+    const style = { marginBottom: 16 }
+
+    if (values && values.rome && values.rome === r.key) {
+      style.backgroundColor = '#5EECE8'
+    }
+
+    return style
+  }
 
   return (
     <Wrapper>
@@ -35,7 +45,7 @@ const Step2Component = ({ onNext }) => {
           light
           key={c.key}
           onClick={() => onNext({ rome: c.key })}
-          style={{ marginBottom: 16 }}
+          style={getStyleOfButton(c)}
         >
           {c.label}
         </Button>
@@ -45,11 +55,13 @@ const Step2Component = ({ onNext }) => {
 }
 
 Step2Component.propTypes = {
-  onNext: PropTypes.func
+  onNext: PropTypes.func,
+  values: PropTypes.object
 }
 
 Step2Component.defaultProps = {
-  onNext: {}
+  onNext: () => {},
+  values: {}
 }
 
 export default Step2Component

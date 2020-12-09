@@ -57,7 +57,14 @@ const SecondTitle = styled(Typography)`
   }
 `
 
-const BackBt = styled(Link)`
+const BackBtLink = styled(Link)`
+  && {
+    position: absolute;
+    left: 16px;
+  }
+`
+
+const BackBt = styled.div`
   && {
     position: absolute;
     left: 16px;
@@ -73,7 +80,12 @@ export const Menu = ({
     <MainSpace style={{ height: totalHeight, minHeight: totalHeight }}>
       <Wrapper>
         <MainWrapper style={{ ...mainStyle, height: mainHeight }}>
-          {backButton && <BackBt to={backButton}><i className="material-icons">arrow_back</i></BackBt>}
+          {backButton && (
+          <>
+            {typeof backButton === 'string' && (<BackBtLink to={backButton}><i className="material-icons">arrow_back</i></BackBtLink>)}
+            {typeof backButton !== 'string' && (<BackBt onClick={backButton}><i className="material-icons">arrow_back</i></BackBt>)}
+          </>
+          )}
           {logo && <LogoBt to="/"><LogoImage src={LOGO} alt="logo" /></LogoBt>}
           {title && <Title>{title}</Title>}
         </MainWrapper>
@@ -97,7 +109,10 @@ Menu.propTypes = {
   secondWrapper: PropTypes.bool,
   secondTitle: PropTypes.string,
   secondHeight: PropTypes.number,
-  backButton: PropTypes.string
+  backButton: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.func
+  ])
 }
 
 Menu.defaultProps = {

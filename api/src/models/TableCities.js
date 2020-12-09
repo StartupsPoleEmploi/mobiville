@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { mean, orderBy } from 'lodash'
-import { ALT_IS_MOUNTAIN, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA } from '../constants/criterion'
+import { ALT_IS_MOUNTAIN, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA } from '../constants/criterion'
 import { getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity } from '../utils/api'
 import { distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
@@ -93,6 +93,20 @@ export default (sequelizeInstance, Model) => {
         let l = []
 
         switch(crit) {
+        case CRIT_CAMPAGNE:
+          l = (await Model.allTensionsCities({
+            where: {
+              [Op.and]: [{
+                distance_from_sea : {[Op.gte]: SIDE_SEA},
+              }, {
+                population : {[Op.lte]: IS_SMALL_CITY},
+              }, {
+                z_moyen : {[Op.lte]: ALT_IS_MOUNTAIN},
+              }],                
+            },
+            codeRome,
+          })).map(c => ({...c, tags: [crit]}))
+          break
         case CRIT_MOUNTAIN:
           l = (await Model.allTensionsCities({
             where: {
