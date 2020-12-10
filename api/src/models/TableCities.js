@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { mean, orderBy } from 'lodash'
-import { ALT_IS_MOUNTAIN, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA } from '../constants/criterion'
+import { ALT_IS_MOUNTAIN, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA, WEIGHT_REGION } from '../constants/criterion'
 import { getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity } from '../utils/api'
 import { distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
@@ -80,6 +80,7 @@ export default (sequelizeInstance, Model) => {
 
   Model.search = async ({codeRegion = [], codeCriterion = [], codeRome = []}) => {
     const list = []
+    let maxWeight = 0
     if(Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})]) {
       return Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})]
     }
@@ -87,6 +88,9 @@ export default (sequelizeInstance, Model) => {
     // criterions
     for(let i = 0; i < codeCriterion.length; i++) {
       const crit = codeCriterion[i]
+      const const_crit = CRITERIONS.find(c => c.key === crit) || { weight: 1 }
+      maxWeight += const_crit.weight
+
       if(Model.cacheSearchCities[JSON.stringify({crit, codeRome})]) {
         list.push(Model.cacheSearchCities[JSON.stringify({crit, codeRome})])
       } else {
@@ -105,7 +109,7 @@ export default (sequelizeInstance, Model) => {
               }],                
             },
             codeRome,
-          })).map(c => ({...c, tags: [crit]}))
+          }))
           break
         case CRIT_MOUNTAIN:
           l = (await Model.allTensionsCities({
@@ -113,7 +117,7 @@ export default (sequelizeInstance, Model) => {
               z_moyen : {[Op.gte]: ALT_IS_MOUNTAIN},
             },
             codeRome,
-          })).map(c => ({...c, tags: [crit]}))
+          }))
           break
         case CRIT_SMALL_CITY:
           l = (await Model.allTensionsCities({
@@ -121,7 +125,7 @@ export default (sequelizeInstance, Model) => {
               population : {[Op.lte]: IS_SMALL_CITY},
             },
             codeRome,
-          })).map(c => ({...c, tags: [crit]}))
+          }))
           break
         case CRIT_MEDIUM_CITY:
           l = (await Model.allTensionsCities({
@@ -132,7 +136,7 @@ export default (sequelizeInstance, Model) => {
                 population : {[Op.lt]: IS_MEDIUM_CITY},
               }]},
             codeRome,
-          })).map(c => ({...c, tags: [crit]}))
+          }))
           break
         case CRIT_LARGE_CITY:
           l = (await Model.allTensionsCities({
@@ -143,7 +147,7 @@ export default (sequelizeInstance, Model) => {
                 population : {[Op.lt]: IS_LARGE_CITY},
               }]},
             codeRome,
-          })).map(c => ({...c, tags: [crit]}))
+          }))
           break
         case CRIT_EXTRA_LARGE_CITY:
           l = (await Model.allTensionsCities({
@@ -151,7 +155,7 @@ export default (sequelizeInstance, Model) => {
               population : {[Op.gte]: IS_LARGE_CITY},
             },
             codeRome,
-          })).map(c => ({...c, tags: [crit]}))
+          }))
           break
         case CRIT_SIDE_SEA:
           l = (await Model.allTensionsCities({
@@ -159,7 +163,7 @@ export default (sequelizeInstance, Model) => {
               distance_from_sea : {[Op.lte]: SIDE_SEA},
             },
             codeRome,
-          })).map(c => ({...c, tags: [crit]}))
+          }))
           break
         case CRIT_SUN:
           l = (await Model.allTensionsCities({
@@ -167,9 +171,12 @@ export default (sequelizeInstance, Model) => {
               average_temperature : {[Op.lte]: IS_SUNNY},
             },
             codeRome,
-          })).map(c => ({...c, tags: [crit]}))
+          }))
           break
         }
+
+        // add default values
+        l = l.map(c => ({...c, tags: [crit], weight: const_crit.weight}))
 
         Model.cacheSearchCities[JSON.stringify({crit, codeRome})] = l
         list.push(Model.cacheSearchCities[JSON.stringify({crit, codeRome})])
@@ -179,6 +186,8 @@ export default (sequelizeInstance, Model) => {
     // all regions
     for(let i = 0; i < codeRegion.length; i++) {
       const reg = codeRegion[i]
+      maxWeight += WEIGHT_REGION
+
       if(Model.cacheSearchCities[JSON.stringify({reg, codeRome})]) {
         list.push(Model.cacheSearchCities[JSON.stringify({reg, codeRome})])
       } else {
@@ -187,7 +196,7 @@ export default (sequelizeInstance, Model) => {
             code_reg : reg,
           },
           codeRome,
-        })).map(c => ({...c, tags: ['reg_' + reg]}))
+        })).map(c => ({...c, tags: ['reg_' + reg], weight: WEIGHT_REGION}))
 
         Model.cacheSearchCities[JSON.stringify({reg, codeRome})] = l
         list.push(Model.cacheSearchCities[JSON.stringify({reg, codeRome})])
@@ -199,23 +208,26 @@ export default (sequelizeInstance, Model) => {
       // no criterions
       list.push((await Model.allTensionsCities({
         codeRome,
-      })).map(c => ({...c, tags: ['default']})))
-      totalTags = 1
+      })).map(c => ({...c, tags: ['default'], weight: 1})))
     }
 
     // merge lists
-    const mergedList = []
+    let mergedList = []
     list.map(typeOfList => {
       typeOfList.map(city => {
         const findIndex = mergedList.findIndex(c => c.id === city.id)
         if(findIndex !== -1) {
           mergedList[findIndex].tags = mergedList[findIndex].tags.concat(city.tags)
-          mergedList[findIndex].match = mergedList[findIndex].tags.length * 100 / totalTags
+          mergedList[findIndex].weight += city.weight
         } else {
-          mergedList.push({...city, match: city.tags.length * 100 / totalTags})
+          mergedList.push(city)
         }
       })
     })
+
+    // calcul matching
+    mergedList = mergedList.map(c => ({...c, match: c.weight * 100 / maxWeight, maxWeight}))
+
 
     // limit to 100 results
     Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})] = orderBy(mergedList, ['match'], ['desc']).slice(0,100)
