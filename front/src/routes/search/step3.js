@@ -76,6 +76,13 @@ const Step3Component = ({ onNext, values }) => {
   return (
     <Wrapper>
       <Title>Dans quelle région ?</Title>
+      <Button
+        light
+        onClick={() => onNext({})}
+        style={getStyleOfButton()}
+      >
+        Toutes les regions
+      </Button>
       {criterions.regions.map((r) => (
         <Button
           light

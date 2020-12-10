@@ -14,6 +14,7 @@ export const SIDE_SEA = 30 // in km
 export const IS_SUNNY = 15 // in degres
 export const CAREGIVER_ROME_CODE = 'J1501'
 export const COMPUTER_MAINTENANCE_TECHNICIAN_ROME_CODE = 'I1401'
+export const WEIGHT_REGION = 6
 
 
 export const CODE_ROMES = [{
@@ -28,39 +29,46 @@ export const CRITERIONS = [{
   label: 'Mer',
   tag: 'environment',
   icon: 'waves',
+  weight: 4,
   key: CRIT_SIDE_SEA,
 }, {
   label: 'Montagne',
   tag: 'environment',
   icon: 'terrain',
+  weight: 4,
   key: CRIT_MOUNTAIN,
 }, {
   label: 'Campagne',
   tag: 'environment',
   icon: 'nature',
+  weight: 4,
   key: CRIT_CAMPAGNE,
 }, {
   label: 'Petite ville',
   tag: 'city',
   icon: 'person',
+  weight: 5,
   subLabel: `- ${IS_SMALL_CITY} 000 habitants`,
   key: CRIT_SMALL_CITY,
 }, {
   label: 'Ville moyenne',
   tag: 'city',
   icon: 'people_alt',
+  weight: 5,
   subLabel: `+ ${IS_MEDIUM_CITY} 000 habitants`,
   key: CRIT_MEDIUM_CITY,
 }, {
   label: 'Grande ville',
   tag: 'city',
   icon: 'groups',
+  weight: 5,
   subLabel: `- ${IS_LARGE_CITY} 000 habitants`,
   key: CRIT_LARGE_CITY,
 }, {
   label: 'Métropole',
   tag: 'city',
   icon: 'apartment',
+  weight: 5,
   subLabel: `+ ${IS_LARGE_CITY} 000 habitants`,
   key: CRIT_EXTRA_LARGE_CITY,
 }]
