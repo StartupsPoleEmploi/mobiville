@@ -1,5 +1,5 @@
 import { Route as RouteBase } from 'koa-smart'
-import { crypto } from '../utils/Crypto'
+import { crypto } from '../utils/crypto'
 import { logError } from '../utils/log'
 
 export default class Route extends RouteBase {
