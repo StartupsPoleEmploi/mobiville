@@ -60,7 +60,7 @@ const Step3Component = ({ onNext, values }) => {
   const getStyleOfButton = (r) => {
     const style = { marginBottom: 16 }
 
-    if (regions.find((reg) => reg.id === r.id)) {
+    if (r && regions.find((reg) => reg.id === r.id)) {
       style.backgroundColor = '#5EECE8'
     }
 
