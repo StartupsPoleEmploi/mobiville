@@ -45,31 +45,31 @@ build_liv_front_on_recette:
     # changes:
     #   - ./front/**/*
 
-.liv_front_on_recette:
-  stage: liv
-  needs: [build_front_src]
-  dependencies:
-    - build_front_src
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y -qq openssh-client 
-    # add SSH_PRIVATE_KEY in agent store
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
-    - mkdir -p ~/.ssh
-  script:
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front"
-    # On récupère l'artifact du build et on l'envoie sur le serveur de recette
-    - scp -o StrictHostKeyChecking=no -r ./front/dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front
-  only:
-    refs:
-      - master
-    # changes:
-    #   - ./front/**/*
-  when: on_success # s'exécutera uniquement si le job `build_front` passe
-    # rules:
-  #   - if: '$CI_COMMIT_BRANCH == "master"'
-  #     changes:
+# .liv_front_on_recette:
+#   stage: liv
+#   needs: [build_front_src]
+#   dependencies:
+#     - build_front_src
+#   before_script:
+#     - apt-get update -qq
+#     - apt-get install -y -qq openssh-client 
+#     # add SSH_PRIVATE_KEY in agent store
+#     - eval $(ssh-agent -s)
+#     - ssh-add <(echo "$SSH_PRIVATE_KEY")
+#     - mkdir -p ~/.ssh
+#   script:
+#     - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front"
+#     # On récupère l'artifact du build et on l'envoie sur le serveur de recette
+#     - scp -o StrictHostKeyChecking=no -r ./front/dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front
+#   only:
+#     refs:
+#       - master
+#     # changes:
+#     #   - ./front/**/*
+#   when: on_success # s'exécutera uniquement si le job `build_front` passe
+#     # rules:
+#   #   - if: '$CI_COMMIT_BRANCH == "master"'
+#   #     changes:
   #       - front/**/*
 
 build_api_image:
