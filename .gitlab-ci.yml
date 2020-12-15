@@ -13,7 +13,6 @@ build_liv_front_on_recette:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
   script:
-    - echo coucou
     # On minifie les src node ds le livrable dist
     - (which yarn || npm i -g yarn@1.15.2)
     - cd ./front
