@@ -96,3 +96,8 @@ export const wikipediaDetails = (pageName) => axios.get(`https://fr.wikipedia.or
 
   return null
 })
+
+export const getAllRegions = () => {
+  let rawdata = readFileSync(__dirname + '/../assets/datas/anciennes-nouvelles-regions.json')
+  return JSON.parse(rawdata).regions.map(r => ({...r.fields}))
+}

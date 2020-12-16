@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { mean, orderBy } from 'lodash'
+import { mean, orderBy, sortBy } from 'lodash'
 import { ALT_IS_MOUNTAIN, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA, WEIGHT_REGION } from '../constants/criterion'
 import { getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity } from '../utils/api'
 import { distanceBetweenToCoordinates, sleep } from '../utils/utils'
@@ -47,12 +47,12 @@ export default (sequelizeInstance, Model) => {
   }
 
   Model.regions = async () => {
-    const list = await Model.findAll({
-      group: ['code_reg'],
+    const list = await Model.models.regions.findAll({
+      group: ['new_code'],
       raw: true,
     })
 
-    return list.map(r => ({id: r.code_reg, label: r.nom_region}))
+    return sortBy(list.map(r => ({id: r.new_code, label: r.new_name})), ['label'])
   }
 
   Model.allTensionsCities = async ({where, codeRome}) => {
@@ -73,6 +73,9 @@ export default (sequelizeInstance, Model) => {
             rome: codeRome,
           },
         }],
+      }, {
+        model: Model.models.regions,
+        require: true,
       }],
       raw: true,
     })
@@ -191,9 +194,11 @@ export default (sequelizeInstance, Model) => {
       if(Model.cacheSearchCities[JSON.stringify({reg, codeRome})]) {
         list.push(Model.cacheSearchCities[JSON.stringify({reg, codeRome})])
       } else {
+        const allOldRegions = (await Model.models.regions.getCodeRegOfOldRegion(reg))
+
         const l = (await Model.allTensionsCities({
           where: {
-            code_reg : reg,
+            code_reg : allOldRegions,
           },
           codeRome,
         })).map(c => ({...c, tags: ['reg_' + reg], weight: WEIGHT_REGION}))
