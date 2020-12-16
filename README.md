@@ -21,6 +21,11 @@ GET http://localhost/api/sync/sync-cities   ~ 71000ms
 GET http://localhost/api/sync/sync-profession-in-tension   ~ 65000ms
 ```
 
+```
+// populate all regions
+GET http://localhost/api/sync/sync-regions   ~ 250ms
+```
+
 ## Buid 
 
 Create / save an image docker to push to the server.
