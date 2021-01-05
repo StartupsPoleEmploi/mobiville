@@ -11,12 +11,16 @@ const Main = styled.div`
 const Content = styled.div`
   flex: 1;
   overflow: auto;
+  padding: 16px 32px;
 `
 
-export const ConnectedLayout = ({ children }) => (
+export const ConnectedLayout = ({ children, title }) => (
   <Main>
     <ConnectedMenu />
-    <Content>{children}</Content>
+    <Content>
+      <h2>{title}</h2>
+      {children}
+    </Content>
   </Main>
 )
 
@@ -24,5 +28,10 @@ ConnectedLayout.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
-  ]).isRequired
+  ]).isRequired,
+  title: PropTypes.string
+}
+
+ConnectedLayout.defaultProps = {
+  title: ''
 }

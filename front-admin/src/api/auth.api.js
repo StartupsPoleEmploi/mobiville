@@ -3,5 +3,5 @@ export const login = (email, password) => new Promise((resolve) => {
 })
 
 export const currentUser = () => new Promise((resolve) => {
-  resolve(null)
+  resolve({ id: 1, email: 'fxaviermontigny@gmail.com' })
 })

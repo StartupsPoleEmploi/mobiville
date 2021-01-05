@@ -2,20 +2,27 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './assets/styles/main.scss'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { Router } from 'react-router-dom'
+import { createBrowserHistory } from 'history'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import Providers from './common/contexts'
 
-const theme = createMuiTheme({
+const theme = createMuiTheme({})
+
+const browserHistory = createBrowserHistory({
+  basename: '/admin'
 })
 
 ReactDOM.render(
   <React.StrictMode>
-    <MuiThemeProvider theme={theme}>
-      <Providers>
-        <App />
-      </Providers>
-    </MuiThemeProvider>
+    <Router history={browserHistory}>
+      <MuiThemeProvider theme={theme}>
+        <Providers>
+          <App />
+        </Providers>
+      </MuiThemeProvider>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 )

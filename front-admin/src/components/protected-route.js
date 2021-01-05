@@ -4,7 +4,11 @@ import { Redirect, Route } from 'react-router-dom'
 import { useUser } from '../common/contexts/userContext'
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
-  const { user } = useUser()
+  const { user, isReady } = useUser()
+
+  if (!isReady) {
+    return (<p>Loading...</p>)
+  }
 
   return (
     <Route

@@ -34,12 +34,14 @@ services:
   front-admin:
     build:
       context: .
-      dockerfile: dockerfile_front-admin
+      dockerfile: dockerfile_front
     restart: unless-stopped
     expose:
       - '3000'
     environment:
       - TZ=Europe/Paris
+    volumes:
+      - './front-admin:/home/front'
     networks:
       mobiville_network:
         ipv4_address: 173.0.0.40
