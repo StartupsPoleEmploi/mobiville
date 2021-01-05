@@ -43,7 +43,9 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
-      - TZ=Europe/Paris     
+      - TZ=Europe/Paris
+    volumes:
+      - './db/var/lib/mysql:/var/lib/mysql'     
 
   # front-admin:
   #   restart: unless-stopped
