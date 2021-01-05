@@ -1,5 +1,6 @@
 .env
 logs
+db
 .env.recette
 images-docker
 node_modules

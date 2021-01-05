@@ -2,23 +2,6 @@ stages:
   - build
   - deploy
 
-# .build_front_src:
-#   stage: build
-#   image: node:12.18.0
-#   script:
-#     - (which yarn || npm i -g yarn@1.15.2)
-#     - cd ./front
-#     - yarn install 
-#     - yarn run build && cp -RT build dist
-#   artifacts:
-#     paths:
-#       - ./front/dist 
-#   only:
-#     refs:
-#       - master
-#     # changes:
-#     #   - ./front/**/*
-
 build_liv_front_on_recette:
   stage: build
   image: node:12.18.0
@@ -30,7 +13,6 @@ build_liv_front_on_recette:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
   script:
-    - echo coucou
     # On minifie les src node ds le livrable dist
     - (which yarn || npm i -g yarn@1.15.2)
     - cd ./front
@@ -44,33 +26,6 @@ build_liv_front_on_recette:
       - master
     # changes:
     #   - ./front/**/*
-
-# .liv_front_on_recette:
-#   stage: liv
-#   needs: [build_front_src]
-#   dependencies:
-#     - build_front_src
-#   before_script:
-#     - apt-get update -qq
-#     - apt-get install -y -qq openssh-client 
-#     # add SSH_PRIVATE_KEY in agent store
-#     - eval $(ssh-agent -s)
-#     - ssh-add <(echo "$SSH_PRIVATE_KEY")
-#     - mkdir -p ~/.ssh
-#   script:
-#     - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front"
-#     # On récupère l'artifact du build et on l'envoie sur le serveur de recette
-#     - scp -o StrictHostKeyChecking=no -r ./front/dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front
-#   only:
-#     refs:
-#       - master
-#     # changes:
-#     #   - ./front/**/*
-#   when: on_success # s'exécutera uniquement si le job `build_front` passe
-#     # rules:
-#   #   - if: '$CI_COMMIT_BRANCH == "master"'
-#   #     changes:
-  #       - front/**/*
 
 build_api_image:
   stage: build 
