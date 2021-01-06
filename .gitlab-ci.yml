@@ -24,8 +24,8 @@ build_liv_front_on_recette:
   only:
     refs:
       - feature/init-admin
-    changes:
-      - ./front/**/*
+    #changes:
+    #  - ./front/**/*
 
 build_liv_front-admin_on_recette:
   stage: build
@@ -44,8 +44,8 @@ build_liv_front-admin_on_recette:
     - yarn install 
     - yarn run build && cp -RT build dist
     # On livre le livrable dist sur le 
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front/admin"
-    - scp -o StrictHostKeyChecking=no -r ./dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front/admin
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front-admin"
+    - scp -o StrictHostKeyChecking=no -r ./dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front-admin
   only:
     refs:
       - feature/init-admin
