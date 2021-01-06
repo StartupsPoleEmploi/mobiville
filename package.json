@@ -4,6 +4,7 @@
 	"scripts": {
 		"build": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml build",
 		"start": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d",
+		"start:test": "docker-compose -p test-e2e -f docker-compose.test.yml run --rm e2e; exitcode=$?; docker-compose -p test-e2e -f docker-compose.test.yml down; exit ${exitcode}",
 		"stop": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml stop",
 		"build:recette": "docker-compose -f docker-compose.yml -f docker-compose.recette.yml build && rm -rf images-docker && mkdir images-docker && docker save -o ./images-docker/nginx_recette nginx_recette:latest && docker save -o ./images-docker/api_recette api_recette:latest",
 		"log:api": "docker logs --tail=200 -f mobiville_api_1",
