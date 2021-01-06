@@ -40,3 +40,11 @@ View api logs
 ```
 yarn logs:api
 ```
+
+## To test
+
+
+```
+chmode +x ./scripts/wait-for-it.sh
+yarn start:test
+```
