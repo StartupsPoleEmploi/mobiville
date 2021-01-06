@@ -49,8 +49,8 @@ build_liv_front-admin_on_recette:
   only:
     refs:
       - feature/init-admin
-    changes:
-      - ./front-admin/**/*
+    # changes:
+    #   - ./front-admin/**/*
 
 build_api_image:
   stage: build 
