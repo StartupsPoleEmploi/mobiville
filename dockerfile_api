@@ -4,13 +4,11 @@ COPY ./api /home/api
 WORKDIR /home/api
 
 CMD (which yarn || npm i -g yarn@1.15.2) && \
-    if [ "$NODE_ENV" = "production" ] || [ "$NODE_ENV" = "recette" ]; then \
-        echo "$NODE_ENV"; \
-        yarn install && \
+    echo "$NODE_ENV"; \
+    yarn install && \
+    if [ "$NODE_ENV" = "production" ] || [ "$NODE_ENV" = "recette" ] || [ "$NODE_ENV" = "test" ]; then \
         yarn build:production && \ 
 	    yarn start:production; \
     else \
-        echo "$NODE_ENV"; \
-        yarn install && \
         yarn start; \
     fi
