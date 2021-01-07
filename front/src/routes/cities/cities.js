@@ -37,7 +37,7 @@ const CitiesPage = ({ location: { search } }) => {
     <MainLayout>
       <CriterionsPanel criterions={params} total={cities.length} />
       {isLoading && (<p>Loading...</p>)}
-      {cities.map((c) => (
+      {cities.slice(0, 10).map((c) => (
         <Items key={c.id} to={getCityUrl(c)}><CityItem city={c} /></Items>
       ))}
     </MainLayout>

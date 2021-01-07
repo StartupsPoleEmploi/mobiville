@@ -93,7 +93,6 @@ export default (sequelizeInstance, Model) => {
       const crit = codeCriterion[i]
       const const_crit = CRITERIONS.find(c => c.key === crit) || { weight: 1 }
       maxWeight += const_crit.weight
-
       if(Model.cacheSearchCities[JSON.stringify({crit, codeRome})]) {
         list.push(Model.cacheSearchCities[JSON.stringify({crit, codeRome})])
       } else {
@@ -190,9 +189,10 @@ export default (sequelizeInstance, Model) => {
     for(let i = 0; i < codeRegion.length; i++) {
       const reg = codeRegion[i]
       maxWeight += WEIGHT_REGION
+      const jsonRegions = JSON.stringify({reg: +reg, codeRome})
 
-      if(Model.cacheSearchCities[JSON.stringify({reg, codeRome})]) {
-        list.push(Model.cacheSearchCities[JSON.stringify({reg, codeRome})])
+      if(Model.cacheSearchCities[jsonRegions]) {
+        list.push(Model.cacheSearchCities[jsonRegions])
       } else {
         const allOldRegions = (await Model.models.regions.getCodeRegOfOldRegion(reg))
 
@@ -203,8 +203,8 @@ export default (sequelizeInstance, Model) => {
           codeRome,
         })).map(c => ({...c, tags: ['reg_' + reg], weight: WEIGHT_REGION}))
 
-        Model.cacheSearchCities[JSON.stringify({reg, codeRome})] = l
-        list.push(Model.cacheSearchCities[JSON.stringify({reg, codeRome})])
+        Model.cacheSearchCities[jsonRegions] = l
+        list.push(Model.cacheSearchCities[jsonRegions])
       }
     }
 
@@ -218,24 +218,35 @@ export default (sequelizeInstance, Model) => {
 
     // merge lists
     let mergedList = []
-    list.map(typeOfList => {
-      typeOfList.map(city => {
-        const findIndex = mergedList.findIndex(c => c.id === city.id)
-        if(findIndex !== -1) {
+    const tempIndex = {}
+    const listLength = list.length
+    for(let x = 0; x < listLength; x++) {
+      const typeOfList = list[x]
+
+      const typeLength = typeOfList.length
+      for(let y = 0; y < typeLength; y++) {
+        const city = typeOfList[y]
+
+        if(tempIndex[city.id]) {
+          const findIndex = tempIndex[city.id]
+          const weight = mergedList[findIndex].weight + city.weight
           mergedList[findIndex].tags = mergedList[findIndex].tags.concat(city.tags)
-          mergedList[findIndex].weight += city.weight
+          mergedList[findIndex].weight = weight
         } else {
-          mergedList.push(city)
+          mergedList.push({...city, maxWeight})
+          tempIndex[city.id] = mergedList.length - 1
         }
-      })
-    })
+      }
+    }
 
     // calcul matching
-    mergedList = mergedList.map(c => ({...c, match: c.weight * 100 / maxWeight, maxWeight}))
+    const mergedLength = mergedList.length
+    for(let x = 0; x < mergedLength; x++) {
+      mergedList[x].match = mergedList[x].weight * 100 / maxWeight
+    }
 
-
-    // limit to 100 results
-    Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})] = orderBy(mergedList, ['match'], ['desc']).slice(0,100)
+    // order results
+    Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})] = orderBy(mergedList, ['match'], ['desc'])
     return Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})]
   }
 
