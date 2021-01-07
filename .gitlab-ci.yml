@@ -32,7 +32,7 @@ build_liv_front-admin_on_recette:
   image: node:12.18.0
   before_script:
     - apt-get update -qq
-    - apt-get install -y -qq openssh-client 
+    - apt-get install -y -qq openssh-client sed
     # add SSH_PRIVATE_KEY in agent store
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
@@ -43,6 +43,7 @@ build_liv_front-admin_on_recette:
     - cd ./front-admin
     - yarn install 
     - yarn run build && cp -RT build dist
+    - sed -i 's/return a.p+"/return a.p+"\//g' dist/index.html
     # On livre le livrable dist sur le 
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front-admin"
     - scp -o StrictHostKeyChecking=no -r ./dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front-admin
