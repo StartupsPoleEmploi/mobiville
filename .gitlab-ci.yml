@@ -23,7 +23,7 @@ build_liv_front_on_recette:
     - scp -o StrictHostKeyChecking=no -r ./dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front
   only:
     refs:
-      - master
+      - develop
     # changes:
     #   - ./front/**/*
 
@@ -38,7 +38,7 @@ build_api_image:
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_api --destination $CI_REGISTRY_IMAGE:api
   only:
     refs:
-      - master
+      - develop
     # changes:
     #   - ./api/**/*
 
@@ -63,5 +63,5 @@ deploy_application_on_recette:
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d"
   only:
     refs:
-      - master
+      - develop
   when: on_success # s'exécutera uniquement si le job `build` passe
