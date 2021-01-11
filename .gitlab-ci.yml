@@ -67,6 +67,7 @@ build_api_image:
       - develop
     changes:
       - ./api/**/*
+      - ./api/*
 
 deploy_application_on_recette:
   stage: deploy
