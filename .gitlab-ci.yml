@@ -65,9 +65,6 @@ build_api_image:
   only:
     refs:
       - develop
-    changes:
-      - ./api/**/*
-      - ./api/*
 
 deploy_application_on_recette:
   stage: deploy
