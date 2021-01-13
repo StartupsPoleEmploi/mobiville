@@ -1,1 +1,1 @@
-export const NB_MAX_REGION = 2
+export const NB_MAX_REGION = 1

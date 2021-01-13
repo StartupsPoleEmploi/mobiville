@@ -6,9 +6,9 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Button } from '../../components/button'
 import { useCities } from '../../common/contexts/citiesContext'
+import { COLOR_PRIMARY, COLOR_TEXT_SECONDARY } from '../../constants/colors'
 
 const Wrapper = styled.div`
-  margin: 0 16px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -23,15 +23,24 @@ const Title = styled(Typography)`
 `
 
 const IconBlock = styled.i`
-  color: #00B9B6;
+  color: ${COLOR_PRIMARY};
   display: block;
-  margin: 0 auto 12px auto;
+  margin: 0 auto 8px auto;
 `
 
 const GroupBlock = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-right: -15px;
+  width: 100%;
+`
+
+const SubLabel = styled(Typography)`
+  && {
+    color: ${COLOR_TEXT_SECONDARY};
+    font-size: 12px;
+    margin-top: 4px;
+  }
 `
 
 const Step4Component = ({ onNext, values }) => {
@@ -39,13 +48,13 @@ const Step4Component = ({ onNext, values }) => {
 
   const Icon = (props) => <IconBlock className="material-icons" {...props} />
 
-  const getStyleOfButton = (r) => {
+  const getStyleOfButton = (r, index = 0) => {
     const style = {
-      width: 'calc(50% - 15px)', height: 80, marginRight: 15, marginBottom: 15
+      width: 'calc(50% - 7.5px)', height: 98, marginRight: index === 0 ? 15 : 0, marginBottom: 15, border: 'none'
     }
 
-    if (r && values && values.environment && values.environment === r.key) {
-      style.backgroundColor = '#5EECE8'
+    if (r && values && values.city && values.city === r.key) {
+      style.border = `2px solid ${COLOR_PRIMARY}`
     }
 
     return style
@@ -53,27 +62,28 @@ const Step4Component = ({ onNext, values }) => {
 
   return (
     <Wrapper>
-      <Title>Quel environnement recherchez-vous ?</Title>
+      <Title>Je souhaite éviter de travailler dans :</Title>
       <GroupBlock>
-        {criterions.criterions.filter((f) => f.tag === 'environment').map((c) => (
+        {criterions.criterions.filter((f) => f.tag === 'city').map((c, index) => (
           <Button
             key={c.key}
             light
             column
-            onClick={() => onNext({ environment: c.key })}
-            style={getStyleOfButton(c)}
+            onClick={() => onNext({ city: c.key })}
+            style={getStyleOfButton(c, index)}
           >
             <Icon>{c.icon}</Icon>
             {c.label}
+            <SubLabel>{c.subLabel}</SubLabel>
           </Button>
         ))}
         <Button
           light
           column
           onClick={() => onNext()}
-          style={getStyleOfButton(null)}
+          style={{ height: 48, border: 'none' }}
         >
-          Tout les environnements
+          Peu importe
         </Button>
       </GroupBlock>
     </Wrapper>

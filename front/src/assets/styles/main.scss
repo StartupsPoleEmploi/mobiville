@@ -1,4 +1,6 @@
 @import '../fonts/Roboto/roboto.scss';
+@import './button.scss';
+@import './form.scss';
 
 html,
 body {
@@ -11,10 +13,29 @@ body {
 	font-size: 14px;
 }
 
+button {
+	font-family: 'Roboto';
+}
+
 #root {
 	height: 100%;
 }
 
 * {
 	box-sizing: border-box;
+}
+
+.MuiGrid-container,
+.wrapper {
+	max-width: 1100px;
+	margin: auto;
+}
+
+.flex-1 {
+	flex: 1;
+}
+
+a,
+a:hover {
+	text-decoration: none;
 }

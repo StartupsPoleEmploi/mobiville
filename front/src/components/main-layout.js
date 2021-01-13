@@ -1,7 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { Menu } from './menu'
+import { MenuMobile } from './menu-mobile'
+import { MenuDesktop } from './menu-desktop'
+import { useWindowSize } from '../common/hooks/window-size'
+import { isMobileView } from '../constants/mobile'
 
 const Main = styled.div`
   height: 100%;
@@ -17,14 +20,23 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-export const MainLayout = ({ children, menu }) => (
-  <Main>
-    <Menu {...menu} />
-    <Container>
-      {children}
-    </Container>
-  </Main>
-)
+export const MainLayout = ({ children, menu }) => {
+  const size = useWindowSize()
+
+  return (
+    <Main>
+      {isMobileView(size) && <MenuMobile {...menu} />}
+      {!isMobileView(size) && <MenuDesktop {...menu} />}
+      <Container style={{
+        paddingBottom: isMobileView(size) ? 60 : 0,
+        paddingTop: isMobileView(size) ? 0 : 76
+      }}
+      >
+        {children}
+      </Container>
+    </Main>
+  )
+}
 
 MainLayout.propTypes = {
   children: PropTypes.oneOfType([
