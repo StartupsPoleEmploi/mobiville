@@ -24,8 +24,8 @@ build_liv_front_on_recette:
   only:
     refs:
       - develop
-    changes:
-     - ./front/**/*
+    # *changes:
+    #  - ./front/**/*
 
 build_liv_front-admin_on_recette:
   stage: build
@@ -50,8 +50,8 @@ build_liv_front-admin_on_recette:
   only:
     refs:
       - develop
-    changes:
-      - ./front-admin/**/*
+    # changes:
+    #   - ./front-admin/**/*
 
 build_api_image:
   stage: build 
@@ -65,9 +65,9 @@ build_api_image:
   only:
     refs:
       - develop
-    changes:
-      - ./api/*
-      - ./api/**/*
+    # changes:
+    #   - ./api/*
+    #   - ./api/**/*
 
 deploy_application_on_recette:
   stage: deploy
