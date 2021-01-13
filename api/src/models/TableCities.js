@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { mean, orderBy, sortBy } from 'lodash'
-import { ALT_IS_MOUNTAIN, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA, WEIGHT_REGION } from '../constants/criterion'
+import { ALT_IS_MOUNTAIN, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA, WEIGHT_REGION } from '../constants/criterion'
 import { getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity } from '../utils/api'
 import { distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
@@ -121,40 +121,18 @@ export default (sequelizeInstance, Model) => {
             codeRome,
           }))
           break
-        case CRIT_SMALL_CITY:
+        case CRIT_SMALL_CITY: // exclusion list
           l = (await Model.allTensionsCities({
             where: {
-              population : {[Op.lte]: IS_SMALL_CITY},
+              population : {[Op.gte]: IS_SMALL_CITY},
             },
             codeRome,
           }))
           break
-        case CRIT_MEDIUM_CITY:
+        case CRIT_EXTRA_LARGE_CITY: // exclusion list
           l = (await Model.allTensionsCities({
             where: {
-              [Op.and]: [{
-                population : {[Op.gt]: IS_SMALL_CITY},
-              }, {
-                population : {[Op.lt]: IS_MEDIUM_CITY},
-              }]},
-            codeRome,
-          }))
-          break
-        case CRIT_LARGE_CITY:
-          l = (await Model.allTensionsCities({
-            where: {
-              [Op.and]: [{
-                population : {[Op.gt]: IS_MEDIUM_CITY},
-              }, {
-                population : {[Op.lt]: IS_LARGE_CITY},
-              }]},
-            codeRome,
-          }))
-          break
-        case CRIT_EXTRA_LARGE_CITY:
-          l = (await Model.allTensionsCities({
-            where: {
-              population : {[Op.gte]: IS_LARGE_CITY},
+              population : {[Op.lte]: IS_LARGE_CITY},
             },
             codeRome,
           }))

@@ -12,9 +12,9 @@ import { getPosition } from '../../utils/navigator'
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'
 import { Espace } from '../../components/espace'
+import { COLOR_GRAY, COLOR_PRIMARY } from '../../constants/colors'
 
 const Wrapper = styled.div`
-  margin: 0 16px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -40,7 +40,7 @@ const FormLine = styled(FormControl)`
 
 const Input = styled(TextField)`
   && {
-    background-color: white;
+    background-color: ${COLOR_GRAY};
 
     input {
       padding-left: 8px !important;
@@ -50,7 +50,7 @@ const Input = styled(TextField)`
 
 const GpsIcon = styled.i`
   margin-right: 8px;
-  color: #00B9B6;
+  color: ${COLOR_PRIMARY};
 `
 
 const Waiting = styled(CircularProgress)`
@@ -131,7 +131,7 @@ const Step1Component = ({ onNext, values }) => {
       {city && (
       <Button
         style={{
-          backgroundColor: '#00B9B6', border: 'none', fontWeight: 'normal', margin: '16px 0', boxShadow: '0 4px 5px 0 rgba(0,0,0,0.2)'
+          border: 'none', fontWeight: 'normal', margin: '32px 0', boxShadow: '0 4px 5px 0 rgba(0,0,0,0.2)'
         }}
         onClick={() => onNext({ from: city })}
       >

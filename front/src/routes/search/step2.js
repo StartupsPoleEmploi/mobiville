@@ -6,9 +6,9 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Button } from '../../components/button'
 import { useCities } from '../../common/contexts/citiesContext'
+import { COLOR_PRIMARY } from '../../constants/colors'
 
 const Wrapper = styled.div`
-  margin: 0 16px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -28,10 +28,10 @@ const Step2Component = ({ onNext, values }) => {
   } = useCities()
 
   const getStyleOfButton = (r) => {
-    const style = { marginBottom: 16 }
+    const style = { marginBottom: 16, border: 'none' }
 
     if (values && values.rome && values.rome === r.key) {
-      style.backgroundColor = '#5EECE8'
+      style.border = `2px solid ${COLOR_PRIMARY}`
     }
 
     return style

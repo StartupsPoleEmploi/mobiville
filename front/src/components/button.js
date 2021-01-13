@@ -2,12 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { Button as ButtonUI } from '@material-ui/core'
+import { COLOR_GRAY, COLOR_PRIMARY } from '../constants/colors'
 
 const Bt = styled(ButtonUI)`
   && {
     height: 48px;
     line-height: 48px;
-    border: 1px solid #23333E;
+    border: 1px solid ${COLOR_PRIMARY};
+    background-color: ${COLOR_PRIMARY};
     border-radius: 48px;
     display: flex;
     align-items: center;
@@ -16,6 +18,12 @@ const Bt = styled(ButtonUI)`
     width: 100%;
     font-weight: bold;
     font-size: 18px;
+    color: white;
+
+    &:hover {
+      opacity: 0.8;
+      background-color: ${COLOR_PRIMARY};
+    }
 
     &.column {
       height: auto;
@@ -33,7 +41,7 @@ export const Button = ({
   children, style, light, onClick, column
 }) => {
   const lightStyle = {
-    backgroundColor: '#E4E9ED', borderColor: '#00B9B6', borderRadius: '8px', fontWeight: 'normal', fontSize: 14
+    backgroundColor: COLOR_GRAY, color: COLOR_PRIMARY, borderColor: COLOR_PRIMARY, borderRadius: '8px', fontWeight: 'normal', fontSize: 14
   }
   let newStyle = style
   if (light) {

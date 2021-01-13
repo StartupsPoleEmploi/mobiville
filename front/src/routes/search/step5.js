@@ -6,9 +6,9 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Button } from '../../components/button'
 import { useCities } from '../../common/contexts/citiesContext'
+import { COLOR_PRIMARY } from '../../constants/colors'
 
 const Wrapper = styled.div`
-  margin: 0 16px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -23,7 +23,7 @@ const Title = styled(Typography)`
 `
 
 const IconBlock = styled.i`
-  color: #00B9B6;
+  color: ${COLOR_PRIMARY};
   display: block;
   margin: 0 auto 12px auto;
 `
@@ -41,10 +41,10 @@ const Step5Component = ({ onNext, values }) => {
 
   const getStyleOfButton = (r) => {
     const style = {
-      width: 'calc(50% - 15px)', height: 80, marginRight: 15, marginBottom: 15
+      width: 'calc(50% - 15px)', height: 80, marginRight: 15, marginBottom: 15, border: 'none'
     }
 
-    if (r && values && values.city && values.city === r.key) {
+    if (r && values && values.environment && values.environment === r.key) {
       style.backgroundColor = '#5EECE8'
     }
 
@@ -53,20 +53,28 @@ const Step5Component = ({ onNext, values }) => {
 
   return (
     <Wrapper>
-      <Title>Lieu de travail ?</Title>
+      <Title>Quel environnement recherchez-vous ?</Title>
       <GroupBlock>
-        {criterions.criterions.filter((f) => f.tag === 'city').map((c) => (
+        {criterions.criterions.filter((f) => f.tag === 'environment').map((c) => (
           <Button
             key={c.key}
             light
             column
-            onClick={() => onNext({ city: c.key })}
+            onClick={() => onNext({ environment: c.key })}
             style={getStyleOfButton(c)}
           >
             <Icon>{c.icon}</Icon>
             {c.label}
           </Button>
         ))}
+        <Button
+          light
+          column
+          onClick={() => onNext()}
+          style={getStyleOfButton(null)}
+        >
+          Peu importe
+        </Button>
       </GroupBlock>
     </Wrapper>
   )
