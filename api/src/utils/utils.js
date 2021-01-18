@@ -1,5 +1,6 @@
 import moment from 'moment'
 import _ from 'lodash'
+import { IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY } from '../constants/criterion'
 
 export function arrayToObjectByKey(data, key, keepRef = true) {
   const object = data.reduce((acc, cur) => {
@@ -170,4 +171,15 @@ export function sleep(duration = 1000) {
   return new Promise((resolve) => {
     setTimeout(resolve, duration)
   })
+}
+export function citySizeLabel(city) {
+  if(city.population >= IS_LARGE_CITY) {
+    return 'Métropole'
+  } else if(city.population >= IS_MEDIUM_CITY) {
+    return 'Grande ville'
+  } else if(city.population >= IS_SMALL_CITY) {
+    return 'Ville moyenne'
+  } else {
+    return 'Petite ville'
+  }
 }

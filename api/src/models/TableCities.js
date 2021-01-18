@@ -2,7 +2,7 @@ import { Op } from 'sequelize'
 import { mean, orderBy, sortBy } from 'lodash'
 import { ALT_IS_MOUNTAIN, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA, WEIGHT_REGION } from '../constants/criterion'
 import { getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity } from '../utils/api'
-import { distanceBetweenToCoordinates, sleep } from '../utils/utils'
+import { citySizeLabel, distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
 
 export default (sequelizeInstance, Model) => {
@@ -156,7 +156,7 @@ export default (sequelizeInstance, Model) => {
         }
 
         // add default values
-        l = l.map(c => ({...c, tags: [crit], weight: const_crit.weight}))
+        l = l.map(c => ({...c, tags: [crit], weight: const_crit.weight, city_size_label: citySizeLabel(c) }))
 
         Model.cacheSearchCities[JSON.stringify({crit, codeRome})] = l
         list.push(Model.cacheSearchCities[JSON.stringify({crit, codeRome})])
@@ -406,6 +406,16 @@ export default (sequelizeInstance, Model) => {
 
     return city
   }  
+
+  Model.searchById = async ({id})  => {
+    const cities = await Model.findAll({
+      where: {id: +id},
+      limit: 1,
+      raw: true,
+    })
+
+    return cities
+  }
 
   Model.searchByName = async ({name})  => {
     const cities = await Model.findAll({

@@ -37,8 +37,8 @@ export default class RouteCities extends Route {
    */
   @Route.Post({
     bodyType: Types.object().keys({
-      code_region: Types.array().type(Types.number()),
-      code_criterion: Types.array().type(Types.string()),
+      code_region: Types.array(),
+      code_criterion: Types.array(),
       code_rome: Types.array().type(Types.string()),
       from: Types.array().type(Types.string()),
     }),
@@ -92,13 +92,20 @@ export default class RouteCities extends Route {
    */
   @Route.Post({
     bodyType: Types.object().keys({
-      name: Types.string().required(),
+      id: Types.number(),
+      name: Types.string(),
     }),
   })
   async searchByName(ctx) {
-    const {name} = this.body(ctx)
+    const {name, id} = this.body(ctx)
+    let result
 
-    const result = await this.model.searchByName({name})
+    if(id) {
+      console.log('search by id')
+      result = await this.model.searchById({id})
+    } else {
+      result = await this.model.searchByName({name})
+    }
 
     this.sendOk(ctx, result)
   }

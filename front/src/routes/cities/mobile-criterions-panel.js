@@ -4,10 +4,12 @@ import styled from 'styled-components'
 import { Typography } from '@material-ui/core'
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'
+import { COLOR_GRAY, COLOR_PRIMARY } from '../../constants/colors'
 
 const Wrapper = styled.div` 
-  padding: 16px;
+  padding: 16px 16px 20px 16px;
   background-color: white;
+  margin-bottom: 16px;
 `
 
 const Title = styled(Typography)`
@@ -23,13 +25,14 @@ const TagsBlock = styled.div`
 `
 
 const Tag = styled.div`
-  background: #99DBF6;
+  background: ${COLOR_GRAY};
   border-radius: 1000px;
-  padding: 4px;
+  padding: 4px 6px;
   font-size: 12px;
   margin-right: 8px;
   margin-bottom: 8px;
   font-weight: 500;
+  color: ${COLOR_PRIMARY};
 `
 
 const SubInfo = styled.div`
@@ -44,7 +47,7 @@ const SubInfo = styled.div`
   }
 `
 
-const CriterionsPanel = ({ criterions, total }) => {
+const MobileCriterionsPanel = ({ criterions, total }) => {
   const { criterions: allCriterios } = useCities()
 
   const findCriterionsValue = (val) => {
@@ -88,14 +91,14 @@ const CriterionsPanel = ({ criterions, total }) => {
   )
 }
 
-CriterionsPanel.propTypes = {
+MobileCriterionsPanel.propTypes = {
   criterions: PropTypes.object,
   total: PropTypes.number
 }
 
-CriterionsPanel.defaultProps = {
+MobileCriterionsPanel.defaultProps = {
   criterions: [],
   total: 0
 }
 
-export default CriterionsPanel
+export default MobileCriterionsPanel
