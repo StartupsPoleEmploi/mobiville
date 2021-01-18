@@ -63,7 +63,7 @@ const Waiting = styled(CircularProgress)`
 const Step1Component = ({ onNext, values }) => {
   const [loadingLocalisation, setLoadingLocalisation] = useState(false)
   const {
-    onSearchByLocation, setCity, onSearchByName, city, cities, isLoadingLocation
+    onSearchByLocation, setCity, onSearchByName, city, searchCities, isLoadingLocation
   } = useCities()
   const [inputValue, setInputValue] = useState('')
 
@@ -117,7 +117,7 @@ const Step1Component = ({ onNext, values }) => {
           }}
           getOptionSelected={(option, value) => option.id === value.id}
           getOptionLabel={formatedCity}
-          options={cities}
+          options={searchCities.filter((s) => s.id !== null)}
           loading={isLoadingLocation}
           renderInput={(params) => <Input {...params} onKeyUp={searchNewCities} label="Villes" />}
         />

@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { MenuMobile } from './menu-mobile'
 import { MenuDesktop } from './menu-desktop'
-import { useWindowSize } from '../common/hooks/window-size'
 import { isMobileView } from '../constants/mobile'
+import { useWindowSize } from '../common/hooks/window-size'
 
 const Main = styled.div`
   height: 100%;

@@ -1,32 +1,46 @@
-import React, { useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
 import { paramUrlToObject } from '../../utils/url'
-import CriterionsPanel from './criterions-panel'
+import MobileCriterionsPanel from './mobile-criterions-panel'
 import CityItem from './city-item'
+import { useWindowSize } from '../../common/hooks/window-size'
+import { isMobileView } from '../../constants/mobile'
+import DesktopCriterionsPanel from './desktop-criterions-panel'
 
 const Items = styled(Link)`
   && {
     color: inherit;
     text-decoration: none;
-  }
+  }        
 `
 
-const CitiesPage = ({ location: { search } }) => {
+const CitiesArea = styled.div`
+  max-width: ${(props) => (props.isMobile ? 'auto' : '700px')};
+  margin-left: ${(props) => (props.isMobile ? '16px' : 'auto')};
+  margin-right: ${(props) => (props.isMobile ? '16px' : 'auto')};
+`
+
+const CitiesPage = () => {
   const { onSearch, cities, isLoading } = useCities()
-  const params = paramUrlToObject(search)
+  const [params, setParams] = useState(null)
+  const size = useWindowSize()
+  const location = useLocation()
+
+  useEffect(() => {
+    setParams(paramUrlToObject(location.search))
+  }, [location])
 
   useEffect(() => {
     onSearch(params)
-  }, [])
+  }, [params])
 
   const getCityUrl = (city) => {
     let url = `/city/${city.insee_com}-${city.nom_comm}`
 
-    if (params.code_rome) {
+    if (params && params.code_rome) {
       url += `?code_rome=${params.code_rome.join(',')}`
     }
 
@@ -35,25 +49,22 @@ const CitiesPage = ({ location: { search } }) => {
 
   return (
     <MainLayout>
-      <CriterionsPanel criterions={params} total={cities.length} />
+      {isMobileView(size) && <MobileCriterionsPanel criterions={params} total={cities.length} />}
+      {!isMobileView(size) && <DesktopCriterionsPanel criterions={params} total={cities.length} />}
       {isLoading && (<p>Loading...</p>)}
-      {cities.slice(0, 10).map((c) => (
-        <Items key={c.id} to={getCityUrl(c)}><CityItem city={c} /></Items>
-      ))}
+      <CitiesArea isMobile={isMobileView(size)}>
+        {cities.slice(0, 10).map((c) => (
+          <Items key={c.id} to={getCityUrl(c)}><CityItem city={c} /></Items>
+        ))}
+      </CitiesArea>
     </MainLayout>
   )
 }
 
 CitiesPage.propTypes = {
-  location: PropTypes.shape({
-    search: PropTypes.string.isRequired
-  })
 }
 
 CitiesPage.defaultProps = {
-  location: {
-    search: ''
-  }
 }
 
 export default CitiesPage
