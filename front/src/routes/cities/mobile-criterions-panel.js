@@ -5,6 +5,7 @@ import { Typography } from '@material-ui/core'
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'
 import { COLOR_GRAY, COLOR_PRIMARY } from '../../constants/colors'
+import CitiesFilterList from './cities-filter-list'
 
 const Wrapper = styled.div` 
   padding: 16px 16px 20px 16px;
@@ -37,9 +38,11 @@ const Tag = styled.div`
 
 const SubInfo = styled.div`
   display: flex;
+  align-items: center;
 
   p {
     font-weight: 500;
+    flex: 1;
   }
 
   span {
@@ -86,6 +89,7 @@ const MobileCriterionsPanel = ({ criterions, total }) => {
           {' '}
           {total > 1 ? 'villes correspondantes' : 'ville correspondant'}
         </Typography>
+        <CitiesFilterList />
       </SubInfo>
     </Wrapper>
   )

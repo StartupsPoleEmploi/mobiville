@@ -104,6 +104,22 @@ const CityItem = ({ city }) => {
           </Tag>
           )}
           {city.city_size_label && <Tag>{city.city_size_label}</Tag>}
+          {city.z_moyen && (
+          <Tag>
+            Altitude moyenne
+            {' '}
+            {city.z_moyen}
+            m
+          </Tag>
+          )}
+          {city.match && (
+          <Tag>
+            Correspond à
+            {' '}
+            {city.match}
+            %
+          </Tag>
+          )}
           {city['region.new_name'] && <Tag>{ucFirst(city['region.new_name'].toLowerCase())}</Tag>}
         </TagsBlock>
       </InformationsBlock>
