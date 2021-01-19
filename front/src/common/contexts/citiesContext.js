@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useCallback, useEffect } from 'react'
+import { orderBy } from 'lodash'
 import {
   getCriterions, loadCity, searchCities as apiSearchCities, searchCityByLocation, searchCityByName
 } from '../../api/cities.api'
@@ -16,10 +17,24 @@ export function CitiesProvider(props) {
   const [isLoading, _setIsLoading] = useState(false)
   const [isLoadingCity, _setIsLoadingCity] = useState(false)
   const [isLoadingLocation, _setIsLoadingLocation] = useState(false)
+  const [sortCriterions, setSortCriterions] = useState('')
+
+  const sortCities = (cs) => {
+    switch (sortCriterions) {
+      case 'habitant':
+        return orderBy(cs, ['population'], ['desc'])
+      case 'mer':
+        return orderBy(cs, ['distance_from_sea'], ['asc'])
+      case 'montagne':
+        return orderBy(cs, ['z_moyen'], ['desc'])
+      default:
+        return orderBy(cs, ['match', 'nom_comm'], ['desc', 'asc'])
+    }
+  }
 
   const onSearch = useCallback((params) => {
     _setIsLoading(true)
-    apiSearchCities(params).then(_setCities)
+    apiSearchCities(params).then((c) => _setCities(sortCities(c)))
       .then(() => _setIsLoading(false))
   }, [])
 
@@ -54,6 +69,10 @@ export function CitiesProvider(props) {
     getCriterions().then(_setCriterions)
   }, [])
 
+  useEffect(() => {
+    _setCities(sortCities(cities))
+  }, [sortCriterions])
+
   return (
     <CitiesContext.Provider
       {...props}
@@ -65,12 +84,14 @@ export function CitiesProvider(props) {
         isLoading,
         isLoadingCity,
         isLoadingLocation,
+        sortCriterions,
         // function
         setCity,
         onSearch,
         onLoadCity,
         onSearchByLocation,
-        onSearchByName
+        onSearchByName,
+        setSortCriterions
       }}
     />
   )

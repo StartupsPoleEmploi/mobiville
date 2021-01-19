@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { mean, orderBy, sortBy } from 'lodash'
+import { mean, sortBy } from 'lodash'
 import { ALT_IS_MOUNTAIN, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA, WEIGHT_REGION } from '../constants/criterion'
 import { getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity } from '../utils/api'
 import { citySizeLabel, distanceBetweenToCoordinates, sleep } from '../utils/utils'
@@ -156,7 +156,7 @@ export default (sequelizeInstance, Model) => {
         }
 
         // add default values
-        l = l.map(c => ({...c, tags: [crit], weight: const_crit.weight, city_size_label: citySizeLabel(c) }))
+        l = l.map(c => ({...c, tags: [crit], weight: const_crit.weight }))
 
         Model.cacheSearchCities[JSON.stringify({crit, codeRome})] = l
         list.push(Model.cacheSearchCities[JSON.stringify({crit, codeRome})])
@@ -224,7 +224,7 @@ export default (sequelizeInstance, Model) => {
     }
 
     // order results
-    Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})] = orderBy(mergedList, ['match'], ['desc'])
+    Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})] = mergedList.map(c => ({...c, city_size_label: citySizeLabel(c) }))
     return Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})]
   }
 

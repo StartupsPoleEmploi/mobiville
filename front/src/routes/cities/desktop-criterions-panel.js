@@ -8,6 +8,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { useCities } from '../../common/contexts/citiesContext'
 import { COLOR_BACKGROUND, COLOR_GRAY, COLOR_PRIMARY } from '../../constants/colors'
 import { ucFirst } from '../../utils/utils'
+import CitiesFilterList from './cities-filter-list'
 
 const Wrapper = styled.div` 
   margin-bottom: 16px;
@@ -48,6 +49,7 @@ const SubInfo = styled.div`
 
   p {
     font-weight: 500;
+    flex: 1;
   }
 
   span {
@@ -71,10 +73,17 @@ const SubmitButton = styled.button`
 
 const DesktopCriterionsPanel = ({ criterions, total }) => {
   const {
-    criterions: allCriterions, searchCities, isLoadingLocation, onSearchByName
+    criterions: allCriterions,
+    searchCities,
+    isLoadingLocation,
+    onSearchByName
   } = useCities()
   const [onSearch, setOnSearch] = useState(null)
   const [tempForm, setTempForm] = useState({})
+
+  if (allCriterions === null || allCriterions.criterions === undefined) {
+    return <div />
+  }
 
   const formatedCity = (c) => {
     const nc = c
@@ -110,7 +119,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     }
 
     if (tempForm.region) {
-      params = { ...params, code_region: tempForm.region }
+      params = { ...params, code_region: [tempForm.region] }
     }
 
     if (tempForm.from) {
@@ -135,7 +144,12 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   }, [criterions])
 
   useEffect(() => {
-    if (searchCities && searchCities.length === 1 && searchCities[0].id === +criterions.from[0]) {
+    if (searchCities
+      && searchCities.length === 1
+      && criterions
+      && criterions.from
+      && criterions.from.length
+      && searchCities[0].id === +criterions.from[0]) {
       updateValue('from', searchCities[0])
     }
   }, [searchCities])
@@ -252,6 +266,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
           {' '}
           {total > 1 ? 'villes correspondantes' : 'ville correspondant'}
         </Typography>
+        <CitiesFilterList />
       </SubInfo>
     </Wrapper>
   )
