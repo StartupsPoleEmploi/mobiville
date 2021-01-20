@@ -101,7 +101,6 @@ export default class RouteCities extends Route {
     let result
 
     if(id) {
-      console.log('search by id')
       result = await this.model.searchById({id})
     } else {
       result = await this.model.searchByName({name})

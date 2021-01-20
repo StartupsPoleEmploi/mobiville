@@ -30,7 +30,9 @@ const CitiesPage = () => {
   const location = useLocation()
 
   useEffect(() => {
-    setParams(paramUrlToObject(location.search))
+    if (location.search) {
+      setParams(paramUrlToObject(location.search))
+    }
   }, [location])
 
   useEffect(() => {

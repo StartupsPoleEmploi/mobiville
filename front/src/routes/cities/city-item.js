@@ -116,7 +116,7 @@ const CityItem = ({ city }) => {
           <Tag>
             Correspond à
             {' '}
-            {city.match}
+            {Math.floor(city.match)}
             %
           </Tag>
           )}

@@ -229,16 +229,14 @@ export default (sequelizeInstance, Model) => {
   }
 
   Model.getCity = async ({insee}) => {
-    const city = await Model.findOne({where: {insee_com: insee}, raw: true})
+    const city = await Model.findOne({where: {insee_com: insee},
+      include: [{
+        model: Model.models.regions,
+        require: true,
+      }],
+      raw: true})
 
-    if(city) {
-      // OTHER TASK
-
-
-      return city
-    }
-
-    return null
+    return city
   }
 
   Model.checkAndStartSyncCity = () => {

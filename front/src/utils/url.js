@@ -5,8 +5,8 @@ export const paramUrlToObject = (paramsUrl = '') => {
     params = params.substring(1)
   }
 
-  params.split(';').forEach((oneParam) => {
-    const list = oneParam.split(':')
+  params.split('&').forEach((oneParam) => {
+    const list = oneParam.split('=')
     if (list.length > 1) {
       const node = list.shift()
       object[node] = list[0].split(',')
