@@ -101,10 +101,10 @@ const SearchPage = () => {
   if (onSearch) {
     const params = []
     Object.entries(onSearch).forEach(([key, value]) => {
-      params.push(`${key}:${value.join(',')}`)
+      params.push(`${key}=${value.join(',')}`)
     })
 
-    return <Redirect to={`/cities?${params.join(';')}`} />
+    return <Redirect to={`/cities?${params.join('&')}`} />
   }
 
   const onBack = () => {
