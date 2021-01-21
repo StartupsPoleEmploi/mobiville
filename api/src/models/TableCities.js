@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 import { mean, sortBy } from 'lodash'
-import { ALT_IS_MOUNTAIN, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA, WEIGHT_REGION } from '../constants/criterion'
+import { ALT_IS_MOUNTAIN, CODE_ROMES, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA, WEIGHT_REGION } from '../constants/criterion'
 import { getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity } from '../utils/api'
 import { citySizeLabel, distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
@@ -47,16 +47,44 @@ export default (sequelizeInstance, Model) => {
   }
 
   Model.regions = async () => {
+    if(Model.cacheSearchCities['cache-regions']) {
+      return Model.cacheSearchCities['cache-regions']
+    }
+
     const list = await Model.models.regions.findAll({
       group: ['new_code'],
       raw: true,
     })
 
-    return sortBy(list.map(r => ({id: r.new_code, label: r.new_name})), ['label'])
+    for(let i = 0; i < list.length; i++) {
+      for(let r = 0; r < CODE_ROMES.length; r++) {
+        const hasRome = (await Model.regionHasTension(list[i].new_code, CODE_ROMES[r].key))
+        if(hasRome) {
+          const romes = list[i].romes || []
+          romes.push(CODE_ROMES[r].key)
+          list[i].romes = romes
+        }
+      }
+    }
+
+    Model.cacheSearchCities['cache-regions'] = sortBy(list.map(r => ({id: r.new_code, label: r.new_name, romes: r.romes})), ['label'])
+    return Model.cacheSearchCities['cache-regions']
   }
 
-  Model.allTensionsCities = async ({where, codeRome}) => {
-    return await Model.findAll({
+  Model.regionHasTension = async (regionId, codeRome) => {
+    const allOldRegions = (await Model.models.regions.getCodeRegOfOldRegion(regionId))
+    const l = (await Model.allTensionsCities({
+      where: {
+        code_reg : allOldRegions,
+      },
+      codeRome: [codeRome],
+    }))
+
+    return l.length !== 0
+  }
+
+  Model.allTensionsCities = async ({where, codeRome, methodName = 'findAll'}) => {
+    return await Model[methodName]({
       where: {
         ...where,
       },
