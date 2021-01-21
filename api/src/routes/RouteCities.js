@@ -20,6 +20,8 @@ export default class RouteCities extends Route {
         await this.model.search({codeRome: [code.key]})
         await this.model.search({codeRegion: regions.map(r => (r.id)), codeCriterion: CRITERIONS.map(c => (c.key)), codeRome: [code.key]})
       }
+      console.log('PRELOAD SEARCH - Regions')
+      await this.model.regions()
       console.log('PRELOAD SEARCH - Done')
     }
   }

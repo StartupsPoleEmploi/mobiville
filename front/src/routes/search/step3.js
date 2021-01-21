@@ -9,7 +9,6 @@ import {
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-// import { toast } from 'react-toastify'
 import { Button } from '../../components/button'
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'
@@ -25,7 +24,13 @@ const Title = styled(Typography)`
   && {
     font-size: 18px;
     font-weight: bold;
-    margin: 0 0 32px 0;
+    margin: 0 0 8px 0;
+  }
+`
+
+const SmallTitle = styled(Typography)`
+  && {
+    margin: 0 0 24px 0;
   }
 `
 
@@ -49,6 +54,7 @@ const Step3Component = ({ onNext, values }) => {
   return (
     <Wrapper>
       <Title>Dans quelle région ?</Title>
+      <SmallTitle>Seul les régions en tensions sont disponibles.</SmallTitle>
       <FormControl>
         <InputLabel htmlFor="age-native-simple">Région</InputLabel>
         <Select
@@ -64,11 +70,12 @@ const Step3Component = ({ onNext, values }) => {
           <MenuItem selected value="">
             Toutes les regions
           </MenuItem>
-          {criterions.regions.map((r) => (
-            <MenuItem key={r.id} value={r.id}>
-              {ucFirst(r.label.toLowerCase())}
-            </MenuItem>
-          ))}
+          {criterions.regions.filter((r) => r.romes && r.romes.indexOf(values.rome) !== -1)
+            .map((r) => (
+              <MenuItem key={r.id} value={r.id}>
+                {ucFirst(r.label.toLowerCase())}
+              </MenuItem>
+            ))}
         </Select>
       </FormControl>
       <Button
