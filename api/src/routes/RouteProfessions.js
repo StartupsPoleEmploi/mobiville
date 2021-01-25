@@ -20,7 +20,7 @@ export default class RouteProfessions extends Route {
   async search(ctx) {
     const {code_rome: codeRome, insee} = this.body(ctx)
 
-    const result = await searchJob({codeRome, insee, distance: 10})
+    const result = await searchJob({codeRome, insee, distance: 30})
     if(result) {
       this.sendOk(ctx, result.resultats)  
     } else {
