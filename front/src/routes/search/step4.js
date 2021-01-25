@@ -57,6 +57,11 @@ const Step4Component = ({ onNext, values }) => {
       style.border = `2px solid ${COLOR_PRIMARY}`
     }
 
+    if (r.available === false) {
+      style.opacity = 0.5
+      style.cursor = 'default'
+    }
+
     return style
   }
 
@@ -64,19 +69,35 @@ const Step4Component = ({ onNext, values }) => {
     <Wrapper>
       <Title>Je souhaite éviter de travailler dans :</Title>
       <GroupBlock>
-        {criterions.criterions.filter((f) => f.tag === 'city').map((c, index) => (
-          <Button
-            key={c.key}
-            light
-            column
-            onClick={() => onNext({ city: c.key })}
-            style={getStyleOfButton(c, index)}
-          >
-            <Icon>{c.icon}</Icon>
-            {c.label}
-            <SubLabel>{c.subLabel}</SubLabel>
-          </Button>
-        ))}
+        {criterions.criterions
+          .filter((f) => f.tag === 'city')
+          .map((c) => {
+            let available = true
+            if (values.regions && values.regions.length) {
+              const reg = criterions.regions.find((r) => r.id === values.regions[0])
+              if (reg) {
+                const allCrit = reg.criterions[values.rome] || []
+                if (allCrit.indexOf(c.key) === -1) {
+                  available = false
+                }
+              }
+            }
+
+            return ({ ...c, available })
+          })
+          .map((c, index) => (
+            <Button
+              key={c.key}
+              light
+              column
+              onClick={() => (c.available ? onNext({ envircityonment: c.key }) : '')}
+              style={getStyleOfButton(c, index)}
+            >
+              <Icon>{c.icon}</Icon>
+              {c.label}
+              <SubLabel>{c.subLabel}</SubLabel>
+            </Button>
+          ))}
         <Button
           light
           column

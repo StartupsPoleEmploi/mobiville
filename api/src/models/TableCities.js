@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { mean, sortBy } from 'lodash'
+import { groupBy, mean, sortBy } from 'lodash'
 import { ALT_IS_MOUNTAIN, CODE_ROMES, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA, WEIGHT_REGION } from '../constants/criterion'
 import { getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity } from '../utils/api'
 import { citySizeLabel, distanceBetweenToCoordinates, sleep } from '../utils/utils'
@@ -56,18 +56,23 @@ export default (sequelizeInstance, Model) => {
       raw: true,
     })
 
-    for(let i = 0; i < list.length; i++) {
+    for(let c = 0; c < CRITERIONS.length; c++) {
       for(let r = 0; r < CODE_ROMES.length; r++) {
-        const hasRome = (await Model.regionHasTension(list[i].new_code, CODE_ROMES[r].key))
-        if(hasRome) {
-          const romes = list[i].romes || []
-          romes.push(CODE_ROMES[r].key)
-          list[i].romes = romes
-        }
+        const citiesGrouped = groupBy((await Model.search({codeCriterion: [CRITERIONS[c].key], codeRome: [CODE_ROMES[r].key]})), 'region.new_code')
+        Object.keys(citiesGrouped).map(v => {
+          const findIndex = list.findIndex(r => r.new_code === v)
+          if(findIndex !== -1) {
+            const allCriterions = list[findIndex].criterions || {}
+            const criterions = allCriterions[CODE_ROMES[r].key] || []
+            criterions.push(CRITERIONS[c].key)
+            allCriterions[CODE_ROMES[r].key] = criterions
+            list[findIndex].criterions = allCriterions
+          }
+        })    
       }
     }
 
-    Model.cacheSearchCities['cache-regions'] = sortBy(list.map(r => ({id: r.new_code, label: r.new_name, romes: r.romes})), ['label'])
+    Model.cacheSearchCities['cache-regions'] = sortBy(list.map(r => ({id: r.new_code, label: r.new_name, criterions: r.criterions})), ['label'])
     return Model.cacheSearchCities['cache-regions']
   }
 

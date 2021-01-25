@@ -70,7 +70,7 @@ const Step3Component = ({ onNext, values }) => {
           <MenuItem selected value="">
             Toutes les regions
           </MenuItem>
-          {criterions.regions.filter((r) => r.romes && r.romes.indexOf(values.rome) !== -1)
+          {criterions.regions.filter((r) => r.criterions && r.criterions[values.rome])
             .map((r) => (
               <MenuItem key={r.id} value={r.id}>
                 {ucFirst(r.label.toLowerCase())}

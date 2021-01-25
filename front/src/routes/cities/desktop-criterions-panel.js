@@ -2,26 +2,14 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {
-  MenuItem, Select, TextField, Typography
+  MenuItem, Select, Typography
 } from '@material-ui/core'
-import Autocomplete from '@material-ui/lab/Autocomplete'
 import { useCities } from '../../common/contexts/citiesContext'
-import { COLOR_BACKGROUND, COLOR_GRAY, COLOR_PRIMARY } from '../../constants/colors'
-import { ucFirst } from '../../utils/utils'
+import { COLOR_BACKGROUND, COLOR_PRIMARY } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
 
 const Wrapper = styled.div` 
   margin-bottom: 16px;
-`
-
-const Input = styled(TextField)`
-  && {
-    background-color: ${COLOR_GRAY};
-
-    input {
-      padding-left: 8px !important;
-    }
-  }
 `
 
 const SearchPanel = styled.div`
@@ -84,17 +72,6 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   if (allCriterions === null || allCriterions.criterions === undefined) {
     return <div />
   }
-
-  const formatedCity = (c) => {
-    const nc = c
-    if (nc) {
-      return ucFirst(nc.nom_comm ? nc.nom_comm.toLowerCase() : nc.toLowerCase())
-    }
-
-    return ''
-  }
-
-  const searchNewCities = (event) => onSearchByName({ name: event.target.value })
 
   const updateValue = (type, value) => {
     setTempForm({ ...tempForm, [type]: value })
@@ -183,16 +160,6 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     <Wrapper>
       <SearchPanel>
         <SearchBar className="wrapper">
-          <Autocomplete
-            inputValue={tempForm.from ? tempForm.from.nom_comm : ''}
-            options={searchCities.filter((s) => s.id !== null)}
-            getOptionLabel={formatedCity}
-            getOptionSelected={(option, value) => option.nom_comm === value}
-            onChange={(e, data) => updateValue('from', data)}
-            loading={isLoadingLocation}
-            renderInput={(params) => <Input {...params} onKeyUp={searchNewCities} label="Villes" />}
-            style={{ marginLeft: 9 }}
-          />
           <Select
             style={{ marginLeft: 16 }}
             value={tempForm.rome || allCriterions.codeRomes[0].key}
