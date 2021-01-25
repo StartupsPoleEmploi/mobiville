@@ -48,6 +48,11 @@ const Step5Component = ({ onNext, values }) => {
       style.backgroundColor = '#5EECE8'
     }
 
+    if (r && r.available === false) {
+      style.opacity = 0.5
+      style.cursor = 'default'
+    }
+
     return style
   }
 
@@ -55,18 +60,34 @@ const Step5Component = ({ onNext, values }) => {
     <Wrapper>
       <Title>Quel environnement recherchez-vous ?</Title>
       <GroupBlock>
-        {criterions.criterions.filter((f) => f.tag === 'environment').map((c) => (
-          <Button
-            key={c.key}
-            light
-            column
-            onClick={() => onNext({ environment: c.key })}
-            style={getStyleOfButton(c)}
-          >
-            <Icon>{c.icon}</Icon>
-            {c.label}
-          </Button>
-        ))}
+        {criterions.criterions
+          .filter((f) => f.tag === 'environment')
+          .map((c) => {
+            let available = true
+            if (values.regions && values.regions.length) {
+              const reg = criterions.regions.find((r) => r.id === values.regions[0])
+              if (reg) {
+                const allCrit = reg.criterions[values.rome] || []
+                if (allCrit.indexOf(c.key) === -1) {
+                  available = false
+                }
+              }
+            }
+
+            return ({ ...c, available })
+          })
+          .map((c) => (
+            <Button
+              key={c.key}
+              light
+              column
+              onClick={() => (c.available ? onNext({ environment: c.key }) : '')}
+              style={getStyleOfButton(c)}
+            >
+              <Icon>{c.icon}</Icon>
+              {c.label}
+            </Button>
+          ))}
         <Button
           light
           column
