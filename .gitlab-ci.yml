@@ -117,7 +117,7 @@ liv_application_on_production:
     - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
     - mkdir -p ~/.ssh
   script:
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front"
+    - ssh -o -vvv StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front"
     - scp -o StrictHostKeyChecking=no -r ./front/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front-admin"
     - scp -o StrictHostKeyChecking=no -r ./front-admin/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front-admin
