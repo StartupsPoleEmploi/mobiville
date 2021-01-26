@@ -13,6 +13,8 @@ import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'
 import { Espace } from '../../components/espace'
 import { COLOR_GRAY, COLOR_PRIMARY } from '../../constants/colors'
+import { useWindowSize } from '../../common/hooks/window-size'
+import { isMobileView } from '../../constants/mobile'
 
 const Wrapper = styled.div`
   flex: 1;
@@ -66,6 +68,7 @@ const Step1Component = ({ onNext, values }) => {
     onSearchByLocation, setCity, onSearchByName, city, searchCities, isLoadingLocation
   } = useCities()
   const [inputValue, setInputValue] = useState('')
+  const size = useWindowSize()
 
   const formatedCity = (c) => {
     const nc = c || city
@@ -122,11 +125,13 @@ const Step1Component = ({ onNext, values }) => {
           renderInput={(params) => <Input {...params} onKeyUp={searchNewCities} label="Villes" />}
         />
       </FormLine>
-      <Button light onClick={locateMe}>
-        {!loadingLocalisation && <GpsIcon className="material-icons">gps_fixed</GpsIcon>}
-        {loadingLocalisation && <Waiting size={22} />}
-        Me localiser
-      </Button>
+      {isMobileView(size) && (
+        <Button light onClick={locateMe}>
+          {!loadingLocalisation && <GpsIcon className="material-icons">gps_fixed</GpsIcon>}
+          {loadingLocalisation && <Waiting size={22} />}
+          Me localiser
+        </Button>
+      )}
       <Espace />
       {city && (
       <Button
