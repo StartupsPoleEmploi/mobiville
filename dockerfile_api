@@ -3,7 +3,7 @@ FROM node:12.18.4
 COPY ./api /home/api
 WORKDIR /home/api
 
-RUN apt-get -y install iptables cron
+#RUN apt-get -y install iptables cron
 
 CMD (which yarn || npm i -g yarn@1.15.2) && \
     echo "$NODE_ENV"; \
@@ -14,4 +14,4 @@ CMD (which yarn || npm i -g yarn@1.15.2) && \
     else \
         yarn start; \
     fi; \
-    cron -f
+    sleep infinity;
