@@ -450,15 +450,22 @@ export default (sequelizeInstance, Model) => {
 
   Model.searchByName = async ({name})  => {
     const cities = await Model.findAll({
-      where: {[Op.or]: [
-        {nom_comm: {[Op.like]: `%${name}%`}},
-        {postal_code: {[Op.like]: `%${name}%`}},
-      ]},
-      limit: 5,
+      where: {
+        [Op.and]: [{
+          [Op.or]: [
+            {nom_comm: {[Op.like]: `%${name}%`}},
+            {nom_comm: name},
+            {postal_code: {[Op.like]: `%${name}%`}},
+          ]}, 
+        [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+          .map(v => ({nom_comm: {[Op.notLike]: `%-${v}%-arrondissement%`}})),
+        ],
+      },
+      limit: 10,
       raw: true,
     })
 
-    return cities
+    return cities.map(c => ({...c, nom_comm: c.nom_comm.replace(/--/gi, '-').replace(/-1er-arrondissement/gi, '')}))
   }  
   
   return Model

@@ -31,7 +31,7 @@ const CityPage = ({ location: { search } }) => {
   useEffect(() => {
     if (city && params && params.code_rome) {
       if (tabList.findIndex((t) => t.key === 'job') === -1) {
-        tabList.splice(0, 0, { key: 'job', label: 'Emplois' })
+        tabList.splice(0, 0, { key: 'job', label: 'Emploi' })
         setTabList(tabList)
       }
     }
