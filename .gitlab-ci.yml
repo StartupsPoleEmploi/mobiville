@@ -114,7 +114,7 @@ liv_application_on_production:
     - apt-get install -y -qq openssh-client 
     # add SSH_PRIVATE_KEY in agent store
     - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
     - mkdir -p ~/.ssh
   script:
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front"
@@ -130,7 +130,7 @@ deploy_application_on_production:
     - apt-get install -y -qq openssh-client 
     # add SSH_PRIVATE_KEY in agent store
     - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
     - mkdir -p ~/.ssh
   script:
     - scp -o StrictHostKeyChecking=no docker-compose.yml docker-compose.production.yml gitlab@$IP_PRODUCTION:$WORKDIR_SERVER
@@ -142,6 +142,6 @@ deploy_application_on_production:
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml pull && 
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d"
-  when: on_success
+  when: manual
     
 
