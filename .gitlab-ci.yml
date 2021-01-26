@@ -4,6 +4,11 @@ stages:
   - liv_production
   - deploy_production
 
+build:
+  stage: build_liv_recette
+  script:
+    - print_error "coucou"
+    
 build_liv_front_on_recette:
   stage: build_liv_recette
   image: node:12.18.0
