@@ -9,14 +9,9 @@ services:
       context: .
       dockerfile: dockerfile_api
     environment: 
-      - NODE_ENV=recette
+      - NODE_ENV=development
     volumes:
       - './api:/home/api'
-    deploy:
-      resources:
-        limits:
-          memory: 4G
-          cpus: '2.5'
 
   front:   
     build:
