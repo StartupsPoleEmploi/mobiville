@@ -7,11 +7,12 @@ WORKDIR /home/api
 
 CMD (which yarn || npm i -g yarn@1.15.2) && \
     echo "$NODE_ENV"; \
-    yarn install && \
+    yarn install --production=false && \
     if [ "$NODE_ENV" = "production" ] || [ "$NODE_ENV" = "recette" ] || [ "$NODE_ENV" = "test" ]; then \
         yarn build:production && \ 
 	    yarn start:production; \
     else \
         yarn start; \
-    fi; \
-    sleep infinity;
+    fi; 
+    # Utile pour debugguer et rentrer dans le conteneur si celui-ci n'est plus OK
+    #sleep infinity;
