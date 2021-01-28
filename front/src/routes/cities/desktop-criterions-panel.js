@@ -150,10 +150,10 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   if (onSearch) {
     const params = []
     Object.entries(onSearch).forEach(([key, value]) => {
-      params.push(`${key}:${value.join(',')}`)
+      params.push(`${key}=${value.join(',')}`)
     })
 
-    window.location.href = `/cities?${params.join(';')}`
+    window.location.href = `/cities?${params.join('&')}`
   }
 
   return (
