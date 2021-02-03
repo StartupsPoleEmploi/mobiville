@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import { groupBy, mean, sortBy } from 'lodash'
 import { ALT_IS_MOUNTAIN, CODE_ROMES, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA, WEIGHT_REGION } from '../constants/criterion'
-import { getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity } from '../utils/api'
+import { getAveragePricing, getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity, getTensionsCities, getAverageHouseRent } from '../utils/api'
 import { citySizeLabel, distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
 
@@ -11,6 +11,9 @@ export default (sequelizeInstance, Model) => {
   Model.averageTemperatureCache = {}
   Model.cityOnSync = false
   Model.cacheSearchCities = {}
+  Model.cacheLoadAveragePricing = null
+  Model.cacheLoadAverageHouseTension = null
+  Model.cacheLoadAverageHouseRent = null
 
   Model.syncCities = async ({cities}) => {
     await Model.deleteAll()
@@ -286,6 +289,9 @@ export default (sequelizeInstance, Model) => {
         {distance_from_sea: null}, 
         {average_temperature: null},
         {description: null},
+        {average_houseselled: null},
+        {city_house_tension: null},
+        {average_houserent: null},
       ],
       },
       order: [['population', 'DESC']],
@@ -294,23 +300,42 @@ export default (sequelizeInstance, Model) => {
 
     if(city) {
       const options = {}
+      let isHttpLoad = false
       console.log(`[START] Sync city ${city.dataValues.id} - ${city.dataValues.nom_comm}`)
       if(city.dataValues.distance_from_sea === null) {
         options.distance_from_sea = Model.distanceFromSea(city.dataValues.geo_point_2d_x, city.dataValues.geo_point_2d_y)
       }
 
       if(city.dataValues.average_temperature === null) {
+        isHttpLoad = true
         options.average_temperature = await Model.averageTemperature(city.dataValues.geo_point_2d_x, city.dataValues.geo_point_2d_y)
       }
 
       if(city.dataValues.description === null) {
+        isHttpLoad = true
         options.description = await Model.getDescription(city.nom_comm)
       }
+
+      if(city.dataValues.average_houseselled === null) {
+        options.average_houseselled = await Model.getAveragePricing(city.insee_com)
+      }
+
+      if(city.dataValues.city_house_tension === null) {
+        options.city_house_tension = await Model.getCityHouseTension(city.insee_com)
+      }
+
+      if(city.dataValues.average_houserent === null) {
+        options.average_houserent = await Model.getAverageHouseRent(city.insee_com)
+      }
+
+      
 
       await city.update(options)
       console.log(`[DONE] Sync city ${city.id}`, options)
       
-      await sleep(1000) // wait and restart command
+      if(isHttpLoad) {
+        await sleep(1000) // wait and restart command
+      }
       Model.syncOneCity()
     } else {
       Model.cityOnSync = false
@@ -467,6 +492,51 @@ export default (sequelizeInstance, Model) => {
 
     return cities.map(c => ({...c, nom_comm: c.nom_comm.replace(/--/gi, '-').replace(/-1er-arrondissement/gi, '')}))
   }  
+
+  Model.getAveragePricing = async(cityInsee) => {
+    let allIntoFile = Model.cacheLoadAveragePricing
+    if(!allIntoFile) {
+      allIntoFile = await getAveragePricing()
+      Model.cacheLoadAveragePricing = allIntoFile
+    }
+
+    const find = allIntoFile.find(c => c.insee_com === cityInsee)
+    if(find && Number(find.prixmoyen_m2)) {
+      return find.prixmoyen_m2 / 100
+    }
+
+    return 0
+  }
+
+  Model.getCityHouseTension = async(cityInsee) => {
+    let allIntoFile = Model.cacheLoadAverageHouseTension
+    if(!allIntoFile) {
+      allIntoFile = await getTensionsCities()
+      Model.cacheLoadAverageHouseTension = allIntoFile
+    }
+
+    const find = allIntoFile.find(c => c.codeInsee === cityInsee)
+    if(find) {
+      return find.frais
+    }
+
+    return 0
+  }
+
+  Model.getAverageHouseRent = async(cityInsee) => {
+    let allIntoFile = Model.cacheLoadAverageHouseRent
+    if(!allIntoFile) {
+      allIntoFile = await getAverageHouseRent()
+      Model.cacheLoadAverageHouseRent = allIntoFile
+    }
+
+    const find = allIntoFile.find(c => c.insee === cityInsee)
+    if(find && find.loypredm2) {
+      return parseFloat(find.loypredm2.replace(/,/g, '.'))
+    }
+
+    return 0
+  }
   
   return Model
 }

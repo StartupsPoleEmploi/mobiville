@@ -92,6 +92,18 @@ export default sequelizeInstance => {
         type: Sequelize.TEXT,
         allowNull: true,
       },
+      average_houseselled: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
+      },
+      city_house_tension: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      average_houserent: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

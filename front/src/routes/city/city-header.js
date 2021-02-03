@@ -18,6 +18,7 @@ const MainLayout = styled.div`
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
   background-color: white;
   padding-top: ${(props) => (props.isMobile ? '0' : '72px')};
+  z-index: 1;
 `
 
 const ImageView = styled.div`
@@ -184,6 +185,7 @@ const FixedLayout = styled.div`
   left: 0;
   right: 0;
   height: 124px;
+  z-index: 1;
 `
 
 const FixedLayoutMobile = styled.div`
@@ -194,12 +196,31 @@ const FixedLayoutMobile = styled.div`
   left: 0;
   right: 0;
   height: 92px;
+  z-index: 1;
 `
 
 const ArrowBackOutlinedIconDesktopFull = styled(ArrowBackOutlinedIcon)`
   position: relative;
   top: -40px;
   cursor: pointer;
+`
+
+const SpaceArrowBackOutlinedIconMobileFull = styled.div`
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  cursor: pointer;
+  background: #FFFFFF;
+  box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.14), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 4px 5px rgba(0, 0, 0, 0.2);
+  width: 32px;
+  height: 32px;
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const ArrowBackOutlinedIconMobileFull = styled(ArrowBackOutlinedIcon)`
 `
 
 const ArrowBackOutlinedIconDesktopSmall = styled(ArrowBackOutlinedIcon)`
@@ -233,7 +254,18 @@ export const CityHeader = ({ tabList, tabSelectedIndex, onSelectTab }) => {
     <>
       <MainLayout isMobile={isMobileView(size)}>
         <ImageView style={{ backgroundImage: `url(${CITY_IMAGE})` }} isMobile={isMobileView(size)}>
-          <ArrowBackOutlinedIconDesktopFull onClick={() => history.goBack()} />
+          {!isMobileView(size) && (
+          <ArrowBackOutlinedIconDesktopFull
+            onClick={() => history.goBack()}
+          />
+          )}
+          {isMobileView(size) && (
+          <SpaceArrowBackOutlinedIconMobileFull
+            onClick={() => history.goBack()}
+          >
+            <ArrowBackOutlinedIconMobileFull />
+          </SpaceArrowBackOutlinedIconMobileFull>
+          )}
         </ImageView>
         <Region>{ucFirstOnly(city['region.new_name'])}</Region>
         <Name>{ucFirstOnly(city.nom_comm)}</Name>

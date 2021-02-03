@@ -9,9 +9,26 @@ import { CityHeader } from './city-header'
 import PanelCityJobs from './panel-city-jobs'
 import PanelCityLife from './panel-city-life'
 import PanelCityLogement from './panel-city-logement'
+import { useWindowSize } from '../../common/hooks/window-size'
+import { isMobileView } from '../../constants/mobile'
 
 const ContentBlock = styled.div`
-  margin: 32px 0;
+  margin: ${(props) => (props.isMobile ? '0' : '32px 0')};
+  padding-bottom: 64px;
+`
+
+const HelpButton = styled.button`
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 48px !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px !important;
+  cursor: pointer;
+  width: ${(props) => (props.isMobile ? 'calc(100% - 32px)' : '')};
+  padding: ${(props) => (props.isMobile ? '0 12px' : '0 48px')} !important;
 `
 
 const CityPage = ({ location: { search } }) => {
@@ -20,6 +37,7 @@ const CityPage = ({ location: { search } }) => {
   const { onLoadCity, isLoadingCity, city } = useCities()
   const { insee } = useParams()
   const params = paramUrlToObject(search)
+  const size = useWindowSize()
 
   useEffect(() => {
     const extract = insee.split('-')
@@ -40,7 +58,7 @@ const CityPage = ({ location: { search } }) => {
   const tabKey = tabList[tabSelected].key
 
   return (
-    <MainLayout menu={{ visible: false }}>
+    <MainLayout menu={{ visible: !isMobileView(size) }}>
       {isLoadingCity && (<p>Loading...</p>)}
       {!isLoadingCity && !city && (<p>Non trouvée</p>)}
       {!isLoadingCity && city && (
@@ -50,10 +68,19 @@ const CityPage = ({ location: { search } }) => {
             tabSelectedIndex={tabSelected}
             onSelectTab={setTagSelected}
           />
-          <ContentBlock>
+          <ContentBlock isMobile={isMobileView(size)}>
             {tabKey === 'job' && <PanelCityJobs city={city} rome={params && params.code_rome ? params.code_rome : null} />}
             {tabKey === 'life' && <PanelCityLife city={city} />}
             {tabKey === 'tenement' && <PanelCityLogement city={city} />}
+
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://surveys.hotjar.com/8f6785e1-2c4f-4373-ba9d-e5e9e3ed09d8"
+              style={{ cursor: 'pointer' }}
+            >
+              <HelpButton className="btn primary" type="button" isMobile={isMobileView(size)}>Être accompagné pour mon projet</HelpButton>
+            </a>
           </ContentBlock>
         </>
       )}

@@ -101,3 +101,32 @@ export const getAllRegions = () => {
   let rawdata = readFileSync(__dirname + '/../assets/datas/anciennes-nouvelles-regions.json')
   return JSON.parse(rawdata).regions.map(r => ({...r.fields}))
 }
+
+export function getAveragePricing() {
+  return new Promise((resolve, reject) => {
+    readFile(__dirname + '/../assets/datas/dvf-communes-2019.csv', (err, data) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(csvToArrayJson(data))
+      }
+    })
+  })
+}
+
+export const getTensionsCities = () => {
+  let rawdata = readFileSync(__dirname + '/../assets/datas/donnees-de-reference_zonage-commune.json')
+  return JSON.parse(rawdata).zonageCommunes
+}
+
+export function getAverageHouseRent() {
+  return new Promise((resolve, reject) => {
+    readFile(__dirname + '/../assets/datas/indicateurs-loyers-appartements.csv', (err, data) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(csvToArrayJson(data))
+      }
+    })
+  })
+}
