@@ -111,4 +111,14 @@ export default class RouteCities extends Route {
     this.sendOk(ctx, result)
   }
 
+  @Route.Get({
+    path: 'tenement/:insee',
+  })
+  async tenementCity(ctx) {
+    const {insee} = ctx.params
+    const details = await this.model.getCity({insee})
+
+    this.sendOk(ctx, {nbSocialHousing: await this.model.models.socialhousings.getNbSocialHousing(details)})
+  }
+
 }

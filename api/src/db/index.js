@@ -46,7 +46,7 @@ function getUmzug({ tableName = 'migrations', folder = 'migrations' }, dbInstanc
     },
     logging: config.database.logging,
     migrations: {
-      params: [client.getQueryInterface(), Sequelize],
+      params: [client.getQueryInterface(), Sequelize, client.models],
       path: `${process.cwd()}/src/db/${folder}`,
       pattern: /^\d+[\w-]+\.js$/,
       wrap: fun => {

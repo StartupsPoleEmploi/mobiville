@@ -25,8 +25,8 @@ export const MainLayout = ({ children, menu }) => {
 
   return (
     <Main>
-      {isMobileView(size) && <MenuMobile {...menu} />}
-      {!isMobileView(size) && <MenuDesktop {...menu} />}
+      {isMobileView(size) && menu.visible && <MenuMobile {...menu} />}
+      {!isMobileView(size) && menu.visible && <MenuDesktop {...menu} />}
       <Container style={{
         paddingBottom: isMobileView(size) ? 60 : 0,
         paddingTop: isMobileView(size) ? 0 : 76
@@ -49,5 +49,7 @@ MainLayout.propTypes = {
 }
 
 MainLayout.defaultProps = {
-  menu: {}
+  menu: {
+    visible: true
+  }
 }
