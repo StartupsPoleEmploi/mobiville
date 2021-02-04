@@ -36,7 +36,9 @@ const CitiesPage = () => {
   }, [location])
 
   useEffect(() => {
-    onSearch(params)
+    if (params && params.code_rome) {
+      onSearch(params)
+    }
   }, [params])
 
   const getCityUrl = (city) => {

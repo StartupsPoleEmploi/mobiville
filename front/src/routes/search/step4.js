@@ -50,7 +50,7 @@ const Step4Component = ({ onNext, values }) => {
 
   const getStyleOfButton = (r, index = 0) => {
     const style = {
-      width: 'calc(50% - 7.5px)', height: 98, marginRight: index === 0 ? 15 : 0, marginBottom: 15, border: 'none'
+      width: 'calc(50% - 7.5px)', height: 98, marginRight: (index + 1) % 2 !== 0 ? 15 : 0, marginBottom: 15, border: 'none'
     }
 
     if (r && values && values.city && values.city === r.key) {
