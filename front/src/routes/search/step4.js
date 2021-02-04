@@ -67,7 +67,7 @@ const Step4Component = ({ onNext, values }) => {
 
   return (
     <Wrapper>
-      <Title>Je souhaite éviter de travailler dans :</Title>
+      <Title>Je souhaite travailler dans :</Title>
       <GroupBlock>
         {criterions.criterions
           .filter((f) => f.tag === 'city')
