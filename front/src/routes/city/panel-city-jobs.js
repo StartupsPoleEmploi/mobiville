@@ -5,6 +5,7 @@ import { useProfessions } from '../../common/contexts/professionsContext'
 import { COLOR_GRAY, COLOR_TEXT_PRIMARY } from '../../constants/colors'
 import { COLOR_TEXT_SECONDARY } from '../../contants/colors'
 import { useCities } from '../../common/contexts/citiesContext'
+import { thereAre } from '../../utils/utils'
 
 const MainLayout = styled.div`
 
@@ -57,6 +58,9 @@ const JobItem = styled.div`
       margin-bottom: 16px;
       font-size: 12px;
       color: black;
+      max-height: 98px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .actions {
@@ -114,7 +118,7 @@ const PanelCityJobs = ({ city, rome }) => {
                 {p.entreprise && p.entreprise.nom && (<p className="enterprise">{p.entreprise.nom}</p>)}
                 <p className="description">{p.description}</p>
                 <div className="actions">
-                  <p className="date">{p.dateActualisation}</p>
+                  <p className="date">{thereAre(p.dateActualisation)}</p>
                   <p className="type">
                     {p.typeContrat}
                     {' '}

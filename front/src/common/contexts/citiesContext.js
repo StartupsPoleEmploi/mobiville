@@ -7,7 +7,8 @@ import {
   searchCities as apiSearchCities,
   searchCityByLocation,
   searchCityByName,
-  getCityTenement
+  getCityTenement,
+  getCityAmenities
 } from '../../api/cities.api'
 
 const EMPTY_CITY = { id: null, nom_comm: 'Non trouvée', description: '' }
@@ -23,8 +24,10 @@ export function CitiesProvider(props) {
   const [isLoadingCity, _setIsLoadingCity] = useState(false)
   const [isLoadingLocation, _setIsLoadingLocation] = useState(false)
   const [isLoadingTenement, _setIsLoadingTenement] = useState(false)
+  const [isLoadingAmenities, _setIsLoadingAmenities] = useState(false)
   const [sortCriterions, setSortCriterions] = useState('')
   const [cityTenement, _setCityTenement] = useState(null)
+  const [cityAmenities, _setCityAmenities] = useState(null)
 
   const sortCities = (cs) => {
     switch (sortCriterions) {
@@ -79,6 +82,13 @@ export function CitiesProvider(props) {
       .then(() => _setIsLoadingTenement(false))
   })
 
+  const onGetCityAmenities = useCallback((id) => {
+    _setIsLoadingAmenities(true)
+    getCityAmenities(id)
+      .then(_setCityAmenities)
+      .then(() => _setIsLoadingAmenities(false))
+  })
+
   useEffect(() => {
     getCriterions().then(_setCriterions)
   }, [])
@@ -101,6 +111,8 @@ export function CitiesProvider(props) {
         sortCriterions,
         isLoadingTenement,
         cityTenement,
+        isLoadingAmenities,
+        cityAmenities,
         // function
         setCity,
         onSearch,
@@ -108,7 +120,8 @@ export function CitiesProvider(props) {
         onSearchByLocation,
         onSearchByName,
         setSortCriterions,
-        onGetCityTenement
+        onGetCityTenement,
+        onGetCityAmenities
       }}
     />
   )

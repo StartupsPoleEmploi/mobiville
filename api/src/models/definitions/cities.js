@@ -104,6 +104,10 @@ export default sequelizeInstance => {
         type: Sequelize.FLOAT,
         allowNull: true,
       },
+      cache_living_environment: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

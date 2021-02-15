@@ -4,6 +4,7 @@ import { ALT_IS_MOUNTAIN, CODE_ROMES, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARG
 import { getAveragePricing, getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity, getTensionsCities, getAverageHouseRent } from '../utils/api'
 import { citySizeLabel, distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
+import { ALL_LIFE_CRITERIONS_LIST } from '../constants/lifeCriterions'
 
 export default (sequelizeInstance, Model) => {
   Model.franceShape = null
@@ -294,6 +295,10 @@ export default (sequelizeInstance, Model) => {
       }],
       raw: true})
 
+    if(city) {
+      city.nom_comm = city.nom_comm.replace(/--/gi, '-').replace(/-1er-arrondissement/gi, '')
+    }
+
     return city
   }
 
@@ -348,9 +353,7 @@ export default (sequelizeInstance, Model) => {
 
       if(city.dataValues.average_houserent === null) {
         options.average_houserent = await Model.getAverageHouseRent(city.insee_com)
-      }
-
-      
+      }      
 
       await city.update(options)
       console.log(`[DONE] Sync city ${city.id}`, options)
@@ -558,6 +561,22 @@ export default (sequelizeInstance, Model) => {
     }
 
     return 0
+  }
+
+  Model.getCacheLivingEnvironment = async(insee) => {
+    const list = [...ALL_LIFE_CRITERIONS_LIST]
+    const all = {}
+
+    for(let i = 0; i < list.length; i++) {
+      for(let x = 0; x < list[i].tab.length; x++) {
+        const total = (await Model.models.amenities.getTotal(insee, list[i].tab[x].code))
+        if(total) {
+          all[list[i].key + '-' + list[i].tab[x].label] = total
+        }
+      }
+    }
+
+    return all
   }
   
   return Model
