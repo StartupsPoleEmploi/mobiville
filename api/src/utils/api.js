@@ -130,3 +130,15 @@ export function getAverageHouseRent() {
     })
   })
 }
+
+export function getAmenitiesDatas() {
+  return new Promise((resolve, reject) => {
+    readFile(__dirname + '/../datas-mnt/bpe19_ensemble_xy.csv', (err, data) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(csvToArrayJson(data))
+      }
+    })
+  })
+}

@@ -2,6 +2,7 @@ import { CODE_ROMES, CRITERIONS } from '../constants/criterion'
 import { Types } from '../utils/types'
 import Route from './Route'
 import config from 'config'
+import { ALL_LIFE_CRITERIONS_LIST } from '../constants/lifeCriterions'
 
 export default class RouteCities extends Route {
   constructor(params) {
@@ -119,6 +120,24 @@ export default class RouteCities extends Route {
     const details = await this.model.getCity({insee})
 
     this.sendOk(ctx, {nbSocialHousing: await this.model.models.socialhousings.getNbSocialHousing(details)})
+  }
+
+  @Route.Get({
+    path: 'amenities/:insee',
+  })
+  async amenitiesCity(ctx) {
+    const {insee} = ctx.params
+    const cacheList = await this.model.getCacheLivingEnvironment(insee) || {}
+    const list = JSON.parse(JSON.stringify(ALL_LIFE_CRITERIONS_LIST))   
+    
+    for(let i = 0; i < list.length; i++) {
+      for(let x = 0; x < list[i].tab.length; x++) {
+        list[i].tab[x].total = cacheList[list[i].key + '-' + list[i].tab[x].label] || 0
+      }
+      list[i].tab = list[i].tab.filter(i => i.total)
+    }
+    
+    this.sendOk(ctx, list)
   }
 
 }

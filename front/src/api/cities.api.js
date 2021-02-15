@@ -11,3 +11,5 @@ export const searchCityByLocation = (body) => axios.post('/api/cities/search-by-
 export const searchCityByName = (body) => axios.post('/api/cities/search-by-name', body).then((response) => (response.data ? response.data.data : []))
 
 export const getCityTenement = (insee) => axios.get(`/api/cities/tenement/${insee}`).then((response) => (response.data ? response.data.data : null))
+
+export const getCityAmenities = (insee) => axios.get(`/api/cities/amenities/${insee}`).then((response) => (response.data ? response.data.data : null))

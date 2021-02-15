@@ -26,6 +26,11 @@ GET http://localhost/api/sync/sync-profession-in-tension   ~ 65000ms
 GET http://localhost/api/sync/sync-regions   ~ 250ms
 ```
 
+```
+// populate all equipements
+GET http://localhost/api/sync/sync-amenities   ~ 1h
+```
+
 ## Buid 
 
 Create / save an image docker to push to the server.
