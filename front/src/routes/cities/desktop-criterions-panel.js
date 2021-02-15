@@ -200,10 +200,6 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
             {allCriterions && allCriterions.criterions
                     && allCriterions.criterions.filter((c) => c.tag === 'city').map((rome) => (
                       <MenuItem key={rome.key} value={rome.key}>
-                        N
-                        {'\''}
-                        est pas une
-                        {' '}
                         {rome.label}
                       </MenuItem>
                     ))}
