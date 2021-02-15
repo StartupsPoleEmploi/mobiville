@@ -90,7 +90,7 @@ const Step4Component = ({ onNext, values }) => {
               key={c.key}
               light
               column
-              onClick={() => (c.available ? onNext({ envircityonment: c.key }) : '')}
+              onClick={() => (c.available ? onNext({ city: c.key }) : '')}
               style={getStyleOfButton(c, index)}
             >
               <Icon>{c.icon}</Icon>

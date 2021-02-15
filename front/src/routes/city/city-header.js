@@ -94,7 +94,7 @@ const CityTabMobile = styled.div`
   width: ${(props) => (props.fixedView ? 'fit-content' : 'auto')};
 `
 
-const TabItem = styled.p`
+const TabItem = styled.button`
   && {
     color: ${(props) => (props.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY)};
     font-weight: 500;
@@ -106,6 +106,8 @@ const TabItem = styled.p`
     cursor: pointer;
     margin-top: 0;
     margin-bottom: 0;
+    background: none;
+    border: none;
     
     &:before {
       content: ' ';
@@ -121,7 +123,7 @@ const TabItem = styled.p`
   }
 `
 
-const TabItemMobile = styled.p`
+const TabItemMobile = styled.button`
   && {
     color: ${(props) => (props.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY)};
     font-weight: 500;
@@ -134,6 +136,8 @@ const TabItemMobile = styled.p`
     margin-top: 0;
     margin-bottom: 0;
     justify-content: space-around;
+    background: none;
+    border: none;
     
     &:before {
       content: ' ';
