@@ -57,6 +57,7 @@ export default sequelizeInstance => {
       timestamps: true,
       paranoid: true,
       underscored: true,
+      indexes: [{ fields: ['former_code'] }, { fields: ['new_code'] }],
     }
   )
 
