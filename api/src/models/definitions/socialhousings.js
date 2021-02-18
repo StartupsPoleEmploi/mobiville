@@ -37,6 +37,7 @@ export default sequelizeInstance => {
       timestamps: true,
       paranoid: true,
       underscored: true,
+      indexes: [{ fields: ['code_reg'] }],
     }
   )
 

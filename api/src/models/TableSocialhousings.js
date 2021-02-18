@@ -1,5 +1,3 @@
-import socialhousings from './definitions/socialhousings'
-
 export default (sequelizeInstance, Model) => {
   Model.getNbSocialHousing = async (city) => {
     if(city) {

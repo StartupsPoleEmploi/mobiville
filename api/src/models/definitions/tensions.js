@@ -73,7 +73,7 @@ export default sequelizeInstance => {
       timestamps: true,
       paranoid: true,
       underscored: true,
-      indexes: [{ unique: true, fields: ['bassin_id', 'rome'] }],
+      indexes: [{ fields: ['bassin_id'] }, { fields: ['rome'] }],
     }
   )
 

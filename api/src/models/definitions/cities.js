@@ -126,6 +126,7 @@ export default sequelizeInstance => {
       timestamps: true,
       paranoid: true,
       underscored: true,
+      indexes: [{ fields: ['insee_com'] }],
     }
   )
 

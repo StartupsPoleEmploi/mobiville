@@ -2,7 +2,7 @@ import Sequelize from 'sequelize'
 
 export default sequelizeInstance => {
   const Model = sequelizeInstance.define(
-    'bassins',
+    'helps',
     {
       id: {
         type: Sequelize.INTEGER,
@@ -11,37 +11,50 @@ export default sequelizeInstance => {
         autoIncrement: true,
         unique: true,
       },
-      code_commune_insee: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-      },
-      reg_credoc: {
+      title: {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      reg: {
+      goal: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      when: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      conditions: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      cumulable: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      link: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      who: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      section: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      situtation: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      count_vue: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-      },
-      dep: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      code_commune: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      nom_com: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      bassin_id: {
-        type: Sequelize.INTEGER,
         allowNull: false,
-      },
-      bassin_name: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
+        defaultValue: 0,
       },
       created_at: {
         allowNull: false,
@@ -61,13 +74,10 @@ export default sequelizeInstance => {
       timestamps: true,
       paranoid: true,
       underscored: true,
-      indexes: [{ fields: ['bassin_id'] },{ fields: ['code_commune_insee'] }],
     }
   )
 
   Model.associate = function(models) {
-    Model.hasMany(models.tensions, { foreignKey: 'bassin_id', sourceKey: 'bassin_id' })
-
     return models
   }
 

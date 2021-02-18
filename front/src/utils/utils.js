@@ -70,7 +70,7 @@ export const ucFirst = (s) => {
 
 export const ucFirstOnly = (s) => {
   if (typeof s !== 'string') return ''
-  return ucFirst(s.toLowerCase())
+  return ucFirst(s.trim().toLowerCase())
 }
 
 export const thereAre = (date) => moment(date).fromNow()
