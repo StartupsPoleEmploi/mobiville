@@ -21,14 +21,22 @@ export function getAllCities() {
 
 export function getAllTensions() {
   return new Promise((resolve, reject) => {
-    readFile(__dirname + '/../assets/datas/cities-tension.csv', (err, data) => {
+    readFile(__dirname + '/../assets/datas/cities-tension-utf8.csv', (err, data) => {
       if(err) {
         reject(err)
       } else {
         resolve(csvToArrayJson(data))
       }
     })
-  }).then(list => (list.map(c => ({...c, bassin_id: c.bassin}))))
+  }).then(list => (list.map(c => ({
+    ...c, 
+    bassin_id: c.cbassin, 
+    bassin_lib: c.lib_bassin_bmo19, 
+    defm: 0, 
+    dee: null, 
+    oee_nosais: null, 
+    ind_t: c.ind_tension_d,
+  }))))
 }
 
 export function getAllBassins() {
