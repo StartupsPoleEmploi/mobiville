@@ -109,6 +109,7 @@ export default (sequelizeInstance, Model) => {
           where: {
             rome: codeRome,
           },
+          order: [['ind_t', 'desc']],
         }],
       }, {
         model: Model.models.regions,
