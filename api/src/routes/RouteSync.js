@@ -5,7 +5,11 @@ export default class RouteSync extends Route {
   constructor(params) {
     super({ ...params, model: 'cities' })
 
-    this.autoSync()
+    try {
+      this.autoSync()
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   async autoSync() {
