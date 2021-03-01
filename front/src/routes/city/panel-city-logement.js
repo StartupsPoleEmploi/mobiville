@@ -152,7 +152,7 @@ const PanelCityLogement = ({ city }) => {
                   {'\''}
                   obtention moyen dans la région
                 </p>
-                <p className="details">A venir</p>
+                <p className="details">{city && city['region.average_delay_obtain_social_housing'] ? `${city['region.average_delay_obtain_social_housing']} jours` : 'A venir'}</p>
               </ElementObject>
             </ItemContentLayout>
           </ItemLayout>
@@ -260,7 +260,7 @@ const PanelCityLogement = ({ city }) => {
                 {'\''}
                 obtention moyen dans la région
               </p>
-              <p className="details">A venir</p>
+              <p className="details">{city && city['region.average_delay_obtain_social_housing'] ? `${city['region.average_delay_obtain_social_housing']} jours` : 'A venir'}</p>
             </ElementObject>
           </ItemContentLayout>
         </ItemLayoutMobile>
