@@ -4,6 +4,16 @@ import Route from './Route'
 export default class RouteSync extends Route {
   constructor(params) {
     super({ ...params, model: 'cities' })
+
+    this.autoSync()
+  }
+
+  async autoSync() {
+    const countAmenities = await this.models.amenities.count()
+    if(countAmenities === 0) {
+      const amenities = await getAmenitiesDatas()
+      await this.models.amenities.sync({amenities})
+    }
   }
 
   @Route.Get()
@@ -32,13 +42,4 @@ export default class RouteSync extends Route {
 
     this.sendOk(ctx, {tensions: statusTensions, bassins: statusBassins})
   }
-
-  @Route.Get()
-  async syncAmenities(ctx) {
-    const amenities = await getAmenitiesDatas()
-    const statusAmenities = await this.models.amenities.sync({amenities})
-
-    this.sendOk(ctx, {amenities: statusAmenities})
-  }
-
 }
