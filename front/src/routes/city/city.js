@@ -76,7 +76,7 @@ const CityPage = ({ location: { search } }) => {
             <a
               target="_blank"
               rel="noreferrer"
-              href="https://surveys.hotjar.com/8f6785e1-2c4f-4373-ba9d-e5e9e3ed09d8"
+              href="https://forms.office.com/Pages/ResponsePage.aspx?id=D2CoVeZOtUuPFFNYlTa23928sWFHLoxJm4ig5MoGaWlUNEI4MU9GMEI3QUswNlpDSkZGTjZSSE5CNy4u"
               style={{ cursor: 'pointer' }}
             >
               <HelpButton className="btn primary" type="button" isMobile={isMobileView(size)}>Être accompagné pour mon projet</HelpButton>
