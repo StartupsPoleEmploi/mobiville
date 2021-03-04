@@ -98,14 +98,14 @@ const Step4Component = ({ onNext, values }) => {
               <SubLabel>{c.subLabel}</SubLabel>
             </Button>
           ))}
-        <Button
+        {/* <Button
           light
           column
           onClick={() => onNext()}
           style={{ height: 48, border: 'none' }}
         >
           Peu importe
-        </Button>
+        </Button> */}
       </GroupBlock>
     </Wrapper>
   )

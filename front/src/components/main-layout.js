@@ -5,6 +5,8 @@ import { MenuMobile } from './menu-mobile'
 import { MenuDesktop } from './menu-desktop'
 import { isMobileView } from '../constants/mobile'
 import { useWindowSize } from '../common/hooks/window-size'
+import { Footer } from './footer'
+import { TopMobileMenu } from './top-mobile-menu'
 
 const Main = styled.div`
   height: 100%;
@@ -20,11 +22,14 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-export const MainLayout = ({ children, menu }) => {
+export const MainLayout = ({
+  children, menu, footer, topMobileMenu
+}) => {
   const size = useWindowSize()
 
   return (
     <Main>
+      {isMobileView(size) && topMobileMenu && <TopMobileMenu />}
       {isMobileView(size) && menu.visible && <MenuMobile {...menu} />}
       {!isMobileView(size) && menu.visible && <MenuDesktop {...menu} />}
       <Container style={{
@@ -34,6 +39,7 @@ export const MainLayout = ({ children, menu }) => {
       >
         {children}
       </Container>
+      {footer && (<Footer />)}
     </Main>
   )
 }
@@ -45,11 +51,15 @@ MainLayout.propTypes = {
   ]).isRequired,
   menu: PropTypes.oneOfType([
     PropTypes.object
-  ])
+  ]),
+  footer: PropTypes.bool,
+  topMobileMenu: PropTypes.bool
 }
 
 MainLayout.defaultProps = {
   menu: {
     visible: true
-  }
+  },
+  footer: false,
+  topMobileMenu: false
 }
