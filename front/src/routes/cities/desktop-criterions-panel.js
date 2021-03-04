@@ -117,7 +117,6 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
 
     updateValue('rome', criterions && criterions.code_rome && criterions.code_rome.length ? criterions.code_rome[0] : '')
     updateValue('region', criterions && criterions.code_region && criterions.code_region.length ? criterions.code_region[0] : '')
-    updateValue('rome', criterions && criterions.code_rome && criterions.code_rome.length ? criterions.code_rome[0] : '')
   }, [criterions])
 
   useEffect(() => {
