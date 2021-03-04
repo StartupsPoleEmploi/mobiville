@@ -252,7 +252,7 @@ const HelpsPage = () => {
             <CategoryTag
               key={c.text}
               selected={project && c.key === project.key}
-              onClick={() => setProject(c.key === project ? null : c)}
+              onClick={() => setProject(project && c.key === project.key ? null : c)}
             >
               <img src={c.icon} alt={c.text} />
               <p>{c.text}</p>
@@ -263,7 +263,7 @@ const HelpsPage = () => {
             <Tag
               key={c.text}
               selected={situation && c.key === situation.key}
-              onClick={() => setStituation(c.key === situation ? null : c)}
+              onClick={() => setStituation(situation && c.key === situation.key ? null : c)}
             >
               <p>{c.text}</p>
             </Tag>
