@@ -232,7 +232,7 @@ const HomePage = () => {
           <Panel>
             <img src={STEP1} alt="Sélectionnez" />
             <NumberText>1</NumberText>
-            <DescriptionText>Sélecitonnez votre métier parmi la liste proposée</DescriptionText>
+            <DescriptionText>Sélectionnez votre métier parmi la liste proposée</DescriptionText>
           </Panel>
           <EmptyPanel isMobile={isMobileView(size)} />
         </BlockLine>
@@ -240,10 +240,10 @@ const HomePage = () => {
         <BlockLine isMobile={isMobileView(size)}>
           <EmptyPanel isMobile={isMobileView(size)} />
           <Panel>
-            <img src={STEP2} alt="Ajouter" />
+            <img src={STEP2} alt="Ajoutez" />
             <NumberText>2</NumberText>
             <DescriptionText>
-              Ajouter vos critères profesionnels
+              Ajoutez vos critères professionnels
               et votre cadre de vie idéal
 
             </DescriptionText>
