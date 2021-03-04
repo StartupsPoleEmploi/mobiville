@@ -17,7 +17,7 @@ const ContentBlock = styled.div`
   padding-bottom: 64px;
 `
 
-const HelpButton = styled.button`
+/* const HelpButton = styled.button`
   position: fixed;
   bottom: 32px;
   left: 50%;
@@ -29,7 +29,7 @@ const HelpButton = styled.button`
   cursor: pointer;
   width: ${(props) => (props.isMobile ? 'calc(100% - 32px)' : '')};
   padding: ${(props) => (props.isMobile ? '0 12px' : '0 48px')} !important;
-`
+` */
 
 const CityPage = ({ location: { search } }) => {
   const [tabList, setTabList] = useState([{ key: 'life', label: 'Cadre de vie' }, { key: 'tenement', label: 'Logement' }])
