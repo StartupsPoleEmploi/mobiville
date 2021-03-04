@@ -267,7 +267,9 @@ const LegalPage = () => (
         <p>
           Pour plus d’informations sur les cookies notamment sur le type de
           cookies déposés ainsi que leurs finalités précises, vous pouvez consulter
-          la plateforme de gestion du consentement, disponible ici
+          la plateforme de gestion du consentement,
+          {' '}
+          <a href="#/" onClick="tC.privacyCenter.showPrivacyCenter(); return false">disponible ici</a>
 
         </p>
         <h4>6.3 Accepter ou refuser les cookies</h4>
