@@ -81,6 +81,8 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     let params = { }
     if (tempForm.rome) {
       params = { ...params, code_rome: [tempForm.rome] }
+    } else if (allCriterions.codeRomes && allCriterions.codeRomes.length) {
+      params = { ...params, code_rome: [allCriterions.codeRomes[0].key] }
     }
 
     if (tempForm.city) {
