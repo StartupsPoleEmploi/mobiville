@@ -29,7 +29,22 @@ const SubTitle = styled.p`
 const Header = styled.div`
   height: 216px; 
   margin-bottom: 32px; 
-  background: #C4C4C4;  
+  background: white;  
+
+  > div {
+    display: flex;
+    align-items: center;
+    max-width: 800px;
+
+    img {
+      height: 216px; 
+      margin-right: 64px;
+    }
+
+    p {
+      font-weight: bold;
+    }
+  }
 `
 
 const Container = styled.div`
@@ -243,7 +258,21 @@ const HelpsPage = () => {
 
   return (
     <MainLayout>
-      {!isMobileView(size) && <Header />}
+      {!isMobileView(size) && (
+      <Header>
+        <div className="wrapper">
+          <img src="/Generique_Aides.png" alt="help" />
+          <div className="text">
+            <h2>
+              Vous avez besoin d
+              {'\''}
+              aide pour votre projet de mobilité ?
+            </h2>
+            <p>Découvrez les solutions pour accélérer votre projet</p>
+          </div>
+        </div>
+      </Header>
+      )}
       <Container isMobile={isMobileView(size)}>
         <CategoryPanel>
           <Title>Découvrez les aides pour vous</Title>
