@@ -288,7 +288,10 @@ const LegalPage = () => (
           Pour les cookies donnant lieu à consentement préalable, l’utilisateur
           peut accepter ou refuser le dépôt de tout ou partie des cookies, à tout
           moment, en formulant des choix sur la plateforme de gestion du
-          consentement via ce lien dédié.
+          consentement
+          {' '}
+          <a href="#/" onClick="tC.privacyCenter.showPrivacyCenter(); return false">via ce lien dédié</a>
+          .
 
         </p>
         <p><b>Le paramétrage du navigateur</b></p>
