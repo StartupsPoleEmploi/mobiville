@@ -73,14 +73,15 @@ const CityPage = ({ location: { search } }) => {
             {tabKey === 'life' && <PanelCityLife city={city} />}
             {tabKey === 'tenement' && <PanelCityLogement city={city} />}
 
-            <a
+            {/* <a
               target="_blank"
               rel="noreferrer"
-              href="https://forms.office.com/Pages/ResponsePage.aspx?id=D2CoVeZOtUuPFFNYlTa23928sWFHLoxJm4ig5MoGaWlUNEI4MU9GMEI3QUswNlpDSkZGTjZSSE5CNy4u"
+href="https://forms.office.com/Pages/ResponsePage.aspx?id=D2CoVeZOtUuPFFNYlTa23928sWFHLoxJm4ig5MoGaWlUNEI4MU9GMEI3QUswNlpDSkZGTjZSSE5CNy4u"
               style={{ cursor: 'pointer' }}
             >
-              <HelpButton className="btn primary" type="button" isMobile={isMobileView(size)}>Être accompagné pour mon projet</HelpButton>
-            </a>
+              <HelpButton className="btn primary" type="button" isMobile={isMobileView(size)}>
+              Être accompagné pour mon projet</HelpButton>
+            </a> */}
           </ContentBlock>
         </>
       )}
