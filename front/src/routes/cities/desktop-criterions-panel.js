@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import {
   MenuItem, Select, Typography
 } from '@material-ui/core'
+import { Redirect } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { COLOR_BACKGROUND, COLOR_PRIMARY } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
@@ -154,7 +155,14 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       params.push(`${key}=${value.join(',')}`)
     })
 
-    window.location.href = `/cities?${params.join('&')}`
+    return (
+      <Redirect
+        to={{
+          pathname: '/cities',
+          search: `?${params.join('&')}`
+        }}
+      />
+    )
   }
 
   return (
