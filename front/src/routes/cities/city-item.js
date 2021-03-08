@@ -75,7 +75,7 @@ const CityItem = ({ city }) => {
       <InformationsBlock>
         <Title>{ucFirst(city.nom_comm.toLowerCase())}</Title>
         <Description>
-          {city.description.replace(/\((.*?)\)/gim, '').replace(/\[(.*?)\]/gim, '')}
+          {(city.description || '').replace(/\((.*?)\)/gim, '').replace(/\[(.*?)\]/gim, '')}
         </Description>
         <TagsBlock>
           {city.distance_from_sea && city.distance_from_sea <= 10 && (

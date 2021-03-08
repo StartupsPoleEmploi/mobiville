@@ -297,7 +297,7 @@ export default (sequelizeInstance, Model) => {
       raw: true})
 
     if(city) {
-      city.nom_comm = city.nom_comm.replace(/--/gi, '-').replace(/-1er-arrondissement/gi, '')
+      city.nom_comm = (city.nom_comm || '').replace(/--/gi, '-').replace(/-1er-arrondissement/gi, '')
     }
 
     return city
@@ -516,7 +516,7 @@ export default (sequelizeInstance, Model) => {
       raw: true,
     })
 
-    return cities.map(c => ({...c, nom_comm: c.nom_comm.replace(/--/gi, '-').replace(/-1er-arrondissement/gi, '')}))
+    return cities.map(c => ({...c, nom_comm: (c.nom_comm || '').replace(/--/gi, '-').replace(/-1er-arrondissement/gi, '')}))
   }  
 
   Model.getAveragePricing = async(cityInsee) => {
