@@ -52,6 +52,11 @@ const ImageBlock = styled.div`
   ` : '')}
 `
 
+const VideoBlock = styled.video`
+  width: 320px;
+  height: 320px;
+`
+
 const TextBlock = styled.div`
   flex: 1;
 `
@@ -189,10 +194,12 @@ const HomePage = () => {
             <Action to="/rechercher">Trouver ma ville</Action>
           </TextBlock>
           {!isMobileView(size) && (
-          <ImageBlock
-            style={{ backgroundImage: 'url(/00-Hero-Homepage.png)' }}
-            isMobile={isMobileView(size)}
-          />
+          <VideoBlock loop muted autoPlay>
+            <source
+              src="/videos/Hero-mobiville-320px.mp4"
+              type="video/mp4"
+            />
+          </VideoBlock>
           )}
         </div>
       </Block>
