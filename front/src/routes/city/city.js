@@ -17,7 +17,7 @@ const ContentBlock = styled.div`
   padding-bottom: 64px;
 `
 
-/* const HelpButton = styled.button`
+const HelpButton = styled.button`
   position: fixed;
   bottom: 32px;
   left: 50%;
@@ -29,7 +29,7 @@ const ContentBlock = styled.div`
   cursor: pointer;
   width: ${(props) => (props.isMobile ? 'calc(100% - 32px)' : '')};
   padding: ${(props) => (props.isMobile ? '0 12px' : '0 48px')} !important;
-` */
+`
 
 const CityPage = ({ location: { search } }) => {
   const [tabList, setTabList] = useState([{ key: 'life', label: 'Cadre de vie' }, { key: 'tenement', label: 'Logement' }])
@@ -82,6 +82,16 @@ href="https://forms.office.com/Pages/ResponsePage.aspx?id=D2CoVeZOtUuPFFNYlTa239
               <HelpButton className="btn primary" type="button" isMobile={isMobileView(size)}>
               Être accompagné pour mon projet</HelpButton>
             </a> */}
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={'mailto:contact@mobiville.pole-emploi.fr?subject=Être accompagné pour mon projet&body=Quelle est la ville qui vous intéresse ?%0D%0A%0D%0A%0D%0A%0D%0AComment pouvons-nous vous aider ?%0D%0A%0D%0A%0D%0A%0D%0AQuel est votre nom et votre prénom ? (ça nous permettra de vous recontacter^^)%0D%0A%0D%0A%0D%0A%0D%0AVotre numéro de téléphone (optionnel mais c\'est mieux d\'échanger en direct )%0D%0A%0D%0A%0D%0A%0D%0ARecommanderiez-vous notre service à un ami ou un collègue ?%0D%0A%0D%0A%0D%0A%0D%0A'}
+              style={{ cursor: 'pointer' }}
+            >
+              <HelpButton className="btn primary" type="button" isMobile={isMobileView(size)}>
+                Être accompagné pour mon projet
+              </HelpButton>
+            </a>
           </ContentBlock>
         </>
       )}
