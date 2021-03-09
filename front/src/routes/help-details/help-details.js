@@ -173,15 +173,24 @@ const HelpDetailsPage = () => {
           </Panel>
           <Panel isMobile={isMobileView(size)}>
             <Title>Quand faire la demande ?</Title>
-            <Description>{help.when}</Description>
+            <Description dangerouslySetInnerHTML={{
+              __html: help.when
+            }}
+            />
           </Panel>
           <Panel isMobile={isMobileView(size)}>
             <Title>Quelles conditions ?</Title>
-            <Description>{help.conditions}</Description>
+            <Description dangerouslySetInnerHTML={{
+              __html: help.conditions
+            }}
+            />
           </Panel>
           <Panel isMobile={isMobileView(size)}>
             <Title>Est-elle cumulable ?</Title>
-            <Description>{help.cumulable}</Description>
+            <Description dangerouslySetInnerHTML={{
+              __html: help.cumulable
+            }}
+            />
           </Panel>
           <Panel isMobile={isMobileView(size)}>
             <Title>Public concerné</Title>
