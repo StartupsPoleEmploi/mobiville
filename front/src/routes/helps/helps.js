@@ -275,7 +275,7 @@ const HelpsPage = () => {
       )}
       <Container isMobile={isMobileView(size)}>
         <CategoryPanel>
-          <Title>Découvrez les aides pour vous</Title>
+          <Title>Découvrez les aides</Title>
           <SubTitle>Quel est votre projet ?</SubTitle>
           {categories.map((c) => (
             <CategoryTag

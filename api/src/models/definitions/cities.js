@@ -108,6 +108,10 @@ export default sequelizeInstance => {
         type: Sequelize.TEXT,
         allowNull: true,
       },
+      photo: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

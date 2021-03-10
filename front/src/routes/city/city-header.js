@@ -10,7 +10,6 @@ import { COLOR_PRIMARY, COLOR_TEXT_SECONDARY } from '../../contants/colors'
 import { ucFirstOnly } from '../../utils/utils'
 import { isMobileView } from '../../constants/mobile'
 import { useWindowSize } from '../../common/hooks/window-size'
-import CITY_IMAGE from '../../assets/images/test-city-image.jpg'
 import { COLOR_SECONDARY } from '../../constants/colors'
 import { useScroll } from '../../common/hooks/use-scroll'
 
@@ -257,7 +256,7 @@ export const CityHeader = ({ tabList, tabSelectedIndex, onSelectTab }) => {
   return (
     <>
       <MainLayout isMobile={isMobileView(size)}>
-        <ImageView style={{ backgroundImage: `url(${CITY_IMAGE})` }} isMobile={isMobileView(size)}>
+        <ImageView style={{ backgroundImage: `url(${city.photo || `/regions/region-${city['region.new_code']}.jpg`})` }} isMobile={isMobileView(size)}>
           {!isMobileView(size) && (
           <ArrowBackOutlinedIconDesktopFull
             onClick={() => history.goBack()}

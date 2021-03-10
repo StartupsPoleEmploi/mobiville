@@ -180,7 +180,7 @@ const PanelCityLife = ({ city }) => {
               Description de la ville
             </ItemTitleLayout>
             <ItemContentLayout>
-              {(city.description || '').replace(/\((.*?)\)/gim, '').replace(/\[(.*?)\]/gim, '')}
+              {city.description}
             </ItemContentLayout>
           </ItemLayout>
 
@@ -297,7 +297,7 @@ const PanelCityLife = ({ city }) => {
             Description de la ville
           </ItemTitleLayout>
           <ItemContentLayout>
-            {(city.description || '').replace(/\((.*?)\)/gim, '').replace(/\[(.*?)\]/gim, '')}
+            {city.description}
           </ItemContentLayout>
         </ItemLayoutMobile>
 

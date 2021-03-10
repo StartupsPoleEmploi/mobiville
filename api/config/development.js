@@ -1,5 +1,5 @@
 module.exports = {
-  preloadSearch: true,
+  preloadSearch: false,
   database: {
     url: process.env.DATABASE_URL,
     dialectOptions: {
