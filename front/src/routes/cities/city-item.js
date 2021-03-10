@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { Typography } from '@material-ui/core'
 import { ucFirst } from '../../utils/utils'
 import { COLOR_TEXT_PRIMARY, COLOR_TEXT_SECONDARY } from '../../constants/colors'
-import CITY_IMAGE from '../../assets/images/test-city-image.jpg'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 
@@ -71,11 +70,11 @@ const CityItem = ({ city }) => {
 
   return (
     <Wrapper isMobile={isMobileView(size)}>
-      <Image style={{ backgroundImage: `url(${CITY_IMAGE})` }} isMobile={isMobileView(size)} />
+      <Image style={{ backgroundImage: `url(${city.photo || `/regions/region-${city['region.new_code']}.jpg`})` }} isMobile={isMobileView(size)} />
       <InformationsBlock>
         <Title>{ucFirst(city.nom_comm.toLowerCase())}</Title>
         <Description>
-          {(city.description || '').replace(/\((.*?)\)/gim, '').replace(/\[(.*?)\]/gim, '')}
+          {city.description}
         </Description>
         <TagsBlock>
           {city.distance_from_sea && city.distance_from_sea <= 10 && (

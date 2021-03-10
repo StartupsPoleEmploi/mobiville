@@ -108,7 +108,7 @@ const Step1Component = ({ onNext, values }) => {
 
   return (
     <Wrapper>
-      <Title>Où habitez vous ?</Title>
+      <Title>Où habitez-vous actuellement ?</Title>
       <FormLine fullWidth>
         <Autocomplete
           onChange={(event, newValue) => {
@@ -122,7 +122,8 @@ const Step1Component = ({ onNext, values }) => {
           getOptionLabel={formatedCity}
           options={searchCities.filter((s) => s.id !== null)}
           loading={isLoadingLocation}
-          renderInput={(params) => <Input {...params} onKeyUp={searchNewCities} label="Villes" />}
+          noOptionsText="Aucun résultat"
+          renderInput={(params) => <Input {...params} onKeyUp={searchNewCities} label="Ville" />}
         />
       </FormLine>
       {isMobileView(size) && (

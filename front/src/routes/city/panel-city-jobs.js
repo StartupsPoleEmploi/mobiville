@@ -94,6 +94,10 @@ const PanelCityJobs = ({ city, rome }) => {
     const finded = criterions.codeRomes.find((c) => c.key === rome[0])
     if (finded) {
       romeLabel = `pour ${finded.label.toLowerCase()}`
+
+      if (professions.length) {
+        romeLabel = romeLabel.replace(/e\)/g, 'es)')
+      }
     }
   }
 
@@ -108,6 +112,8 @@ const PanelCityJobs = ({ city, rome }) => {
           {professions.length > 1 ? 's' : ''}
           {' '}
           {romeLabel}
+          {' '}
+          dans un rayon de 30 km
         </JobTitleLayout>
         <JobContentLayout>
           {isLoadingProfessions && <p>Chargement des métiers</p>}

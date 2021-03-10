@@ -53,8 +53,14 @@ const Step3Component = ({ onNext, values }) => {
 
   return (
     <Wrapper>
-      <Title>Dans quelle région ?</Title>
-      <SmallTitle>Seules les régions en tensions sont disponibles.</SmallTitle>
+      <Title>Quelle région vous intéresse ?</Title>
+      <SmallTitle>
+        Seules les régions avec des fortes probabilités d
+        {'\''}
+        embauche s
+        {'\''}
+        affichent.
+      </SmallTitle>
       <FormControl>
         <InputLabel htmlFor="age-native-simple">Région</InputLabel>
         <Select

@@ -18,10 +18,10 @@ export const WEIGHT_REGION = 6
 
 
 export const CODE_ROMES = [{
-  label: 'Aide soignant',
+  label: 'Aide-soignant(e)',
   key: CAREGIVER_ROME_CODE,
 }, {
-  label: 'Technicien maintenance informatique',
+  label: 'Technicien(nne) maintenance informatique',
   key: COMPUTER_MAINTENANCE_TECHNICIAN_ROME_CODE,
 }]
 
@@ -48,27 +48,27 @@ export const CRITERIONS = [{
   tag: 'city',
   icon: 'person',
   weight: 5,
-  subLabel: `- ${IS_SMALL_CITY} 000 habitants`,
+  subLabel: `moins de ${IS_SMALL_CITY} 000 habitants`,
   key: CRIT_SMALL_CITY,
 }, {
   label: 'Ville moyenne',
   tag: 'city',
   icon: 'people_alt',
   weight: 5,
-  subLabel: `+ ${IS_MEDIUM_CITY} 000 habitants`,
+  subLabel: `entre ${IS_MEDIUM_CITY} 000 habitants et ${IS_LARGE_CITY} 000 habitants`,
   key: CRIT_MEDIUM_CITY,
 }, {
   label: 'Grande ville',
   tag: 'city',
   icon: 'groups',
   weight: 5,
-  subLabel: `- ${IS_LARGE_CITY} 000 habitants`,
+  subLabel: `entre ${IS_LARGE_CITY} 000 habitants et ${IS_LARGE_CITY} 000 habitants`,
   key: CRIT_LARGE_CITY,
 }, {
   label: 'Métropole',
   tag: 'city',
   icon: 'apartment',
   weight: 5,
-  subLabel: `+ ${IS_LARGE_CITY} 000 habitants`,
+  subLabel: `plus de ${IS_LARGE_CITY} 000 habitants`,
   key: CRIT_EXTRA_LARGE_CITY,
 }]

@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import { groupBy, mean, sortBy } from 'lodash'
 import { ALT_IS_MOUNTAIN, CODE_ROMES, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA, WEIGHT_REGION } from '../constants/criterion'
-import { getAveragePricing, getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, wikipediaSearchCity, getTensionsCities, getAverageHouseRent } from '../utils/api'
+import { getAveragePricing, getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, getTensionsCities, getAverageHouseRent } from '../utils/api'
 import { citySizeLabel, distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
 import { ALL_LIFE_CRITERIONS_LIST } from '../constants/lifeCriterions'
@@ -341,7 +341,9 @@ export default (sequelizeInstance, Model) => {
 
       if(city.dataValues.description === null) {
         isHttpLoad = true
-        options.description = await Model.getDescription(city.nom_comm)
+        const {photo, description} = await Model.getDescription(city.nom_comm)
+        options.photo = photo
+        options.description = description
       }
 
       if(city.dataValues.average_houseselled === null) {
@@ -360,7 +362,7 @@ export default (sequelizeInstance, Model) => {
       console.log(`[DONE] Sync city ${city.id}`, options)
       
       if(isHttpLoad) {
-        await sleep(1000) // wait and restart command
+        await sleep(700) // wait and restart command
       }
       Model.syncOneCity()
     } else {
@@ -444,21 +446,22 @@ export default (sequelizeInstance, Model) => {
   }
 
   Model.getDescription = async(cityName) => {
-    const listCity = await wikipediaSearchCity(cityName)
-    const firstItem = listCity.length ? listCity[0] : null
-    
-    if(firstItem && firstItem.title) {
-      try {
-        const description = await wikipediaDetails(firstItem.title)
-        if(description) {
-          return description
-        }
-      } catch(err) {
-        console.log(err)
-      }
+    const cityDetails = await wikipediaDetails(cityName)
+    let description = NO_DESCRIPTION_MSG
+    let photo = null
+
+    if(cityDetails && cityDetails.extract) {
+      description = (cityDetails.extract || '').replace(/\((.*?)\)/gim, '').replace(/\[(.*?)\]/gim, '')
     }
 
-    return NO_DESCRIPTION_MSG
+    if(cityDetails && cityDetails.original && cityDetails.original.source) {
+      photo = cityDetails.original.source
+    }
+    
+    return {
+      description,
+      photo,
+    }
   }
 
   Model.searchByLocation = async ({latitude, longitude})  => {
