@@ -4,10 +4,20 @@
 
 Install Docker, Docker-Compose and yarn, then
 
+### install npm
 ```
+curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh
+sudo bash nodesource_setup.sh
+apt install nodejs
 yarn
-yarn start
 ```
+
+### build and start container
+
+1. provision .env
+2. `yarn build`
+3. `yarn start`
+
 
 ## API Sync your database
 
