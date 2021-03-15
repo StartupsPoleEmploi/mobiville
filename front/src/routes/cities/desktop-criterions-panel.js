@@ -4,13 +4,20 @@ import styled from 'styled-components'
 import {
   MenuItem, Select, Typography
 } from '@material-ui/core'
-import { Redirect } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { COLOR_BACKGROUND, COLOR_PRIMARY } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
 
+const EmptySpace = styled.div`
+  height: 244px;
+`
+
 const Wrapper = styled.div` 
-  margin-bottom: 16px;
+  position: fixed;
+  top: 76px;
+  left: 0;
+  right: 0;
+  background-color: ${COLOR_BACKGROUND};
 `
 
 const SearchPanel = styled.div`
@@ -118,8 +125,11 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       onSearchByName({ id: criterions.from[0] })
     }
 
-    updateValue('rome', criterions && criterions.code_rome && criterions.code_rome.length ? criterions.code_rome[0] : '')
-    updateValue('region', criterions && criterions.code_region && criterions.code_region.length ? criterions.code_region[0] : '')
+    setTempForm({
+      ...tempForm,
+      rome: criterions && criterions.code_rome && criterions.code_rome.length ? criterions.code_rome[0] : '',
+      region: criterions && criterions.code_region && criterions.code_region.length ? criterions.code_region[0] : ''
+    })
   }, [criterions])
 
   useEffect(() => {
@@ -155,92 +165,87 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       params.push(`${key}=${value.join(',')}`)
     })
 
-    return (
-      <Redirect
-        to={{
-          pathname: '/cities',
-          search: `?${params.join('&')}`
-        }}
-      />
-    )
+    window.location.href = `/cities?${params.join('&')}`
   }
 
   return (
-    <Wrapper>
-      <SearchPanel>
-        <SearchBar className="wrapper">
-          <Select
-            style={{ marginLeft: 16 }}
-            value={tempForm.rome || allCriterions.codeRomes[0].key}
-            onChange={(event) => { updateValue('rome', event.target.value) }}
-          >
-            {allCriterions && allCriterions.codeRomes
+    <EmptySpace>
+      <Wrapper>
+        <SearchPanel>
+          <SearchBar className="wrapper">
+            <Select
+              style={{ marginLeft: 16 }}
+              value={tempForm.rome || allCriterions.codeRomes[0].key}
+              onChange={(event) => { updateValue('rome', event.target.value) }}
+            >
+              {allCriterions && allCriterions.codeRomes
                     && allCriterions.codeRomes.map((rome) => (
                       <MenuItem key={rome.key} value={rome.key}>
                         {rome.label}
                       </MenuItem>
                     ))}
-          </Select>
-          <Select
-            style={{ marginLeft: 16 }}
-            value={tempForm.environment || ''}
-            displayEmpty
-            onChange={(event) => { updateValue('environment', event.target.value) }}
-          >
-            <MenuItem selected value="">
-              Peu importe
-            </MenuItem>
-            {allCriterions && allCriterions.criterions
+            </Select>
+            <Select
+              style={{ marginLeft: 16 }}
+              value={tempForm.environment || ''}
+              displayEmpty
+              onChange={(event) => { updateValue('environment', event.target.value) }}
+            >
+              <MenuItem selected value="">
+                Peu importe
+              </MenuItem>
+              {allCriterions && allCriterions.criterions
                     && allCriterions.criterions.filter((c) => c.tag === 'environment').map((rome) => (
                       <MenuItem key={rome.key} value={rome.key}>
                         {rome.label}
                       </MenuItem>
                     ))}
-          </Select>
-          <Select
-            style={{ marginLeft: 16 }}
-            value={tempForm.city || ''}
-            displayEmpty
-            onChange={(event) => { updateValue('city', event.target.value) }}
-          >
-            <MenuItem selected value="">
-              Peu importe
-            </MenuItem>
-            {allCriterions && allCriterions.criterions
+            </Select>
+            <Select
+              style={{ marginLeft: 16 }}
+              value={tempForm.city || ''}
+              displayEmpty
+              onChange={(event) => { updateValue('city', event.target.value) }}
+            >
+              <MenuItem selected value="">
+                Peu importe
+              </MenuItem>
+              {allCriterions && allCriterions.criterions
                     && allCriterions.criterions.filter((c) => c.tag === 'city').map((rome) => (
                       <MenuItem key={rome.key} value={rome.key}>
                         {rome.label}
                       </MenuItem>
                     ))}
-          </Select>
-          <Select
-            style={{ marginLeft: 16, marginRight: 16 }}
-            value={tempForm.region || ''}
-            displayEmpty
-            onChange={(event) => { updateValue('region', event.target.value) }}
-          >
-            <MenuItem selected value="">
-              Toutes les regions
-            </MenuItem>
-            {allCriterions && allCriterions.regions
+            </Select>
+            <Select
+              style={{ marginLeft: 16, marginRight: 16 }}
+              value={tempForm.region || ''}
+              displayEmpty
+              onChange={(event) => { updateValue('region', event.target.value) }}
+            >
+              <MenuItem selected value="">
+                Toutes les regions
+              </MenuItem>
+              {allCriterions && allCriterions.regions
                     && allCriterions.regions.map((rome) => (
                       <MenuItem key={rome.id} value={rome.id}>
                         {rome.label}
                       </MenuItem>
                     ))}
-          </Select>
-          <SubmitButton onClick={onSubmit}>Rechercher</SubmitButton>
-        </SearchBar>
-      </SearchPanel>
-      <SubInfo>
-        <Typography>
-          <span>{total}</span>
-          {' '}
-          {total > 1 ? 'villes correspondantes' : 'ville correspondant'}
-        </Typography>
-        <CitiesFilterList />
-      </SubInfo>
-    </Wrapper>
+            </Select>
+            <SubmitButton onClick={onSubmit}>Rechercher</SubmitButton>
+          </SearchBar>
+        </SearchPanel>
+        <SubInfo>
+          <Typography>
+            <span>{total}</span>
+            {' '}
+            {total > 1 ? 'villes correspondantes' : 'ville correspondant'}
+          </Typography>
+          <CitiesFilterList />
+        </SubInfo>
+      </Wrapper>
+    </EmptySpace>
   )
 }
 

@@ -77,14 +77,14 @@ const CityItem = ({ city }) => {
           {city.description}
         </Description>
         <TagsBlock>
-          {city.distance_from_sea && city.distance_from_sea <= 10 && (
+          {city.distance_from_sea !== null && city.distance_from_sea <= 10 && (
           <Tag>
             Mer
             {' < '}
             10km
           </Tag>
           )}
-          {city.distance_from_sea
+          {city.distance_from_sea !== null
           && city.distance_from_sea > 10
           && city.distance_from_sea <= 20 && (
           <Tag>
@@ -93,7 +93,7 @@ const CityItem = ({ city }) => {
             20km
           </Tag>
           )}
-          {city.distance_from_sea
+          {city.distance_from_sea !== null
           && city.distance_from_sea > 20
           && city.distance_from_sea <= 30 && (
           <Tag>
