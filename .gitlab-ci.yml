@@ -93,7 +93,7 @@ deploy_application_on_recette:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
   script:
-    - echo -e 'DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET' > .env 
+    - echo -e "DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET" > .env 
     - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.recette.yml .env gitlab@$IP_RECETTE:$WORKDIR_SERVER
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx"
     - scp -o StrictHostKeyChecking=no nginx/recette.conf gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/
