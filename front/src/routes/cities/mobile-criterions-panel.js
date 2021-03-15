@@ -7,10 +7,18 @@ import { ucFirst } from '../../utils/utils'
 import { COLOR_GRAY, COLOR_PRIMARY } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
 
+const EmptySpace = styled.div`
+  height: 216px;
+`
+
 const Wrapper = styled.div` 
   padding: 16px 16px 20px 16px;
   background-color: white;
   margin-bottom: 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
 `
 
 const Title = styled(Typography)`
@@ -78,20 +86,22 @@ const MobileCriterionsPanel = ({ criterions, total }) => {
   })
 
   return (
-    <Wrapper>
-      <Title>Mes critères</Title>
-      <TagsBlock>
-        {tagsList.map((t) => (<Tag key={t}>{t}</Tag>))}
-      </TagsBlock>
-      <SubInfo>
-        <Typography>
-          <span>{total}</span>
-          {' '}
-          {total > 1 ? 'villes correspondantes' : 'ville correspondant'}
-        </Typography>
-        <CitiesFilterList />
-      </SubInfo>
-    </Wrapper>
+    <EmptySpace>
+      <Wrapper>
+        <Title>Mes critères</Title>
+        <TagsBlock>
+          {tagsList.map((t) => (<Tag key={t}>{t}</Tag>))}
+        </TagsBlock>
+        <SubInfo>
+          <Typography>
+            <span>{total}</span>
+            {' '}
+            {total > 1 ? 'villes correspondantes' : 'ville correspondant'}
+          </Typography>
+          <CitiesFilterList />
+        </SubInfo>
+      </Wrapper>
+    </EmptySpace>
   )
 }
 
