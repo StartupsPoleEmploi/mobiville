@@ -3,6 +3,7 @@ stages:
   - deploy_recette
   - liv_production
   - deploy_production
+  - test
 
 build_liv_front_on_recette:
   stage: build_liv_recette
