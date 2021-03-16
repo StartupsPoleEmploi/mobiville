@@ -68,9 +68,20 @@ const InformationsBlock = styled.div`
 const CityItem = ({ city }) => {
   const size = useWindowSize()
 
+  let { photo } = city
+  if (photo) {
+    if (photo.indexOf('.svg') === -1) {
+      photo = photo.replace('/commons/', '/commons/thumb/')
+      const split = photo.split('/')
+      photo += `/250px-${split[split.length - 1]}`
+    }
+  } else {
+    photo = `/regions/region-${city['region.new_code']}.jpg`
+  }
+
   return (
     <Wrapper isMobile={isMobileView(size)}>
-      <Image style={{ backgroundImage: `url(${city.photo || `/regions/region-${city['region.new_code']}.jpg`})` }} isMobile={isMobileView(size)} />
+      <Image style={{ backgroundImage: `url(${photo})` }} isMobile={isMobileView(size)} />
       <InformationsBlock>
         <Title>{ucFirst(city.nom_comm.toLowerCase())}</Title>
         <Description>
