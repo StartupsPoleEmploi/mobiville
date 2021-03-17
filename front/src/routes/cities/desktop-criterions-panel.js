@@ -77,7 +77,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   const [onSearch, setOnSearch] = useState(null)
   const [tempForm, setTempForm] = useState({})
 
-  if (allCriterions === null || allCriterions.criterions === undefined) {
+  if (allCriterions == null || allCriterions.criterions === undefined) {
     return <div />
   }
 

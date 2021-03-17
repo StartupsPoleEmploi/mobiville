@@ -8,7 +8,7 @@ import MobileCriterionsPanel from './mobile-criterions-panel'
 import CityItem from './city-item'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
-import DesktopCriterionsPanel from './desktop-criterions-panel'
+// import DesktopCriterionsPanel from './desktop-criterions-panel'
 
 const Items = styled(Link)`
   && {
@@ -24,10 +24,10 @@ const CitiesArea = styled.div`
 `
 
 const CitiesPage = () => {
-  const { cities, isLoading } = useCities()
+  const { cities, isLoading, onSearch } = useCities()
   const [params, setParams] = useState(null)
-  const [itemsViews] = useState(10)
-  // const [offset, setOffset] = useState(0)
+  const [itemsViews, setItemsViews] = useState(10)
+  const [offset, setOffset] = useState(0)
   const size = useWindowSize()
   const location = useLocation()
 
@@ -37,7 +37,7 @@ const CitiesPage = () => {
     }
   }, [location])
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (params && params.code_rome) {
       onSearch(params)
     }
@@ -70,7 +70,7 @@ const CitiesPage = () => {
         setItemsViews(itemsViews + 20)
       }
     }
-  }, [offset]) */
+  }, [offset])
 
   const getCityUrl = (city) => {
     let url = `/city/${city.insee_com}-${city.nom_comm}`
@@ -85,12 +85,12 @@ const CitiesPage = () => {
   return (
     <MainLayout>
       {isMobileView(size) && <MobileCriterionsPanel criterions={params} total={cities.length} />}
-      {!isMobileView(size) && (
+      {/*! isMobileView(size) && (
       <DesktopCriterionsPanel
         criterions={params}
         total={cities.length}
       />
-      )}
+      ) */}
       {isLoading && (<p>Loading...</p>)}
       <CitiesArea isMobile={isMobileView(size)}>
         {cities.slice(0, itemsViews).map((c) => (
