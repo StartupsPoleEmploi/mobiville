@@ -24,10 +24,10 @@ const CitiesArea = styled.div`
 `
 
 const CitiesPage = () => {
-  const { onSearch, cities, isLoading } = useCities()
+  const { cities, isLoading } = useCities()
   const [params, setParams] = useState(null)
-  const [itemsViews, setItemsViews] = useState(10)
-  const [offset, setOffset] = useState(0)
+  const [itemsViews] = useState(10)
+  // const [offset, setOffset] = useState(0)
   const size = useWindowSize()
   const location = useLocation()
 
@@ -37,7 +37,7 @@ const CitiesPage = () => {
     }
   }, [location])
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (params && params.code_rome) {
       onSearch(params)
     }
@@ -70,7 +70,7 @@ const CitiesPage = () => {
         setItemsViews(itemsViews + 20)
       }
     }
-  }, [offset])
+  }, [offset]) */
 
   const getCityUrl = (city) => {
     let url = `/city/${city.insee_com}-${city.nom_comm}`
