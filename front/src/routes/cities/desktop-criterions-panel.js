@@ -71,7 +71,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   const {
     criterions: allCriterions
   } = useCities()
-  const [onSearch/* , setOnSearch */] = useState(null)
+  // const [onSearch , setOnSearch] = useState(null)
   const [tempForm, setTempForm] = useState({})
 
   if (allCriterions == null || allCriterions.criterions === undefined) {
@@ -143,14 +143,14 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     }
   } */
 
-  if (onSearch) {
+  /* if (onSearch) {
     const params = []
     Object.entries(onSearch).forEach(([key, value]) => {
       params.push(`${key}=${value.join(',')}`)
     })
 
     window.location.href = `/cities?${params.join('&')}`
-  }
+  } */
 
   return (
     <EmptySpace>
