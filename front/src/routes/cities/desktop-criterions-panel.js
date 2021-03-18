@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { /* useEffect, */ useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {
@@ -71,7 +71,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   const {
     criterions: allCriterions
   } = useCities()
-  // const [onSearch, setOnSearch] = useState(null)
+  const [onSearch, setOnSearch] = useState(null)
   const [tempForm, setTempForm] = useState({})
 
   if (allCriterions == null || allCriterions.criterions === undefined) {
@@ -110,11 +110,10 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       params = { ...params, from: [tempForm.from.id] }
     }
 
-    // setOnSearch(params)
+    setOnSearch(params)
   }
-  onSubmit()
 
-  useEffect(() => {
+  /* useEffect(() => {
     setTempForm({
       ...tempForm,
       rome: criterions && criterions.code_rome
@@ -122,7 +121,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       region: criterions && criterions.code_region
       && criterions.code_region.length ? criterions.code_region[0] : ''
     })
-  }, [criterions])
+  }, [criterions]) */
 
   if (allCriterions.criterions && criterions && criterions.code_criterion) {
     if (tempForm.environment == null && criterions) {
@@ -143,14 +142,14 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     }
   }
 
-  /* if (onSearch) {
+  if (onSearch) {
     const params = []
     Object.entries(onSearch).forEach(([key, value]) => {
       params.push(`${key}=${value.join(',')}`)
     })
 
     window.location.href = `/cities?${params.join('&')}`
-  } */
+  }
 
   return (
     <EmptySpace>
