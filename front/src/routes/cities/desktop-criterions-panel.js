@@ -2,7 +2,7 @@ import React, { /* useEffect, */ useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {
-  /* MenuItem, Select, */ Typography
+  MenuItem, Select, Typography
 } from '@material-ui/core'
 import { useCities } from '../../common/contexts/citiesContext'
 import { COLOR_BACKGROUND, COLOR_PRIMARY } from '../../constants/colors'
@@ -157,7 +157,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       <Wrapper>
         <SearchPanel>
           <SearchBar className="wrapper">
-            {/* <Select
+            <Select
               style={{ marginLeft: 16 }}
               value={tempForm.rome || allCriterions.codeRomes[0].key}
               onChange={(event) => { updateValue('rome', event.target.value) }}
@@ -169,7 +169,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
                       </MenuItem>
                     ))}
             </Select>
-            <Select
+            {/* <Select
               style={{ marginLeft: 16 }}
               value={tempForm.environment || ''}
               displayEmpty
