@@ -1,17 +1,17 @@
 import React/* , { useEffect, useState } */ from 'react'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
-/* import {
-  MenuItem, Select, Typography
-} from '@material-ui/core' */
+import {
+  /* MenuItem, Select, */Typography
+} from '@material-ui/core'
 // import { useCities } from '../../common/contexts/citiesContext'
-// import { COLOR_BACKGROUND/* , COLOR_PRIMARY */ } from '../../constants/colors'
-// import CitiesFilterList from './cities-filter-list'
+import { COLOR_BACKGROUND/* , COLOR_PRIMARY */ } from '../../constants/colors'
+import CitiesFilterList from './cities-filter-list'
 
 const EmptySpace = styled.div`
   height: 244px;
 `
-/*
+
 const Wrapper = styled.div`
   position: fixed;
   top: 76px;
@@ -36,7 +36,7 @@ const SearchBar = styled.div`
   > *:not(button) {
     flex: 1;
   }
-`
+` */
 
 const SubInfo = styled.div`
   display: flex;
@@ -53,7 +53,7 @@ const SubInfo = styled.div`
   }
 `
 
-const SubmitButton = styled.button`
+/* const SubmitButton = styled.button`
   height: 100%;
   background-color: ${COLOR_PRIMARY};
   color: white;
@@ -67,7 +67,7 @@ const SubmitButton = styled.button`
   cursor: pointer;
 ` */
 
-const DesktopCriterionsPanel = (/* { criterions, total } */) => {
+const DesktopCriterionsPanel = ({ /* criterions, */ total }) => {
   /* const {
     criterions: allCriterions
   } = useCities() */
@@ -154,8 +154,8 @@ const DesktopCriterionsPanel = (/* { criterions, total } */) => {
 
   return (
     <EmptySpace>
-      {/* <Wrapper>
-        <SearchPanel>
+      <Wrapper>
+        {/* <SearchPanel>
           <SearchBar className="wrapper">
             <Select
               style={{ marginLeft: 16 }}
@@ -220,7 +220,7 @@ const DesktopCriterionsPanel = (/* { criterions, total } */) => {
             </Select>
             <SubmitButton onClick={onSubmit}>Rechercher</SubmitButton>
           </SearchBar>
-        </SearchPanel>
+        </SearchPanel> */}
         <SubInfo>
           <Typography>
             <span>{total}</span>
@@ -229,18 +229,18 @@ const DesktopCriterionsPanel = (/* { criterions, total } */) => {
           </Typography>
           <CitiesFilterList />
         </SubInfo>
-                    </Wrapper> */}
+      </Wrapper>
     </EmptySpace>
   )
 }
 
 DesktopCriterionsPanel.propTypes = {
-  /* criterions: PropTypes.object,
-  total: PropTypes.number */
+  /* criterions: PropTypes.object, */
+  total: PropTypes.number
 }
 
 DesktopCriterionsPanel.defaultProps = {
-  criterions: [],
+  // criterions: [],
   total: 0
 }
 
