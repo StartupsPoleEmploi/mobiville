@@ -1,4 +1,4 @@
-import React, { /* useEffect, */ useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {
@@ -114,7 +114,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   }
   onSubmit()
 
-  /* useEffect(() => {
+  useEffect(() => {
     setTempForm({
       ...tempForm,
       rome: criterions && criterions.code_rome
@@ -122,7 +122,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       region: criterions && criterions.code_region
       && criterions.code_region.length ? criterions.code_region[0] : ''
     })
-  }, [criterions]) */
+  }, [criterions])
 
   if (allCriterions.criterions && criterions && criterions.code_criterion) {
     if (tempForm.environment == null && criterions) {
