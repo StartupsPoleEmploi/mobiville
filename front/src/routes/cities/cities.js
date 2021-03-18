@@ -107,4 +107,4 @@ CitiesPage.propTypes = {
 CitiesPage.defaultProps = {
 }
 
-export default CitiesPage
+export default React.memo(CitiesPage)
