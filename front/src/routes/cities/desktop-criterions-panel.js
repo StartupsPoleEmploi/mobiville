@@ -70,9 +70,9 @@ const SubmitButton = styled.button`
 const DesktopCriterionsPanel = ({ criterions, total }) => {
   const {
     criterions: allCriterions,
-    searchCities
-    /* isLoadingLocation,
-    onSearchByName */
+    searchCities,
+    isLoadingLocation,
+    onSearchByName
   } = useCities()
   const [onSearch, setOnSearch] = useState(null)
   const [tempForm, setTempForm] = useState({})
@@ -116,7 +116,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     setOnSearch(params)
   }
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (isLoadingLocation === false && tempForm.from == null
       && criterions && criterions.from && criterions.from.length
       && (searchCities.length === 0 || searchCities
@@ -127,14 +127,14 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
 
     setTempForm({
       ...tempForm,
-      rome: criterions && criterions.code_rome &&
-      criterions.code_rome.length ? criterions.code_rome[0] : '',
-      region: criterions && criterions.code_region &&
-      criterions.code_region.length ? criterions.code_region[0] : ''
+      rome: criterions && criterions.code_rome
+      && criterions.code_rome.length ? criterions.code_rome[0] : '',
+      region: criterions && criterions.code_region
+      && criterions.code_region.length ? criterions.code_region[0] : ''
     })
-  }, [criterions]) */
+  }, [criterions])
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (searchCities
       && searchCities.length === 1
       && criterions
@@ -143,7 +143,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       && searchCities[0].id === +criterions.from[0]) {
       updateValue('from', searchCities[0])
     }
-  }, [searchCities])
+  }, [searchCities]) */
 
   if (allCriterions.criterions && criterions && criterions.code_criterion) {
     if (tempForm.environment == null && criterions) {
