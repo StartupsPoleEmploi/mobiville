@@ -169,7 +169,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
                       </MenuItem>
                     ))}
             </Select>
-            {/* <Select
+            <Select
               style={{ marginLeft: 16 }}
               value={tempForm.environment || ''}
               displayEmpty
@@ -217,7 +217,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
                         {rome.label}
                       </MenuItem>
                     ))}
-                    </Select> */}
+            </Select>
             <SubmitButton onClick={onSubmit}>Rechercher</SubmitButton>
           </SearchBar>
         </SearchPanel>
