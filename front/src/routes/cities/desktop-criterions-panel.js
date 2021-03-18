@@ -2,16 +2,16 @@ import React, { /* useEffect, */ useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {
-  FormControl,
-  MenuItem, Select, Typography
+  /* FormControl,
+  MenuItem, Select, */ Typography
 } from '@material-ui/core'
-import { Controller, useForm } from 'react-hook-form'
+import { /* Controller, */ useForm } from 'react-hook-form'
 import { useCities } from '../../common/contexts/citiesContext'
-import { COLOR_BACKGROUND, COLOR_PRIMARY } from '../../constants/colors'
+import { COLOR_BACKGROUND/* , COLOR_PRIMARY */ } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
 
 const EmptySpace = styled.div`
-  height: 244px;
+  height: 40px;
 `
 
 const Wrapper = styled.div`
@@ -22,13 +22,13 @@ const Wrapper = styled.div`
   background-color: ${COLOR_BACKGROUND};
 `
 
-const SearchPanel = styled.div`
+/* const SearchPanel = styled.div`
   margin-bottom: 36px;
   background-color: white;
   padding: 32px 0;
-`
+` */
 
-const SearchBar = styled.div`
+/* const SearchBar = styled.div`
   height: 64px;
   background-color: ${COLOR_BACKGROUND};
   border-radius: 4px;
@@ -38,11 +38,12 @@ const SearchBar = styled.div`
   > *:not(input) {
     flex: 1;
   }
-`
+` */
 
 const SubInfo = styled.div`
   display: flex;
   max-width: 700px;
+  align-items: center;
   margin: auto;
 
   p {
@@ -55,7 +56,7 @@ const SubInfo = styled.div`
   }
 `
 
-const SubmitButton = styled.input`
+/* const SubmitButton = styled.input`
   height: 100%;
   background-color: ${COLOR_PRIMARY};
   color: white;
@@ -67,15 +68,15 @@ const SubmitButton = styled.input`
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
   cursor: pointer;
-`
+` */
 
 const DesktopCriterionsPanel = ({ criterions, total }) => {
   const {
     criterions: allCriterions
   } = useCities()
-  const [onSearch, setOnSearch] = useState(null)
+  const [onSearch/* , setOnSearch */] = useState(null)
   const {
-    control, handleSubmit, setValue, getValues
+    /* control, handleSubmit, */ setValue, getValues
   } = useForm()
 
   if (allCriterions == null || allCriterions.criterions === undefined) {
@@ -86,7 +87,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     setValue(type, value)
   }
 
-  const onSubmit = (data) => {
+  /* const onSubmit = (data) => {
     let params = { }
     if (data.rome) {
       params = { ...params, code_rome: [data.rome] }
@@ -115,7 +116,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     }
 
     setOnSearch(params)
-  }
+  } */
 
   useEffect(() => {
     const rome = criterions && criterions.code_rome
@@ -160,7 +161,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   return (
     <EmptySpace>
       <Wrapper>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        {/* <form onSubmit={handleSubmit(onSubmit)}>
           <SearchPanel>
             <SearchBar className="wrapper">
 
@@ -259,7 +260,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
               <SubmitButton type="submit" value="Rechercher" />
             </SearchBar>
           </SearchPanel>
-        </form>
+                    </form> */}
         <SubInfo>
           <Typography>
             <span>{total}</span>
