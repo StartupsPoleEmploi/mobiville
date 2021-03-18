@@ -1,4 +1,4 @@
-import React/* , { useEffect, useState } */ from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {
@@ -67,14 +67,14 @@ const SubInfo = styled.div`
   cursor: pointer;
 ` */
 
-const DesktopCriterionsPanel = ({ /* criterions, */ total }) => {
+const DesktopCriterionsPanel = ({ criterions, total }) => {
   /* const {
     criterions: allCriterions
   } = useCities() */
   // const [onSearch, setOnSearch] = useState(null)
-  /* const [tempForm, setTempForm] = useState({})
+  const [tempForm, setTempForm] = useState({})
 
-  if (allCriterions == null || allCriterions.criterions === undefined) {
+  /* if (allCriterions == null || allCriterions.criterions === undefined) {
     return <div />
   }
 
@@ -114,7 +114,7 @@ const DesktopCriterionsPanel = ({ /* criterions, */ total }) => {
   }
   onSubmit()
 
-  /* useEffect(() => {
+  useEffect(() => {
     setTempForm({
       ...tempForm,
       rome: criterions && criterions.code_rome
@@ -124,7 +124,7 @@ const DesktopCriterionsPanel = ({ /* criterions, */ total }) => {
     })
   }, [criterions])
 
-  if (allCriterions.criterions && criterions && criterions.code_criterion) {
+  /* if (allCriterions.criterions && criterions && criterions.code_criterion) {
     if (tempForm.environment == null && criterions) {
       const envFinded = allCriterions.criterions
       .filter((c) => c.tag === 'environment')
@@ -235,12 +235,12 @@ const DesktopCriterionsPanel = ({ /* criterions, */ total }) => {
 }
 
 DesktopCriterionsPanel.propTypes = {
-  /* criterions: PropTypes.object, */
+  criterions: PropTypes.object,
   total: PropTypes.number
 }
 
 DesktopCriterionsPanel.defaultProps = {
-  // criterions: [],
+  criterions: [],
   total: 0
 }
 
