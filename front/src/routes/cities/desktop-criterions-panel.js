@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
+import React/* , { useEffect, useState } */ from 'react'
+// import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import {
-  /* MenuItem, Select, */ Typography
-} from '@material-ui/core'
-import { useCities } from '../../common/contexts/citiesContext'
-import { COLOR_BACKGROUND/* , COLOR_PRIMARY */ } from '../../constants/colors'
-import CitiesFilterList from './cities-filter-list'
+/* import {
+  MenuItem, Select, Typography
+} from '@material-ui/core' */
+// import { useCities } from '../../common/contexts/citiesContext'
+// import { COLOR_BACKGROUND/* , COLOR_PRIMARY */ } from '../../constants/colors'
+// import CitiesFilterList from './cities-filter-list'
 
 const EmptySpace = styled.div`
   height: 244px;
 `
-
-const Wrapper = styled.div` 
+/*
+const Wrapper = styled.div`
   position: fixed;
   top: 76px;
   left: 0;
   right: 0;
   background-color: ${COLOR_BACKGROUND};
 `
-
-/* const SearchPanel = styled.div`
+/*
+const SearchPanel = styled.div`
   margin-bottom: 36px;
   background-color: white;
   padding: 32px 0;
@@ -36,7 +36,7 @@ const SearchBar = styled.div`
   > *:not(button) {
     flex: 1;
   }
-` */
+`
 
 const SubInfo = styled.div`
   display: flex;
@@ -53,7 +53,7 @@ const SubInfo = styled.div`
   }
 `
 
-/* const SubmitButton = styled.button`
+const SubmitButton = styled.button`
   height: 100%;
   background-color: ${COLOR_PRIMARY};
   color: white;
@@ -67,12 +67,12 @@ const SubInfo = styled.div`
   cursor: pointer;
 ` */
 
-const DesktopCriterionsPanel = ({ criterions, total }) => {
-  const {
+const DesktopCriterionsPanel = (/* { criterions, total } */) => {
+  /* const {
     criterions: allCriterions
-  } = useCities()
-  const [onSearch/* , setOnSearch */] = useState(null)
-  const [tempForm, setTempForm] = useState({})
+  } = useCities() */
+  // const [onSearch, setOnSearch] = useState(null)
+  /* const [tempForm, setTempForm] = useState({})
 
   if (allCriterions == null || allCriterions.criterions === undefined) {
     return <div />
@@ -80,10 +80,10 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
 
   const updateValue = (type, value) => {
     setTempForm({ ...tempForm, [type]: value })
-  }
+  } */
 
-  /* const onSubmit = () => {
-    let params = { }
+  const onSubmit = () => {
+    /* let params = { }
     if (tempForm.rome) {
       params = { ...params, code_rome: [tempForm.rome] }
     } else if (allCriterions.codeRomes && allCriterions.codeRomes.length) {
@@ -110,10 +110,11 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       params = { ...params, from: [tempForm.from.id] }
     }
 
-    setOnSearch(params)
-  } */
+    setOnSearch(params) */
+  }
+  onSubmit()
 
-  useEffect(() => {
+  /* useEffect(() => {
     setTempForm({
       ...tempForm,
       rome: criterions && criterions.code_rome
@@ -125,33 +126,36 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
 
   if (allCriterions.criterions && criterions && criterions.code_criterion) {
     if (tempForm.environment == null && criterions) {
-      const envFinded = allCriterions.criterions.filter((c) => c.tag === 'environment').find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+      const envFinded = allCriterions.criterions
+      .filter((c) => c.tag === 'environment')
+      .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
       if (envFinded) {
         updateValue('environment', envFinded.key)
       }
     }
 
     if (tempForm.city == null) {
-      const cityFinded = allCriterions.criterions.filter((c) => c.tag === 'city').find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+      const cityFinded = allCriterions.criterions
+      .filter((c) => c.tag === 'city').find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
       if (cityFinded) {
         updateValue('city', cityFinded.key)
       }
     }
-  }
+  } */
 
-  if (onSearch) {
+  /* if (onSearch) {
     const params = []
     Object.entries(onSearch).forEach(([key, value]) => {
       params.push(`${key}=${value.join(',')}`)
     })
 
     window.location.href = `/cities?${params.join('&')}`
-  }
+  } */
 
   return (
     <EmptySpace>
-      <Wrapper>
-        {/* <SearchPanel>
+      {/* <Wrapper>
+        <SearchPanel>
           <SearchBar className="wrapper">
             <Select
               style={{ marginLeft: 16 }}
@@ -176,11 +180,11 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
               </MenuItem>
               {allCriterions && allCriterions.criterions
                     && allCriterions.criterions
-                    .filter((c) => c.tag === 'environment').map((rome) => (
-                      <MenuItem key={rome.key} value={rome.key}>
-                        {rome.label}
-                      </MenuItem>
-                    ))}
+                      .filter((c) => c.tag === 'environment').map((rome) => (
+                        <MenuItem key={rome.key} value={rome.key}>
+                          {rome.label}
+                        </MenuItem>
+                      ))}
             </Select>
             <Select
               style={{ marginLeft: 16 }}
@@ -216,7 +220,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
             </Select>
             <SubmitButton onClick={onSubmit}>Rechercher</SubmitButton>
           </SearchBar>
-        </SearchPanel> */}
+        </SearchPanel>
         <SubInfo>
           <Typography>
             <span>{total}</span>
@@ -225,14 +229,14 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
           </Typography>
           <CitiesFilterList />
         </SubInfo>
-      </Wrapper>
+                    </Wrapper> */}
     </EmptySpace>
   )
 }
 
 DesktopCriterionsPanel.propTypes = {
-  criterions: PropTypes.object,
-  total: PropTypes.number
+  /* criterions: PropTypes.object,
+  total: PropTypes.number */
 }
 
 DesktopCriterionsPanel.defaultProps = {
