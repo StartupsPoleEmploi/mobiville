@@ -69,10 +69,7 @@ const SubmitButton = styled.button`
 
 const DesktopCriterionsPanel = ({ criterions, total }) => {
   const {
-    criterions: allCriterions,
-    searchCities,
-    isLoadingLocation,
-    onSearchByName
+    criterions: allCriterions
   } = useCities()
   const [onSearch, setOnSearch] = useState(null)
   const [tempForm, setTempForm] = useState({})
@@ -117,14 +114,6 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   }
 
   useEffect(() => {
-    if (isLoadingLocation === false && tempForm.from == null
-      && criterions && criterions.from && criterions.from.length
-      && (searchCities.length === 0 || searchCities
-        .find((c) => c.id === +criterions.from[0] || c.id === null) == null
-      )) {
-      onSearchByName({ id: criterions.from[0] })
-    }
-
     setTempForm({
       ...tempForm,
       rome: criterions && criterions.code_rome
@@ -133,17 +122,6 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       && criterions.code_region.length ? criterions.code_region[0] : ''
     })
   }, [criterions])
-
-  /* useEffect(() => {
-    if (searchCities
-      && searchCities.length === 1
-      && criterions
-      && criterions.from
-      && criterions.from.length
-      && searchCities[0].id === +criterions.from[0]) {
-      updateValue('from', searchCities[0])
-    }
-  }, [searchCities]) */
 
   if (allCriterions.criterions && criterions && criterions.code_criterion) {
     if (tempForm.environment == null && criterions) {
@@ -261,4 +239,4 @@ DesktopCriterionsPanel.defaultProps = {
   total: 0
 }
 
-export default DesktopCriterionsPanel
+export default React.memo(DesktopCriterionsPanel)
