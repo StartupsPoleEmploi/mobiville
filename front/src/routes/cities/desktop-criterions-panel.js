@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {
-  /* MenuItem, Select, */Typography
+  MenuItem, Select, Typography
 } from '@material-ui/core'
 import { useCities } from '../../common/contexts/citiesContext'
-import { COLOR_BACKGROUND/* , COLOR_PRIMARY */ } from '../../constants/colors'
+import { COLOR_BACKGROUND, COLOR_PRIMARY } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
 
 const EmptySpace = styled.div`
@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   right: 0;
   background-color: ${COLOR_BACKGROUND};
 `
-/*
+
 const SearchPanel = styled.div`
   margin-bottom: 36px;
   background-color: white;
@@ -36,7 +36,7 @@ const SearchBar = styled.div`
   > *:not(button) {
     flex: 1;
   }
-` */
+`
 
 const SubInfo = styled.div`
   display: flex;
@@ -53,7 +53,7 @@ const SubInfo = styled.div`
   }
 `
 
-/* const SubmitButton = styled.button`
+const SubmitButton = styled.button`
   height: 100%;
   background-color: ${COLOR_PRIMARY};
   color: white;
@@ -65,25 +65,25 @@ const SubInfo = styled.div`
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
   cursor: pointer;
-` */
+`
 
 const DesktopCriterionsPanel = ({ criterions, total }) => {
   const {
     criterions: allCriterions
   } = useCities()
-  // const [onSearch , setOnSearch] = useState(null)
+  // const [onSearch, setOnSearch] = useState(null)
   const [tempForm, setTempForm] = useState({})
 
   if (allCriterions == null || allCriterions.criterions === undefined) {
     return <div />
   }
 
-  /* const updateValue = (type, value) => {
+  const updateValue = (type, value) => {
     setTempForm({ ...tempForm, [type]: value })
-  } */
+  }
 
   const onSubmit = () => {
-    /* let params = { }
+    let params = { }
     if (tempForm.rome) {
       params = { ...params, code_rome: [tempForm.rome] }
     } else if (allCriterions.codeRomes && allCriterions.codeRomes.length) {
@@ -110,9 +110,8 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       params = { ...params, from: [tempForm.from.id] }
     }
 
-    setOnSearch(params) */
+    // setOnSearch(params)
   }
-  onSubmit()
 
   useEffect(() => {
     setTempForm({
@@ -124,11 +123,11 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     })
   }, [criterions])
 
-  /* if (allCriterions.criterions && criterions && criterions.code_criterion) {
+  if (allCriterions.criterions && criterions && criterions.code_criterion) {
     if (tempForm.environment == null && criterions) {
       const envFinded = allCriterions.criterions
-      .filter((c) => c.tag === 'environment')
-      .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+        .filter((c) => c.tag === 'environment')
+        .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
       if (envFinded) {
         updateValue('environment', envFinded.key)
       }
@@ -136,12 +135,12 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
 
     if (tempForm.city == null) {
       const cityFinded = allCriterions.criterions
-      .filter((c) => c.tag === 'city').find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+        .filter((c) => c.tag === 'city').find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
       if (cityFinded) {
         updateValue('city', cityFinded.key)
       }
     }
-  } */
+  }
 
   /* if (onSearch) {
     const params = []
@@ -155,7 +154,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   return (
     <EmptySpace>
       <Wrapper>
-        {/* <SearchPanel>
+        <SearchPanel>
           <SearchBar className="wrapper">
             <Select
               style={{ marginLeft: 16 }}
@@ -220,7 +219,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
             </Select>
             <SubmitButton onClick={onSubmit}>Rechercher</SubmitButton>
           </SearchBar>
-        </SearchPanel> */}
+        </SearchPanel>
         <SubInfo>
           <Typography>
             <span>{total}</span>
