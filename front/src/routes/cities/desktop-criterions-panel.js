@@ -5,7 +5,7 @@ import {
   /* MenuItem, Select, */ Typography
 } from '@material-ui/core'
 import { useCities } from '../../common/contexts/citiesContext'
-import { COLOR_BACKGROUND/* , COLOR_PRIMARY */ } from '../../constants/colors'
+import { COLOR_BACKGROUND, COLOR_PRIMARY } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
 
 const EmptySpace = styled.div`
@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   background-color: ${COLOR_BACKGROUND};
 `
 
-/* const SearchPanel = styled.div`
+const SearchPanel = styled.div`
   margin-bottom: 36px;
   background-color: white;
   padding: 32px 0;
@@ -36,7 +36,7 @@ const SearchBar = styled.div`
   > *:not(button) {
     flex: 1;
   }
-` */
+`
 
 const SubInfo = styled.div`
   display: flex;
@@ -53,7 +53,7 @@ const SubInfo = styled.div`
   }
 `
 
-/* const SubmitButton = styled.button`
+const SubmitButton = styled.button`
   height: 100%;
   background-color: ${COLOR_PRIMARY};
   color: white;
@@ -65,7 +65,7 @@ const SubInfo = styled.div`
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
   cursor: pointer;
-` */
+`
 
 const DesktopCriterionsPanel = ({ criterions, total }) => {
   const {
@@ -155,9 +155,9 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   return (
     <EmptySpace>
       <Wrapper>
-        {/* <SearchPanel>
+        <SearchPanel>
           <SearchBar className="wrapper">
-            <Select
+            {/* <Select
               style={{ marginLeft: 16 }}
               value={tempForm.rome || allCriterions.codeRomes[0].key}
               onChange={(event) => { updateValue('rome', event.target.value) }}
@@ -217,10 +217,10 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
                         {rome.label}
                       </MenuItem>
                     ))}
-            </Select>
+                    </Select> */}
             <SubmitButton onClick={onSubmit}>Rechercher</SubmitButton>
           </SearchBar>
-        </SearchPanel> */}
+        </SearchPanel>
         <SubInfo>
           <Typography>
             <span>{total}</span>
