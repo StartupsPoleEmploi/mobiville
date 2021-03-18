@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import {
   /* MenuItem, Select, */Typography
 } from '@material-ui/core'
-// import { useCities } from '../../common/contexts/citiesContext'
+import { useCities } from '../../common/contexts/citiesContext'
 import { COLOR_BACKGROUND/* , COLOR_PRIMARY */ } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
 
@@ -68,17 +68,17 @@ const SubInfo = styled.div`
 ` */
 
 const DesktopCriterionsPanel = ({ criterions, total }) => {
-  /* const {
+  const {
     criterions: allCriterions
-  } = useCities() */
-  // const [onSearch, setOnSearch] = useState(null)
+  } = useCities()
+  const [onSearch/* , setOnSearch */] = useState(null)
   const [tempForm, setTempForm] = useState({})
 
-  /* if (allCriterions == null || allCriterions.criterions === undefined) {
+  if (allCriterions == null || allCriterions.criterions === undefined) {
     return <div />
   }
 
-  const updateValue = (type, value) => {
+  /* const updateValue = (type, value) => {
     setTempForm({ ...tempForm, [type]: value })
   } */
 
@@ -143,14 +143,14 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     }
   } */
 
-  /* if (onSearch) {
+  if (onSearch) {
     const params = []
     Object.entries(onSearch).forEach(([key, value]) => {
       params.push(`${key}=${value.join(',')}`)
     })
 
     window.location.href = `/cities?${params.join('&')}`
-  } */
+  }
 
   return (
     <EmptySpace>
