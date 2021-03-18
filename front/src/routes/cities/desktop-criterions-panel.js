@@ -1,4 +1,4 @@
-import React, { /* useEffect, */ useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {
@@ -69,9 +69,9 @@ const SubmitButton = styled.button`
 
 const DesktopCriterionsPanel = ({ criterions, total }) => {
   const {
-    criterions: allCriterions
-    /* searchCities,
-    isLoadingLocation,
+    criterions: allCriterions,
+    searchCities
+    /* isLoadingLocation,
     onSearchByName */
   } = useCities()
   const [onSearch, setOnSearch] = useState(null)
@@ -134,7 +134,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     })
   }, [criterions]) */
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (searchCities
       && searchCities.length === 1
       && criterions
@@ -143,7 +143,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       && searchCities[0].id === +criterions.from[0]) {
       updateValue('from', searchCities[0])
     }
-  }, [searchCities]) */
+  }, [searchCities])
 
   if (allCriterions.criterions && criterions && criterions.code_criterion) {
     if (tempForm.environment == null && criterions) {
