@@ -72,7 +72,7 @@ export function loadWeatherFile(stationId) {
   return axios.get(config.weatherFile(stationId)).then(data => data.data.split('\r\n'))
 }
 
-export const wikipediaDetails = (pageName) => axios.get(`https://fr.wikipedia.org/w/api.php?format=json&action=query&prop=extracts%7Cpageimages&piprop=original&exintro&explaintext&generator=search&gsrsearch=%${pageName}%22%20+deepcat:%22Article%20avec%20mod%C3%A8le%20Infobox%20Commune%20de%20France%22&gsrlimit=1&redirects=1`).then((response) => {
+export const wikipediaDetails = (pageName) => axios.get(`https://fr.wikipedia.org/w/api.php?format=json&action=query&prop=extracts%7Cpageimages&piprop=original&exintro&explaintext&generator=search&gsrsearch=%22${pageName}%22%20+deepcat:%22Article%20avec%20mod%C3%A8le%20Infobox%20Commune%20de%20France%22&gsrlimit=1&redirects=1`).then((response) => {
   if(response.data && response.data.query && response.data.query.pages) {
     return Object.values(response.data.query.pages)[0]
   }
