@@ -19,7 +19,7 @@ export const CULTURE_CRITERIONS = [{
   code: 'F121',
   icon: 'gymnase.svg',
 },{
-  label: 'Terains multisports',
+  label: 'Terrains multisports',
   code: 'F113',
   icon: 'multisports.svg',
 },{

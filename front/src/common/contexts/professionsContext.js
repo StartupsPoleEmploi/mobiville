@@ -1,3 +1,4 @@
+import { orderBy } from 'lodash'
 import React, { useState, useCallback } from 'react'
 import { searchProfessions } from '../../api/professions.api'
 
@@ -9,7 +10,9 @@ export function ProfessionsProvider(props) {
 
   const onSearch = useCallback((params) => {
     _setIsLoading(true)
-    searchProfessions(params).then(_setProfessions)
+    searchProfessions(params).then((profs) => {
+      _setProfessions(orderBy(profs, ['dateCreation'], ['desc']))
+    })
       .then(() => _setIsLoading(false))
   }, [])
 

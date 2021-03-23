@@ -124,7 +124,7 @@ const PanelCityJobs = ({ city, rome }) => {
                 {p.entreprise && p.entreprise.nom && (<p className="enterprise">{p.entreprise.nom}</p>)}
                 <p className="description">{p.description}</p>
                 <div className="actions">
-                  <p className="date">{thereAre(p.dateActualisation)}</p>
+                  <p className="date">{thereAre(p.dateCreation)}</p>
                   <p className="type">
                     {p.typeContrat}
                     {' '}

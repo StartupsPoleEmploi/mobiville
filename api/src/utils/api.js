@@ -2,10 +2,6 @@ import config from 'config'
 import axios from 'axios'
 import { csvToArrayJson } from './csv'
 import {readFile, readFileSync} from 'fs'
-import slugify from 'slugify'
-const Entities = require('html-entities').AllHtmlEntities
-const entities = new Entities()
-import stripHtml from 'string-strip-html'
 
 export function getAllCities() {
   return new Promise((resolve, reject) => {

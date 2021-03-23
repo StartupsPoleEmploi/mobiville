@@ -47,8 +47,8 @@ export const TopMobileMenu = () => (
       <Link to="/"><LogoImage src={LOGO} alt="logo" /></Link>
       <div className="flex-1" />
       <Text>Proposé par</Text>
-      <LogoImagePartener src={LOGO_AL} alt="Action logement" />
-      <LogoImagePartener src={LOGO_PE} alt="Pôle Emploi" />
+      <a href="https://www.actionlogement.fr/" target="_blank" rel="noreferrer"><LogoImagePartener src={LOGO_AL} alt="Action logement" /></a>
+      <a href="https://www.pole-emploi.fr/" target="_blank" rel="noreferrer"><LogoImagePartener src={LOGO_PE} alt="Pôle Emploi" /></a>
     </Container>
   </MainSpace>
 )

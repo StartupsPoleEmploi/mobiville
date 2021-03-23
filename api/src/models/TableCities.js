@@ -507,14 +507,15 @@ export default (sequelizeInstance, Model) => {
       where: {
         [Op.and]: [{
           [Op.or]: [
-            {nom_comm: {[Op.like]: `%${name}%`}},
+            {nom_comm: {[Op.like]: `${name}%`}},
             {nom_comm: name},
-            {postal_code: {[Op.like]: `%${name}%`}},
+            {postal_code: {[Op.like]: `${name}%`}},
           ]}, 
         [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
           .map(v => ({nom_comm: {[Op.notLike]: `%-${v}%-arrondissement%`}})),
         ],
       },
+      order: [['nom_comm', 'ASC']],
       limit: 10,
       raw: true,
     })
@@ -531,7 +532,7 @@ export default (sequelizeInstance, Model) => {
 
     const find = allIntoFile.find(c => c.insee_com === cityInsee)
     if(find && Number(find.prixmoyen_m2)) {
-      return find.prixmoyen_m2 / 100
+      return find.prixmoyen_m2
     }
 
     return 0
