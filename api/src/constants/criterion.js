@@ -55,14 +55,14 @@ export const CRITERIONS = [{
   tag: 'city',
   icon: 'people_alt',
   weight: 5,
-  subLabel: `entre ${IS_MEDIUM_CITY} 000 habitants et ${IS_LARGE_CITY} 000 habitants`,
+  subLabel: `entre ${IS_SMALL_CITY} 000 habitants et ${IS_MEDIUM_CITY} 000 habitants`,
   key: CRIT_MEDIUM_CITY,
 }, {
   label: 'Grande ville',
   tag: 'city',
   icon: 'groups',
   weight: 5,
-  subLabel: `entre ${IS_LARGE_CITY} 000 habitants et ${IS_LARGE_CITY} 000 habitants`,
+  subLabel: `entre ${IS_MEDIUM_CITY} 000 habitants et ${IS_LARGE_CITY} 000 habitants`,
   key: CRIT_LARGE_CITY,
 }, {
   label: 'Métropole',

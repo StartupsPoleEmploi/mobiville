@@ -8,7 +8,7 @@ import MobileCriterionsPanel from './mobile-criterions-panel'
 import CityItem from './city-item'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
-import DesktopCriterionsPanel from './desktop-criterions-panel'
+// import DesktopCriterionsPanel from './desktop-criterions-panel'
 
 const Items = styled(Link)`
   && {
@@ -85,12 +85,12 @@ const CitiesPage = () => {
   return (
     <MainLayout>
       {isMobileView(size) && <MobileCriterionsPanel criterions={params} total={cities.length} />}
-      {!isMobileView(size) && (
+      {/*! isMobileView(size) && (
       <DesktopCriterionsPanel
         criterions={params}
         total={cities.length}
       />
-      )}
+      ) */}
       {isLoading && (<p>Loading...</p>)}
       <CitiesArea isMobile={isMobileView(size)}>
         {cities.slice(0, itemsViews).map((c) => (
