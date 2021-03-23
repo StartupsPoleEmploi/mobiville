@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import PersonIcon from '@material-ui/icons/Person'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
 import { useCities } from '../../common/contexts/citiesContext'
 import { COLOR_PRIMARY, COLOR_TEXT_SECONDARY } from '../../contants/colors'
@@ -68,9 +68,19 @@ const NameMobile = styled.p`
 `
 
 const CityPreview = styled.div`
-  height: ${(props) => (props.isMobile ? '58px' : 'auto')};
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+
+  ${(props) => (props.isMobile ? `
+    > *:first-child {
+      margin-left: 32px;
+    }
+
+    a {
+      margin-top: 16px;
+    }
+  ` : '')};
 `
 
 const CityTab = styled.div`
@@ -247,6 +257,28 @@ const BackLine = styled.div`
   position: relative;
 `
 
+const HeaderLink = styled(Link)`
+  && {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    cursor: pointer;
+    margin-left: 32px;
+
+    div {
+      font-weight: 500;
+      font-size: 12px;
+      color: #336E7B;
+      padding: 8px;
+      border: 2px solid #336E7B;
+      border-radius: 30px;
+      margin-left: 8px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+  }        
+`
+
 export const CityHeader = ({ tabList, tabSelectedIndex, onSelectTab }) => {
   const { city } = useCities()
   const { scrollY } = useScroll()
@@ -274,7 +306,7 @@ export const CityHeader = ({ tabList, tabSelectedIndex, onSelectTab }) => {
         <Name>{ucFirstOnly(city.nom_comm)}</Name>
         <SecondSection isMobile={isMobileView(size)}>
           <CityPreview isMobile={isMobileView(size)}>
-            <PersonIconGreen />
+            <img src="/icons/people.svg" alt="people" />
             <PreviewItem>
               Habitants
               <b>{city.population * 1000}</b>
@@ -287,6 +319,12 @@ export const CityHeader = ({ tabList, tabSelectedIndex, onSelectTab }) => {
                 °C
               </b>
             </PreviewItem>
+            <HeaderLink to={`/aides?code_region=${city['region.new_code']}&insee_com=${city.insee_com}`}>
+              <img src="/icons/superhero.svg" alt="superhero" />
+              <PreviewItem>
+                Découvrir les aides
+              </PreviewItem>
+            </HeaderLink>
           </CityPreview>
           {tabList.length !== 0 && (
             <>

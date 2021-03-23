@@ -124,7 +124,7 @@ const PanelCityLogement = ({ city }) => {
                 <i className="material-icons">home</i>
                 <p className="title">Achat</p>
                 <p className="sub-title">Prix au m2 moyen</p>
-                <p className="details">{city && city.average_houseselled ? `${city.average_houseselled.toFixed(2)}€` : 'A venir'}</p>
+                <p className="details">{city && city.average_houseselled ? `${city.average_houseselled}€` : 'A venir'}</p>
               </ElementObject>
               <ElementObject>
                 <i className="material-icons">location_city</i>

@@ -83,9 +83,9 @@ export const Footer = () => {
       <div style={{ backgroundColor: COLOR_TEXT_SECONDARY }}>
         <Wrapper>
           <Line isMobile={isMobileView(size)}>
-            <img src={IMGPE} alt="pole emploi" />
-            <img src={IMGEUROPE} alt="europe" />
-            <img src={IMGAL} alt="action logement" />
+            <a href="https://www.pole-emploi.fr/" target="_blank" rel="noreferrer"><img src={IMGPE} alt="pole emploi" /></a>
+            <a href="http://www.fse.gouv.fr/" target="_blank" rel="noreferrer"><img src={IMGEUROPE} alt="europe" /></a>
+            <a href="https://www.actionlogement.fr/" target="_blank" rel="noreferrer"><img src={IMGAL} alt="action logement" /></a>
           </Line>
           <CopyRight>COPYRIGHT 2021 - MOBIVILLE</CopyRight>
         </Wrapper>
