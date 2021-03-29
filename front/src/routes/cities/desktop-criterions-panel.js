@@ -119,31 +119,33 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   }
 
   useEffect(() => {
-    const rome = criterions && criterions.code_rome
+    if (criterions) {
+      const rome = criterions && criterions.code_rome
     && criterions.code_rome.length ? criterions.code_rome[0] : ''
-    const region = criterions && criterions.code_region
+      const region = criterions && criterions.code_region
     && criterions.code_region.length ? criterions.code_region[0] : ''
 
-    updateValue('rome', rome)
-    updateValue('region', region)
+      updateValue('rome', rome)
+      updateValue('region', region)
 
-    const values = getValues()
+      const values = getValues()
 
-    if (allCriterions.criterions && criterions && criterions.code_criterion) {
-      if (!values.environment) {
-        const envFinded = allCriterions.criterions
-          .filter((c) => c.tag === 'environment')
-          .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
-        if (envFinded) {
-          updateValue('environment', envFinded.key)
+      if (allCriterions.criterions && criterions && criterions.code_criterion) {
+        if (!values.environment) {
+          const envFinded = allCriterions.criterions
+            .filter((c) => c.tag === 'environment')
+            .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+          if (envFinded) {
+            updateValue('environment', envFinded.key)
+          }
         }
-      }
 
-      if (!values.city) {
-        const cityFinded = allCriterions.criterions
-          .filter((c) => c.tag === 'city').find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
-        if (cityFinded) {
-          updateValue('city', cityFinded.key)
+        if (!values.city) {
+          const cityFinded = allCriterions.criterions
+            .filter((c) => c.tag === 'city').find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+          if (cityFinded) {
+            updateValue('city', cityFinded.key)
+          }
         }
       }
     }
