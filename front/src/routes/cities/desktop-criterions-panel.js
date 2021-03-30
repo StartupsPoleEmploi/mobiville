@@ -78,7 +78,12 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   const {
     control, handleSubmit, setValue
   } = useForm({
-    shouldUnregister: false
+    defaultValues: {
+      rome: '',
+      region: '',
+      environment: '',
+      city: ''
+    }
   })
 
   if (allCriterions == null || allCriterions.criterions === undefined) {
@@ -130,20 +135,34 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       updateValue('rome', rome)
       updateValue('region', region)
 
-      if (allCriterions.criterions && criterions && criterions.code_criterion) {
+      if (criterions && criterions.code_criterion) {
+        criterions.code_criterion.map((c) => {
+          if (c.indexOf('city') === -1) {
+            updateValue('environment', c)
+          } else {
+            updateValue('city', c)
+          }
+
+          return c
+        })
+      }
+
+      /* if (allCriterions.criterions && criterions && criterions.code_criterion) {
         const envFinded = allCriterions.criterions
           .filter((c) => c.tag === 'environment')
           .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
         if (envFinded) {
-          updateValue('environment', envFinded.key)
+          console.log(envFinded)
+          // updateValue('environment', envFinded.key)
         }
 
         const cityFinded = allCriterions.criterions
-          .filter((c) => c.tag === 'city').find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+          .filter((c) => c.tag === 'city')
+          .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
         if (cityFinded) {
-          updateValue('city', cityFinded.key)
+          // updateValue('city', cityFinded.key)
         }
-      }
+      } */
     }
   }, [criterions])
 
