@@ -132,20 +132,21 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
 
       if (allCriterions.criterions && criterions && criterions.code_criterion) {
         if (!values.environment) {
-          const envFinded = allCriterions.criterions
+          /* const envFinded = allCriterions.criterions
             .filter((c) => c.tag === 'environment')
             .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
           if (envFinded) {
           // updateValue('environment', envFinded.key)
-          }
+          } */
         }
 
         if (!values.city) {
-          const cityFinded = allCriterions.criterions
-            .filter((c) => c.tag === 'city').find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+          /* const cityFinded = allCriterions.criterions
+            .filter((c) => c.tag === 'city')
+            .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
           if (cityFinded) {
             // updateValue('city', cityFinded.key)
-          }
+          } */
         }
       }
     }
