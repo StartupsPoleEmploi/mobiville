@@ -7,3 +7,4 @@ node_modules
 tests/cypress/screenshots/
 tests/cypress/videos/
 /api/src/datas-mnt
+front/dist/
