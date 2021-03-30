@@ -76,8 +76,10 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   } = useCities()
   const [onSearch, setOnSearch] = useState(null)
   const {
-    control, handleSubmit, setValue, getValues
-  } = useForm()
+    control, handleSubmit, setValue
+  } = useForm({
+    shouldUnregister: false
+  })
 
   if (allCriterions == null || allCriterions.criterions === undefined) {
     return <div />
@@ -127,29 +129,23 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
 
       updateValue('rome', rome)
       updateValue('region', region)
+
+      if (allCriterions.criterions && criterions && criterions.code_criterion) {
+        const envFinded = allCriterions.criterions
+          .filter((c) => c.tag === 'environment')
+          .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+        if (envFinded) {
+          updateValue('environment', envFinded.key)
+        }
+
+        const cityFinded = allCriterions.criterions
+          .filter((c) => c.tag === 'city').find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+        if (cityFinded) {
+          updateValue('city', cityFinded.key)
+        }
+      }
     }
   }, [criterions])
-
-  const values = getValues()
-  if (allCriterions.criterions && criterions && criterions.code_criterion) {
-    if (!values.environment) {
-      const envFinded = allCriterions.criterions
-        .filter((c) => c.tag === 'environment')
-        .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
-      if (envFinded) {
-        updateValue('environment', envFinded.key)
-      }
-    }
-
-    if (!values.city) {
-      const cityFinded = allCriterions.criterions
-        .filter((c) => c.tag === 'city')
-        .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
-      if (cityFinded) {
-        updateValue('city', cityFinded.key)
-      }
-    }
-  }
 
   if (onSearch) {
     const params = []
@@ -197,13 +193,16 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
                       style={{ marginLeft: 16 }}
                       displayEmpty
                     >
-                      <MenuItem selected value="">
+                      <MenuItem value="">
                         Peu importe
                       </MenuItem>
                       {allCriterions && allCriterions.criterions
                     && allCriterions.criterions
                       .filter((c) => c.tag === 'environment').map((rome) => (
-                        <MenuItem key={rome.key} value={rome.key}>
+                        <MenuItem
+                          key={rome.key}
+                          value={rome.key}
+                        >
                           {rome.label}
                         </MenuItem>
                       ))}
@@ -286,4 +285,4 @@ DesktopCriterionsPanel.defaultProps = {
   total: 0
 }
 
-export default React.memo(DesktopCriterionsPanel)
+export default DesktopCriterionsPanel
