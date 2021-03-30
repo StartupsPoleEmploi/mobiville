@@ -6,9 +6,11 @@ import {
   MenuItem, Select, Typography
 } from '@material-ui/core'
 import { Controller, useForm } from 'react-hook-form'
+import { useLocation } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { COLOR_BACKGROUND, COLOR_PRIMARY } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
+import { paramUrlToObject } from '../../utils/url'
 
 const EmptySpace = styled.div`
   height: 244px;
@@ -75,6 +77,8 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     criterions: allCriterions
   } = useCities()
   const [onSearch, setOnSearch] = useState(null)
+  const location = useLocation()
+  console.log(paramUrlToObject(location.search))
   const {
     control, handleSubmit, setValue
   } = useForm({
@@ -135,32 +139,19 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       updateValue('rome', rome)
       updateValue('region', region)
 
-      if (criterions && criterions.code_criterion) {
-        criterions.code_criterion.map((c) => {
-          if (c.indexOf('city') === -1) {
-            // updateValue('environment', c)
-          } else {
-            updateValue('city', c)
-          }
-
-          return c
-        })
-      }
-
       /* if (allCriterions.criterions && criterions && criterions.code_criterion) {
         const envFinded = allCriterions.criterions
           .filter((c) => c.tag === 'environment')
           .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
         if (envFinded) {
-          console.log(envFinded)
-          // updateValue('environment', envFinded.key)
+          updateValue('environment', envFinded.key)
         }
 
         const cityFinded = allCriterions.criterions
           .filter((c) => c.tag === 'city')
           .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
         if (cityFinded) {
-          // updateValue('city', cityFinded.key)
+          updateValue('city', cityFinded.key)
         }
       } */
     }
@@ -215,16 +206,17 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
                       <MenuItem value="">
                         Peu importe
                       </MenuItem>
-                      {allCriterions && allCriterions.criterions
-                    && allCriterions.criterions
-                      .filter((c) => c.tag === 'environment').map((rome) => (
-                        <MenuItem
-                          key={rome.key}
-                          value={rome.key}
-                        >
-                          {rome.label}
-                        </MenuItem>
-                      ))}
+                      {allCriterions
+                      && allCriterions.criterions
+                        ? allCriterions.criterions
+                          .filter((c) => c.tag === 'environment').map((rome) => (
+                            <MenuItem
+                              key={rome.key}
+                              value={rome.key}
+                            >
+                              {rome.label}
+                            </MenuItem>
+                          )) : null}
                     </Select>
                   )}
                 />
@@ -244,11 +236,11 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
                         Peu importe
                       </MenuItem>
                       {allCriterions && allCriterions.criterions
-                    && allCriterions.criterions.filter((c) => c.tag === 'city').map((rome) => (
-                      <MenuItem key={rome.key} value={rome.key}>
-                        {rome.label}
-                      </MenuItem>
-                    ))}
+                        ? allCriterions.criterions.filter((c) => c.tag === 'city').map((rome) => (
+                          <MenuItem key={rome.key} value={rome.key}>
+                            {rome.label}
+                          </MenuItem>
+                        )) : null}
                     </Select>
                   )}
                 />
