@@ -130,15 +130,15 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
 
       // const values = getValues()
 
-      // if (allCriterions.criterions && criterions && criterions.code_criterion) {
+      if (allCriterions.criterions && criterions && criterions.code_criterion) {
       // if (!values.environment) {
-      const envFinded = allCriterions.criterions
-        .filter((c) => c.tag === 'environment')
-        .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
-      if (envFinded) {
-        updateValue('environment', envFinded.key)
-      }
-      // }
+        const envFinded = allCriterions.criterions
+          .filter((c) => c.tag === 'environment')
+          .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+        if (envFinded) {
+          updateValue('environment', envFinded.key)
+        }
+        // }
 
       /* if (!values.city) {
           const cityFinded = allCriterions.criterions
@@ -148,7 +148,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
             updateValue('city', cityFinded.key)
           }
         } */
-      // }
+      }
     }
   }, [criterions])
 
