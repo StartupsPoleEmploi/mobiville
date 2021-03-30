@@ -127,30 +127,29 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
 
       updateValue('rome', rome)
       updateValue('region', region)
-
-      const values = getValues()
-
-      if (allCriterions.criterions && criterions && criterions.code_criterion) {
-        if (!values.environment) {
-          /* const envFinded = allCriterions.criterions
-            .filter((c) => c.tag === 'environment')
-            .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
-          if (envFinded) {
-          // updateValue('environment', envFinded.key)
-          } */
-        }
-
-        if (!values.city) {
-          /* const cityFinded = allCriterions.criterions
-            .filter((c) => c.tag === 'city')
-            .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
-          if (cityFinded) {
-            // updateValue('city', cityFinded.key)
-          } */
-        }
-      }
     }
   }, [criterions])
+
+  const values = getValues()
+  if (allCriterions.criterions && criterions && criterions.code_criterion) {
+    if (!values.environment) {
+      const envFinded = allCriterions.criterions
+        .filter((c) => c.tag === 'environment')
+        .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+      if (envFinded) {
+        updateValue('environment', envFinded.key)
+      }
+    }
+
+    if (!values.city) {
+      const cityFinded = allCriterions.criterions
+        .filter((c) => c.tag === 'city')
+        .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+      if (cityFinded) {
+        updateValue('city', cityFinded.key)
+      }
+    }
+  }
 
   if (onSearch) {
     const params = []
