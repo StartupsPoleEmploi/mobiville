@@ -138,7 +138,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       if (criterions && criterions.code_criterion) {
         criterions.code_criterion.map((c) => {
           if (c.indexOf('city') === -1) {
-            updateValue('environment', c)
+            // updateValue('environment', c)
           } else {
             updateValue('city', c)
           }
