@@ -11,7 +11,7 @@ import { COLOR_BACKGROUND, COLOR_PRIMARY } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
 
 const EmptySpace = styled.div`
-  height: 40px;
+  height: 244px;
 `
 
 const Wrapper = styled.div`
@@ -76,7 +76,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   } = useCities()
   const [onSearch, setOnSearch] = useState(null)
   const {
-    control, handleSubmit, setValue/* , getValues */
+    control, handleSubmit, setValue, getValues
   } = useForm()
 
   if (allCriterions == null || allCriterions.criterions === undefined) {
@@ -128,7 +128,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
       updateValue('rome', rome)
       updateValue('region', region)
 
-      /* const values = getValues()
+      const values = getValues()
 
       if (allCriterions.criterions && criterions && criterions.code_criterion) {
         if (!values.environment) {
@@ -140,15 +140,15 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
           }
         }
 
-        if (!values.city) {
+        /* if (!values.city) {
           const cityFinded = allCriterions.criterions
             .filter((c) => c.tag === 'city').find((c) =>
             criterions.code_criterion.indexOf(c.key) !== -1)
           if (cityFinded) {
             updateValue('city', cityFinded.key)
           }
-        }
-      } */
+        } */
+      }
     }
   }, [criterions])
 
