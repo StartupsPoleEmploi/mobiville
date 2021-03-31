@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {
-  FormControl,
-  MenuItem, Select, Typography
+  /* FormControl,
+  MenuItem, Select, */ Typography
 } from '@material-ui/core'
-import { Controller, useForm } from 'react-hook-form'
+import { /* Controller, */useForm } from 'react-hook-form'
 import { useCities } from '../../common/contexts/citiesContext'
 import { COLOR_BACKGROUND, COLOR_PRIMARY } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
@@ -70,13 +70,13 @@ const SubmitButton = styled.input`
   cursor: pointer;
 `
 
-const DesktopCriterionsPanel = ({ criterions, total }) => {
+const DesktopCriterionsPanel = ({ paramsUrl, total }) => {
   const {
-    criterions: allCriterions
+    criterions
   } = useCities()
   const [onSearch, setOnSearch] = useState(null)
   const {
-    control, handleSubmit, setValue
+    /* control, */ handleSubmit, setValue
   } = useForm({
     defaultValues: {
       rome: '',
@@ -86,7 +86,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     }
   })
 
-  if (allCriterions == null || allCriterions.criterions === undefined) {
+  if (criterions == null || criterions.criterions === undefined) {
     return <div />
   }
 
@@ -94,8 +94,8 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
     let params = { }
     if (data.rome) {
       params = { ...params, code_rome: [data.rome] }
-    } else if (allCriterions.codeRomes && allCriterions.codeRomes.length) {
-      params = { ...params, code_rome: [allCriterions.codeRomes[0].key] }
+    } else if (criterions.codeRomes && criterions.codeRomes.length) {
+      params = { ...params, code_rome: [criterions.codeRomes[0].key] }
     }
 
     if (data.city) {
@@ -122,27 +122,27 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
   }
 
   useEffect(() => {
-    if (criterions) {
-      const rome = criterions && criterions.code_rome
-    && criterions.code_rome.length ? criterions.code_rome[0] : ''
-      const region = criterions && criterions.code_region
-    && criterions.code_region.length ? criterions.code_region[0] : ''
+    if (paramsUrl) {
+      const rome = paramsUrl && paramsUrl.code_rome
+    && paramsUrl.code_rome.length ? paramsUrl.code_rome[0] : ''
+      const region = paramsUrl && paramsUrl.code_region
+    && paramsUrl.code_region.length ? paramsUrl.code_region[0] : ''
 
       const values = []
       values.push({ name: 'rome', value: rome })
       values.push({ name: 'region', value: region })
 
-      if (allCriterions.criterions && criterions && criterions.code_criterion) {
-        const envFinded = allCriterions.criterions
+      if (criterions.criterions && paramsUrl && paramsUrl.code_criterion) {
+        const envFinded = criterions.criterions
           .filter((c) => c.tag === 'environment')
-          .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+          .find((c) => paramsUrl.code_criterion.indexOf(c.key) !== -1)
         if (envFinded) {
           values.push({ name: 'environment', value: envFinded.key })
         }
 
-        const cityFinded = allCriterions.criterions
+        const cityFinded = criterions.criterions
           .filter((c) => c.tag === 'city')
-          .find((c) => criterions.code_criterion.indexOf(c.key) !== -1)
+          .find((c) => paramsUrl.code_criterion.indexOf(c.key) !== -1)
         if (cityFinded) {
           values.push({ name: 'city', value: cityFinded.key })
         }
@@ -150,7 +150,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
 
       values.forEach(({ name, value }) => setValue(name, value, { shouldDirty: true }))
     }
-  }, [criterions])
+  }, [paramsUrl])
 
   if (onSearch) {
     const params = []
@@ -167,8 +167,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <SearchPanel>
             <SearchBar className="wrapper">
-
-              <FormControl>
+              {/* <FormControl>
                 <Controller
                   control={control}
                   name="rome"
@@ -263,7 +262,7 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
                     </Select>
                   )}
                 />
-              </FormControl>
+              </FormControl> */}
               <SubmitButton type="submit" value="Rechercher" />
             </SearchBar>
           </SearchPanel>
@@ -282,12 +281,12 @@ const DesktopCriterionsPanel = ({ criterions, total }) => {
 }
 
 DesktopCriterionsPanel.propTypes = {
-  criterions: PropTypes.object,
+  paramsUrl: PropTypes.object,
   total: PropTypes.number
 }
 
 DesktopCriterionsPanel.defaultProps = {
-  criterions: [],
+  paramsUrl: [],
   total: 0
 }
 

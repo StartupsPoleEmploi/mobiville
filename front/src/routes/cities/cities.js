@@ -87,7 +87,7 @@ const CitiesPage = () => {
       {isMobileView(size) && <MobileCriterionsPanel criterions={params} total={cities.length} />}
       {!isMobileView(size) && (
       <DesktopCriterionsPanel
-        criterions={params}
+        paramsUrl={params}
         total={cities.length}
       />
       )}
