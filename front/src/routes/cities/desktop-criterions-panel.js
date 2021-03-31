@@ -287,4 +287,4 @@ DesktopCriterionsPanel.defaultProps = {
   redirectTo: () => {}
 }
 
-export default DesktopCriterionsPanel
+export default React.memo(DesktopCriterionsPanel)
