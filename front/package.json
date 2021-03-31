@@ -29,11 +29,11 @@
 	},
 	"scripts": {
 		"start": "react-app-rewired start",
-		"build": "react-app-rewired build",
+		"build": "react-app-rewired build -- --profile",
 		"test": "react-app-rewired test",
 		"eject": "react-app-rewired eject",
 		"lint": "npm run eslint src",
-		"build:production": "yarn install && yarn run build && cp -RT build dist",
+		"build:production": "yarn install && yarn run build --profile && cp -RT build dist",
 		"eslint": "eslint"
 	},
 	"eslintConfig": {
