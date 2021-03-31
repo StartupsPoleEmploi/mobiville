@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {
-  /* FormControl,
-  MenuItem, Select, */ Typography
+  FormControl,
+  MenuItem, Select, Typography
 } from '@material-ui/core'
-import { /* Controller, */useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useCities } from '../../common/contexts/citiesContext'
 import { COLOR_BACKGROUND, COLOR_PRIMARY } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
@@ -70,13 +70,12 @@ const SubmitButton = styled.input`
   cursor: pointer;
 `
 
-const DesktopCriterionsPanel = ({ paramsUrl, total }) => {
+const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
   const {
     criterions
   } = useCities()
-  const [onSearch, setOnSearch] = useState(null)
   const {
-    /* control, */ handleSubmit, setValue
+    control, handleSubmit, setValue
   } = useForm({
     defaultValues: {
       rome: '',
@@ -118,7 +117,12 @@ const DesktopCriterionsPanel = ({ paramsUrl, total }) => {
       params = { ...params, from: [data.from.id] }
     }
 
-    setOnSearch(params)
+    const pushParams = []
+    Object.entries(params).forEach(([key, value]) => {
+      pushParams.push(`${key}=${value.join(',')}`)
+    })
+
+    redirectTo(pushParams.join('&'))
   }
 
   useEffect(() => {
@@ -152,22 +156,13 @@ const DesktopCriterionsPanel = ({ paramsUrl, total }) => {
     }
   }, [paramsUrl])
 
-  if (onSearch) {
-    const params = []
-    Object.entries(onSearch).forEach(([key, value]) => {
-      params.push(`${key}=${value.join(',')}`)
-    })
-
-    window.location.href = `/cities?${params.join('&')}`
-  }
-
   return (
     <EmptySpace>
       <Wrapper>
         <form onSubmit={handleSubmit(onSubmit)}>
           <SearchPanel>
             <SearchBar className="wrapper">
-              {/* <FormControl>
+              <FormControl>
                 <Controller
                   control={control}
                   name="rome"
@@ -176,8 +171,8 @@ const DesktopCriterionsPanel = ({ paramsUrl, total }) => {
                     <Select
                       style={{ marginLeft: 16 }}
                     >
-                      {allCriterions && allCriterions.codeRomes
-            && allCriterions.codeRomes.map((rome) => (
+                      {criterions && criterions.codeRomes
+            && criterions.codeRomes.map((rome) => (
               <MenuItem key={rome.key} value={rome.key}>
                 {rome.label}
               </MenuItem>
@@ -200,9 +195,9 @@ const DesktopCriterionsPanel = ({ paramsUrl, total }) => {
                       <MenuItem value="">
                         Peu importe
                       </MenuItem>
-                      {allCriterions
-                      && allCriterions.criterions
-                        ? allCriterions.criterions
+                      {criterions
+                      && criterions.criterions
+                        ? criterions.criterions
                           .filter((c) => c.tag === 'environment').map((rome) => (
                             <MenuItem
                               key={rome.key}
@@ -229,8 +224,8 @@ const DesktopCriterionsPanel = ({ paramsUrl, total }) => {
                       <MenuItem selected value="">
                         Peu importe
                       </MenuItem>
-                      {allCriterions && allCriterions.criterions
-                        ? allCriterions.criterions.filter((c) => c.tag === 'city').map((rome) => (
+                      {criterions && criterions.criterions
+                        ? criterions.criterions.filter((c) => c.tag === 'city').map((rome) => (
                           <MenuItem key={rome.key} value={rome.key}>
                             {rome.label}
                           </MenuItem>
@@ -253,8 +248,8 @@ const DesktopCriterionsPanel = ({ paramsUrl, total }) => {
                       <MenuItem selected value="">
                         Toutes les regions
                       </MenuItem>
-                      {allCriterions && allCriterions.regions
-                    && allCriterions.regions.map((rome) => (
+                      {criterions && criterions.regions
+                    && criterions.regions.map((rome) => (
                       <MenuItem key={rome.id} value={rome.id}>
                         {rome.label}
                       </MenuItem>
@@ -262,7 +257,7 @@ const DesktopCriterionsPanel = ({ paramsUrl, total }) => {
                     </Select>
                   )}
                 />
-              </FormControl> */}
+              </FormControl>
               <SubmitButton type="submit" value="Rechercher" />
             </SearchBar>
           </SearchPanel>
@@ -282,12 +277,14 @@ const DesktopCriterionsPanel = ({ paramsUrl, total }) => {
 
 DesktopCriterionsPanel.propTypes = {
   paramsUrl: PropTypes.object,
-  total: PropTypes.number
+  total: PropTypes.number,
+  redirectTo: PropTypes.func
 }
 
 DesktopCriterionsPanel.defaultProps = {
   paramsUrl: [],
-  total: 0
+  total: 0,
+  redirectTo: () => {}
 }
 
 export default DesktopCriterionsPanel

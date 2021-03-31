@@ -82,6 +82,11 @@ const CitiesPage = () => {
     return url
   }
 
+  const onRedirectTo = (to) => {
+    console.log('redirect to', to)
+    window.location.href = `/cities?${to}&n=${new Date().getTime()}`
+  }
+
   return (
     <MainLayout>
       {isMobileView(size) && <MobileCriterionsPanel criterions={params} total={cities.length} />}
@@ -89,6 +94,7 @@ const CitiesPage = () => {
       <DesktopCriterionsPanel
         paramsUrl={params}
         total={cities.length}
+        redirectTo={onRedirectTo}
       />
       )}
       {isLoading && (<p>Loading...</p>)}
