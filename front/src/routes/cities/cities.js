@@ -83,7 +83,6 @@ const CitiesPage = () => {
   }
 
   const onRedirectTo = (to) => {
-    console.log('redirect to', to)
     window.location.href = `/cities?${to}&n=${new Date().getTime()}`
   }
 
