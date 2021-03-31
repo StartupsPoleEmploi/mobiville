@@ -88,7 +88,6 @@ const CitiesPage = () => {
 
   return (
     <MainLayout>
-      <p>Coucou</p>
       {isMobileView(size) && <MobileCriterionsPanel criterions={params} total={cities.length} />}
       {!isMobileView(size) && (
       <DesktopCriterionsPanel
