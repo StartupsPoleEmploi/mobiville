@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react'
 import {
   BrowserRouter as Router,
+  Redirect,
   Route, Switch
 } from 'react-router-dom'
 
@@ -19,9 +20,13 @@ export const Routes = () => (
     <Router>
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route exact path="/rechercher" component={Search} />
+        <Route exact path="/rechercher">
+          <Redirect to="/rechercher/depuis" />
+        </Route>
+        <Route exact path="/rechercher/:stepName" component={Search} />
         <Route exact path="/cities" component={Cities} />
         <Route exact path="/city/:insee" component={City} />
+        <Route exact path="/city/:insee/:place" component={City} />
         <Route exact path="/aides" component={Helps} />
         <Route exact path="/aides/:id" component={HelpDetailsPage} />
         <Route exact path="/compte" component={Account} />

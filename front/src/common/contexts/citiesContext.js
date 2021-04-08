@@ -75,6 +75,13 @@ export function CitiesProvider(props) {
       .catch(() => { _setSearchCities([EMPTY_CITY]); _setIsLoadingLocation(false) })
   })
 
+  const onSearchById = useCallback((id) => searchCityByName({ id }).then((c) => {
+    if (c.length === 0) {
+      return EMPTY_CITY
+    }
+    return c[0]
+  }))
+
   const onGetCityTenement = useCallback((id) => {
     _setIsLoadingTenement(true)
     getCityTenement(id)
@@ -119,6 +126,7 @@ export function CitiesProvider(props) {
         onLoadCity,
         onSearchByLocation,
         onSearchByName,
+        onSearchById,
         setSortCriterions,
         onGetCityTenement,
         onGetCityAmenities

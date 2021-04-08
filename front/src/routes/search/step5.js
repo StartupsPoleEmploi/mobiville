@@ -44,7 +44,7 @@ const Step5Component = ({ onNext, values }) => {
       width: 'calc(50% - 15px)', height: 80, marginRight: 15, marginBottom: 15, border: 'none'
     }
 
-    if (r && values && values.environment && values.environment === r.key) {
+    if (r && values && values.code_criterion && values.code_criterion.indexOf(r.key) !== -1) {
       style.backgroundColor = '#5EECE8'
     }
 
@@ -64,10 +64,10 @@ const Step5Component = ({ onNext, values }) => {
           .filter((f) => f.tag === 'environment')
           .map((c) => {
             let available = true
-            if (values.regions && values.regions.length) {
-              const reg = criterions.regions.find((r) => r.id === values.regions[0])
+            if (values.code_region && values.code_region.length) {
+              const reg = criterions.regions.find((r) => r.id === values.code_region[0])
               if (reg) {
-                const allCrit = reg.criterions[values.rome] || []
+                const allCrit = reg.criterions[values.code_rome[0]] || []
                 if (allCrit.indexOf(c.key) === -1) {
                   available = false
                 }

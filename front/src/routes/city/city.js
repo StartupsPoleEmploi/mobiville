@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
 import { paramUrlToObject } from '../../utils/url'
@@ -32,12 +32,12 @@ const HelpButton = styled.button`
 `
 
 const CityPage = ({ location: { search } }) => {
-  const [tabList, setTabList] = useState([{ key: 'life', label: 'Cadre de vie' }, { key: 'tenement', label: 'Logement' }])
-  const [tabSelected, setTagSelected] = useState(0)
+  const tabList = [{ key: 'job', label: 'Emploi' }, { key: 'life', label: 'Cadre de vie' }, { key: 'tenement', label: 'Logement' }]
   const { onLoadCity, isLoadingCity, city } = useCities()
-  const { insee } = useParams()
+  const { insee, place } = useParams()
   const params = paramUrlToObject(search)
   const size = useWindowSize()
+  const history = useHistory()
 
   useEffect(() => {
     const extract = insee.split('-')
@@ -46,16 +46,14 @@ const CityPage = ({ location: { search } }) => {
     }
   }, [])
 
-  useEffect(() => {
-    if (city && params && params.code_rome) {
-      if (tabList.findIndex((t) => t.key === 'job') === -1) {
-        tabList.splice(0, 0, { key: 'job', label: 'Emploi' })
-        setTabList(tabList)
-      }
-    }
-  }, [city])
+  const setTagSelected = (tagIndex) => {
+    const tag = tabList[tagIndex].key
+    const tagPath = tag !== 'job' ? `/${tag}` : ''
 
-  const tabKey = tabList[tabSelected].key
+    history.push({ pathname: `/city/${insee}${tagPath}`, search })
+  }
+
+  const tabKey = place || 'job'
 
   return (
     <MainLayout menu={{ visible: !isMobileView(size) }}>
@@ -65,7 +63,7 @@ const CityPage = ({ location: { search } }) => {
         <>
           <CityHeader
             tabList={tabList}
-            tabSelectedIndex={tabSelected}
+            tabSelected={tabKey}
             onSelectTab={setTagSelected}
           />
           <ContentBlock isMobile={isMobileView(size)}>

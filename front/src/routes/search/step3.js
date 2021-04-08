@@ -46,14 +46,20 @@ const Step3Component = ({ onNext, values }) => {
   }
 
   useEffect(() => {
-    if (values.regions) {
-      setRegions(values.regions)
+    if (values && values.code_region && values.code_region.length) {
+      setRegions([values.code_region[0]])
     }
   }, [values])
+
+  let list = [...criterions.regions]
+  if (values.code_rome && values.code_rome.length) {
+    list = criterions.regions.filter((r) => r.criterions && r.criterions[values.code_rome[0]])
+  }
 
   return (
     <Wrapper>
       <Title>Quelle région vous intéresse ?</Title>
+      {values && values.code_rome && values.code_rome.length && (
       <SmallTitle>
         Seules les régions avec des fortes probabilités d
         {'\''}
@@ -61,6 +67,7 @@ const Step3Component = ({ onNext, values }) => {
         {'\''}
         affichent.
       </SmallTitle>
+      )}
       <FormControl>
         <InputLabel htmlFor="age-native-simple">Région</InputLabel>
         <Select
@@ -76,12 +83,12 @@ const Step3Component = ({ onNext, values }) => {
           <MenuItem selected value="">
             Toutes les regions
           </MenuItem>
-          {criterions.regions.filter((r) => r.criterions && r.criterions[values.rome])
-            .map((r) => (
-              <MenuItem key={r.id} value={r.id}>
-                {ucFirst(r.label.toLowerCase())}
-              </MenuItem>
-            ))}
+          {list.map((r) => (
+            <MenuItem key={r.id} value={r.id}>
+              {ucFirst(r.label.toLowerCase())}
+            </MenuItem>
+          ))}
+
         </Select>
       </FormControl>
       <Button

@@ -30,7 +30,7 @@ const Step2Component = ({ onNext, values }) => {
   const getStyleOfButton = (r) => {
     const style = { marginBottom: 16, border: 'none' }
 
-    if (values && values.rome && values.rome === r.key) {
+    if (values && values.code_rome && values.code_rome.length && values.code_rome[0] === r.key) {
       style.border = `2px solid ${COLOR_PRIMARY}`
     }
 
