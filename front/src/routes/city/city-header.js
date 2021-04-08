@@ -279,7 +279,7 @@ const HeaderLink = styled(Link)`
   }        
 `
 
-export const CityHeader = ({ tabList, tabSelectedIndex, onSelectTab }) => {
+export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
   const { city } = useCities()
   const { scrollY } = useScroll()
   const size = useWindowSize()
@@ -326,38 +326,33 @@ export const CityHeader = ({ tabList, tabSelectedIndex, onSelectTab }) => {
               </PreviewItem>
             </HeaderLink>
           </CityPreview>
-          {tabList.length !== 0 && (
-            <>
-              {isMobileView(size) && (
-              <CityTabMobile>
-                {tabList.map((t, i) => (
-                  <TabItemMobile
-                    isMobile={isMobileView(size)}
-                    key={t.key}
-                    selected={i === tabSelectedIndex}
-                    onClick={() => onSelectTab(i)}
-                  >
-                    {t.label}
-                  </TabItemMobile>
-                ))}
-              </CityTabMobile>
-              )}
-              {!isMobileView(size) && (
-              <CityTab>
-                {tabList.map((t, i) => (
-                  <TabItem
-                    isMobile={isMobileView(size)}
-                    key={t.key}
-                    selected={i === tabSelectedIndex}
-                    onClick={() => onSelectTab(i)}
-                  >
-                    {t.label}
-                  </TabItem>
-                ))}
-              </CityTab>
-              )}
-            </>
-
+          {isMobileView(size) && (
+          <CityTabMobile>
+            {tabList.map((t, i) => (
+              <TabItemMobile
+                isMobile={isMobileView(size)}
+                key={t.key}
+                selected={t.key === tabSelected}
+                onClick={() => onSelectTab(i)}
+              >
+                {t.label}
+              </TabItemMobile>
+            ))}
+          </CityTabMobile>
+          )}
+          {!isMobileView(size) && (
+          <CityTab>
+            {tabList.map((t, i) => (
+              <TabItem
+                isMobile={isMobileView(size)}
+                key={t.key}
+                selected={t.key === tabSelected}
+                onClick={() => onSelectTab(i)}
+              >
+                {t.label}
+              </TabItem>
+            ))}
+          </CityTab>
           )}
         </SecondSection>
       </MainLayout>
@@ -381,7 +376,7 @@ export const CityHeader = ({ tabList, tabSelectedIndex, onSelectTab }) => {
                 <TabItem
                   fixedView
                   key={t.key}
-                  selected={i === tabSelectedIndex}
+                  selected={t.key === tabSelected}
                   onClick={() => onSelectTab(i)}
                 >
                   {t.label}
@@ -408,7 +403,7 @@ export const CityHeader = ({ tabList, tabSelectedIndex, onSelectTab }) => {
                 <TabItem
                   fixedView
                   key={t.key}
-                  selected={i === tabSelectedIndex}
+                  selected={t.key === tabSelected}
                   onClick={() => onSelectTab(i)}
                 >
                   {t.label}
@@ -425,12 +420,12 @@ export const CityHeader = ({ tabList, tabSelectedIndex, onSelectTab }) => {
 
 CityHeader.propTypes = {
   tabList: PropTypes.array,
-  tabSelectedIndex: PropTypes.number,
+  tabSelected: PropTypes.string,
   onSelectTab: PropTypes.func
 }
 
 CityHeader.defaultProps = {
   tabList: [],
-  tabSelectedIndex: 0,
+  tabSelected: '',
   onSelectTab: () => {}
 }

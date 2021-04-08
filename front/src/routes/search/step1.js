@@ -65,7 +65,7 @@ const Waiting = styled(CircularProgress)`
 const Step1Component = ({ onNext, values }) => {
   const [loadingLocalisation, setLoadingLocalisation] = useState(false)
   const {
-    onSearchByLocation, setCity, onSearchByName, city, searchCities, isLoadingLocation
+    onSearchByLocation, setCity, onSearchByName, onSearchById, city, searchCities, isLoadingLocation
   } = useCities()
   const [inputValue, setInputValue] = useState('')
   const size = useWindowSize()
@@ -101,8 +101,8 @@ const Step1Component = ({ onNext, values }) => {
   }, [city])
 
   useEffect(() => {
-    if (values && values.from) {
-      setCity(values.from)
+    if (values && values.from && !city) {
+      onSearchById(values.from).then(setCity)
     }
   }, [values])
 

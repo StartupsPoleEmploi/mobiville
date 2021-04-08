@@ -84,13 +84,13 @@ const PanelCityJobs = ({ city, rome }) => {
   } = useCities()
 
   useEffect(() => {
-    if (city && rome) {
+    if (city && rome && rome.length) {
       onSearchProfessions({ code_rome: rome, insee: [city.insee_com] })
     }
   }, [city])
 
   let romeLabel = ''
-  if (criterions && criterions.codeRomes) {
+  if (criterions && criterions.codeRomes && rome && rome.length) {
     const finded = criterions.codeRomes.find((c) => c.key === rome[0])
     if (finded) {
       romeLabel = `pour ${finded.label.toLowerCase()}`
@@ -119,7 +119,8 @@ const PanelCityJobs = ({ city, rome }) => {
           {isLoadingProfessions && <p>Chargement des métiers</p>}
           {professions.filter((p) => p && p.id).map((p) => (
             <JobItem key={p.id}>
-              <a href={p.origineOffre.urlOrigine} target="_blank" rel="noreferrer">
+              { /* eslint-disable-next-line */ }
+              <a href={p.origineOffre.urlOrigine} target="_blank">
                 <p className="title">{p.appellationlibelle}</p>
                 {p.entreprise && p.entreprise.nom && (<p className="enterprise">{p.entreprise.nom}</p>)}
                 <p className="description">{p.description}</p>

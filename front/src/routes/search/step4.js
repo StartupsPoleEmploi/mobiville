@@ -53,7 +53,7 @@ const Step4Component = ({ onNext, values }) => {
       width: 'calc(50% - 7.5px)', height: 98, marginRight: (index + 1) % 2 !== 0 ? 15 : 0, marginBottom: 15, border: 'none'
     }
 
-    if (r && values && values.city && values.city === r.key) {
+    if (r && values && values.code_criterion && values.code_criterion.indexOf(r.key) !== -1) {
       style.border = `2px solid ${COLOR_PRIMARY}`
     }
 
@@ -73,10 +73,10 @@ const Step4Component = ({ onNext, values }) => {
           .filter((f) => f.tag === 'city')
           .map((c) => {
             let available = true
-            if (values.regions && values.regions.length) {
-              const reg = criterions.regions.find((r) => r.id === values.regions[0])
+            if (values.code_region && values.code_region.length) {
+              const reg = criterions.regions.find((r) => r.id === values.code_region[0])
               if (reg) {
-                const allCrit = reg.criterions[values.rome] || []
+                const allCrit = reg.criterions[values.code_rome[0]] || []
                 if (allCrit.indexOf(c.key) === -1) {
                   available = false
                 }
