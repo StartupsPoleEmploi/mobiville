@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { Typography } from '@material-ui/core'
-import LOGO from '../assets/images/logo_MobiVille.svg'
+import LOGO from '../assets/images/LogoMobiville_gros.svg'
 
 const MainSpace = styled.div`
 `
