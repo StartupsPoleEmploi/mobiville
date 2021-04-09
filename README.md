@@ -71,21 +71,22 @@ yarn logs:api
 
 ## Les données
 
-Code rome I1401 (Informaticien)
-Nb ville proche mer : 704
-Nb ville proche en montagne : 2416
-Nb ville à la campagne : 1978
-Nb petite ville : 4831
-Nb ville moyenne : 111
-Nb grande ville : 52
-Nb metropole : 6
+Code rome I1401 (Informaticien)  
+Nb ville proche mer : 704  
+Nb ville proche en montagne : 2416  
+Nb ville à la campagne : 1978  
+Nb petite ville : 4831  
+Nb ville moyenne : 111  
+Nb grande ville : 52  
+Nb metropole : 6  
 
-Code rome J1501 (Aide soignant)
-Nb ville proche mer : 2755
-Nb ville proche en montagne : 10588
-Nb ville à la campagne : 8681
-Nb petite ville : 21482
-Nb ville moyenne : 106
-Nb grande ville : 47
-Nb metropole : 6
+
+Code rome J1501 (Aide soignant)  
+Nb ville proche mer : 2755  
+Nb ville proche en montagne : 10588  
+Nb ville à la campagne : 8681  
+Nb petite ville : 21482  
+Nb ville moyenne : 106  
+Nb grande ville : 47  
+Nb metropole : 6  
 
