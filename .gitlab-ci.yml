@@ -10,7 +10,7 @@ build_liv_front_on_recette:
   image: node:12.18.0
   before_script:
     - apt-get update -qq
-    - apt-get install -y -qq openssh-client 
+    - apt-get install -y -qq openssh-client
     # add SSH_PRIVATE_KEY in agent store
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
@@ -20,7 +20,7 @@ build_liv_front_on_recette:
     - (which yarn || npm i -g yarn@1.15.2)
     - cd ./front
     # recupération des dépendances npm
-    - yarn install 
+    - yarn install
     # On minifie les src ds le livrable dist
     - yarn run build && cp -RT build dist
     # On livre le livrable dist sur la machine de recette
@@ -28,7 +28,7 @@ build_liv_front_on_recette:
     - scp -o StrictHostKeyChecking=no -r ./dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front
   artifacts:
     paths:
-      - front/dist 
+      - front/dist
     expire_in: 1 week
   only:
     refs:
@@ -51,16 +51,16 @@ build_liv_front-admin_on_recette:
     - (which yarn || npm i -g yarn@1.15.2)
     - cd ./front-admin
     # recupération des dépendances npm
-    - yarn install 
+    - yarn install
     # On minifie les src ds le livrable dist
     - yarn run build && cp -RT build dist
     - sed -i 's/return a.p+"/return a.p+"\//g' dist/index.html
-    # On livre le livrable dist sur le 
+    # On livre le livrable dist sur le
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front-admin"
     - scp -o StrictHostKeyChecking=no -r ./dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front-admin
   artifacts:
     paths:
-      - front-admin/dist 
+      - front-admin/dist
     expire_in: 1 week
   only:
     refs:
@@ -69,7 +69,7 @@ build_liv_front-admin_on_recette:
       - front-admin/**/*
 
 build_api_image:
-  stage: build_liv_recette 
+  stage: build_liv_recette
   image:
       name: gcr.io/kaniko-project/executor:debug
       entrypoint: [""]
@@ -87,20 +87,20 @@ deploy_application_on_recette:
   stage: deploy_recette
   before_script:
     - apt-get update -qq
-    - apt-get install -y -qq openssh-client 
+    - apt-get install -y -qq openssh-client
     # add SSH_PRIVATE_KEY in agent store
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
   script:
-    - echo -e "DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET" > .env 
+    - echo -e "DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET" > .env
     - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.recette.yml .env gitlab@$IP_RECETTE:$WORKDIR_SERVER
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx"
     - scp -o StrictHostKeyChecking=no nginx/recette.conf gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "
                 cd $WORKDIR_SERVER &&
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
-                docker-compose -f docker-compose.yml -f docker-compose.recette.yml pull && 
+                docker-compose -f docker-compose.yml -f docker-compose.recette.yml pull &&
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d"
   only:
     refs:
@@ -115,7 +115,7 @@ liv_application_on_production:
   stage: liv_production
   before_script:
     - apt-get update -qq
-    - apt-get install -y -qq openssh-client 
+    - apt-get install -y -qq openssh-client
     # add SSH_PRIVATE_KEY in agent store
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
@@ -123,9 +123,9 @@ liv_application_on_production:
   script:
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "rm -rf $WORKDIR_SERVER/nginx"
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front"
-    - scp -o StrictHostKeyChecking=no -r ./front/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front
+    - scp -o StrictHostKeyChecking=no -r front/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front-admin"
-    - scp -o StrictHostKeyChecking=no -r ./front-admin/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front-admin
+    - scp -o StrictHostKeyChecking=no -r front-admin/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front-admin
   dependencies:
     - build_liv_front_on_recette
     - build_liv_front-admin_on_recette
@@ -135,7 +135,7 @@ deploy_application_on_production:
   stage: deploy_production
   before_script:
     - apt-get update -qq
-    - apt-get install -y -qq openssh-client 
+    - apt-get install -y -qq openssh-client
     # add SSH_PRIVATE_KEY in agent store
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
