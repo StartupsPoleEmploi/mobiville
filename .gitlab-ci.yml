@@ -126,6 +126,9 @@ liv_application_on_production:
     - scp -o StrictHostKeyChecking=no -r ./front/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front-admin"
     - scp -o StrictHostKeyChecking=no -r ./front-admin/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front-admin
+  dependencies:
+    - build_liv_front_on_recette
+    - build_liv_front-admin_on_recette
   when: manual
 
 deploy_application_on_production:
