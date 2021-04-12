@@ -28,13 +28,13 @@ build_liv_front_on_recette:
     - scp -o StrictHostKeyChecking=no -r ./dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front
   artifacts:
     paths:
-      - ./front/dist 
+      - front/dist 
     expire_in: 1 week
   only:
     refs:
       - develop
     changes:
-      - ./front/**/*
+      - front/**
 
 build_liv_front-admin_on_recette:
   stage: build_liv_recette
@@ -60,13 +60,13 @@ build_liv_front-admin_on_recette:
     - scp -o StrictHostKeyChecking=no -r ./dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front-admin
   artifacts:
     paths:
-      - ./front-admin/dist 
+      - front-admin/dist 
     expire_in: 1 week
   only:
     refs:
       - develop
     changes:
-      - ./front-admin/**/*
+      - front-admin/**
 
 build_api_image:
   stage: build_liv_recette 
@@ -81,8 +81,7 @@ build_api_image:
     refs:
       - develop
     changes:
-      - ./api/*
-      - ./api/**/*
+      - api/**
 
 deploy_application_on_recette:
   stage: deploy_recette
@@ -106,6 +105,10 @@ deploy_application_on_recette:
   only:
     refs:
       - develop
+    changes:
+      - front/**
+      - front-admin/**
+      - api/**
   when: on_success # s'exécutera uniquement si le job `build` passe
 
 liv_application_on_production:
