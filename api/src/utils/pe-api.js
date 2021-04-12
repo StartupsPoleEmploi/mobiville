@@ -7,7 +7,7 @@ export function getAccessToken() {
     grant_type: 'client_credentials',
     client_id: config.EMPLOI_STORE_ID,
     client_secret: config.EMPLOI_STORE_SECRET,
-    scope: `api_offresdemploiv2 application_${config.EMPLOI_STORE_ID} o2dsoffre`,
+    scope: `api_infotravailv1 api_offresdemploiv2 application_${config.EMPLOI_STORE_ID} o2dsoffre`,
   }), {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -24,6 +24,14 @@ export async function searchJob({codeRome = [], insee = [], distance = 10}) {
       commune: insee.join(','),
       distance,
     },
+    headers: {Authorization: `Bearer ${token}`},
+  }).then(result => (result.data))
+}
+
+export async function infosTravail({codeProfession, codeRegion}) {
+  const token = await getAccessToken()
+  // CONVERTIR CODE ROME EN PCS_PROFESSION_CODE
+  return axios.get(`https://api.emploi-store.fr/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "d9090eaf-65cd-41cb-816f-7249897a3e51" WHERE "AREA_CODE" = '${codeRegion}' AND "PCS_PROFESSION_CODE" = '${codeProfession}'`, {
     headers: {Authorization: `Bearer ${token}`},
   }).then(result => (result.data))
 }

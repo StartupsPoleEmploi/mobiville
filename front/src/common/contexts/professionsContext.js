@@ -1,6 +1,6 @@
 import { orderBy } from 'lodash'
 import React, { useState, useCallback } from 'react'
-import { searchProfessions } from '../../api/professions.api'
+import { searchProfessions, searchInfosTravail } from '../../api/professions.api'
 
 const ProfessionsContext = React.createContext()
 
@@ -16,6 +16,8 @@ export function ProfessionsProvider(props) {
       .then(() => _setIsLoading(false))
   }, [])
 
+  const onSearchInfosTravail = useCallback((params) => searchInfosTravail(params), [])
+
   return (
     <ProfessionsContext.Provider
       {...props}
@@ -23,7 +25,8 @@ export function ProfessionsProvider(props) {
         professions,
         isLoading,
         // function
-        onSearch
+        onSearch,
+        onSearchInfosTravail
       }}
     />
   )
