@@ -35,6 +35,7 @@ build_liv_front_on_recette:
       - develop
     changes:
       - front/**/*
+      - .gitlab-ci.yml
 
 build_liv_front-admin_on_recette:
   stage: build_liv_recette
@@ -67,6 +68,7 @@ build_liv_front-admin_on_recette:
       - develop
     changes:
       - front-admin/**/*
+      - .gitlab-ci.yml
 
 build_api_image:
   stage: build_liv_recette
@@ -82,6 +84,7 @@ build_api_image:
       - develop
     changes:
       - api/**/*
+      - .gitlab-ci.yml
 
 deploy_application_on_recette:
   stage: deploy_recette
@@ -111,7 +114,7 @@ deploy_application_on_recette:
       - api/**/*
   when: on_success # s'exécutera uniquement si le job `build` passe
 
-liv_application_on_production:
+liv_front_application_on_production:
   stage: liv_production
   before_script:
     - apt-get update -qq
@@ -121,14 +124,24 @@ liv_application_on_production:
     - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
     - mkdir -p ~/.ssh
   script:
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "rm -rf $WORKDIR_SERVER/nginx"
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "rm -rf $WORKDIR_SERVER/nginx/front"
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front"
     - scp -o StrictHostKeyChecking=no -r front/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front
+  when: manual
+
+liv_front-admin_application_on_production:
+  stage: liv_production
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client
+    # add SSH_PRIVATE_KEY in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
+    - mkdir -p ~/.ssh
+  script:
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "rm -rf $WORKDIR_SERVER/nginx/font-admin"
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front-admin"
     - scp -o StrictHostKeyChecking=no -r front-admin/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front-admin
-  dependencies:
-    - build_liv_front_on_recette
-    - build_liv_front-admin_on_recette
   when: manual
 
 deploy_application_on_production:
