@@ -84,6 +84,7 @@ const CitiesPage = () => {
   }
 
   const onRedirectTo = (to) => {
+    // add test log
     history.push({ pathname: '/cities', search: `?${to}&n=${new Date().getTime()}` })
   }
 
