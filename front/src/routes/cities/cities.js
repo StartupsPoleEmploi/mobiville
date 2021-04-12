@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { Link, /* useHistory, */ useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
@@ -8,7 +8,7 @@ import MobileCriterionsPanel from './mobile-criterions-panel'
 import CityItem from './city-item'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
-import DesktopCriterionsPanel from './desktop-criterions-panel'
+// import DesktopCriterionsPanel from './desktop-criterions-panel'
 
 const Items = styled(Link)`
   && {
@@ -30,7 +30,7 @@ const CitiesPage = () => {
   const [offset, setOffset] = useState(0)
   const size = useWindowSize()
   const location = useLocation()
-  const history = useHistory()
+  // const history = useHistory()
 
   useEffect(() => {
     if (location.search) {
@@ -83,21 +83,21 @@ const CitiesPage = () => {
     return url
   }
 
-  const onRedirectTo = (to) => {
+  /* const onRedirectTo = (to) => {
     // add test log
     history.push({ pathname: '/cities', search: `?${to}&n=${new Date().getTime()}` })
-  }
+  } */
 
   return (
     <MainLayout>
       {isMobileView(size) && <MobileCriterionsPanel criterions={params} total={cities.length} />}
-      {!isMobileView(size) && (
+      {/*! isMobileView(size) && (
       <DesktopCriterionsPanel
         paramsUrl={params}
         total={cities.length}
         redirectTo={onRedirectTo}
       />
-      )}
+      ) */}
       {isLoading && (<p>Loading...</p>)}
       <CitiesArea isMobile={isMobileView(size)}>
         {cities.slice(0, itemsViews).map((c) => (
