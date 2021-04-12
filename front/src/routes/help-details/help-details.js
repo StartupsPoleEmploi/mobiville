@@ -197,12 +197,8 @@ const HelpDetailsPage = () => {
             {help.who.split(',').map((t) => <Tag key={t}>{ucFirstOnly(t)}</Tag>)}
           </Panel>
 
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href={help.link}
-            style={{ cursor: 'pointer' }}
-          >
+          { /* eslint-disable-next-line */ }
+          <a target="_blank" href={help.link} style={{ cursor: 'pointer' }}>
             <HelpButton className="btn primary" type="button" isMobile={isMobileView(size)}>Faire ma demande</HelpButton>
           </a>
 
