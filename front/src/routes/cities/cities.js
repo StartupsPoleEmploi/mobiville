@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
@@ -30,6 +30,7 @@ const CitiesPage = () => {
   const [offset, setOffset] = useState(0)
   const size = useWindowSize()
   const location = useLocation()
+  const history = useHistory()
 
   useEffect(() => {
     if (location.search) {
@@ -83,7 +84,7 @@ const CitiesPage = () => {
   }
 
   const onRedirectTo = (to) => {
-    window.location.href = `/cities?${to}&n=${new Date().getTime()}`
+    history.push({ pathname: '/cities', search: `?${to}&n=${new Date().getTime()}` })
   }
 
   return (
