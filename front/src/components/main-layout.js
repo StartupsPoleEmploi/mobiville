@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import { useLocation } from 'react-router-dom'
 import { MenuMobile } from './menu-mobile'
 import { MenuDesktop } from './menu-desktop'
 import { isMobileView } from '../constants/mobile'
@@ -26,6 +27,11 @@ export const MainLayout = ({
   children, menu, footer, topMobileMenu
 }) => {
   const size = useWindowSize()
+  const location = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location])
 
   return (
     <Main>
