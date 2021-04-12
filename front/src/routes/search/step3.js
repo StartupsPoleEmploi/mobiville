@@ -39,6 +39,7 @@ const Step3Component = ({ onNext, values }) => {
     criterions
   } = useCities()
   const [regions, setRegions] = useState([])
+  const [list, setList] = useState([])
 
   const toggleRegion = (event) => {
     const region = event.target.value
@@ -49,12 +50,13 @@ const Step3Component = ({ onNext, values }) => {
     if (values && values.code_region && values.code_region.length) {
       setRegions([values.code_region[0]])
     }
-  }, [values])
 
-  let list = [...criterions.regions]
-  if (values.code_rome && values.code_rome.length) {
-    list = criterions.regions.filter((r) => r.criterions && r.criterions[values.code_rome[0]])
-  }
+    if (values.code_rome && values.code_rome.length) {
+      setList(criterions.regions.filter((r) => r.criterions && r.criterions[values.code_rome[0]]))
+    } else {
+      setList([...criterions.regions])
+    }
+  }, [values])
 
   return (
     <Wrapper>
