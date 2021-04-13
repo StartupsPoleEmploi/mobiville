@@ -94,20 +94,14 @@ const SearchPage = () => {
     } else if (newValues.from) {
       val = { ...values, from: [newValues.from.id] }
     } else if (newValues.city) {
-      const tab = (values.code_criterion || [])
-      if (tab.indexOf(newValues.city) === -1) {
-        tab.push(newValues.city)
-      }
-      val = { ...values, code_criterion: tab }
+      val = { ...values, code_city: [newValues.city] }
     } else if (newValues.environment) {
-      const tab = (values.code_criterion || [])
-      if (tab.indexOf(newValues.environment) === -1) {
-        tab.push(newValues.environment)
-      }
-      val = { ...values, code_criterion: tab }
+      val = { ...values, code_environment: [newValues.environment] }
     } else {
       val = { ...values, ...newValues }
     }
+
+    val = { ...val, code_criterion: (val.code_city || []).concat(val.code_environment || []) }
 
     const params = []
     Object.entries(val).forEach(([key, value]) => {
