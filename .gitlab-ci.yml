@@ -143,6 +143,7 @@ liv_front-admin_application_on_production:
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "rm -rf $WORKDIR_SERVER/nginx/font-admin"
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front-admin"
     - scp -o StrictHostKeyChecking=no -r front-admin/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front-admin
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "cd $WORKDIR_SERVER && docker-compose -f docker-compose.yml -f docker-compose.production.yml restart nginx"
   when: manual
 
 install_application_on_production:
