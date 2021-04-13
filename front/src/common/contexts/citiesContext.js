@@ -43,6 +43,7 @@ export function CitiesProvider(props) {
   }
 
   const onSearch = useCallback((params) => {
+    _setCities([])
     _setIsLoading(true)
     apiSearchCities(params).then((c) => _setCities(sortCities(c)))
       .then(() => _setIsLoading(false))
