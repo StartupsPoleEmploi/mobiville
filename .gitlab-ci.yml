@@ -127,7 +127,7 @@ liv_front_application_on_production:
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "rm -rf $WORKDIR_SERVER/nginx/front"
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front"
     - scp -o StrictHostKeyChecking=no -r front/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "cd $WORKDIR_SERVER && docker-compose -f docker-compose.yml -f docker-compose.production.yml exec nginx /bin/bash -c 'service nginx reload'"
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "cd $WORKDIR_SERVER && docker-compose -T -f docker-compose.yml -f docker-compose.production.yml exec nginx /bin/bash -c 'service nginx reload'"
   when: manual
 
 liv_front-admin_application_on_production:
