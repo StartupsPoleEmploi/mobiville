@@ -64,7 +64,7 @@ const MENU_LINK = [{
 }, {
   path: '/rechercher', icon: 'explore', label: 'Recherche', selected: false
 }, {
-  path: '/aides', icon: 'map', label: 'Bons plans', selected: false
+  path: '/aides', icon: 'map', label: 'Les aides', selected: false
 }]
 
 export const MenuDesktop = () => {

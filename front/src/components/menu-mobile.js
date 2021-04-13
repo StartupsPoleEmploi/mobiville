@@ -71,9 +71,11 @@ const Text = styled(Typography)`
 `
 
 const MENU_LINK = [{
+  path: '/', icon: 'house', label: 'Accueil', selected: false
+}, {
   path: '/rechercher', icon: 'explore', label: 'Recherche', selected: false
 }, {
-  path: '/aides', icon: 'support', label: 'Aides', selected: false
+  path: '/aides', icon: 'support', label: 'Les aides', selected: false
 }, {
   path: '/compte', icon: 'account_circle', label: 'Compte', selected: false
 }]

@@ -221,7 +221,7 @@ const HomePage = () => {
               solutions pour accélérer votre projet
 
             </Description>
-            <Action to="/aides">Découvrir les bons plans</Action>
+            <Action to="/aides">Découvrir les aides</Action>
           </TextBlock>
         </div>
       </Block>
