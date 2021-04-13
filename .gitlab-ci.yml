@@ -144,7 +144,7 @@ liv_front-admin_application_on_production:
     - scp -o StrictHostKeyChecking=no -r front-admin/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front-admin
   when: manual
 
-deploy_application_on_production:
+install_application_on_production:
   stage: deploy_production
   before_script:
     - apt-get update -qq
@@ -163,9 +163,31 @@ deploy_application_on_production:
                 cd $WORKDIR_SERVER &&
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml pull &&
-                docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d"
+                docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d &&
+                docker logout $CI_REGISTRY"
   when: manual
-    
+
+
+deploy_application_on_production:
+  stage: deploy_production
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client
+    # add SSH_PRIVATE_KEY in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
+    - mkdir -p ~/.ssh
+  script:
+    - scp -o StrictHostKeyChecking=no docker-compose.yml docker-compose.production.yml gitlab@$IP_PRODUCTION:$WORKDIR_SERVER
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "
+                cd $WORKDIR_SERVER &&
+                docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
+                docker-compose -f docker-compose.yml -f docker-compose.production.yml pull &&
+                docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d &&
+                docker logout $CI_REGISTRY"
+  when: manual
+
+
 sonarqube-check:
   image:
     name: sonarsource/sonar-scanner-cli:latest
