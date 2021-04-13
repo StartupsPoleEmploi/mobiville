@@ -285,18 +285,22 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
   const size = useWindowSize()
   const history = useHistory()
 
+  const onBack = () => {
+    history.push({ pathname: '/cities', search: localStorage.getItem('lastSearch') })
+  }
+
   return (
     <>
       <MainLayout isMobile={isMobileView(size)}>
         <ImageView style={{ backgroundImage: `url(${city.photo || `/regions/region-${city['region.new_code']}.jpg`})` }} isMobile={isMobileView(size)}>
           {!isMobileView(size) && (
           <ArrowBackOutlinedIconDesktopFull
-            onClick={() => history.goBack()}
+            onClick={onBack}
           />
           )}
           {isMobileView(size) && (
           <SpaceArrowBackOutlinedIconMobileFull
-            onClick={() => history.goBack()}
+            onClick={onBack}
           >
             <ArrowBackOutlinedIconMobileFull />
           </SpaceArrowBackOutlinedIconMobileFull>
@@ -361,7 +365,7 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
           {isMobileView(size) && (
           <FixedLayoutMobile>
             <BackLine isMobile={isMobileView(size)}>
-              <ArrowBackOutlinedIconMobileSmall onClick={() => history.goBack()} />
+              <ArrowBackOutlinedIconMobileSmall onClick={onBack} />
             </BackLine>
             <NameMobile
               fixedView
@@ -388,7 +392,7 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
           {!isMobileView(size) && (
           <FixedLayout>
             <BackLine>
-              <ArrowBackOutlinedIconDesktopSmall onClick={() => history.goBack()} />
+              <ArrowBackOutlinedIconDesktopSmall onClick={onBack} />
             </BackLine>
             <Name
               fixedView

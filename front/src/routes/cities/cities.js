@@ -34,6 +34,7 @@ const CitiesPage = () => {
 
   useEffect(() => {
     if (location.search) {
+      localStorage.setItem('lastSearch', location.search)
       setParams(paramUrlToObject(location.search))
     }
   }, [location])

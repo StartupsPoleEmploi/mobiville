@@ -85,7 +85,7 @@ const CityItem = ({ city }) => {
       <InformationsBlock>
         <Title>{ucFirst(city.nom_comm.toLowerCase())}</Title>
         <Description>
-          {city.description}
+          {(city.description || '').replace('Écouter', '')}
         </Description>
         <TagsBlock>
           {city.distance_from_sea !== null && city.distance_from_sea <= 10 && (

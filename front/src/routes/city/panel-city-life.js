@@ -180,7 +180,7 @@ const PanelCityLife = ({ city }) => {
               Description de la ville
             </ItemTitleLayout>
             <ItemContentLayout>
-              {city.description}
+              {(city.description || '').replace('Écouter', '')}
             </ItemContentLayout>
           </ItemLayout>
 
@@ -297,7 +297,7 @@ const PanelCityLife = ({ city }) => {
             Description de la ville
           </ItemTitleLayout>
           <ItemContentLayout>
-            {city.description}
+            {(city.description || '').replace('Écouter', '')}
           </ItemContentLayout>
         </ItemLayoutMobile>
 
