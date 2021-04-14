@@ -364,7 +364,7 @@ export default (sequelizeInstance, Model) => {
       if(isHttpLoad) {
         await sleep(700) // wait and restart command
       }
-      Model.syncOneCity()
+      // Model.syncOneCity()
     } else {
       Model.cityOnSync = false
     }
@@ -560,7 +560,7 @@ export default (sequelizeInstance, Model) => {
       Model.cacheLoadAverageHouseRent = allIntoFile
     }
 
-    const find = allIntoFile.find(c => c.insee === +cityInsee)
+    const find = allIntoFile.find(c => c.insee === (+cityInsee) + '')
     if(find && find.loypredm2) {
       return parseFloat(find.loypredm2.replace(/,/g, '.'))
     }
