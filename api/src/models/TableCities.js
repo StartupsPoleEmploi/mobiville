@@ -364,7 +364,7 @@ export default (sequelizeInstance, Model) => {
       if(isHttpLoad) {
         await sleep(700) // wait and restart command
       }
-      // Model.syncOneCity()
+      Model.syncOneCity()
     } else {
       Model.cityOnSync = false
     }
