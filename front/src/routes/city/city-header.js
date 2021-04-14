@@ -6,11 +6,10 @@ import PersonIcon from '@material-ui/icons/Person'
 import { Link, useHistory } from 'react-router-dom'
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
 import { useCities } from '../../common/contexts/citiesContext'
-import { COLOR_PRIMARY, COLOR_TEXT_SECONDARY } from '../../contants/colors'
+import { COLOR_PRIMARY, COLOR_TEXT_SECONDARY, COLOR_SECONDARY } from '../../constants/colors'
 import { ucFirstOnly } from '../../utils/utils'
 import { isMobileView } from '../../constants/mobile'
 import { useWindowSize } from '../../common/hooks/window-size'
-import { COLOR_SECONDARY } from '../../constants/colors'
 import { useScroll } from '../../common/hooks/use-scroll'
 
 const MainLayout = styled.div`

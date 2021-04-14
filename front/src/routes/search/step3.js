@@ -12,7 +12,7 @@ import styled from 'styled-components'
 import { Button } from '../../components/button'
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'
-import { NB_MAX_REGION } from '../../contants/search'
+import { NB_MAX_REGION } from '../../constants/search'
 
 const Wrapper = styled.div`
   flex: 1;
