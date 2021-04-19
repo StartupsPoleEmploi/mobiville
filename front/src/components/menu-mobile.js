@@ -75,9 +75,7 @@ const MENU_LINK = [{
 }, {
   path: '/rechercher', icon: 'explore', label: 'Recherche', selected: false
 }, {
-  path: '/aides', icon: 'support', label: 'Les aides', selected: false
-}, {
-  path: '/compte', icon: 'account_circle', label: 'Compte', selected: false
+  path: '/aides', icon: 'map', label: 'Les aides', selected: false
 }]
 
 export const MenuMobile = () => {
