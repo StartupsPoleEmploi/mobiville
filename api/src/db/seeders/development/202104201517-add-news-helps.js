@@ -313,7 +313,7 @@ module.exports = {
         when: 'Dès que vous recherchez un logement',
         conditions: 'Aucune condition',
         cumulable: 'oui avec la Garantie visale, l\'aide Mobili jeune, l\'avance loca-pass,	',
-        link: 'oui avec la Garantie visale, l\'aide Mobili jeune, l\'avance loca-pass',
+        link: 'https://alternome.com/',
         who: 'alternant',
         section: 'logement',
         situtation: 'Je recherche un logement',
