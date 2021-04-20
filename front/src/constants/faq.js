@@ -46,7 +46,7 @@ export const FAQ = [
   },
   {
     question: 'J’ai identifié une ville dans Mobiville, et j’ai envie d’y partir. C’est quoi la suite?',
-    answer: 'Nous vous avons préparé un guide pour identifier les prochaines étapes pour votre projet. Téléchargez-le <a target="_blank" href="https://drive.google.com/drive/folders/1Y9Zp-8jQxGKB2uHHIRcXmdwjo27v-VIC">ici</a>',
+    answer: 'Nous vous avons préparé un guide pour identifier les prochaines étapes pour votre projet. Téléchargez-le <a target="_blank" href="/pdf/je-demenage.pdf">ici</a>',
     isOpen: false
   }
 ]
