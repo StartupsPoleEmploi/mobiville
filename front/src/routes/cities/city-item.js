@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Typography } from '@material-ui/core'
 import { ucFirst } from '../../utils/utils'
-import { COLOR_TEXT_PRIMARY, COLOR_TEXT_SECONDARY } from '../../constants/colors'
+import { COLOR_GRAY, COLOR_PRIMARY, COLOR_TEXT_PRIMARY } from '../../constants/colors'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 
@@ -13,6 +13,9 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: ${(props) => (props.isMobile ? 'column' : 'row')};
   align-items: ${(props) => (props.isMobile ? 'stretch' : 'center')};
+  background: #FFFFFF;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
 `
 
 const Title = styled(Typography)`
@@ -24,16 +27,17 @@ const Title = styled(Typography)`
 `
 
 const Image = styled.div`
-  height: ${(props) => (props.isMobile ? '172px' : '160px')};
-  border-radius: 8px;
+  min-height: ${(props) => (props.isMobile ? '172px' : '160px')};
+  border-top-left-radius: ${(props) => (props.isMobile ? '8px' : '8px')};
+  border-top-right-radius: ${(props) => (props.isMobile ? '8px' : '0')};
+  border-bottom-left-radius: ${(props) => (props.isMobile ? '0' : '8px')};
   margin-bottom: ${(props) => (props.isMobile ? '16px' : '0')};
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2);
+  align-self: stretch;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   width: ${(props) => (props.isMobile ? '100%' : '248px')};
-  min-width: ${(props) => (props.isMobile ? 'auto' : '248px')};
-  margin-right: ${(props) => (props.isMobile ? '0' : '16px')};
+  min-width: ${(props) => (props.isMobile ? 'auto' : '248px')};0
 `
 
 const Description = styled(Typography)`
@@ -52,17 +56,46 @@ const TagsBlock = styled.div`
 const Tag = styled.div`
   background: white;
   border-radius: 1000px;
-  padding: 4px 6px;
+  padding: 3px 6px;
   font-size: 12px;
   margin-right: 8px;
   margin-bottom: 8px;
+  color: ${COLOR_TEXT_PRIMARY};
+  background: ${COLOR_GRAY};
+`
+
+const TagPerti = styled.div`
+  float: right;
+  background: white;
+  border-radius: 1000px;
+  padding: 2px 6px;
+  font-size: 12px;
   font-weight: 500;
   color: ${COLOR_TEXT_PRIMARY};
-  border: 1px solid ${COLOR_TEXT_SECONDARY};
+  border: 1px solid black;
+  margin-top: 1px;
 `
 
 const InformationsBlock = styled.div`
+  padding: 16px;
+  width: 100%;
+`
 
+const ViewMore = styled.p`
+  text-align: right;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 500;
+  color: ${COLOR_PRIMARY};
+  margin-top: 12px;
+  margin-bottom: 0;
+
+  span {
+    font-size: 14px;
+    margin-left: 6px;
+    position: relative;
+    top: 2px;
+  }
 `
 
 const CityItem = ({ city }) => {
@@ -79,11 +112,40 @@ const CityItem = ({ city }) => {
     photo = `/regions/region-${city['region.new_code']}.jpg`
   }
 
+  let borderTagColor = null
+  if (city.match > 71) {
+    borderTagColor = '#1E824C'
+  } else if (city.match > 41) {
+    borderTagColor = '#EB9532'
+  } else {
+    borderTagColor = '#CF000F'
+  }
+
+  let bgTagColor = null
+  if (city.match > 71) {
+    bgTagColor = '#BBDAC9'
+  } else if (city.match > 41) {
+    bgTagColor = '#F9DFC2'
+  } else {
+    bgTagColor = '#F1B3B7'
+  }
+
   return (
     <Wrapper isMobile={isMobileView(size)}>
       <Image style={{ backgroundImage: `url(${photo})` }} isMobile={isMobileView(size)} />
       <InformationsBlock>
-        <Title>{ucFirst(city.nom_comm.toLowerCase())}</Title>
+        <Title>
+          {city.match && (
+          <TagPerti style={{ borderColor: borderTagColor, backgroundColor: bgTagColor }}>
+            Correspond à
+            {' '}
+            {Math.floor(city.match)}
+            %
+          </TagPerti>
+          )}
+          {ucFirst(city.nom_comm.toLowerCase())}
+
+        </Title>
         <Description>
           {(city.description || '').replace('Écouter', '')}
         </Description>
@@ -122,16 +184,12 @@ const CityItem = ({ city }) => {
             m
           </Tag>
           )}
-          {city.match && (
-          <Tag>
-            Correspond à
-            {' '}
-            {Math.floor(city.match)}
-            %
-          </Tag>
-          )}
           {city['region.new_name'] && <Tag>{ucFirst(city['region.new_name'].toLowerCase())}</Tag>}
         </TagsBlock>
+        <ViewMore>
+          En savoir plus
+          <span className="material-icons">arrow_forward</span>
+        </ViewMore>
       </InformationsBlock>
     </Wrapper>
   )

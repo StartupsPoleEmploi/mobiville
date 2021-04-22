@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { Button as ButtonUI } from '@material-ui/core'
-import { COLOR_GRAY, COLOR_PRIMARY } from '../constants/colors'
+import { COLOR_GRAY, COLOR_PRIMARY, COLOR_TEXT_PRIMARY } from '../constants/colors'
 
 const Bt = styled(ButtonUI)`
   && {
@@ -41,7 +41,7 @@ export const Button = ({
   children, style, light, onClick, column
 }) => {
   const lightStyle = {
-    backgroundColor: COLOR_GRAY, color: COLOR_PRIMARY, borderColor: COLOR_PRIMARY, borderRadius: '8px', fontWeight: 'normal', fontSize: 14
+    backgroundColor: COLOR_GRAY, color: COLOR_TEXT_PRIMARY, borderColor: COLOR_PRIMARY, borderRadius: '8px', fontWeight: 'normal', fontSize: 14
   }
   let newStyle = style
   if (light) {

@@ -47,7 +47,7 @@ const Name = styled.p`
     height: ${(props) => (props.fixedView ? '78px' : '46px')};
     line-height: ${(props) => (props.fixedView ? '100px' : '46px')};
     font-weight: 500;
-    font-size: ${(props) => (props.fixedView ? '24px' : '18px')};
+    font-size: 24px;
     text-align: center;
     margin-top: 0;
     margin-bottom: 0;
@@ -59,7 +59,7 @@ const NameMobile = styled.p`
     height: 46px;
     line-height: 41px;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 24px;
     text-align: center;
     margin-top: 0;
     margin-bottom: 0;
