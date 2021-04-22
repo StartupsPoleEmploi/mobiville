@@ -21,7 +21,7 @@ export const Routes = () => (
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/rechercher">
-          <Redirect to="/rechercher/depuis" />
+          <Redirect to="/rechercher/rome" />
         </Route>
         <Route exact path="/rechercher/:stepName" component={Search} />
         <Route exact path="/cities" component={Cities} />

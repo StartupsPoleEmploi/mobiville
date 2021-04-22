@@ -42,22 +42,22 @@ const BackWrapper = styled.div`
   margin-top: ${(props) => (props.isMobile ? '24px' : '68px')};
 `
 
-const ALL_STEPS = [{
+const ALL_STEPS = [/* {
   key: 'depuis',
   components: lazy(() => import('./step1'))
-}, {
-  key: 'rome',
-  components: lazy(() => import('./step2'))
-}, {
-  key: 'region',
-  components: lazy(() => import('./step3'))
-}, {
-  key: 'cadre',
-  components: lazy(() => import('./step4'))
-}, {
-  key: 'environement',
-  components: lazy(() => import('./step5'))
-}]
+}, */ {
+    key: 'rome',
+    components: lazy(() => import('./step2'))
+  }, {
+    key: 'region',
+    components: lazy(() => import('./step3'))
+  }, {
+    key: 'cadre',
+    components: lazy(() => import('./step4'))
+  }, {
+    key: 'environement',
+    components: lazy(() => import('./step5'))
+  }]
 
 const SearchPage = () => {
   const { criterions } = useCities()
