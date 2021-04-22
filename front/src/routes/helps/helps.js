@@ -128,6 +128,7 @@ const Tag = styled.div`
   border-radius: 44px;
   padding: 8px;
   margin-right: 8px;
+  margin-bottom: 8px;
   display: inline-block;
   cursor: pointer;
 
@@ -231,8 +232,11 @@ const HelpsPage = () => {
     key: 'salarie',
     text: 'Salarié'
   }, {
-    key: '26ans',
+    key: 'Moins de 26 ans',
     text: 'Moins de 26 ans'
+  }, {
+    key: 'Plus de 26 ans',
+    text: 'Plus de 26 ans'
   }]
 
   useEffect(() => {
@@ -247,6 +251,7 @@ const HelpsPage = () => {
       }
 
       if (situation) {
+        console.log(situation.text.toLowerCase())
         l = l.filter((i) => i.who.toLowerCase().indexOf(situation.text.toLowerCase()) !== -1)
       }
 
