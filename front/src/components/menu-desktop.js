@@ -39,6 +39,8 @@ const Item = styled(Link)`
 
 const Icon = styled.i`
   color: inherit;
+  position: relative;
+  top: -1px;
 `
 
 const Text = styled(Typography)`

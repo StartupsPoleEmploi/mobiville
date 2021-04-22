@@ -27,6 +27,17 @@ const SelectBlock = styled(Select)`
   }
 `
 
+const SpaceItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  svg {
+    margin-left: 8px;
+  }
+`
+
 const CitiesFilterList = () => {
   const {
     setSortCriterions,
@@ -40,16 +51,33 @@ const CitiesFilterList = () => {
         value={sortCriterions}
         onChange={(event) => setSortCriterions(event.target.value)}
       >
-        <MenuItem value="">Pertinence</MenuItem>
-        <MenuItem value="habitant">
-          Nombre d
-          {'\''}
-          habitant
+        <MenuItem value="">
+          <SpaceItem>
+            Pertinence
+            <FilterListIcon />
+          </SpaceItem>
         </MenuItem>
-        <MenuItem value="mer">Plus proche de la mer</MenuItem>
-        <MenuItem value="montagne">Plus en montagne</MenuItem>
+        <MenuItem value="habitant">
+          <SpaceItem>
+            Nombre d
+            {'\''}
+            habitant
+            <FilterListIcon />
+          </SpaceItem>
+        </MenuItem>
+        <MenuItem value="mer">
+          <SpaceItem>
+            Plus proche de la mer
+            <FilterListIcon />
+          </SpaceItem>
+        </MenuItem>
+        <MenuItem value="montagne">
+          <SpaceItem>
+            Plus en montagne
+            <FilterListIcon />
+          </SpaceItem>
+        </MenuItem>
       </SelectBlock>
-      <FilterListIcon />
     </Wrapper>
   )
 }
