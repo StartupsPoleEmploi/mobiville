@@ -1,20 +1,25 @@
 stages:
-  - build_liv_recette
-  - deploy_recette
-  - liv_production
+  - build
+  - publish
+  - config_staging
+  - deploy_staging
+  - config_production
   - deploy_production
-  - test
+  - install
 
-build_liv_front_on_recette:
-  stage: build_liv_recette
+variables:
+  PACKAGE_NAME: mobiville
+  PACKAGE_VERSION: 1.0.0
+  DATABASEDUMP_VERSION: 1.0.0
+  IP_TEST: 192.168.4.134
+  RECETTE: $IP_RECETTE
+  PRODUCTION: $IP_PRODUCTION
+  REF_BRANCH: develop
+  FORCE_INSTALL: 'NO'
+
+package 1/2:
+  stage: build
   image: node:12.18.0
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y -qq openssh-client
-    # add SSH_PRIVATE_KEY in agent store
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
-    - mkdir -p ~/.ssh
   script:
     # installe de yarn
     - (which yarn || npm i -g yarn@1.15.2)
@@ -23,55 +28,37 @@ build_liv_front_on_recette:
     - yarn install
     # On minifie les src ds le livrable dist
     - yarn run build && cp -RT build dist
-    # On livre le livrable dist sur la machine de recette
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front"
-    - scp -o StrictHostKeyChecking=no -r ./dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front
   artifacts:
     paths:
       - front/dist
     expire_in: 1 week
   only:
     refs:
-      - develop
+      - branches
+    variables:
+      - $CI_COMMIT_BRANCH == $REF_BRANCH
     changes:
       - front/**/*
-      - .gitlab-ci.yml
 
-build_liv_front-admin_on_recette:
-  stage: build_liv_recette
-  image: node:12.18.0
+package 2/2:
+  stage: publish
   before_script:
     - apt-get update -qq
-    - apt-get install -y -qq openssh-client sed
-    # add SSH_PRIVATE_KEY in agent store
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
-    - mkdir -p ~/.ssh
+    - apt-get install -y -qq curl
   script:
-    # installe de yarn
-    - (which yarn || npm i -g yarn@1.15.2)
-    - cd ./front-admin
-    # recupération des dépendances npm
-    - yarn install
-    # On minifie les src ds le livrable dist
-    - yarn run build && cp -RT build dist
-    - sed -i 's/return a.p+"/return a.p+"\//g' dist/index.html
-    # On livre le livrable dist sur le
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front-admin"
-    - scp -o StrictHostKeyChecking=no -r ./dist gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/front-admin
-  artifacts:
-    paths:
-      - front-admin/dist
-    expire_in: 1 week
+    - cd ./front
+    - tar -czvf "${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz" dist
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz"'
   only:
     refs:
-      - develop
+      - branches
+    variables:
+      - $CI_COMMIT_BRANCH == $REF_BRANCH
     changes:
-      - front-admin/**/*
-      - .gitlab-ci.yml
+      - front/**/*
 
-build_api_image:
-  stage: build_liv_recette
+api_image:
+  stage: build
   image:
       name: gcr.io/kaniko-project/executor:debug
       entrypoint: [""]
@@ -81,13 +68,61 @@ build_api_image:
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_api --destination $CI_REGISTRY_IMAGE:api
   only:
     refs:
-      - develop
+      - branches
+    variables:
+      - $CI_COMMIT_BRANCH == $REF_BRANCH
     changes:
       - api/**/*
-      - .gitlab-ci.yml
 
-deploy_application_on_recette:
-  stage: deploy_recette
+deploy_front_staging:
+  stage: deploy_staging
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client
+    # add SSH_PRIVATE_KEY in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+  script:
+    # On livre le livrable dist sur la machine de recette
+    - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front"
+    - 'ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "cd $WORKDIR_SERVER && curl -O --header \"DEPLOY-TOKEN: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz\""'
+    - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz"
+  only:
+    refs:
+      - branches
+    variables:
+      - $CI_COMMIT_BRANCH == $REF_BRANCH
+    changes:
+      - front/**/*
+
+deploy_api_staging:
+  stage: deploy_staging
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client
+    # add SSH_PRIVATE_KEY in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+  script:
+    - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "
+                cd $WORKDIR_SERVER &&
+                docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
+                docker-compose -f docker-compose.yml -f docker-compose.recette.yml pull &&
+                docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d &&
+                docker logout $CI_REGISTRY"
+  only:
+    refs:
+      - branches
+    variables:
+      - $CI_COMMIT_BRANCH == $REF_BRANCH
+    changes:
+      - api/**/*
+  when: on_success # s'exécutera uniquement si le job `build` passe
+
+deploy_conf_staging:
+  stage: config_staging
   before_script:
     - apt-get update -qq
     - apt-get install -y -qq openssh-client
@@ -97,57 +132,51 @@ deploy_application_on_recette:
     - mkdir -p ~/.ssh
   script:
     - echo -e "DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET" > .env
-    - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.recette.yml .env gitlab@$IP_RECETTE:$WORKDIR_SERVER
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "mkdir -p $WORKDIR_SERVER/nginx"
-    - scp -o StrictHostKeyChecking=no nginx/recette.conf gitlab@$IP_RECETTE:$WORKDIR_SERVER/nginx/
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_RECETTE "
-                cd $WORKDIR_SERVER &&
-                docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
-                docker-compose -f docker-compose.yml -f docker-compose.recette.yml pull &&
-                docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d"
+    - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.recette.yml .env gitlab@$RECETTE:$WORKDIR_SERVER
+    - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "mkdir -p $WORKDIR_SERVER/nginx"
+    - scp -o StrictHostKeyChecking=no nginx/recette.conf gitlab@$RECETTE:$WORKDIR_SERVER/nginx/
   only:
     refs:
-      - develop
-    changes:
-      - front/**/*
-      - front-admin/**/*
-      - api/**/*
-  when: on_success # s'exécutera uniquement si le job `build` passe
-
-liv_front_application_on_production:
-  stage: liv_production
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y -qq openssh-client
-    # add SSH_PRIVATE_KEY in agent store
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
-    - mkdir -p ~/.ssh
-  script:
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "rm -rf $WORKDIR_SERVER/nginx/front"
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front"
-    - scp -o StrictHostKeyChecking=no -r front/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "cd $WORKDIR_SERVER && docker-compose -f docker-compose.yml -f docker-compose.production.yml restart nginx"
+      - branches
+    variables:
+      - $CI_COMMIT_BRANCH == $REF_BRANCH
   when: manual
 
-liv_front-admin_application_on_production:
-  stage: liv_production
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y -qq openssh-client
-    # add SSH_PRIVATE_KEY in agent store
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
-    - mkdir -p ~/.ssh
-  script:
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "rm -rf $WORKDIR_SERVER/nginx/font-admin"
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front-admin"
-    - scp -o StrictHostKeyChecking=no -r front-admin/dist gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/front-admin
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "cd $WORKDIR_SERVER && docker-compose -f docker-compose.yml -f docker-compose.production.yml restart nginx"
-  when: manual
-
-install_application_on_production:
+deploy_front_production:
   stage: deploy_production
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client
+    # add SSH_PRIVATE_KEY in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
+    - mkdir -p ~/.ssh
+  script:
+    - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"DEPLOY-TOKEN: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz\""'
+    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz"
+  when: manual
+
+deploy_api_production:
+  stage: deploy_production
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client
+    # add SSH_PRIVATE_KEY in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
+    - mkdir -p ~/.ssh
+  script:
+    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "
+                cd $WORKDIR_SERVER &&
+                docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
+                docker-compose -f docker-compose.yml -f docker-compose.production.yml pull &&
+                docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d &&
+                docker logout $CI_REGISTRY"
+  when: manual
+
+
+deploy_conf_production:
+  stage: config_production
   before_script:
     - apt-get update -qq
     - apt-get install -y -qq openssh-client
@@ -157,21 +186,19 @@ install_application_on_production:
     - mkdir -p ~/.ssh
   script:
     - echo -e "DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET" > .env
-    - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.production.yml .env gitlab@$IP_PRODUCTION:$WORKDIR_SERVER
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx"
-    - scp -o StrictHostKeyChecking=no nginx/production.conf gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/
-    - scp -o StrictHostKeyChecking=no -r nginx/ssl gitlab@$IP_PRODUCTION:$WORKDIR_SERVER/nginx/
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "
+    - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.production.yml .env gitlab@$PRODUCTION:$WORKDIR_SERVER
+    - scp -o StrictHostKeyChecking=no nginx/production.conf gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
+    - scp -o StrictHostKeyChecking=no -r nginx/ssl gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
+    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "
                 cd $WORKDIR_SERVER &&
-                docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
-                docker-compose -f docker-compose.yml -f docker-compose.production.yml pull &&
+                chmod 640 nginx/ssl/* &&
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d &&
-                docker logout $CI_REGISTRY"
+                docker-compose -f docker-compose.yml -f docker-compose.production.yml restart nginx"
   when: manual
 
 
-deploy_application_on_production:
-  stage: deploy_production
+install_production:
+  stage: install
   before_script:
     - apt-get update -qq
     - apt-get install -y -qq openssh-client
@@ -180,30 +207,27 @@ deploy_application_on_production:
     - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
     - mkdir -p ~/.ssh
   script:
-    - scp -o StrictHostKeyChecking=no docker-compose.yml docker-compose.production.yml gitlab@$IP_PRODUCTION:$WORKDIR_SERVER
-    - ssh -o StrictHostKeyChecking=no gitlab@$IP_PRODUCTION "
+    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "mkdir $WORKDIR_SERVER"
+    - echo -e "DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET" > .env
+    - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.production.yml .env gitlab@$PRODUCTION:$WORKDIR_SERVER
+    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front"
+    - scp -o StrictHostKeyChecking=no nginx/production.conf gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
+    - scp -o StrictHostKeyChecking=no -r nginx/ssl gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
+    - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"DEPLOY-TOKEN: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/database/${DATABASEDUMP_VERSION}/database.${DATABASEDUMP_VERSION}.tar.gz\""'
+    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && tar -xzvf database.${DATABASEDUMP_VERSION}.tar.gz"
+    - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"DEPLOY-TOKEN: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz\""'
+    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz"
+    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "
                 cd $WORKDIR_SERVER &&
+                chmod 640 nginx/ssl/* &&
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml pull &&
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d &&
                 docker logout $CI_REGISTRY"
-  when: manual
-
-
-sonarqube-check:
-  image:
-    name: sonarsource/sonar-scanner-cli:latest
-  variables:
-    SONAR_TOKEN: "${SONAR_TOKEN}"
-    SONAR_HOST_URL: "https://sonarqube.beta.pole-emploi.fr"
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar" # Defines the location of the analysis task cache
-    GIT_DEPTH: 0 # Tells git to fetch all the branches of the project, required by the analysis task
-  cache:
-    key: ${CI_JOB_NAME}
-    paths:
-      - .sonar/cache
-  stage: test
-  script:
-    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=mobiville
-  allow_failure: true
+  only:
+    refs:
+      - branches
+    variables:
+      - $CI_COMMIT_BRANCH == $REF_BRANCH
+      - $FORCE_INSTALL == 'YES'
   when: manual
