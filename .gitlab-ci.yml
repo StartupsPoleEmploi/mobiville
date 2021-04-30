@@ -225,9 +225,6 @@ install_production:
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d &&
                 docker logout $CI_REGISTRY"
   only:
-    refs:
-      - branches
     variables:
-      - $CI_COMMIT_BRANCH == $REF_BRANCH
       - $FORCE_INSTALL == 'YES'
   when: manual
