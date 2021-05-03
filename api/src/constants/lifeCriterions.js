@@ -74,7 +74,7 @@ export const SERVICES_CRITERIOS = [{
   icon: 'commissariat.svg',
 },{
   label: 'Pôle emploi',
-  code: ['A115', 'A122', 'A123'],
+  code: ['A122'],
   icon: 'pole-emploi.svg',
 },{
   label: 'Grandes surfaces',
