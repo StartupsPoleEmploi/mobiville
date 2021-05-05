@@ -116,6 +116,7 @@ const TabItem = styled.button`
     margin-bottom: 0;
     background: none;
     border: none;
+    white-space: nowrap;
     
     &:before {
       content: ' ';
@@ -146,6 +147,7 @@ const TabItemMobile = styled.button`
     justify-content: space-around;
     background: none;
     border: none;
+    white-space: nowrap;
     
     &:before {
       content: ' ';
