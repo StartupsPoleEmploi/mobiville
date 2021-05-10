@@ -1,11 +1,14 @@
 stages:
+  - install
   - build
+  - test
   - publish
   - config_staging
   - deploy_staging
+  - accessibility
   - config_production
   - deploy_production
-  - install
+
 
 variables:
   PACKAGE_NAME: mobiville
@@ -14,8 +17,39 @@ variables:
   IP_TEST: 192.168.4.134
   RECETTE: $IP_RECETTE
   PRODUCTION: $IP_PRODUCTION
-  REF_BRANCH: develop
-  FORCE_INSTALL: 'NO'
+  DEV_BRANCH: develop
+  PROD_BRANCH: master
+  FORCE_INSTALL:
+    value: 'NO'
+    description: 'Install from scratch mobiville with "YES"'
+  ENV_CHANGED:
+    value: 'NO'
+    description: 'Deploy new configuration when some env var changed with "YES"'
+  a11y_urls: "https://mobiville.pole-emploi.fr https://mobiville.beta.pole-emploi.fr/rechercher/rome https://mobiville.beta.pole-emploi.fr/cities?code_rome=J1501&code_criterion=small-city,mountain&code_region=94&code_city=small-city&code_environment=mountain https://mobiville.beta.pole-emploi.fr/city/2B036-BIGORNO?code_rome=J1501"
+
+
+sonarqube-check:
+  stage: test
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+  variables:
+    SONAR_TOKEN: "${SONAR_TOKEN}"
+    SONAR_HOST_URL: "https://sonarqube.beta.pole-emploi.fr"
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar" # Defines the location of the analysis task cache
+    GIT_DEPTH: 0 # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: ${CI_JOB_NAME}
+    paths:
+      - .sonar/cache
+  stage: test
+  script:
+    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=mobiville
+  allow_failure: true
+
+
+include:
+  - template: "Verify/Accessibility.gitlab-ci.yml"
+
 
 package 1/2:
   stage: build
@@ -32,13 +66,11 @@ package 1/2:
     paths:
       - front/dist
     expire_in: 1 week
-  only:
-    refs:
-      - branches
-    variables:
-      - $CI_COMMIT_BRANCH == $REF_BRANCH
-    changes:
-      - front/**/*
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+      changes:
+        - front/**/*
+
 
 package 2/2:
   stage: publish
@@ -49,16 +81,14 @@ package 2/2:
     - cd ./front
     - tar -czvf "${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz" dist
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz"'
-  only:
-    refs:
-      - branches
-    variables:
-      - $CI_COMMIT_BRANCH == $REF_BRANCH
-    changes:
-      - front/**/*
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+      changes:
+        - front/**/*
 
-api_image:
-  stage: build
+
+publish api image:
+  stage: publish
   image:
       name: gcr.io/kaniko-project/executor:debug
       entrypoint: [""]
@@ -66,15 +96,13 @@ api_image:
     # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_api --destination $CI_REGISTRY_IMAGE:api
-  only:
-    refs:
-      - branches
-    variables:
-      - $CI_COMMIT_BRANCH == $REF_BRANCH
-    changes:
-      - api/**/*
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+      changes:
+        - api/**/*
 
-deploy_front_staging:
+
+deploy front staging:
   stage: deploy_staging
   before_script:
     - apt-get update -qq
@@ -87,16 +115,14 @@ deploy_front_staging:
     # On livre le livrable dist sur la machine de recette
     - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front"
     - 'ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "cd $WORKDIR_SERVER && curl -O --header \"DEPLOY-TOKEN: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz\""'
-    - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz"
-  only:
-    refs:
-      - branches
-    variables:
-      - $CI_COMMIT_BRANCH == $REF_BRANCH
-    changes:
-      - front/**/*
+    - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz && find . -ctime +1 -delete"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+      changes:
+        - front/**/*
 
-deploy_api_staging:
+
+deploy api staging:
   stage: deploy_staging
   before_script:
     - apt-get update -qq
@@ -112,16 +138,13 @@ deploy_api_staging:
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml pull &&
                 docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d &&
                 docker logout $CI_REGISTRY"
-  only:
-    refs:
-      - branches
-    variables:
-      - $CI_COMMIT_BRANCH == $REF_BRANCH
-    changes:
-      - api/**/*
-  when: on_success # s'exécutera uniquement si le job `build` passe
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+      changes:
+        - api/**/*
 
-deploy_conf_staging:
+
+deploy conf staging:
   stage: config_staging
   before_script:
     - apt-get update -qq
@@ -135,14 +158,20 @@ deploy_conf_staging:
     - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.recette.yml .env gitlab@$RECETTE:$WORKDIR_SERVER
     - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "mkdir -p $WORKDIR_SERVER/nginx"
     - scp -o StrictHostKeyChecking=no nginx/recette.conf gitlab@$RECETTE:$WORKDIR_SERVER/nginx/
-  only:
-    refs:
-      - branches
-    variables:
-      - $CI_COMMIT_BRANCH == $REF_BRANCH
-  when: manual
+    - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "
+                cd $WORKDIR_SERVER &&
+                docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d &&
+                docker-compose -f docker-compose.yml -f docker-compose.recette.yml exec -T nginx nginx -s reload"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+      changes:
+        - nginx/**/*
+        - package.json
+        - docker-compose*
+    - if: '$ENV_CHANGED == "YES"'
 
-deploy_front_production:
+
+deploy front production:
   stage: deploy_production
   before_script:
     - apt-get update -qq
@@ -153,10 +182,15 @@ deploy_front_production:
     - mkdir -p ~/.ssh
   script:
     - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"DEPLOY-TOKEN: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz\""'
-    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz"
-  when: manual
+    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz && find . -ctime +1 -delete"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
+      changes:
+        - front/**/*
+      when: manual
 
-deploy_api_production:
+
+deploy api production:
   stage: deploy_production
   before_script:
     - apt-get update -qq
@@ -172,10 +206,14 @@ deploy_api_production:
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml pull &&
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d &&
                 docker logout $CI_REGISTRY"
-  when: manual
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
+      changes:
+        - api/**/*
+      when: manual
 
 
-deploy_conf_production:
+deploy conf production:
   stage: config_production
   before_script:
     - apt-get update -qq
@@ -193,11 +231,17 @@ deploy_conf_production:
                 cd $WORKDIR_SERVER &&
                 chmod 640 nginx/ssl/* &&
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d &&
-                docker-compose -f docker-compose.yml -f docker-compose.production.yml restart nginx"
-  when: manual
+                docker-compose -f docker-compose.yml -f docker-compose.production.yml exec -T nginx nginx -s reload"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
+      changes:
+        - nginx/**/*
+        - package.json
+        - docker-compose*
+      when: manual
 
 
-install_production:
+install production:
   stage: install
   before_script:
     - apt-get update -qq
@@ -224,7 +268,6 @@ install_production:
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml pull &&
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d &&
                 docker logout $CI_REGISTRY"
-  only:
-    variables:
-      - $FORCE_INSTALL == 'YES'
-  when: manual
+  rules:
+    - if: '$FORCE_INSTALL == "YES"'
+      when: manual
