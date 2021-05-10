@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useCallback, useEffect } from 'react'
-import { orderBy } from 'lodash'
 import {
   getCriterions,
   loadCity,
@@ -17,6 +16,7 @@ const CitiesContext = React.createContext()
 
 export function CitiesProvider(props) {
   const [cities, _setCities] = useState([])
+  const [totalCities, _setTotalCities] = useState(0)
   const [searchCities, _setSearchCities] = useState([])
   const [city, setCity] = useState(null)
   const [criterions, _setCriterions] = useState(null)
@@ -29,23 +29,20 @@ export function CitiesProvider(props) {
   const [cityTenement, _setCityTenement] = useState(null)
   const [cityAmenities, _setCityAmenities] = useState(null)
 
-  const sortCities = (cs) => {
-    switch (sortCriterions) {
-      case 'habitant':
-        return orderBy(cs, ['population'], ['desc'])
-      case 'mer':
-        return orderBy(cs, ['distance_from_sea'], ['asc'])
-      case 'montagne':
-        return orderBy(cs, ['z_moyen'], ['desc'])
-      default:
-        return orderBy(cs, ['match', 'nom_comm'], ['desc', 'asc'])
+  const onSearch = useCallback((params, index = 0, oldCities = []) => {
+    if (index === 0) {
+      _setCities([])
     }
-  }
-
-  const onSearch = useCallback((params) => {
-    _setCities([])
     _setIsLoading(true)
-    apiSearchCities(params).then((c) => _setCities(sortCities(c)))
+
+    apiSearchCities({ ...params, index }).then((c) => {
+      if (index === 0) {
+        _setCities(c.list)
+      } else {
+        _setCities(oldCities.concat(c.list))
+      }
+      _setTotalCities(c.total)
+    })
       .then(() => _setIsLoading(false))
   }, [])
 
@@ -101,10 +98,6 @@ export function CitiesProvider(props) {
     getCriterions().then(_setCriterions)
   }, [])
 
-  useEffect(() => {
-    _setCities(sortCities(cities))
-  }, [sortCriterions])
-
   return (
     <CitiesContext.Provider
       {...props}
@@ -121,6 +114,7 @@ export function CitiesProvider(props) {
         cityTenement,
         isLoadingAmenities,
         cityAmenities,
+        totalCities,
         // function
         setCity,
         onSearch,

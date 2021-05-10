@@ -3,6 +3,7 @@ import { Types } from '../utils/types'
 import Route from './Route'
 import config from 'config'
 import { ALL_LIFE_CRITERIONS_LIST } from '../constants/lifeCriterions'
+import { orderBy } from 'lodash'
 
 export default class RouteCities extends Route {
   constructor(params) {
@@ -44,15 +45,35 @@ export default class RouteCities extends Route {
       code_criterion: Types.array(),
       code_rome: Types.array().type(Types.string()),
       from: Types.array().type(Types.string()),
+      index: Types.number(),
+      sortBy: Types.string(),
     }),
   })
   async search(ctx) {
-    const {code_region: codeRegion = [], code_criterion: codeCriterion = [], code_rome: codeRome = [], from = []} = this.body(ctx)
+    const {code_region: codeRegion = [], code_criterion: codeCriterion = [], code_rome: codeRome = [], from = [], index = 0, sortBy} = this.body(ctx)
 
-    this.model.models.stats.addStats({values: {codeRegion, codeCriterion, codeRome, from}, session_id: ctx.session.id})
-    const result = await this.model.search({codeRegion, codeCriterion, codeRome})
+    if(index === 0) {
+      this.model.models.stats.addStats({values: {codeRegion, codeCriterion, codeRome, from}, session_id: ctx.session.id})
+    }
+    let result = await this.model.search({codeRegion, codeCriterion, codeRome})
+    
+    switch (sortBy) {
+    case 'habitant':
+      result = orderBy(result, ['population'], ['desc'])
+      break
+    case 'mer':
+      result = orderBy(result, ['distance_from_sea'], ['asc'])
+      break
+    case 'montagne':
+      result = orderBy(result, ['z_moyen'], ['desc'])
+      break
+    }
 
-    this.sendOk(ctx, result)
+    this.sendOk(ctx, {
+      list: result.slice(index, index + 10),
+      total: result.length,
+      index,
+    })
   }
 
   @Route.Get()
