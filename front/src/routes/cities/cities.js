@@ -24,9 +24,10 @@ const CitiesArea = styled.div`
 `
 
 const CitiesPage = () => {
-  const { cities, isLoading, onSearch } = useCities()
+  const {
+    cities, isLoading, onSearch, totalCities, sortCriterions
+  } = useCities()
   const [params, setParams] = useState(null)
-  const [itemsViews, setItemsViews] = useState(10)
   const [offset, setOffset] = useState(0)
   const size = useWindowSize()
   const location = useLocation()
@@ -40,10 +41,10 @@ const CitiesPage = () => {
   }, [location])
 
   useEffect(() => {
-    if (params && params.code_rome) {
-      onSearch(params)
+    if (params && params.code_rome && !isLoading) {
+      onSearch({ ...params, sortBy: sortCriterions })
     }
-  }, [params])
+  }, [params, sortCriterions])
 
   useEffect(() => {
     window.onscroll = () => {
@@ -51,25 +52,23 @@ const CitiesPage = () => {
     }
   }, [])
 
-  useEffect(() => {
-    // on list change replace on the top
-    window.scrollTo(0, 0)
-    setItemsViews(10)
-  }, [cities])
+  // on list change replace on the top
+  // window.scrollTo(0, 0)
+  // setItemsViews(10)
 
   useEffect(() => {
-    const heightCheck = window.innerHeight * 2
+    const heightCheck = window.innerHeight * 1.5
     const { body } = document
     const html = document.documentElement
     const contentHeight = Math.max(body.scrollHeight, body.offsetHeight,
       html.clientHeight, html.scrollHeight, html.offsetHeight)
 
     if (
-      contentHeight - window.scrollY < heightCheck
+      contentHeight - window.scrollY < heightCheck && !isLoading && cities.length
     ) {
       // can load next page
-      if (cities.length > itemsViews + 20) {
-        setItemsViews(itemsViews + 20)
+      if (totalCities > cities.length) {
+        onSearch({ ...params, sortBy: sortCriterions }, cities.length, cities)
       }
     }
   }, [offset])
@@ -91,18 +90,18 @@ const CitiesPage = () => {
 
   return (
     <MainLayout>
-      {isMobileView(size) && <MobileCriterionsPanel criterions={params} total={cities.length} />}
+      {isMobileView(size) && <MobileCriterionsPanel criterions={params} total={totalCities} />}
       {!isMobileView(size) && (
       <DesktopCriterionsPanel
         paramsUrl={params}
-        total={cities.length}
+        total={totalCities}
         redirectTo={onRedirectTo}
       />
       )}
-      {isLoading && (<p>Loading...</p>)}
+      {isLoading && cities.length === 0 && (<p>Chargement...</p>)}
       {!isLoading && cities.length === 0 && (<p>Aucuns resultat</p>)}
       <CitiesArea isMobile={isMobileView(size)}>
-        {cities.slice(0, itemsViews).map((c) => (
+        {cities.map((c) => (
           <Items key={c.id} to={getCityUrl(c)}><CityItem city={c} /></Items>
         ))}
       </CitiesArea>

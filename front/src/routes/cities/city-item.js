@@ -64,7 +64,7 @@ const Tag = styled.div`
   background: ${COLOR_GRAY};
 `
 
-const TagPerti = styled.div`
+const TagPerti = styled.span`
   float: right;
   background: white;
   border-radius: 1000px;
