@@ -67,6 +67,9 @@ export default class RouteCities extends Route {
     case 'montagne':
       result = orderBy(result, ['z_moyen'], ['desc'])
       break
+    default:
+      result = orderBy(result, ['match'], ['desc'])
+      break
     }
 
     this.sendOk(ctx, {
