@@ -135,3 +135,13 @@ Liste des regions, nouvelle nomenclature -> Fichier importé depuis le fichier a
 API Offre d'emploi, pour afficher la liste des offres pour une ville et un métier
 
 API Info travail, pour afficher la tranche de salaire d'une region et d'un métier sur la fiche ville
+
+# Mise en prod
+
+Lors d'un commit sur develop (recette) l'image de l'api est poussé si besoin et un package des sources compilés est également poussé si besoin.
+Pour mettre en prod la dernière image de l'API et/ou du dernier package, il faut créer une merge request de develop sur la master.
+Se rendre ensuite dans le pipeline et faire la mep manuellement en cliquant sur le bouton.
+
+Pour revenir en arrière il faut se positionner sur la pipeline qui convient et republier l'API et/ou le package pour le repousser en production manuellement via la pipeline.
+
+En cours: gestion des numéro de version pour facilité le rollback.
