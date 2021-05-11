@@ -141,7 +141,8 @@ const HelpDetailsPage = () => {
 
   useEffect(() => {
     if (id) {
-      onLoadPreviewId(id)
+      const split = (id || '').split('-')
+      onLoadPreviewId(split[0])
     }
   }, [id])
 
