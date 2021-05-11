@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { orderBy } from 'lodash'
 import { Link } from 'react-router-dom'
+import slug from 'slug'
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { MainLayout } from '../../components/main-layout'
@@ -308,7 +309,7 @@ const HelpsPage = () => {
         <HelpsPanel isMobile={isMobileView(size)}>
           <TitleHelps isMobile={isMobileView(size)}>{project || situation ? 'Mes aides disponibles' : 'Les aides les plus consultées'}</TitleHelps>
           {list.map((item) => (
-            <Item key={item.id} to={`/aides/${item.id}`} ismobile={isMobileView(size) ? 'true' : 'false'}>
+            <Item key={item.id} to={`/aides/${item.id}-${slug(item.title)}`} ismobile={isMobileView(size) ? 'true' : 'false'}>
               <p className="first-title">{item.title}</p>
               <p className="second-title">{item.goal}</p>
               {item.who.split(',').map((t) => <p className="tag" key={t}>{ucFirstOnly(t)}</p>)}
