@@ -198,7 +198,7 @@ const HelpDetailsPage = () => {
           </Panel>
 
           { /* eslint-disable-next-line */ }
-          <a target="_blank" href={help.link} style={{ cursor: 'pointer' }}>
+          <a target="_blank" href={help.link} style={{ cursor: 'pointer' }} tag-navigation={`faire-ma-demande/${help.title}`}>
             <HelpButton className="btn primary" type="button" isMobile={isMobileView(size)}>Faire ma demande</HelpButton>
           </a>
 
