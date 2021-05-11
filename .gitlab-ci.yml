@@ -167,7 +167,8 @@ deploy conf staging:
       changes:
         - nginx/**/*
         - package.json
-        - docker-compose*
+        - docker-compose.yml
+        - docker-compose.recette.yml
     - if: '$ENV_CHANGED == "YES"'
 
 
@@ -237,7 +238,8 @@ deploy conf production:
       changes:
         - nginx/**/*
         - package.json
-        - docker-compose*
+        - docker-compose.yml
+        - docker-compose.production.yml
       when: manual
 
 
