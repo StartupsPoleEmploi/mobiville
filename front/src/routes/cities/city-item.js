@@ -101,6 +101,10 @@ const ViewMore = styled.p`
 const CityItem = ({ city }) => {
   const size = useWindowSize()
 
+  if (!city) {
+    return (<div />)
+  }
+
   let { photo } = city
   if (photo) {
     if (photo.indexOf('.svg') === -1) {
