@@ -192,7 +192,7 @@ const PanelCityJobs = ({ city, rome }) => {
               {professions.filter((p) => p && p.id).map((p) => (
                 <JobItem key={p.id}>
                   { /* eslint-disable-next-line */ }
-                  <a href={p.origineOffre.urlOrigine} target="_blank" tag-navigation="offres-d-emplois">
+                  <a href={p.origineOffre.urlOrigine} target="_blank" tag-exit="offres-d-emplois">
                     <p className="title">{p.appellationlibelle}</p>
                     {p.entreprise && p.entreprise.nom && (<p className="enterprise">{p.entreprise.nom}</p>)}
                     <p className="description">{p.description}</p>
