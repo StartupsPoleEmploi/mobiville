@@ -25,7 +25,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn test"
+      "pre-commit": ""
     }
   },
 	"homepage": "https://git.beta.pole-emploi.fr/mobiville/mobiville/-/blob/master/README.md"

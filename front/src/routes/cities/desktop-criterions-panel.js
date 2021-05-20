@@ -20,6 +20,7 @@ const Wrapper = styled.div`
   left: 0;
   right: 0;
   background-color: ${COLOR_BACKGROUND};
+  z-index: 1;
 `
 
 const SearchPanel = styled.div`

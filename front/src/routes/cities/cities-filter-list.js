@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { MenuItem, Select } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
@@ -44,6 +44,10 @@ const CitiesFilterList = () => {
     sortCriterions
   } = useCities()
 
+  useEffect(() => {
+    setSortCriterions('')
+  }, [])
+
   return (
     <Wrapper>
       <SelectBlock
@@ -52,12 +56,6 @@ const CitiesFilterList = () => {
         onChange={(event) => setSortCriterions(event.target.value)}
       >
         <MenuItem value="">
-          <SpaceItem>
-            Pertinence
-            <FilterListIcon />
-          </SpaceItem>
-        </MenuItem>
-        <MenuItem value="habitant">
           <SpaceItem>
             Nombre d
             {'\''}
