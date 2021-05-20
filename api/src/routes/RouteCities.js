@@ -58,9 +58,6 @@ export default class RouteCities extends Route {
     let result = await this.model.search({codeRegion, codeCriterion, codeRome})
     
     switch (sortBy) {
-    case 'habitant':
-      result = orderBy(result, ['population'], ['desc'])
-      break
     case 'mer':
       result = orderBy(result, ['distance_from_sea'], ['asc'])
       break
@@ -68,7 +65,7 @@ export default class RouteCities extends Route {
       result = orderBy(result, ['z_moyen'], ['desc'])
       break
     default:
-      result = orderBy(result, ['match'], ['desc'])
+      result = orderBy(result, ['population'], ['desc'])
       break
     }
 

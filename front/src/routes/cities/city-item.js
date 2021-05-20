@@ -64,18 +64,6 @@ const Tag = styled.div`
   background: ${COLOR_GRAY};
 `
 
-const TagPerti = styled.span`
-  float: right;
-  background: white;
-  border-radius: 1000px;
-  padding: 2px 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: ${COLOR_TEXT_PRIMARY};
-  border: 1px solid black;
-  margin-top: 1px;
-`
-
 const InformationsBlock = styled.div`
   padding: 16px;
   width: 100%;
@@ -116,39 +104,12 @@ const CityItem = ({ city }) => {
     photo = `/regions/region-${city['region.new_code']}.jpg`
   }
 
-  let borderTagColor = null
-  if (city.match > 71) {
-    borderTagColor = '#1E824C'
-  } else if (city.match > 41) {
-    borderTagColor = '#EB9532'
-  } else {
-    borderTagColor = '#CF000F'
-  }
-
-  let bgTagColor = null
-  if (city.match > 71) {
-    bgTagColor = '#BBDAC9'
-  } else if (city.match > 41) {
-    bgTagColor = '#F9DFC2'
-  } else {
-    bgTagColor = '#F1B3B7'
-  }
-
   return (
     <Wrapper isMobile={isMobileView(size)}>
       <Image style={{ backgroundImage: `url(${photo})` }} isMobile={isMobileView(size)} />
       <InformationsBlock>
         <Title>
-          {city.match && (
-          <TagPerti style={{ borderColor: borderTagColor, backgroundColor: bgTagColor }}>
-            Correspond à
-            {' '}
-            {Math.floor(city.match)}
-            %
-          </TagPerti>
-          )}
           {ucFirst(city.nom_comm.toLowerCase())}
-
         </Title>
         <Description>
           {(city.description || '').replace('Écouter', '')}
@@ -180,6 +141,13 @@ const CityItem = ({ city }) => {
           </Tag>
           )}
           {city.city_size_label && <Tag>{city.city_size_label}</Tag>}
+          {city.population && (
+          <Tag>
+            {city.population * 1000}
+            {' '}
+            habitants
+          </Tag>
+          )}
           {city.z_moyen && (
           <Tag>
             Altitude moyenne
