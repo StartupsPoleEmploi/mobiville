@@ -85,10 +85,6 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
     }
   })
 
-  if (criterions == null || criterions.criterions === undefined) {
-    return <div />
-  }
-
   const onSubmit = (data) => {
     let params = { }
     if (data.rome) {
@@ -126,6 +122,10 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
   }
 
   useEffect(() => {
+    if (criterions == null || criterions.criterions === undefined) {
+      return
+    }
+
     if (paramsUrl) {
       const rome = paramsUrl && paramsUrl.code_rome
     && paramsUrl.code_rome.length ? paramsUrl.code_rome[0] : ''
@@ -154,7 +154,11 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
 
       values.forEach(({ name, value }) => setValue(name, value, { shouldDirty: true }))
     }
-  }, [paramsUrl])
+  }, [paramsUrl, criterions])
+
+  if (criterions == null || criterions.criterions === undefined) {
+    return <div />
+  }
 
   return (
     <EmptySpace>
