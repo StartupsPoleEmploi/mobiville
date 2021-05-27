@@ -28,7 +28,12 @@ const Step2Component = ({ onNext, values }) => {
   } = useCities()
 
   const getStyleOfButton = (r) => {
-    const style = { marginBottom: 16, border: 'none' }
+    const style = {
+      marginBottom: 16,
+      border: 'none',
+      height: 'auto',
+      minHeight: 48
+    }
 
     if (values && values.code_rome && values.code_rome.length && values.code_rome[0] === r.key) {
       style.border = `2px solid ${COLOR_PRIMARY}`
