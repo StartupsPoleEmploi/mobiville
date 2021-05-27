@@ -49,7 +49,6 @@ export default class App extends AppBase {
       compress({}), // compresses requests made to the API
       session(config.SESSION_CONFIG, this.koaApp),
     ])
-
     super.mountFolder(join(__dirname, 'routes'), '/') // adds a folder to scan for route files
 
     return super.start()

@@ -43,5 +43,24 @@ export default (sequelizeInstance, Model) => {
     return inseeCode
   }
 
+  Model.fetchJobList = async () => {
+    if (Model.jobList) {
+      return Model.jobList
+    }
+
+    const result = await Model.findAll({
+      attributes: ['rome', 'rome_label'],
+      group: ['rome', 'rome_label'],
+      order: ['rome_label']
+    })
+
+    Model.jobList = result.map(result => ({ 
+      label: result.rome_label,
+      rome: result.rome
+    }))
+
+    return Model.jobList
+  }
+
   return Model
 }

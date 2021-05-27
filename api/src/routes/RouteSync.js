@@ -1,9 +1,18 @@
-import { getAllBassins, getAllCities, getAllTensions, getAllRegions, getAmenitiesDatas } from '../utils/api'
+import { getAllBassins, getAllCities, getAllTensions, getAllRegions, getAmenitiesDatas, getRomeLabel } from '../utils/api'
 import Route from './Route'
 
 export default class RouteSync extends Route {
   constructor(params) {
     super({ ...params, model: 'cities' })
+
+    setTimeout(() => { // super crade à changer lol
+      this.syncDatas()
+    }, 5000)
+  }
+
+  async syncDatas () {
+    await this.model.models.romeogrs.syncRomeOgrs()
+    await this.model.models.romeskills.syncRomeSkills()
   }
 
   @Route.Get()
@@ -28,6 +37,9 @@ export default class RouteSync extends Route {
     const statusBassins = await this.models.bassins.sync({bassins})
 
     const tensions = await getAllTensions()
+    for(let i = 0; i < tensions.length; i++) {
+      tensions[i].rome_label = (await getRomeLabel(tensions[i].rome))
+    }
     const statusTensions = await this.models.tensions.syncTensions({tensions})
 
     this.sendOk(ctx, {tensions: statusTensions, bassins: statusBassins})

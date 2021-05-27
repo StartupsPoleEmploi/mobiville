@@ -1,8 +1,8 @@
 import { Op } from 'sequelize'
 import { groupBy, mean, sortBy } from 'lodash'
-import { ALT_IS_MOUNTAIN, CODE_ROMES, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA, WEIGHT_REGION } from '../constants/criterion'
+import { ALT_IS_MOUNTAIN, CRITERIONS, CRIT_CAMPAGNE, CRIT_EXTRA_LARGE_CITY, CRIT_LARGE_CITY, CRIT_MEDIUM_CITY, CRIT_MOUNTAIN, CRIT_SIDE_SEA, CRIT_SMALL_CITY, CRIT_SUN, IS_LARGE_CITY, IS_MEDIUM_CITY, IS_SMALL_CITY, IS_SUNNY, SIDE_SEA } from '../constants/criterion'
 import { getAveragePricing, getFranceShape, getFrenchWeatherStation, loadWeatherFile, wikipediaDetails, getTensionsCities, getAverageHouseRent } from '../utils/api'
-import { citySizeLabel, distanceBetweenToCoordinates, sleep } from '../utils/utils'
+import { distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
 import { ALL_LIFE_CRITERIONS_LIST } from '../constants/lifeCriterions'
 
@@ -11,7 +11,6 @@ export default (sequelizeInstance, Model) => {
   Model.weatherStationList = null
   Model.averageTemperatureCache = {}
   Model.cityOnSync = false
-  Model.cacheSearchCities = {}
   Model.cacheLoadAveragePricing = null
   Model.cacheLoadAverageHouseTension = null
   Model.cacheLoadAverageHouseRent = null
@@ -50,242 +49,114 @@ export default (sequelizeInstance, Model) => {
     }
   }
 
-  Model.regions = async () => {
-    if(Model.cacheSearchCities['cache-regions']) {
-      return Model.cacheSearchCities['cache-regions']
-    }
-
-    const list = await Model.models.regions.findAll({
-      group: ['new_code'],
-      raw: true,
-    })
-
-    for(let c = 0; c < CRITERIONS.length; c++) {
-      for(let r = 0; r < CODE_ROMES.length; r++) {
-        const citiesGrouped = groupBy((await Model.search({codeCriterion: [CRITERIONS[c].key], codeRome: [CODE_ROMES[r].key]})), 'region.new_code')
-        Object.keys(citiesGrouped).map(v => {
-          const findIndex = list.findIndex(r => r.new_code === v)
-          if(findIndex !== -1) {
-            const allCriterions = list[findIndex].criterions || {}
-            const criterions = allCriterions[CODE_ROMES[r].key] || []
-            criterions.push(CRITERIONS[c].key)
-            allCriterions[CODE_ROMES[r].key] = criterions
-            list[findIndex].criterions = allCriterions
-          }
-        })    
-      }
-    }
-
-    Model.cacheSearchCities['cache-regions'] = sortBy(list.map(r => ({id: r.new_code, label: r.new_name, criterions: r.criterions})), ['label'])
-    return Model.cacheSearchCities['cache-regions']
-  }
-
   Model.regionHasTension = async (regionId, codeRome) => {
-    const allOldRegions = (await Model.models.regions.getCodeRegOfOldRegion(regionId))
     const l = (await Model.allTensionsCities({
-      where: {
-        code_reg : allOldRegions,
-      },
+      codeRegion: [regionId],
       codeRome: [codeRome],
     }))
 
     return l.length !== 0
   }
 
-  Model.allTensionsCities = async ({where, codeRome, methodName = 'findAll'}) => {
+  Model.allTensionsCities = async ({where, codeRome, codeRegion = [], methodName = 'findAll', logging = true}) => {
+    let whereRegion = {}
+    if (codeRegion.length) {
+      whereRegion = {
+        where: {
+          new_code: codeRegion,
+        },
+      }
+    }
+
     return await Model[methodName]({
       where: {
         ...where,
       },
       group: ['id'],
-      include: [{
-        attributes: [],
-        model: Model.models.bassins,
-        required: true,
-        include: [{
+      include: [
+        {
           attributes: [],
-          model: Model.models.tensions,
+          model: Model.models.bassins,
+          required: true,
+          include: [{
+            attributes: [],
+            model: Model.models.tensions,
+            require: true,
+            where: {
+              rome: codeRome,
+            },
+            order: [['ind_t', 'desc']],
+          }],
+        },
+        {
+          model: Model.models.regions,
           require: true,
-          where: {
-            rome: codeRome,
-          },
-          order: [['ind_t', 'desc']],
-        }],
-      }, {
-        model: Model.models.regions,
-        require: true,
-      }],
+          ...whereRegion,
+        },
+      ],
       raw: true,
+      logging,
     })
   }
 
-  Model.search = async ({codeRegion = [], codeCriterion = [], codeRome = []}) => {
-    const list = []
-    let maxWeight = 0
-    if(Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})]) {
-      return Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})]
-    }
+  Model.search = async ({codeRegion = [], codeCriterion = [], codeRome = [], logging = true}) => {
+    const usedCriterions = codeCriterion.map(key => CRITERIONS.find(criterion => criterion.key === key))
+    const whereAnd = usedCriterions.reduce((prev, criterion) => {
 
-    // criterions
-    for(let i = 0; i < codeCriterion.length; i++) {
-      const crit = codeCriterion[i]
-      const const_crit = CRITERIONS.find(c => c.key === crit) || { weight: 1 }
-      maxWeight += const_crit.weight
-      if(Model.cacheSearchCities[JSON.stringify({crit, codeRome})]) {
-        list.push(Model.cacheSearchCities[JSON.stringify({crit, codeRome})])
-      } else {
-        let l = []
+      switch(criterion.key) {
+      case CRIT_CAMPAGNE:
+        return prev.concat([{
+          distance_from_sea : {[Op.gte]: SIDE_SEA},
+        }, {
+          population : {[Op.lte]: IS_SMALL_CITY},
+        }, {
+          z_moyen : {[Op.lte]: ALT_IS_MOUNTAIN},
+        }])
+      case CRIT_MOUNTAIN:
+        return prev.concat({
+          z_moyen : {[Op.gte]: ALT_IS_MOUNTAIN},
+        })
+      case CRIT_SMALL_CITY:
+        return prev.concat({
+          population : {[Op.lte]: IS_SMALL_CITY},
+        })
 
-        switch(crit) {
-        case CRIT_CAMPAGNE:
-          l = (await Model.allTensionsCities({
-            where: {
-              [Op.and]: [{
-                distance_from_sea : {[Op.gte]: SIDE_SEA},
-              }, {
-                population : {[Op.lte]: IS_SMALL_CITY},
-              }, {
-                z_moyen : {[Op.lte]: ALT_IS_MOUNTAIN},
-              }],                
-            },
-            codeRome,
-          }))
-          break
-        case CRIT_MOUNTAIN:
-          l = (await Model.allTensionsCities({
-            where: {
-              z_moyen : {[Op.gte]: ALT_IS_MOUNTAIN},
-            },
-            codeRome,
-          }))
-          break
-        case CRIT_SMALL_CITY:
-          l = (await Model.allTensionsCities({
-            where: {
-              population : {[Op.lte]: IS_SMALL_CITY},
-            },
-            codeRome,
-          }))
-          break
-        case CRIT_MEDIUM_CITY:
-          l = (await Model.allTensionsCities({
-            where: {
-              [Op.and]: [{
-                population : {[Op.gt]: IS_SMALL_CITY},
-              }, {
-                population : {[Op.lt]: IS_MEDIUM_CITY},
-              }]},
-            codeRome,
-          }))
-          break
-        case CRIT_LARGE_CITY:
-          l = (await Model.allTensionsCities({
-            where: {
-              [Op.and]: [{
-                population : {[Op.gt]: IS_MEDIUM_CITY},
-              }, {
-                population : {[Op.lt]: IS_LARGE_CITY},
-              }]},
-            codeRome,
-          }))
-          break
-        case CRIT_EXTRA_LARGE_CITY:
-          l = (await Model.allTensionsCities({
-            where: {
-              population : {[Op.gte]: IS_LARGE_CITY},
-            },
-            codeRome,
-          }))
-          break
-        case CRIT_SIDE_SEA:
-          l = (await Model.allTensionsCities({
-            where: {
-              distance_from_sea : {[Op.lte]: SIDE_SEA},
-            },
-            codeRome,
-          }))
-          break
-        case CRIT_SUN:
-          l = (await Model.allTensionsCities({
-            where: {
-              average_temperature : {[Op.lte]: IS_SUNNY},
-            },
-            codeRome,
-          }))
-          break
-        }
+      case CRIT_MEDIUM_CITY:
+          
+        return prev.concat([{
+          population : {[Op.gt]: IS_SMALL_CITY},
+        }, {
+          population : {[Op.lt]: IS_MEDIUM_CITY},
+        }])
 
-        // add default values
-        l = l.map(c => ({...c, tags: [crit], weight: const_crit.weight }))
+      case CRIT_LARGE_CITY:
+        return prev.concat([{
+          population : {[Op.gte]: IS_MEDIUM_CITY},
+        }, {
+          population : {[Op.lt]: IS_LARGE_CITY},
+        }])
 
-        Model.cacheSearchCities[JSON.stringify({crit, codeRome})] = l
-        list.push(Model.cacheSearchCities[JSON.stringify({crit, codeRome})])
+      case CRIT_EXTRA_LARGE_CITY:
+        return prev.concat({
+          population : {[Op.gte]: IS_LARGE_CITY},
+        })
+          
+      case CRIT_SIDE_SEA:
+        return prev.concat({
+          distance_from_sea : {[Op.lte]: SIDE_SEA},
+        })
+          
+      case CRIT_SUN:
+        return prev.concat({average_temperature : {[Op.lte]: IS_SUNNY},
+        })
+
+      default:
+        return prev
       }
-    }
+    }, [])
 
-    // all regions
-    for(let i = 0; i < codeRegion.length; i++) {
-      const reg = codeRegion[i]
-      maxWeight += WEIGHT_REGION
-      const jsonRegions = JSON.stringify({reg: +reg, codeRome})
-
-      if(Model.cacheSearchCities[jsonRegions]) {
-        list.push(Model.cacheSearchCities[jsonRegions])
-      } else {
-        const allOldRegions = (await Model.models.regions.getCodeRegOfOldRegion(reg))
-
-        const l = (await Model.allTensionsCities({
-          where: {
-            code_reg : allOldRegions,
-          },
-          codeRome,
-        })).map(c => ({...c, tags: ['reg_' + reg], weight: WEIGHT_REGION}))
-
-        Model.cacheSearchCities[jsonRegions] = l
-        list.push(Model.cacheSearchCities[jsonRegions])
-      }
-    }
-
-    let totalTags = codeCriterion.length + codeRegion.length
-    if(totalTags === 0) {
-      // no criterions
-      list.push((await Model.allTensionsCities({
-        codeRome,
-      })).map(c => ({...c, tags: ['default'], weight: 1})))
-    }
-
-    // merge lists
-    let mergedList = []
-    const tempIndex = {}
-    const listLength = list.length
-    for(let x = 0; x < listLength; x++) {
-      const typeOfList = list[x]
-
-      const typeLength = typeOfList.length
-      for(let y = 0; y < typeLength; y++) {
-        const city = typeOfList[y]
-
-        if(tempIndex[city.id]) {
-          const findIndex = tempIndex[city.id]
-          const weight = mergedList[findIndex].weight + city.weight
-          mergedList[findIndex].tags = mergedList[findIndex].tags.concat(city.tags)
-          mergedList[findIndex].weight = weight
-        } else {
-          mergedList.push({...city, maxWeight})
-          tempIndex[city.id] = mergedList.length - 1
-        }
-      }
-    }
-
-    // calcul matching
-    const mergedLength = mergedList.length
-    for(let x = 0; x < mergedLength; x++) {
-      mergedList[x].match = mergedList[x].weight * 100 / maxWeight
-    }
-
-    // order results
-    Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})] = mergedList.map(c => ({...c, city_size_label: citySizeLabel(c) }))
-    return Model.cacheSearchCities[JSON.stringify({codeRegion, codeCriterion, codeRome})]
+    const result =  await Model.allTensionsCities({ where : { [Op.and] : whereAnd}, codeRegion, codeRome, logging })
+    return result
   }
 
   Model.getCity = async ({insee}) => {

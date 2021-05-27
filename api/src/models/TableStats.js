@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import {CODE_ROMES, CRITERIONS} from '../constants/criterion'
+import {CRITERIONS} from '../constants/criterion'
 
 export default (sequelizeInstance, Model) => {
   Model.addStats = async ({values = {}, session_id = null}) => {
@@ -11,15 +11,17 @@ export default (sequelizeInstance, Model) => {
   }
 
   Model.getSearchs = async () => {
-    const regions = await Model.models.cities.regions()
+    const regions = await Model.models.regionsTensions.fetch()
+    const jobList = await Model.models.tensions.fetchJobList()
+
     const regionsObjects = {}
     regions.map(r => {
       regionsObjects[r.id] = r.label
     })
 
     const romeObjects = {}
-    CODE_ROMES.map(r => {
-      romeObjects[r.key] = r.label
+    jobList.map(job => {
+      romeObjects[job.rome] = job.label
     })
 
     const criterionsObjects = {}

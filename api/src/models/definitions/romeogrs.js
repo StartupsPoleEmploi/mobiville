@@ -2,7 +2,7 @@ import Sequelize from 'sequelize'
 
 export default sequelizeInstance => {
   const Model = sequelizeInstance.define(
-    'tensions',
+    'romeogrs',
     {
       id: {
         type: Sequelize.INTEGER,
@@ -11,53 +11,17 @@ export default sequelizeInstance => {
         autoIncrement: true,
         unique: true,
       },
-      libfap: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      rome: {
+      code_rome: {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
-      rome_label: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      fap: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      bassin_id: {
+      code_ogr: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      bassin_lib: {
+      ogr_label: {
         type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      lib_rome: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      defm: {
-        type: Sequelize.FLOAT,
-        allowNull: true,
-      },
-      dee: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-      },
-      oee_nosais: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-      },
-      ind_t: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-      },
-      selec_offre: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
       },
       created_at: {
         allowNull: false,
@@ -77,7 +41,7 @@ export default sequelizeInstance => {
       timestamps: true,
       paranoid: true,
       underscored: true,
-      indexes: [{ fields: ['bassin_id'] }, { fields: ['rome'] }],
+      indexes: [{ fields: ['code_rome', 'code_ogr'] }],
     }
   )
 
