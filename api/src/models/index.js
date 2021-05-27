@@ -45,6 +45,7 @@ function initModelsByPath(sequelizeInstance, folderPath, globalName) {
 
 function initModels() {
   const models = initModelsByPath(dbInstance, __dirname, 'models')
+
   return models
 }
 

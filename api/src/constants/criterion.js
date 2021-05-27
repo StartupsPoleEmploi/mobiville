@@ -16,15 +16,6 @@ export const CAREGIVER_ROME_CODE = 'J1501'
 export const COMPUTER_MAINTENANCE_TECHNICIAN_ROME_CODE = 'I1401'
 export const WEIGHT_REGION = 6
 
-
-export const CODE_ROMES = [{
-  label: 'Aide-soignant(e)',
-  key: CAREGIVER_ROME_CODE,
-}, {
-  label: 'Technicien(nne) maintenance informatique',
-  key: COMPUTER_MAINTENANCE_TECHNICIAN_ROME_CODE,
-}]
-
 export const CRITERIONS = [{
   label: 'Mer',
   tag: 'environment',

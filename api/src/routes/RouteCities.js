@@ -1,32 +1,14 @@
-import { CODE_ROMES, CRITERIONS } from '../constants/criterion'
+import { CRITERIONS } from '../constants/criterion'
 import { Types } from '../utils/types'
 import Route from './Route'
-import config from 'config'
 import { ALL_LIFE_CRITERIONS_LIST } from '../constants/lifeCriterions'
-import { orderBy } from 'lodash'
+import { compact, orderBy } from 'lodash'
 
 export default class RouteCities extends Route {
   constructor(params) {
     super({ ...params, model: 'cities' })
-
-    this.preloadSearch()
   }
 
-  async preloadSearch() {
-    if(config.preloadSearch) {
-      console.log('PRELOAD SEARCH - Start')
-      const regions = await this.model.regions()
-      for(let i = 0; i < CODE_ROMES.length; i++) {
-        const code = CODE_ROMES[i]
-        console.log('PRELOAD SEARCH - Code rome ' + code.key)
-        await this.model.search({codeRome: [code.key]})
-        await this.model.search({codeRegion: regions.map(r => (r.id)), codeCriterion: CRITERIONS.map(c => (c.key)), codeRome: [code.key]})
-      }
-      console.log('PRELOAD SEARCH - Regions')
-      await this.model.regions()
-      console.log('PRELOAD SEARCH - Done')
-    }
-  }
 
   @Route.Get()
   async list(ctx) {
@@ -50,7 +32,8 @@ export default class RouteCities extends Route {
     }),
   })
   async search(ctx) {
-    const {code_region: codeRegion = [], code_criterion: codeCriterion = [], code_rome: codeRome = [], from = [], index = 0, sortBy} = this.body(ctx)
+    const {code_region: codeRegionTemp = [], code_criterion: codeCriterion = [], code_rome: codeRome = [], from = [], index = 0, sortBy} = this.body(ctx)
+    const codeRegion = compact(codeRegionTemp) // temporary fix, as the front may send an array containing an empty string in code_region
 
     if(index === 0) {
       this.model.models.stats.addStats({values: {codeRegion, codeCriterion, codeRome, from}, session_id: ctx.session.id})
@@ -78,7 +61,12 @@ export default class RouteCities extends Route {
 
   @Route.Get()
   async criterions(ctx) {
-    this.sendOk(ctx, {criterions: CRITERIONS, regions: await this.model.regions(), codeRomes: CODE_ROMES})
+    const jobList = await this.model.models.tensions.fetchJobList()
+
+    this.sendOk(ctx, {criterions: CRITERIONS, regions: await this.model.models.regionsTensions.fetch(), codeRomes: jobList.map(job => ({
+      key: job.rome,
+      label: job.label,
+    }))})
   }
 
   @Route.Get({
@@ -159,6 +147,23 @@ export default class RouteCities extends Route {
     }
     
     this.sendOk(ctx, list)
+  }
+
+  /**
+   * @body {[string]} [label]
+   */
+   @Route.Post({
+     bodyType: Types.object().keys({
+       label: Types.string().required(),
+     }),
+   })
+  async searchBySkill(ctx) {
+    const {label} = this.body(ctx)
+
+    const resultFromSkill = await this.model.models.romeskills.searchByLabel(label)
+    const resultFromOgr = await this.model.models.romeogrs.searchByLabel(label)
+
+    this.sendOk(ctx, resultFromSkill.concat(resultFromOgr))
   }
 
 }

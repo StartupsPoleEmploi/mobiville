@@ -2,6 +2,9 @@ import config from 'config'
 import axios from 'axios'
 import { csvToArrayJson } from './csv'
 import {readFile, readFileSync} from 'fs'
+import parser from 'xml2json'
+
+let romeLabelFile = null
 
 export function getAllCities() {
   return new Promise((resolve, reject) => {
@@ -119,5 +122,25 @@ export function getAmenitiesDatas() {
         resolve(csvToArrayJson(data))
       }
     })
+  })
+}
+
+export function getRomeLabel(rome) {
+  return new Promise((resolve, reject) => {
+    if(romeLabelFile) {
+      resolve(romeLabelFile[rome] || 'unknow')
+    } else {
+      readFile(__dirname + '/../assets/datas/unix_referentiel_code_rome_v346_utf8.xml', (err, data) => {
+        if(err) {
+          reject(err)
+        } else {
+          romeLabelFile = {}
+          JSON.parse(parser.toJson(data)).ogr.item_referentiel_code_rome.map(xmlObj => {
+            romeLabelFile[xmlObj.code_rome] = xmlObj.libelle
+          })
+          resolve(romeLabelFile[rome] || 'unknow')
+        }
+      })
+    }    
   })
 }
