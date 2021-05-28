@@ -45,10 +45,12 @@ sonarqube-check:
   script:
     - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=mobiville
   allow_failure: true
+  when: on_success
 
 
 include:
   - template: "Verify/Accessibility.gitlab-ci.yml"
+    when: on_success
 
 
 package 1/2:
@@ -166,7 +168,7 @@ deploy conf staging:
     - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
       changes:
         - nginx/**/*
-        - package.json
+        - /package.json
         - docker-compose.yml
         - docker-compose.recette.yml
     - if: '$ENV_CHANGED == "YES"'
@@ -237,7 +239,7 @@ deploy conf production:
     - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
       changes:
         - nginx/**/*
-        - package.json
+        - /package.json
         - docker-compose.yml
         - docker-compose.production.yml
       when: manual
