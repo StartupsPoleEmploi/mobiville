@@ -365,4 +365,3 @@ install production:
   environment:
     name: production
     url: https://mobiville.beta.pole-emploi.fr
-
