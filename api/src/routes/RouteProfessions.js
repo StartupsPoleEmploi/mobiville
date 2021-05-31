@@ -4,13 +4,13 @@ import { searchJob, infosTravail } from '../utils/pe-api'
 import { meanBy } from 'lodash'
 
 
-const CODE_INSEE_LYON_FIRST_DISTRICT = "69381"
-const CODE_INSEE_PARIS_FIRST_DISTRICT = "75101"
-const CODE_INSEE_MARSEILLE_FIRST_DISTRICT = "13201"
+const CODE_INSEE_LYON_FIRST_DISTRICT = '69381'
+const CODE_INSEE_PARIS_FIRST_DISTRICT = '75101'
+const CODE_INSEE_MARSEILLE_FIRST_DISTRICT = '13201'
 
-const CODE_INSEE_LYON = "69123"
-const CODE_INSEE_PARIS = "75056"
-const CODE_INSEE_MARSEILLE = "13055"
+const CODE_INSEE_LYON = '69123'
+const CODE_INSEE_PARIS = '75056'
+const CODE_INSEE_MARSEILLE = '13055'
 
 // we need special matchings for Marseille, Paris and Lyon, since we cannot search them directly
 // and need to input the insee code of a special district
@@ -59,7 +59,7 @@ export default class RouteProfessions extends Route {
     }),
   })
   async infosTravail(ctx) {
-    const {code_rome: codeRome, insee} = this.body(ctx)
+    const {code_rome, insee} = this.body(ctx)
 
     //https://dares.travail-emploi.gouv.fr/donnees/la-nomenclature-des-familles-professionnelles-fap-2009
 
@@ -68,18 +68,15 @@ export default class RouteProfessions extends Route {
       raw: true,
     }))
 
-    let codeProfession
-    switch(codeRome) {
-    case 'J1501':
-      codeProfession = '526d'
-      break
-    case 'I1401':
-      codeProfession = '478b'
-      break
-    }
+    const pcs = await this.model.models.tensions.findOne({
+      where: {
+        rome: code_rome,
+      }, 
+      raw: true,
+    })
 
-    if(city && codeProfession) {
-      const result = await infosTravail({codeProfession, codeRegion: city.code_dept})
+    if(city && pcs) {
+      const result = await infosTravail({codeProfession: pcs.pcs, codeRegion: city.code_dept})
       if(result && result.result && result.result.records) {
 
         const records = result.result.records.map(r => ({...r, MINIMUM_SALARY: +r.MINIMUM_SALARY, MAXIMUM_SALARY: +r.MAXIMUM_SALARY}))

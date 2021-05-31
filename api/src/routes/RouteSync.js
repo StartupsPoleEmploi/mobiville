@@ -13,6 +13,7 @@ export default class RouteSync extends Route {
   async syncDatas () {
     await this.model.models.romeogrs.syncRomeOgrs()
     await this.model.models.romeskills.syncRomeSkills()
+    await this.model.models.tensions.syncDatas()
   }
 
   @Route.Get()
