@@ -15,10 +15,10 @@ variables:
   DATABASEDUMP_VERSION: 1.0.0
   IP_TEST: 192.168.4.134
   RECETTE:
-    value: $IP_RECETTE
+    value: '192.168.4.192'
     description: 'ip for the staging machine'
   PRODUCTION:
-    value: $IP_PRODUCTION
+    value: '51.68.80.218'
     description: 'ip for the production machine'
   DEV_BRANCH:
     value: 'develop'
