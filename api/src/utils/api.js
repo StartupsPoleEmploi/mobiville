@@ -144,3 +144,42 @@ export function getRomeLabel(rome) {
     }    
   })
 }
+
+export function getPCSByRome(rome, fap) {
+  return new Promise((resolve, reject) => {
+    readFile(__dirname + '/../assets/datas/table-correspondance-pcs-rome.csv', (err, data) => {
+      if(err) {
+        reject(err)
+      } else {
+        let finded = null
+        csvToArrayJson(data, {
+          columns: false,
+        }).then(l => {
+          let codeFaq = ''
+          let codePcs = ''
+          let codeRome = ''
+          for(let x = 0; x < l.length; x++) {
+            const row = l[x]
+
+            if(row['0'] && row['0'].length === 5) {
+              codeFaq = row['0']
+            }
+            if(row['1']) {
+              codePcs = row['1']
+            }
+            if(row['2'] && row['2'].length === 5) {
+              codeRome = row['2']
+            }
+
+            if(codeRome.toLowerCase() === rome.toLowerCase() && codeFaq.toLowerCase() === fap.toLowerCase()) {
+              finded = codePcs
+              break
+            }
+          }  
+
+          resolve(finded)        
+        })         
+      }
+    })
+  })
+}

@@ -1,3 +1,5 @@
+import { getPCSByRome } from '../utils/api'
+
 export default (sequelizeInstance, Model) => {
   Model.syncTensions = async ({tensions}) => {
     await Model.deleteAll()
@@ -51,15 +53,33 @@ export default (sequelizeInstance, Model) => {
     const result = await Model.findAll({
       attributes: ['rome', 'rome_label'],
       group: ['rome', 'rome_label'],
-      order: ['rome_label']
+      order: ['rome_label'],
     })
 
     Model.jobList = result.map(result => ({ 
       label: result.rome_label,
-      rome: result.rome
+      rome: result.rome,
     }))
 
     return Model.jobList
+  }
+
+  Model.syncDatas = async () => {
+    console.log('sync datas')
+
+    const result = await Model.findAll({
+      attributes: ['id', 'rome', 'pcs', 'fap'],
+      where: {
+        pcs: null,
+      },
+    })
+
+    for(let i = 0; i < result.length; i++) {
+      const row = result[i]
+      const pcs = await getPCSByRome(row.dataValues.rome, row.dataValues.fap)
+
+      await row.update({pcs})
+    }
   }
 
   return Model
