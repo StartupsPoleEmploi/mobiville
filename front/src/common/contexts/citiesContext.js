@@ -7,7 +7,8 @@ import {
   searchCityByLocation,
   searchCityByName,
   getCityTenement,
-  getCityAmenities
+  getCityAmenities,
+  searchJobLabels
 } from '../../api/cities.api'
 
 const EMPTY_CITY = { id: null, nom_comm: 'Non trouvée', description: '' }
@@ -18,6 +19,7 @@ export function CitiesProvider(props) {
   const [cities, _setCities] = useState([])
   const [totalCities, _setTotalCities] = useState(0)
   const [searchCities, _setSearchCities] = useState([])
+  const [jobsMatchingCriterions, setJobsMatchingCriterions] = useState([])
   const [city, setCity] = useState(null)
   const [criterions, _setCriterions] = useState(null)
   const [isLoading, _setIsLoading] = useState(false)
@@ -94,8 +96,28 @@ export function CitiesProvider(props) {
       .then(() => _setIsLoadingAmenities(false))
   })
 
+  const onSearchJobLabels = useCallback((label) => {
+    if (!label.trim()) {
+      setJobsMatchingCriterions(criterions.codeRomes)
+      return
+    }
+
+    searchJobLabels({ label }).then((results) => {
+      setJobsMatchingCriterions(
+        criterions.codeRomes.filter(
+          (criterionRome) => results.some(
+            ({ codeRome }) => codeRome === criterionRome.key
+          )
+        )
+      )
+    })
+  }, [criterions])
+
   useEffect(() => {
-    getCriterions().then(_setCriterions)
+    getCriterions().then((results) => {
+      _setCriterions(results)
+      setJobsMatchingCriterions(results.codeRomes)
+    })
   }, [])
 
   return (
@@ -115,6 +137,7 @@ export function CitiesProvider(props) {
         isLoadingAmenities,
         cityAmenities,
         totalCities,
+        jobsMatchingCriterions,
         // function
         setCity,
         onSearch,
@@ -124,7 +147,8 @@ export function CitiesProvider(props) {
         onSearchById,
         setSortCriterions,
         onGetCityTenement,
-        onGetCityAmenities
+        onGetCityAmenities,
+        onSearchJobLabels
       }}
     />
   )

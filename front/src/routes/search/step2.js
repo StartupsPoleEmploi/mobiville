@@ -1,12 +1,12 @@
 import {
-  Typography
+  TextField, Typography
 } from '@material-ui/core'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Button } from '../../components/button'
 import { useCities } from '../../common/contexts/citiesContext'
-import { COLOR_PRIMARY } from '../../constants/colors'
+import { COLOR_GRAY, COLOR_PRIMARY } from '../../constants/colors'
 
 const Wrapper = styled.div`
   flex: 1;
@@ -22,10 +22,26 @@ const Title = styled(Typography)`
   }
 `
 
+const Input = styled(TextField)`
+  && {
+    input {
+      background-color: ${COLOR_GRAY};
+      padding-left: 8px !important;
+    }
+  }
+`
+
 const Step2Component = ({ onNext, values }) => {
   const {
-    criterions
+    jobsMatchingCriterions,
+    onSearchJobLabels
   } = useCities()
+
+  const [searchedLabel, setSearchedLabel] = useState('')
+
+  useEffect(() => {
+    onSearchJobLabels(searchedLabel)
+  }, [searchedLabel])
 
   const getStyleOfButton = (r) => {
     const style = {
@@ -44,17 +60,29 @@ const Step2Component = ({ onNext, values }) => {
 
   return (
     <Wrapper>
-      <Title>Quel métier recherchez-vous ?</Title>
-      {criterions.codeRomes.map((c) => (
-        <Button
-          light
-          key={c.key}
-          onClick={() => onNext({ rome: c.key })}
-          style={getStyleOfButton(c)}
-        >
-          {c.label}
-        </Button>
-      )) }
+      <Title>Quel métier ou compétences recherchez-vous ?</Title>
+
+      <Input
+        label="Rechercher"
+        onChange={(event) => {
+          setSearchedLabel(event.target.value)
+        }}
+        value={searchedLabel}
+        variant="filled"
+      />
+      <p>Mobiville est disponible seulement pour certains métiers en tension.</p>
+      <div>
+        {jobsMatchingCriterions.map((c) => (
+          <Button
+            light
+            key={c.key}
+            onClick={() => onNext({ rome: c.key })}
+            style={getStyleOfButton(c)}
+          >
+            {c.label}
+          </Button>
+        )) }
+      </div>
     </Wrapper>
   )
 }
