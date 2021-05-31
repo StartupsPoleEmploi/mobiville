@@ -5,7 +5,6 @@ stages:
   - publish
   - config_staging
   - deploy_staging
-  - accessibility
   - config_production
   - deploy_production
 
@@ -15,42 +14,37 @@ variables:
   PACKAGE_VERSION: 1.0.0
   DATABASEDUMP_VERSION: 1.0.0
   IP_TEST: 192.168.4.134
-  RECETTE: $IP_RECETTE
-  PRODUCTION: $IP_PRODUCTION
-  DEV_BRANCH: develop
-  PROD_BRANCH: master
+  RECETTE:
+    value: $IP_RECETTE
+    description: 'ip for the staging machine'
+  PRODUCTION:
+    value: $IP_PRODUCTION
+    description: 'ip for the production machine'
+  DEV_BRANCH:
+    value: 'develop'
+    description: 'name of the staging branch'
+  PROD_BRANCH:
+    value: 'master'
+    description: 'name of the production deployment branch'
   FORCE_INSTALL:
     value: 'NO'
-    description: 'Install from scratch mobiville with "YES"'
-  ENV_CHANGED:
-    value: 'NO'
-    description: 'Deploy new configuration when some env var changed with "YES"'
-  a11y_urls: "https://mobiville.pole-emploi.fr https://mobiville.beta.pole-emploi.fr/rechercher/rome https://mobiville.beta.pole-emploi.fr/cities?code_rome=J1501&code_criterion=small-city,mountain&code_region=94&code_city=small-city&code_environment=mountain https://mobiville.beta.pole-emploi.fr/city/2B036-BIGORNO?code_rome=J1501"
+    description: 'production install from scratch mobiville with "YES"'
+  a11y_urls: "https://mobiville.pole-emploi.fr https://mobiville.beta.pole-emploi.fr/rechercher/rome https://mobiville.beta.pole-emploi.fr/cities?code_rome=j1501&code_criterion=small-city,mountain&code_region=94&code_city=small-city&code_environment=mountain https://mobiville.beta.pole-emploi.fr/city/2b036-bigorno?code_rome=j1501"
 
 
-sonarqube-check:
+test:sonar:
+  extends: .sonarqube-check
   stage: test
-  image:
-    name: sonarsource/sonar-scanner-cli:latest
-  variables:
-    SONAR_TOKEN: "${SONAR_TOKEN}"
-    SONAR_HOST_URL: "https://sonarqube.beta.pole-emploi.fr"
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar" # Defines the location of the analysis task cache
-    GIT_DEPTH: 0 # Tells git to fetch all the branches of the project, required by the analysis task
-  cache:
-    key: ${CI_JOB_NAME}
-    paths:
-      - .sonar/cache
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+
+test:a11y:
+  extends: .a11y
   stage: test
-  script:
-    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=mobiville
-  allow_failure: true
-  when: on_success
-
-
-include:
-  - template: "Verify/Accessibility.gitlab-ci.yml"
-    when: on_success
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
 
 
 package 1/2:
@@ -62,7 +56,7 @@ package 1/2:
     - cd ./front
     # recupération des dépendances npm
     - yarn install
-    # On minifie les src ds le livrable dist
+    # on minifie les src ds le livrable dist
     - yarn run build && cp -RT build dist
   artifacts:
     paths:
@@ -82,7 +76,7 @@ package 2/2:
   script:
     - cd ./front
     - tar -czvf "${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz" dist
-    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz"'
+    - 'curl --header "job-token: $CI_JOB_TOKEN" --upload-file ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz"'
   rules:
     - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
       changes:
@@ -95,7 +89,7 @@ publish api image:
       name: gcr.io/kaniko-project/executor:debug
       entrypoint: [""]
   script:
-    # On construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
+    # on construit l'image docker du composant front et on la sauvegarde dans le registry gitlab
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_api --destination $CI_REGISTRY_IMAGE:api
   rules:
@@ -105,65 +99,39 @@ publish api image:
 
 
 deploy front staging:
+  extends: .deploy_front
   stage: deploy_staging
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y -qq openssh-client
-    # add SSH_PRIVATE_KEY in agent store
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
-    - mkdir -p ~/.ssh
-  script:
-    # On livre le livrable dist sur la machine de recette
-    - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "mkdir -p $WORKDIR_SERVER/nginx/front"
-    - 'ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "cd $WORKDIR_SERVER && curl -O --header \"DEPLOY-TOKEN: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz\""'
-    - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz && find . -ctime +1 -delete"
   rules:
     - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
       changes:
         - front/**/*
+  variables:
+    IP_SERVER: $RECETTE
+    SSH_PKEY: $SSH_PRIVATE_KEY
+  environment:
+    name: recette
+    url: https://mobiville.beta.pole-emploi.fr
 
 
 deploy api staging:
+  extends: .deploy_api
   stage: deploy_staging
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y -qq openssh-client
-    # add SSH_PRIVATE_KEY in agent store
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
-    - mkdir -p ~/.ssh
-  script:
-    - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "
-                cd $WORKDIR_SERVER &&
-                docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
-                docker-compose -f docker-compose.yml -f docker-compose.recette.yml pull &&
-                docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d &&
-                docker logout $CI_REGISTRY"
   rules:
     - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
       changes:
         - api/**/*
+  variables:
+    IP_SERVER: $RECETTE
+    ENV_TARGET: recette
+    SSH_PKEY: $SSH_PRIVATE_KEY
+  environment:
+    name: recette
+    url: https://mobiville.beta.pole-emploi.fr
 
 
 deploy conf staging:
+  extends: .deploy_conf
   stage: config_staging
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y -qq openssh-client
-    # add SSH_PRIVATE_KEY in agent store
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
-    - mkdir -p ~/.ssh
-  script:
-    - echo -e "DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET" > .env
-    - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.recette.yml .env gitlab@$RECETTE:$WORKDIR_SERVER
-    - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "mkdir -p $WORKDIR_SERVER/nginx"
-    - scp -o StrictHostKeyChecking=no nginx/recette.conf gitlab@$RECETTE:$WORKDIR_SERVER/nginx/
-    - ssh -o StrictHostKeyChecking=no gitlab@$RECETTE "
-                cd $WORKDIR_SERVER &&
-                docker-compose -f docker-compose.yml -f docker-compose.recette.yml up -d &&
-                docker-compose -f docker-compose.yml -f docker-compose.recette.yml exec -T nginx nginx -s reload"
   rules:
     - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
       changes:
@@ -171,70 +139,49 @@ deploy conf staging:
         - /package.json
         - docker-compose.yml
         - docker-compose.recette.yml
-    - if: '$ENV_CHANGED == "YES"'
+  variables:
+    IP_SERVER: $RECETTE
+    ENV_TARGET: recette
+    SSH_PKEY: $SSH_PRIVATE_KEY
+  environment:
+    name: recette
+    url: https://mobiville.beta.pole-emploi.fr
 
 
 deploy front production:
+  extends: .deploy_front
   stage: deploy_production
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y -qq openssh-client
-    # add SSH_PRIVATE_KEY in agent store
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
-    - mkdir -p ~/.ssh
-  script:
-    - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"DEPLOY-TOKEN: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz\""'
-    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz && find . -ctime +1 -delete"
   rules:
     - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
       changes:
         - front/**/*
       when: manual
+  variables:
+    IP_SERVER: $PRODUCTION
+    ENV_TARGET: production
+    SSH_PKEY: $SSH_PRIVATE_KEY_PROD
+  environment:
+    name: production
+    url: https://mobiville.beta.pole-emploi.fr
 
 
 deploy api production:
+  extends: .deploy_api
   stage: deploy_production
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y -qq openssh-client
-    # add SSH_PRIVATE_KEY in agent store
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
-    - mkdir -p ~/.ssh
-  script:
-    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "
-                cd $WORKDIR_SERVER &&
-                docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
-                docker-compose -f docker-compose.yml -f docker-compose.production.yml pull &&
-                docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d &&
-                docker logout $CI_REGISTRY"
   rules:
     - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
       changes:
         - api/**/*
       when: manual
+  variables:
+    IP_SERVER: $PRODUCTION
+    ENV_TARGET: production
+    SSH_PKEY: $SSH_PRIVATE_KEY_PROD
 
 
 deploy conf production:
+  extends: .deploy_conf
   stage: config_production
-  before_script:
-    - apt-get update -qq
-    - apt-get install -y -qq openssh-client
-    # add SSH_PRIVATE_KEY in agent store
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
-    - mkdir -p ~/.ssh
-  script:
-    - echo -e "DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET" > .env
-    - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.production.yml .env gitlab@$PRODUCTION:$WORKDIR_SERVER
-    - scp -o StrictHostKeyChecking=no nginx/production.conf gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
-    - scp -o StrictHostKeyChecking=no -r nginx/ssl gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
-    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "
-                cd $WORKDIR_SERVER &&
-                chmod 640 nginx/ssl/* &&
-                docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d &&
-                docker-compose -f docker-compose.yml -f docker-compose.production.yml exec -T nginx nginx -s reload"
   rules:
     - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
       changes:
@@ -243,6 +190,95 @@ deploy conf production:
         - docker-compose.yml
         - docker-compose.production.yml
       when: manual
+  variables:
+    IP_SERVER: $PRODUCTION
+    ENV_TARGET: production
+    SSH_PKEY: $SSH_PRIVATE_KEY_PROD
+
+
+.deploy_api:
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client
+    # add ssh_private_key in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PKEY")
+    - mkdir -p ~/.ssh
+  script:
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_SERVER "
+                cd $WORKDIR_SERVER &&
+                docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
+                docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml pull &&
+                docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml up -d &&
+                docker logout $CI_REGISTRY"
+
+
+.deploy_front:
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client
+    # add ssh_private_key in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PKEY")
+    - mkdir -p ~/.ssh
+  script:
+    # on livre le livrable dist sur la machine de recette
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_SERVER "mkdir -p $WORKDIR_SERVER/nginx/front"
+    - 'ssh -o StrictHostKeyChecking=no gitlab@$IP_SERVER "cd $WORKDIR_SERVER && curl -O --header \"deploy-token: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz\""'
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_SERVER "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz && find . -ctime +1 -delete"
+
+
+.deploy_conf:
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client
+    # add ssh_private_key in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PKEY")
+    - mkdir -p ~/.ssh
+  script:
+    - echo -e "DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET" > .env
+    - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.$ENV_TARGET.yml .env gitlab@$IP_SERVER:$WORKDIR_SERVER
+    - scp -o StrictHostKeyChecking=no nginx/$ENV_TARGET.conf gitlab@$IP_SERVER:$WORKDIR_SERVER/nginx/
+    - scp -o StrictHostKeyChecking=no -r nginx/ssl gitlab@$IP_SERVER:$WORKDIR_SERVER/nginx/
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_SERVER "
+                cd $WORKDIR_SERVER &&
+                chmod 640 nginx/ssl/* &&
+                docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml up -d &&
+                docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml exec -T nginx nginx -s reload"
+
+
+
+.sonarqube-check:
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+  variables:
+    SONAR_TOKEN: "${SONAR_TOKEN}"
+    SONAR_HOST_URL: "https://sonarqube.beta.pole-emploi.fr"
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar" # defines the location of the analysis task cache
+    GIT_DEPTH: 0 # tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: ${CI_JOB_NAME}
+    paths:
+      - .sonar/cache
+  stage: test
+  script:
+    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=mobiville
+  allow_failure: true
+
+.a11y:
+  image: registry.gitlab.com/gitlab-org/ci-cd/accessibility:5.3.0-gitlab.3
+  script: /gitlab-accessibility.sh $a11y_urls
+  allow_failure: true
+  artifacts:
+    when: always
+    expose_as: 'Accessibility Reports'
+    paths: ['reports/']
+    reports:
+      accessibility: reports/gl-accessibility.json
+  rules:
+    - if: $a11y_urls
+
 
 
 install production:
@@ -250,7 +286,7 @@ install production:
   before_script:
     - apt-get update -qq
     - apt-get install -y -qq openssh-client
-    # add SSH_PRIVATE_KEY in agent store
+    # add ssh_private_key in agent store
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
     - mkdir -p ~/.ssh
@@ -261,9 +297,9 @@ install production:
     - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front"
     - scp -o StrictHostKeyChecking=no nginx/production.conf gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
     - scp -o StrictHostKeyChecking=no -r nginx/ssl gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
-    - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"DEPLOY-TOKEN: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/database/${DATABASEDUMP_VERSION}/database.${DATABASEDUMP_VERSION}.tar.gz\""'
+    - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"deploy-token: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/database/${DATABASEDUMP_VERSION}/database.${DATABASEDUMP_VERSION}.tar.gz\""'
     - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && tar -xzvf database.${DATABASEDUMP_VERSION}.tar.gz"
-    - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"DEPLOY-TOKEN: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz\""'
+    - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"deploy-token: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz\""'
     - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz"
     - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "
                 cd $WORKDIR_SERVER &&
@@ -275,3 +311,4 @@ install production:
   rules:
     - if: '$FORCE_INSTALL == "YES"'
       when: manual
+
