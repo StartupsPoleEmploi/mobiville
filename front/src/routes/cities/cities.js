@@ -10,11 +10,25 @@ import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 import DesktopCriterionsPanel from './desktop-criterions-panel'
 
+import noResultsPic from '../../assets/images/no_results.svg'
+
 const Items = styled(Link)`
   && {
     color: inherit;
     text-decoration: none;
-  }        
+  }
+`
+
+const NotFoundContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding-top: 5rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: #657078;
 `
 
 const CitiesArea = styled.div`
@@ -99,7 +113,18 @@ const CitiesPage = () => {
       />
       )}
       {isLoading && cities.length === 0 && (<p>Chargement...</p>)}
-      {!isLoading && cities.length === 0 && (<p>Aucuns resultat</p>)}
+      {!isLoading && cities.length === 0 && (
+        <NotFoundContainer>
+          <img
+            alt=""
+            src={noResultsPic}
+            style={{ marginBottom: '2rem' }}
+          />
+          Aucune ville correspondante
+          <br />
+          Modifiez vos critères
+        </NotFoundContainer>
+      )}
       <CitiesArea isMobile={isMobileView(size)}>
         {cities.map((c) => (
           <Items key={c.id} to={getCityUrl(c)}><CityItem city={c} /></Items>
