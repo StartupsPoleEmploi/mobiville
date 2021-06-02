@@ -7,8 +7,10 @@ import {
 } from '@material-ui/core'
 import { Controller, useForm } from 'react-hook-form'
 import { useCities } from '../../common/contexts/citiesContext'
-import { COLOR_BACKGROUND, COLOR_PRIMARY } from '../../constants/colors'
+import { COLOR_BACKGROUND, COLOR_PRIMARY, COLOR_GRAY } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
+
+import infoIcon from '../../assets/images/information.svg'
 
 const EmptySpace = styled.div`
   height: 244px;
@@ -39,6 +41,19 @@ const SearchBar = styled.div`
   > *:not(input) {
     flex: 1;
   }
+`
+
+const Infopanel = styled.div`
+  display: flex;
+  background: ${COLOR_GRAY};
+  align-items: space-between;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 700px;
+  margin: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 12px;
 `
 
 const SubInfo = styled.div`
@@ -267,11 +282,17 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
             </SearchBar>
           </SearchPanel>
         </form>
+        <Infopanel>
+          <p>
+            Les villes proposées sont les plus favorables à votre retour à l’emploi.
+          </p>
+          <img src={infoIcon} alt="" />
+        </Infopanel>
         <SubInfo>
           <Typography>
             <span>{total}</span>
             {' '}
-            {total > 1 ? 'villes correspondantes' : 'ville correspondant'}
+            {total > 1 ? 'villes correspondantes' : 'ville correspondante'}
           </Typography>
           <CitiesFilterList />
         </SubInfo>

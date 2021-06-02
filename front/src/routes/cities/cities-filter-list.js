@@ -4,7 +4,7 @@ import { MenuItem, Select } from '@material-ui/core'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import { useCities } from '../../common/contexts/citiesContext'
 
-const Wrapper = styled.div` 
+const Wrapper = styled.div`
   display: flex;
   align-items: center;
 `
@@ -59,7 +59,7 @@ const CitiesFilterList = () => {
           <SpaceItem>
             Nombre d
             {'\''}
-            habitant
+            habitants
             <FilterListIcon />
           </SpaceItem>
         </MenuItem>
