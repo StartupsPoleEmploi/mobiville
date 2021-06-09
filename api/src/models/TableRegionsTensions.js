@@ -2,16 +2,14 @@ import { groupBy, sortBy, toArray, uniq } from 'lodash'
 import { CRITERIONS } from '../constants/criterion'
 
 export default (sequelizeInstance, Model) => {
+  let loading = true
+
   // populate regions_tensions data from cities data. Quite lengthy (~25s with 77 jobs), so should be run
   // from another process, at specific times.
   Model.sync = async () => {
-    const tableData = await Model.findAll()
+    await Model.truncate({ force: true })
 
-    const regions = await Model.models.regions.findAll({
-      group: ['new_code'],
-      raw: true,
-      logging: false,
-    })
+    const tableData = await Model.findAll()
 
     const jobList = await Model.models.tensions.fetchJobList()
 
@@ -54,10 +52,14 @@ export default (sequelizeInstance, Model) => {
           })
         }
       }
+
+      loading = false
     }
   }
 
   Model.fetch = async () => {
+    if (loading) throw new Error('Loading error, please try again in a few seconds') // initial loading only
+
     if (Model.cache) {
       return Model.cache
     }
