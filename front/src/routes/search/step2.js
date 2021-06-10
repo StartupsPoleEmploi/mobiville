@@ -70,7 +70,7 @@ const Step2Component = ({ onNext, values }) => {
         value={searchedLabel}
         variant="filled"
       />
-      <p>Mobiville est disponible seulement pour certains métiers en tension.</p>
+      <p>Pour le moment, le service est disponible uniquement pour certains métiers</p>
       <div>
         {jobsMatchingCriterions.map((c) => (
           <Button
