@@ -24,8 +24,9 @@ const Wrapper = styled.div`
 const Line = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
-  > a {
+  > * {
     color: white;
   }
 
@@ -46,6 +47,7 @@ const Line = styled.div`
 
 const Item = styled.div`
   flex: 1;
+  text-align: center;
 
   > a {
     color: white;
@@ -73,7 +75,10 @@ export const Footer = () => {
             <Item>
               <CustomLink to="/legal">Mentions légales</CustomLink>
             </Item>
-            <Item style={{ textAlign: 'center' }}><CustomLink to="/faq">FAQ</CustomLink></Item>
+            <Item><CustomLink to="/faq">FAQ</CustomLink></Item>
+            <Item>
+              <a href="/stats" target="_blank" rel="noreferrer">Statistiques</a>
+            </Item>
             <Item>
               <a href="mailto:contact@mobiville.pole-emploi.fr">contact@mobiville.pole-emploi.fr</a>
             </Item>
