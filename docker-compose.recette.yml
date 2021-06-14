@@ -2,7 +2,6 @@ version: "3.3"
 services:
   nginx:
     volumes:
-      - './nginx/recette.conf:/etc/nginx/conf.d/default.conf'
       - './nginx/front/dist:/home/front'
       - './nginx/front-admin/dist:/home/front/admin'
     deploy:
