@@ -15,21 +15,32 @@ variables:
   DATABASEDUMP_VERSION: 1.0.0
   IP_TEST: 192.168.4.134
   RECETTE:
-    value: '192.168.4.192'
-    description: 'ip for the staging machine'
+    value: "192.168.4.192"
+    description: ip for the staging machine
   PRODUCTION:
-    value: '51.68.80.218'
-    description: 'ip for the production machine'
+    value: "51.68.80.218"
+    description: ip for the production machine
   DEV_BRANCH:
-    value: 'develop'
-    description: 'name of the staging branch'
+    value: "develop"
+    description: name of the staging branch
   PROD_BRANCH:
-    value: 'master'
-    description: 'name of the production deployment branch'
+    value: "master"
+    description: name of the production deployment branch
   FORCE_INSTALL:
-    value: 'NO'
-    description: 'production install from scratch mobiville with "YES"'
-  a11y_urls: "https://mobiville.pole-emploi.fr https://mobiville.beta.pole-emploi.fr/rechercher/rome https://mobiville.beta.pole-emploi.fr/cities?code_rome=j1501&code_criterion=small-city,mountain&code_region=94&code_city=small-city&code_environment=mountain https://mobiville.beta.pole-emploi.fr/city/2b036-bigorno?code_rome=j1501"
+    value: "NO"
+    description: production install from scratch mobiville with "YES"
+  RENEW_TLS:
+    value: "NO"
+    description: replace TLS certificate with "YES"
+  a11y_urls: "https://mobiville.pole-emploi.fr https://mobiville.beta.pole-emploi.fr/rechercher/romehttps://mobiville.beta.pole-emploi.fr/cities?code_rome=j1501&code_criterion=small-city,mountain&code_region=94&code_city=small-city&code_environment=mountain https://mobiville.beta.pole-emploi.fr/city/2b036-bigorno?code_rome=j1501"
+
+
+include:
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
+secret_detection:
+  variables:
+    SECRET_DETECTION_HISTORIC_SCAN: "true"
 
 
 test:sonar:
@@ -177,6 +188,9 @@ deploy api production:
     IP_SERVER: $PRODUCTION
     ENV_TARGET: production
     SSH_PKEY: $SSH_PRIVATE_KEY_PROD
+  environment:
+    name: production
+    url: https://mobiville.beta.pole-emploi.fr
 
 
 deploy conf production:
@@ -194,6 +208,9 @@ deploy conf production:
     IP_SERVER: $PRODUCTION
     ENV_TARGET: production
     SSH_PKEY: $SSH_PRIVATE_KEY_PROD
+  environment:
+    name: production
+    url: https://mobiville.beta.pole-emploi.fr
 
 
 .deploy_api:
@@ -238,14 +255,16 @@ deploy conf production:
     - mkdir -p ~/.ssh
   script:
     - echo -e "DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET" > .env
+    - echo "$htpasswd" > nginx/.htpasswd
     - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.$ENV_TARGET.yml .env gitlab@$IP_SERVER:$WORKDIR_SERVER
-    - scp -o StrictHostKeyChecking=no nginx/$ENV_TARGET.conf gitlab@$IP_SERVER:$WORKDIR_SERVER/nginx/
-    - scp -o StrictHostKeyChecking=no -r nginx/ssl gitlab@$IP_SERVER:$WORKDIR_SERVER/nginx/
+    - ssh -o StrictHostKeyChecking=no gitlab@$IP_SERVER "mkdir -p $WORKDIR_SERVER/nginx/conf.d"
+    - scp -o StrictHostKeyChecking=no nginx/conf.d/$ENV_TARGET.conf gitlab@$IP_SERVER:$WORKDIR_SERVER/nginx/conf.d/$ENV_TARGET.conf
+    - scp -o StrictHostKeyChecking=no nginx/.htpasswd gitlab@$IP_SERVER:$WORKDIR_SERVER/nginx/
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_SERVER "
                 cd $WORKDIR_SERVER &&
-                chmod 640 nginx/ssl/* &&
+                chmod 640 nginx/.htpasswd &&
                 docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml up -d &&
-                docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml exec -T nginx nginx -s reload"
+                docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml exec -T nginx bash -c 'nginx -t && nginx -s reload'"
 
 
 
@@ -280,6 +299,31 @@ deploy conf production:
     - if: $a11y_urls
 
 
+renew production tls:
+  stage: install
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq openssh-client
+    # add ssh_private_key in agent store
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY_PROD")
+    - mkdir -p ~/.ssh
+  script:
+    - echo "$SSL_dhparam_pem" > nginx/ssl/dhparam.pem
+    - echo "$SSL_entrust_mobiville_pole_emploi_fr_key_pem" > nginx/ssl/entrust-mobiville.pole-emploi.fr-key.pem
+    - echo "$SSL_mobiville_pole_emploi_fr_crt" > nginx/ssl/mobiville.pole-emploi.fr.crt
+    - scp -o StrictHostKeyChecking=no -r nginx/ssl gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
+    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "
+                cd $WORKDIR_SERVER &&
+                chmod 640 nginx/ssl/* &&
+                docker-compose -f docker-compose.yml -f docker-compose.production.yml exec -T nginx bash -c 'nginx -t && nginx -s reload'"
+  rules:
+    - if: '$RENEW_TLS == "YES"'
+      when: manual
+  environment:
+    name: production
+    url: https://mobiville.beta.pole-emploi.fr
+
 
 install production:
   stage: install
@@ -293,10 +337,16 @@ install production:
   script:
     - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "mkdir $WORKDIR_SERVER"
     - echo -e "DATABASE_URL=$DATABASE_URL\nMYSQL_DATABASE=$MYSQL_DATABASE\nMYSQL_USER=$MYSQL_USER\nMYSQL_PASSWORD=$MYSQL_PASSWORD\nEMPLOI_STORE_URL=$EMPLOI_STORE_URL\nENTERPRISE_URL=$ENTERPRISE_URL\nEMPLOI_STORE_ID=$EMPLOI_STORE_ID\nEMPLOI_STORE_SECRET=$EMPLOI_STORE_SECRET" > .env
+    - mkdir nginx/ssl
+    - echo "$SSL_dhparam_pem" > nginx/ssl/dhparam.pem
+    - echo "$SSL_entrust_mobiville_pole_emploi_fr_key_pem" > nginx/ssl/entrust-mobiville.pole-emploi.fr-key.pem
+    - echo "$SSL_mobiville_pole_emploi_fr_crt" > nginx/ssl/mobiville.pole-emploi.fr.crt
+    - echo "$htpasswd" > nginx/.htpasswd
     - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.production.yml .env gitlab@$PRODUCTION:$WORKDIR_SERVER
-    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front"
-    - scp -o StrictHostKeyChecking=no nginx/production.conf gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
+    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front && mkdir -p $WORKDIR_SERVER/nginx/conf.d"
+    - scp -o StrictHostKeyChecking=no nginx/conf.d/production.conf gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/conf.d
     - scp -o StrictHostKeyChecking=no -r nginx/ssl gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
+    - scp -o StrictHostKeyChecking=no nginx/.htpasswd gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
     - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"deploy-token: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/database/${DATABASEDUMP_VERSION}/database.${DATABASEDUMP_VERSION}.tar.gz\""'
     - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && tar -xzvf database.${DATABASEDUMP_VERSION}.tar.gz"
     - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"deploy-token: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz\""'
@@ -304,6 +354,7 @@ install production:
     - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "
                 cd $WORKDIR_SERVER &&
                 chmod 640 nginx/ssl/* &&
+                chmod 640 nginx/.htpasswd &&
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml pull &&
                 docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d &&
@@ -311,4 +362,7 @@ install production:
   rules:
     - if: '$FORCE_INSTALL == "YES"'
       when: manual
+  environment:
+    name: production
+    url: https://mobiville.beta.pole-emploi.fr
 
