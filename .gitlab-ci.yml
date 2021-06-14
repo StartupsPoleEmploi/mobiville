@@ -258,7 +258,7 @@ deploy conf production:
     - echo "$htpasswd" > nginx/.htpasswd
     - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.$ENV_TARGET.yml .env gitlab@$IP_SERVER:$WORKDIR_SERVER
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_SERVER "mkdir -p $WORKDIR_SERVER/nginx/conf.d"
-    - scp -o StrictHostKeyChecking=no nginx/$ENV_TARGET.conf gitlab@$IP_SERVER:$WORKDIR_SERVER/nginx/conf.d/$ENV_TARGET.conf
+    - scp -o StrictHostKeyChecking=no nginx/conf.d/$ENV_TARGET.conf gitlab@$IP_SERVER:$WORKDIR_SERVER/nginx/conf.d/$ENV_TARGET.conf
     - scp -o StrictHostKeyChecking=no nginx/.htpasswd gitlab@$IP_SERVER:$WORKDIR_SERVER/nginx/
     - ssh -o StrictHostKeyChecking=no gitlab@$IP_SERVER "
                 cd $WORKDIR_SERVER &&
@@ -344,7 +344,7 @@ install production:
     - echo "$htpasswd" > nginx/.htpasswd
     - scp -o StrictHostKeyChecking=no package.json docker-compose.yml docker-compose.production.yml .env gitlab@$PRODUCTION:$WORKDIR_SERVER
     - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "mkdir -p $WORKDIR_SERVER/nginx/front && mkdir -p $WORKDIR_SERVER/nginx/conf.d"
-    - scp -o StrictHostKeyChecking=no nginx/production.conf gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/conf.d
+    - scp -o StrictHostKeyChecking=no nginx/conf.d/production.conf gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/conf.d
     - scp -o StrictHostKeyChecking=no -r nginx/ssl gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
     - scp -o StrictHostKeyChecking=no nginx/.htpasswd gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
     - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"deploy-token: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/database/${DATABASEDUMP_VERSION}/database.${DATABASEDUMP_VERSION}.tar.gz\""'
