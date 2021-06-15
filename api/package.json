@@ -10,7 +10,10 @@
     "build:production": "npm run _rm-build-prod && npm run _build-prod",
     "_build-prod": "babel src --out-dir dist --copy-files",
     "_rm-build-prod": "rm -rf dist",
-    "sync:all": "babel-node ./src/scripts/syncCities.js && babel-node ./src/scripts/syncProfessionsInTension.js && babel-node ./src/scripts/syncRegions.js"
+    "sync:cities": "babel-node ./src/scripts/syncCities.js",
+    "sync:regions": "babel-node ./src/scripts/syncRegions.js",
+    "sync:professionsInTension": "babel-node ./src/scripts/syncProfessionsInTension.js",
+    "sync:amenities": "babel-node ./src/scripts/syncAmenities.js"
   },
   "dependencies": {
     "async": "^3.2.0",
@@ -30,6 +33,7 @@
     "lodash": "^4.17.20",
     "mariadb": "^2.5.1",
     "moment": "^2.29.1",
+    "node-gzip": "^1.1.2",
     "path": "^0.12.7",
     "querystring": "^0.2.0",
     "sequelize": "^6.3.5",

@@ -1,5 +1,6 @@
 import config from 'config'
 import axios from 'axios'
+import { ungzip } from 'node-gzip'
 import { csvToArrayJson } from './csv'
 import {readFile, readFileSync} from 'fs'
 import parser from 'xml2json'
@@ -115,12 +116,12 @@ export function getAverageHouseRent() {
 
 export function getAmenitiesDatas() {
   return new Promise((resolve, reject) => {
-    readFile(__dirname + '/../datas-mnt/bpe19_ensemble_xy.csv', (err, data) => {
-      if(err) {
-        reject(err)
-      } else {
-        resolve(csvToArrayJson(data))
-      }
+    readFile(__dirname + '/../assets/datas/bpe19_ensemble_xy.csv.gz', (err, bufferData) => {
+      if (err) return reject(err)
+
+      ungzip(bufferData).then(data => {
+        resolve(csvToArrayJson(data.toString()))
+      }).catch(err)
     })
   })
 }
