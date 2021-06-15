@@ -20,18 +20,25 @@ export default class App extends AppBase {
   }
 
   async start() {
-    db.migrations().then(() => {
-      db.seeders().then(() => {
-        startCrons(this) // start crons 
-      })      
-    })
-
     this.models = db.initModels()
     this.routeParam.models = this.models
     this.routeParam.replicaModels = this.replicaModels
     this.koaApp.context.sequelize = db.instance
     this.koaApp.context.models = this.models
     this.koaApp.keys = config.koaKeys
+
+
+    db.migrations().then(() => {
+      db.seeders().then(async () => {
+        startCrons(this) // start crons
+
+        // Code that was previously started after a 5 seconds timer.
+        // TODO: Study if this is necessary on every launch (probably not)
+        await this.model.models.romeogrs.syncRomeOgrs()
+        await this.model.models.romeskills.syncRomeSkills()
+        await this.model.models.tensions.syncDatas()
+      })
+    })
 
     super.addMiddlewares([
       // we add the relevant middlewares to our API

@@ -9,7 +9,8 @@
     "start:production": "node --optimize_for_size --max_old_space_size=2000 --gc_interval=100 dist/index.js",
     "build:production": "npm run _rm-build-prod && npm run _build-prod",
     "_build-prod": "babel src --out-dir dist --copy-files",
-    "_rm-build-prod": "rm -rf dist"
+    "_rm-build-prod": "rm -rf dist",
+    "sync:all": "babel-node ./src/scripts/syncCities.js && babel-node ./src/scripts/syncProfessionsInTension.js && babel-node ./src/scripts/syncRegions.js"
   },
   "dependencies": {
     "async": "^3.2.0",
