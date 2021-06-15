@@ -32,19 +32,15 @@ yarn
 
 ## API alimenter/synchroniser la base de donnée
 
-```
-// populate all cities in France
-GET http://localhost/api/sync/sync-cities   ~ 71000ms
-```
+Entrer dans le container api
+`docker exec -it mobiville_api_1 /bin/bash`
 
+Et exécuter les commandes de synchronisation :
 ```
-// populate all cities in tension
-GET http://localhost/api/sync/sync-profession-in-tension   ~ 65000ms
-```
-
-```
-// populate all regions
-GET http://localhost/api/sync/sync-regions   ~ 250ms
+yarn run sync:cities # 2 minutes long
+yarn run sync:regions # 2 minutes long
+yarn run sync:professionsInTension # almost instant
+yarn run sync:amenities # This will take about 3 HOURS
 ```
 
 ## Construire les images
