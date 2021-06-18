@@ -35,7 +35,7 @@ services:
     image: mariadb:10
     restart: always
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     networks:
       mobiville_network:
         ipv4_address: 173.0.0.50
@@ -46,8 +46,8 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
       - TZ=Europe/Paris
     volumes:
-      - './db/var/lib/mysql:/var/lib/mysql'     
-  
+      - './db/var/lib/mysql:/var/lib/mysql'
+
 networks:
   mobiville_network:
     driver: bridge
