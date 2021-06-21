@@ -34,9 +34,9 @@ export default class App extends AppBase {
 
         // Code that was previously started after a 5 seconds timer.
         // TODO: Study if this is necessary on every launch (probably not)
-        await this.model.models.romeogrs.syncRomeOgrs()
-        await this.model.models.romeskills.syncRomeSkills()
-        await this.model.models.tensions.syncDatas()
+        await this.models.romeogrs.syncRomeOgrs()
+        await this.models.romeskills.syncRomeSkills()
+        await this.models.tensions.syncDatas()
       })
     })
 
