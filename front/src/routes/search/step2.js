@@ -1,12 +1,11 @@
 import {
   TextField, Typography
 } from '@material-ui/core'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Button } from '../../components/button'
 import { useCities } from '../../common/contexts/citiesContext'
-import { COLOR_GRAY, COLOR_PRIMARY } from '../../constants/colors'
 
 const Wrapper = styled.div`
   flex: 1;
@@ -22,17 +21,20 @@ const Title = styled(Typography)`
   }
 `
 
-const Input = styled(TextField)`
+const JobTextField = styled(TextField)`
   && {
     input {
-      background-color: ${COLOR_GRAY};
       padding-left: 8px !important;
     }
   }
 `
 
-const Step2Component = ({ onNext, values }) => {
+// impossible separator to find in a job name, used to detect a user has selected on autocomplete
+const SEPARATOR = '||=|=||'
+
+const Step2Component = ({ onNext }) => {
   const {
+    isLoading,
     jobsMatchingCriterions,
     onSearchJobLabels
   } = useCities()
@@ -43,46 +45,38 @@ const Step2Component = ({ onNext, values }) => {
     onSearchJobLabels(searchedLabel)
   }, [searchedLabel])
 
-  const getStyleOfButton = (r) => {
-    const style = {
-      marginBottom: 16,
-      border: 'none',
-      height: 'auto',
-      minHeight: 48
-    }
-
-    if (values && values.code_rome && values.code_rome.length && values.code_rome[0] === r.key) {
-      style.border = `2px solid ${COLOR_PRIMARY}`
-    }
-
-    return style
-  }
-
   return (
     <Wrapper>
       <Title>Quel métier ou compétences recherchez-vous ?</Title>
 
-      <Input
-        label="Rechercher"
-        onChange={(event) => {
-          setSearchedLabel(event.target.value)
-        }}
-        value={searchedLabel}
-        variant="filled"
-      />
-      <p>Pour le moment, le service est disponible uniquement pour certains métiers</p>
       <div>
-        {jobsMatchingCriterions.map((c) => (
-          <Button
-            light
-            key={c.key}
-            onClick={() => onNext({ rome: c.key })}
-            style={getStyleOfButton(c)}
-          >
-            {c.label}
-          </Button>
-        )) }
+        <Autocomplete
+          onInputChange={(event, newValue) => {
+            if (!event) return
+
+            if (newValue.includes(SEPARATOR)) {
+              const [key] = newValue.split(SEPARATOR)
+              const job = jobsMatchingCriterions.find((c) => c.key === key)
+
+              if (!job) return
+
+              onNext({ rome: key })
+            }
+
+            setSearchedLabel(newValue)
+          }}
+          inputValue={searchedLabel}
+          options={jobsMatchingCriterions}
+          getOptionLabel={({ key, label }) => `${key}${SEPARATOR}${label}`}
+          renderOption={({ label }) => label}
+          renderInput={(inputParams) => <JobTextField {...inputParams} label="Rechercher un type de métier" variant="filled" />}
+          noOptionsText="Pas de résultat"
+          loading={isLoading}
+          loadingText="Chargement…"
+        />
       </div>
+
+      <p>Mobiville est disponible seulement pour certains métiers en tension.</p>
     </Wrapper>
   )
 }
