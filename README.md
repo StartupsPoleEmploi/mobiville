@@ -141,3 +141,13 @@ Se rendre ensuite dans le pipeline et faire la mep manuellement en cliquant sur 
 Pour revenir en arrière il faut se positionner sur la pipeline qui convient et republier l'API et/ou le package pour le repousser en production manuellement via la pipeline.
 
 En cours: gestion des numéro de version pour facilité le rollback.
+
+## Divers
+
+Paris, Lyon et Marseille sont trois villes avec des spéciales : Le référentiel INSEE dont nous disposons ne comporte que leurs arrondissements, pas les villes elles-mêmes. En cas de mise à jour du référenciel (`cities-france.csv`), il faut donc ajouter manuellement ces trois lignes afin de correctement créer ces villes lors de la prochaine synchro.
+
+```
+75056;75000;PARIS;PARIS;ILE-DE-FRANCE;Capitale d'état;33.0;181.0;2161;48.8626304852,2.33629344655;"{""type"": ""Polygon"", ""coordinates"": [[[2.344559180836944, 48.85399290271931], [2.332852282604382, 48.85930633356469], [2.320781393695372, 48.86307865626878], [2.325754809597834, 48.869546095073304], [2.327877416924118, 48.869863809746434], [2.350834505477619, 48.863344374598334], [2.350088493587214, 48.86195533215501], [2.344559180836944, 48.85399290271931]]]}";36588;;15;1;75;11
+13055;13000;MARSEILLE;BOUCHES-DU-RHONE;PROVENCE-ALPES-COTE D'AZUR;Préfecture de région;29.0;178.0;861.6;43.2999009436,5.38227869795;"{""type"": ""Polygon"", ""coordinates"": [[[5.372144736531373, 43.290965444448595], [5.371008366340329, 43.29359128652747], [5.373616424523343, 43.29499198426251], [5.375021899598046, 43.30159390045778], [5.390502166127308, 43.30939746657357], [5.393048242612156, 43.3042292209066], [5.389078069139432, 43.300312137417784], [5.385563774200395, 43.29429693114428], [5.381847823036012, 43.295908846993086], [5.380357790047036, 43.29294477171], [5.372144736531373, 43.290965444448595]]]}";36589;;99;3;13;93
+69123;69000;LYON;RHONE;RHONE-ALPES;Préfecture de région;197.0;153.0;513.2;45.7699284397,4.82922464978;"{""type"": ""Polygon"", ""coordinates"": [[[4.830490136783295, 45.764711873086085], [4.828234329945935, 45.767324545508124], [4.819695911085194, 45.767156356147254], [4.812869224911417, 45.771301526436304], [4.835619846255646, 45.77462664189978], [4.839738601584955, 45.77307334284989], [4.839756688763879, 45.766272510421146], [4.830490136783295, 45.764711873086085]]]}";36605;;99;1;69;82
+```
