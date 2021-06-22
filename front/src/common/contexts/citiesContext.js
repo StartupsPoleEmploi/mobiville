@@ -103,12 +103,19 @@ export function CitiesProvider(props) {
     }
 
     searchJobLabels({ label }).then((results) => {
+      // augment rome labels with job title matches
       setJobsMatchingCriterions(
-        criterions.codeRomes.filter(
-          (criterionRome) => results.some(
-            ({ codeRome }) => codeRome === criterionRome.key
+        criterions.codeRomes.reduce((prev, { key, label: romeLabel }) => {
+          const result = results.find(
+            ({ codeRome }) => codeRome === key
           )
-        )
+          if (!result) return prev
+
+          return prev.concat({
+            key,
+            label: romeLabel.concat(` (${result.label}, …)`)
+          })
+        }, [])
       )
     })
   }, [criterions])
