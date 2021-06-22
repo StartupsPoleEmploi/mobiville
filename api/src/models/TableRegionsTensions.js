@@ -1,4 +1,4 @@
-import { groupBy, sortBy, toArray, uniq } from 'lodash'
+import { groupBy, sortBy, toArray } from 'lodash'
 import { CRITERIONS } from '../constants/criterion'
 
 export default (sequelizeInstance, Model) => {
@@ -52,9 +52,9 @@ export default (sequelizeInstance, Model) => {
           })
         }
       }
-
-      loading = false
     }
+
+    loading = false
   }
 
   Model.fetch = async () => {

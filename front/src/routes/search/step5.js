@@ -35,6 +35,7 @@ const GroupBlock = styled.div`
 `
 
 const BIG_CITY = 'big-city'
+const MEDIUM_CITY = 'medium-city'
 const CAMPAGNE = 'campagne'
 
 const Step5Component = ({ onNext, values }) => {
@@ -67,9 +68,11 @@ const Step5Component = ({ onNext, values }) => {
           .filter((f) => f.tag === 'environment')
           .map((c) => {
             let available = true
+            const isTooBigForCountrySide = values.code_city[0].includes(BIG_CITY)
+              || values.code_city[0].includes(MEDIUM_CITY)
 
-            if (values.code_city[0].includes(BIG_CITY) && c.key === CAMPAGNE) {
-              // handles special case : a big city can’t be on the countryside…
+            if (isTooBigForCountrySide && c.key === CAMPAGNE) {
+              // handles special case : a medium or big city isn’t a countryside city…
               available = false
             } else if (values.code_region && values.code_region.length) {
               const reg = criterions.regions.find((r) => r.id === values.code_region[0])

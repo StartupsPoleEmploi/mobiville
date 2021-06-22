@@ -122,7 +122,6 @@ export default (sequelizeInstance, Model) => {
         })
 
       case CRIT_MEDIUM_CITY:
-          
         return prev.concat([{
           population : {[Op.gt]: IS_SMALL_CITY},
         }, {
@@ -140,12 +139,12 @@ export default (sequelizeInstance, Model) => {
         return prev.concat({
           population : {[Op.gte]: IS_LARGE_CITY},
         })
-          
+
       case CRIT_SIDE_SEA:
         return prev.concat({
           distance_from_sea : {[Op.lte]: SIDE_SEA},
         })
-          
+
       case CRIT_SUN:
         return prev.concat({average_temperature : {[Op.lte]: IS_SUNNY},
         })
