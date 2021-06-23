@@ -160,7 +160,11 @@ export default class RouteCities extends Route {
   async searchBySkill(ctx) {
     const {label} = this.body(ctx)
 
-    const resultFromSkill = await this.model.models.romeskills.searchByLabel(label)
+    // Temporarily disable the search by skill to only
+    // use the search by job title (OGR)
+    const resultFromSkill = []
+    // const resultFromSkill = await this.model.models.romeskills.searchByLabel(label)
+
     const resultFromOgr = await this.model.models.romeogrs.searchByLabel(label)
 
     this.sendOk(ctx, resultFromSkill.concat(resultFromOgr))
