@@ -184,7 +184,7 @@ export default (sequelizeInstance, Model) => {
 
     const city = await Model.findOne({
       where: {[Op.or]: [
-        {distance_from_sea: null}, 
+        {distance_from_sea: null},
         {average_temperature: null},
         {description: null},
         {average_houseselled: null},
@@ -226,11 +226,11 @@ export default (sequelizeInstance, Model) => {
 
       if(city.dataValues.average_houserent === null) {
         options.average_houserent = await Model.getAverageHouseRent(city.insee_com)
-      }      
+      }
 
       await city.update(options)
       console.log(`[DONE] Sync city ${city.id}`, options)
-      
+
       if(isHttpLoad) {
         await sleep(700) // wait and restart command
       }
@@ -327,7 +327,7 @@ export default (sequelizeInstance, Model) => {
     if(cityDetails && cityDetails.original && cityDetails.original.source) {
       photo = cityDetails.original.source
     }
-    
+
     return {
       description,
       photo,
@@ -360,7 +360,7 @@ export default (sequelizeInstance, Model) => {
     })
 
     return city
-  }  
+  }
 
   Model.searchById = async ({id})  => {
     const cities = await Model.findAll({
@@ -380,7 +380,7 @@ export default (sequelizeInstance, Model) => {
             {nom_comm: {[Op.like]: `${name}%`}},
             {nom_comm: name},
             {postal_code: {[Op.like]: `${name}%`}},
-          ]}, 
+          ]},
         [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
           .map(v => ({nom_comm: {[Op.notLike]: `%-${v}%-arrondissement%`}})),
         ],
@@ -391,7 +391,7 @@ export default (sequelizeInstance, Model) => {
     })
 
     return cities.map(c => ({...c, nom_comm: (c.nom_comm || '').replace(/--/gi, '-').replace(/-1er-arrondissement/gi, '')}))
-  }  
+  }
 
   Model.getAveragePricing = async(cityInsee) => {
     let allIntoFile = Model.cacheLoadAveragePricing
@@ -453,6 +453,6 @@ export default (sequelizeInstance, Model) => {
 
     return all
   }
-  
+
   return Model
 }

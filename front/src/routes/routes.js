@@ -14,6 +14,7 @@ const Account = lazy(() => import('./account/account'))
 const HelpDetailsPage = lazy(() => import('./help-details/help-details'))
 const FAQ = lazy(() => import('./faq/faq'))
 const Legal = lazy(() => import('./legal/legal'))
+const MobilityGuide = lazy(() => import('./mobility-guide/MobilityGuide'))
 
 export const Routes = () => (
   <Suspense fallback={<p>loading...</p>}>
@@ -29,6 +30,7 @@ export const Routes = () => (
         <Route exact path="/city/:insee/:place" component={City} />
         <Route exact path="/aides" component={Helps} />
         <Route exact path="/aides/:id" component={HelpDetailsPage} />
+        <Route exact path="/mobility-guide" component={MobilityGuide} />
         <Route exact path="/compte" component={Account} />
         <Route exact path="/faq" component={FAQ} />
         <Route exact path="/legal" component={Legal} />
