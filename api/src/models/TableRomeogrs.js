@@ -35,7 +35,8 @@ export default (sequelizeInstance, Model) => {
     return (await Model.findAll({
       where: {
         ogr_label: {
-          [Op.like]: `%${(label || '').toLowerCase()}%`,
+          // replace space by wildcard to allow for simple search of "aide-soignant" for "aide soignant"
+          [Op.like]: `%${(label || '').toLowerCase().trim().replace(/ /g, '_')}%`,
         },
       },
       limit: 20,
