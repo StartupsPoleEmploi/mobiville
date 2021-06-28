@@ -117,7 +117,7 @@ const MobilityGuide = () => {
             accéder à un logement temporaire.
           </p>
           <p>
-            <Link to="/aides">
+            <Link to="/aides?project=logement">
               Je cherche un logement
               <ArrowForward />
             </Link>
