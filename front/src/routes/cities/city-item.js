@@ -143,7 +143,7 @@ const CityItem = ({ city }) => {
           {city.city_size_label && <Tag>{city.city_size_label}</Tag>}
           {city.population && (
           <Tag>
-            {city.population * 1000}
+            {parseInt(city.population * 1000, 10)}
             {' '}
             habitants
           </Tag>
