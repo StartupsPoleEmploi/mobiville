@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { orderBy } from 'lodash'
-import { Link } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import slug from 'slug'
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
@@ -12,6 +13,7 @@ import {
 } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { ucFirstOnly } from '../../utils/utils'
+import { paramUrlToObject } from '../../utils/url'
 
 const Title = styled.p`
   color: ${COLOR_TEXT_PRIMARY};
@@ -28,9 +30,9 @@ const SubTitle = styled.p`
 `
 
 const Header = styled.div`
-  height: 216px; 
-  margin-bottom: 32px; 
-  background: white;  
+  height: 216px;
+  margin-bottom: 32px;
+  background: white;
 
   > div {
     display: flex;
@@ -38,7 +40,7 @@ const Header = styled.div`
     max-width: 800px;
 
     img {
-      height: 216px; 
+      height: 216px;
       margin-right: 64px;
     }
 
@@ -58,7 +60,7 @@ const Container = styled.div`
 
   ${(props) => (props.isMobile ? `
     display: block;
-    margin: 0 0 64px 0;  
+    margin: 0 0 64px 0;
     padding: 0;
 
     > div {
@@ -210,59 +212,63 @@ const Item = styled(Link)`
   ` : '')}
 `
 
-const HelpsPage = () => {
+const CATEGORIES = [{
+  key: 'emploi',
+  icon: '/icons/emploi.svg',
+  text: 'Je recherche un emploi'
+}, {
+  key: 'logement',
+  icon: '/icons/logement.svg',
+  text: 'Je recherche un logement'
+}, {
+  key: 'déménage',
+  icon: '/icons/demenagement.svg',
+  text: 'Je déménage prochainement'
+}]
+
+const SITUATIONS = [{
+  key: 'emploi',
+  text: 'Demandeur d\'emploi'
+}, {
+  key: 'salarie',
+  text: 'Salarié'
+}, {
+  key: 'Moins de 26 ans',
+  text: 'Moins de 26 ans'
+}, {
+  key: 'Plus de 26 ans',
+  text: 'Plus de 26 ans'
+}]
+
+const HelpsPage = ({ location: { search } }) => {
   const { previews, onLoadPreviews } = useHelps()
-  const [project, setProject] = useState(null)
-  const [situation, setStituation] = useState(null)
-  const [list, setList] = useState([])
   const size = useWindowSize()
-  const categories = [{
-    key: 'emploi',
-    icon: '/icons/emploi.svg',
-    text: 'Je recherche un emploi'
-  }, {
-    key: 'logement',
-    icon: '/icons/logement.svg',
-    text: 'Je recherche un logement'
-  }, {
-    key: 'déménage',
-    icon: '/icons/demenagement.svg',
-    text: 'Je déménage prochainement'
-  }]
-  const situations = [{
-    key: 'emploi',
-    text: 'Demandeur d\'emploi'
-  }, {
-    key: 'salarie',
-    text: 'Salarié'
-  }, {
-    key: 'Moins de 26 ans',
-    text: 'Moins de 26 ans'
-  }, {
-    key: 'Plus de 26 ans',
-    text: 'Plus de 26 ans'
-  }]
+  const history = useHistory()
+  const location = useLocation()
 
   useEffect(() => {
     onLoadPreviews()
   }, [])
 
-  useEffect(() => {
-    if (project || situation) {
-      let l = previews.slice()
-      if (project) {
-        l = l.filter((i) => i.situtation.toLowerCase().indexOf(project.key.toLowerCase()) !== -1)
-      }
+  const projectParam = decodeURI(paramUrlToObject(search).project?.[0] || '')
+  const situationParam = decodeURI(paramUrlToObject(search).situation?.[0] || '')
 
-      if (situation) {
-        l = l.filter((i) => i.who.toLowerCase().indexOf(situation.text.toLowerCase()) !== -1)
-      }
+  const project = CATEGORIES.find(({ key }) => projectParam === key) || null
+  const situation = SITUATIONS.find(({ key }) => situationParam === key) || null
 
-      setList(l)
-    } else {
-      setList(orderBy(previews, ['count_vue'], ['desc']).slice(0, 4))
-    }
-  }, [project, situation, previews])
+  let list
+
+  if (situation) {
+    list = previews.filter(
+      (preview) => preview.who.toLowerCase().indexOf(situation.text.toLowerCase()) !== -1
+    )
+  } else if (project) {
+    list = previews.filter(
+      (preview) => preview.situtation.toLowerCase().indexOf(project.key.toLowerCase()) !== -1
+    )
+  } else {
+    list = orderBy(previews, ['count_vue'], ['desc']).slice(0, 4)
+  }
 
   return (
     <MainLayout>
@@ -285,26 +291,32 @@ const HelpsPage = () => {
         <CategoryPanel>
           <Title>Découvrez les aides</Title>
           <SubTitle>Quel est votre projet ?</SubTitle>
-          {categories.map((c) => (
-            <CategoryTag
-              key={c.text}
-              selected={project && c.key === project.key}
-              onClick={() => setProject(project && c.key === project.key ? null : c)}
-            >
-              <img src={c.icon} alt={c.text} />
-              <p>{c.text}</p>
-            </CategoryTag>
-          ))}
+          {CATEGORIES.map((c) => {
+            const selected = project && c.key === project.key
+            return (
+              <CategoryTag
+                key={c.text}
+                selected={project && c.key === project.key}
+                onClick={() => history.replace({ pathname: location.pathname, search: selected ? '' : `?project=${c.key}` })}
+              >
+                <img src={c.icon} alt={c.text} />
+                <p>{c.text}</p>
+              </CategoryTag>
+            )
+          })}
           <SubTitle>Ma situation</SubTitle>
-          {situations.map((c) => (
-            <Tag
-              key={c.text}
-              selected={situation && c.key === situation.key}
-              onClick={() => setStituation(situation && c.key === situation.key ? null : c)}
-            >
-              <p>{c.text}</p>
-            </Tag>
-          ))}
+          {SITUATIONS.map((c) => {
+            const selected = situation && c.key === situation.key
+            return (
+              <Tag
+                key={c.text}
+                selected={selected}
+                onClick={() => history.replace({ pathname: location.pathname, search: selected ? '' : `?situation=${c.key}` })}
+              >
+                <p>{c.text}</p>
+              </Tag>
+            )
+          })}
         </CategoryPanel>
         <HelpsPanel isMobile={isMobileView(size)}>
           <TitleHelps isMobile={isMobileView(size)}>{project || situation ? 'Mes aides disponibles' : 'Les aides les plus consultées'}</TitleHelps>
@@ -321,4 +333,15 @@ const HelpsPage = () => {
   )
 }
 
+HelpsPage.propTypes = {
+  location: PropTypes.shape({
+    search: PropTypes.string.isRequired
+  })
+}
+
+HelpsPage.defaultProps = {
+  location: {
+    search: ''
+  }
+}
 export default HelpsPage
