@@ -10,8 +10,6 @@ import { useCities } from '../../common/contexts/citiesContext'
 import { COLOR_BACKGROUND, COLOR_PRIMARY, COLOR_GRAY } from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
 
-import infoIcon from '../../assets/images/information.svg'
-
 const EmptySpace = styled.div`
   height: 244px;
 `
@@ -287,7 +285,6 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
             Les villes qui vous sont proposées sont les villes où il y a des offres et peu de
             concurrence, afin d’accélérer votre recherche d’emploi.
           </p>
-          <img src={infoIcon} alt="" />
         </Infopanel>
         <SubInfo>
           <Typography>
