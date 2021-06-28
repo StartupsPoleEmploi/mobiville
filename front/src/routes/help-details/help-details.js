@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Typography } from '@material-ui/core'
-import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { MainLayout } from '../../components/main-layout'
@@ -104,18 +103,6 @@ const Description = styled(Typography)`
     margin-bottom: 16px;
   }
 `
-
-const LinkBack = styled(Link)`
-  position: absolute;
-  left: -25px;
-  top: 2px;
-  cursor: pointer;
-`
-
-const ArrowBack = styled(ArrowBackOutlinedIcon)`
-  color: ${COLOR_TEXT_PRIMARY};
-`
-
 const HelpButton = styled.button`
   position: fixed;
   bottom: 32px;
@@ -152,7 +139,6 @@ const HelpDetailsPage = () => {
       <>
         <Header isMobile={isMobileView(size)}>
           <p>
-            <LinkBack to="/aides"><ArrowBack /></LinkBack>
             {help.title}
           </p>
         </Header>
