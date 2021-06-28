@@ -82,7 +82,7 @@ const Step2Component = ({ onNext }) => {
         />
       </div>
 
-      <p>Mobiville est disponible seulement pour certains métiers en tension.</p>
+      <p>Pour le moment, le service est disponible uniquement pour certains métiers.</p>
     </Wrapper>
   )
 }

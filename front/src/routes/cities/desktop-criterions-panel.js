@@ -284,7 +284,8 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
         </form>
         <Infopanel>
           <p>
-            Les villes proposées sont les plus favorables à votre retour à l’emploi.
+            Les villes qui vous sont proposées sont les villes où il y a des offres et peu de
+            concurrence, afin d’accélérer votre recherche d’emploi.
           </p>
           <img src={infoIcon} alt="" />
         </Infopanel>
