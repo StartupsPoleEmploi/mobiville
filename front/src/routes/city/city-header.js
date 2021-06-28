@@ -314,7 +314,7 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
             <img src="/icons/people.svg" alt="people" />
             <PreviewItem>
               Habitants
-              <b>{city.population * 1000}</b>
+              <b>{parseInt(city.population * 1000, 10)}</b>
             </PreviewItem>
             <PersonIconGreen />
             <PreviewItem>
