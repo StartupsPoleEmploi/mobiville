@@ -14,7 +14,7 @@ import { paramUrlToObject } from '../../utils/url'
 
 const StepBlock = styled(Typography)`
   && {
-    margin: ${(props) => (props.isMobile ? '8px 0' : '28px 0 48px 0')};
+    margin: 28px 0 48px 0;
     font-size: 12px;
     font-weight: bold;
   }
@@ -120,7 +120,7 @@ const SearchPage = () => {
         <BackWrapper isMobile={isMobile}>
           <ArrowBackOutlinedIcon style={{ cursor: 'pointer' }} onClick={() => onNextStep({}, -1)} />
         </BackWrapper>
-        <StepBlock isMobile={isMobile}>
+        <StepBlock>
           Etape
           {' '}
           {index + 1}
