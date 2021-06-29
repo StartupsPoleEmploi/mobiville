@@ -1,11 +1,13 @@
 import {
-  TextField, Typography
+  TextField
 } from '@material-ui/core'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useCities } from '../../common/contexts/citiesContext'
+import { useWindowSize } from '../../common/hooks/window-size'
+import { isMobileView } from '../../constants/mobile'
 
 const Wrapper = styled.div`
   flex: 1;
@@ -13,11 +15,11 @@ const Wrapper = styled.div`
   flex-direction: column;
 `
 
-const Title = styled(Typography)`
+const Title = styled.h1`
   && {
     font-size: 18px;
     font-weight: bold;
-    margin: 0 0 32px 0;
+    margin: ${({ isMobile }) => (isMobile ? '0 0 8px 0' : '0 0 32px 0')};
   }
 `
 
@@ -38,6 +40,7 @@ const filterOptions = createFilterOptions({
 })
 
 const Step2Component = ({ onNext }) => {
+  const size = useWindowSize()
   const {
     isLoading,
     jobsMatchingCriterions,
@@ -50,9 +53,11 @@ const Step2Component = ({ onNext }) => {
     onSearchJobLabels(searchedLabel)
   }, [searchedLabel])
 
+  const isMobile = isMobileView(size)
+
   return (
     <Wrapper>
-      <Title>Quel métier ou compétences recherchez-vous ?</Title>
+      <Title isMobile={isMobile}>Quel métier ou compétences recherchez-vous ?</Title>
 
       <div>
         <Autocomplete
