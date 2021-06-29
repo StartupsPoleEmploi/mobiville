@@ -13,7 +13,7 @@ import { paramUrlToObject } from '../../utils/url'
 
 const StepBlock = styled(Typography)`
   && {
-    margin: 28px 0 48px 0;
+    margin: ${(props) => (props.isMobile ? '8px 0' : '28px 0 48px 0')};
     font-size: 12px;
     font-weight: bold;
   }
@@ -67,6 +67,7 @@ const SearchPage = () => {
   const history = useHistory()
   const location = useLocation()
   const values = paramUrlToObject(location.search)
+  const isMobile = isMobileView(size)
 
   if (!criterions) {
     return <p>Chargement...</p>
@@ -120,11 +121,11 @@ const SearchPage = () => {
   return (
     <MainLayout>
       <ProgressBar style={{ width: `${((index + 1) * 100) / ALL_STEPS.length}%` }} />
-      <LimitedWrapper isMobile={isMobileView(size)}>
-        <BackWrapper isMobile={isMobileView(size)}>
+      <LimitedWrapper isMobile={isMobile}>
+        <BackWrapper isMobile={isMobile}>
           <Icon className="material-icons" onClick={() => onNextStep({}, -1)}>keyboard_backspace</Icon>
         </BackWrapper>
-        <StepBlock>
+        <StepBlock isMobile={isMobile}>
           Etape
           {' '}
           {index + 1}
