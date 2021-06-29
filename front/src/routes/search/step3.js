@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   flex-direction: column;
 `
 
-const Title = styled(Typography)`
+const Title = styled.h1`
   && {
     font-size: 18px;
     font-weight: bold;
@@ -28,9 +28,9 @@ const Title = styled(Typography)`
   }
 `
 
-const SmallTitle = styled(Typography)`
+const InfoText = styled(Typography)`
   && {
-    margin: 0 0 24px 0;
+    margin: 14px 0;
   }
 `
 
@@ -61,15 +61,6 @@ const Step3Component = ({ onNext, values }) => {
   return (
     <Wrapper>
       <Title>Quelle région vous intéresse ?</Title>
-      {values && values.code_rome && values.code_rome.length && (
-      <SmallTitle>
-        Seules les régions avec des fortes probabilités d
-        {'\''}
-        embauche s
-        {'\''}
-        affichent.
-      </SmallTitle>
-      )}
       <FormControl>
         <InputLabel htmlFor="age-native-simple">Région</InputLabel>
         <Select
@@ -93,6 +84,13 @@ const Step3Component = ({ onNext, values }) => {
 
         </Select>
       </FormControl>
+
+      {values?.code_rome?.length && (
+        <InfoText>
+          Seules les régions avec des fortes probabilités d’embauche s’affichent.
+        </InfoText>
+      )}
+
       <Button
         style={{
           fontWeight: 'normal', margin: '32px 0', boxShadow: '0 4px 5px 0 rgba(0,0,0,0.2)'
