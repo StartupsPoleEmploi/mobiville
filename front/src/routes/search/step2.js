@@ -19,7 +19,7 @@ const Title = styled.h1`
   && {
     font-size: 18px;
     font-weight: bold;
-    margin: ${({ isMobile }) => (isMobile ? '0 0 8px 0' : '0 0 32px 0')};
+    margin: 0 0 32px 0;
   }
 `
 
@@ -59,6 +59,7 @@ const Step2Component = ({ onNext }) => {
   return (
     <Wrapper>
       <Title isMobile={isMobile}>Quel métier ou compétences recherchez-vous ?</Title>
+      <p>Pour le moment, le service est disponible uniquement pour certains métiers.</p>
 
       <div>
         <Autocomplete
@@ -106,8 +107,6 @@ const Step2Component = ({ onNext }) => {
           onBlur={(() => setIsAutocompleteFocused(false))}
         />
       </div>
-
-      <p>Pour le moment, le service est disponible uniquement pour certains métiers.</p>
     </Wrapper>
   )
 }

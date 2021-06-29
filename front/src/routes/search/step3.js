@@ -30,7 +30,7 @@ const Title = styled.h1`
 
 const InfoText = styled(Typography)`
   && {
-    margin: 14px 0;
+    margin: 24px 0;
   }
 `
 
