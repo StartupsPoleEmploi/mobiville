@@ -3,6 +3,7 @@ import React, {
 } from 'react'
 import styled from 'styled-components'
 import { Typography } from '@material-ui/core'
+import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
@@ -31,11 +32,6 @@ const ProgressBar = styled.div`
   position: absolute;
   height: 4px;
   left: 0;
-`
-
-const Icon = styled.i`
-  cursor: pointer;
-  color: black;
 `
 
 const BackWrapper = styled.div`
@@ -122,7 +118,7 @@ const SearchPage = () => {
       <ProgressBar style={{ width: `${((index + 1) * 100) / ALL_STEPS.length}%` }} />
       <LimitedWrapper isMobile={isMobile}>
         <BackWrapper isMobile={isMobile}>
-          <Icon className="material-icons" onClick={() => onNextStep({}, -1)}>keyboard_backspace</Icon>
+          <ArrowBackOutlinedIcon style={{ cursor: 'pointer' }} onClick={() => onNextStep({}, -1)} />
         </BackWrapper>
         <StepBlock isMobile={isMobile}>
           Etape
