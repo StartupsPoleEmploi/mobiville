@@ -48,6 +48,7 @@ const Step2Component = ({ onNext }) => {
   } = useCities()
 
   const [searchedLabel, setSearchedLabel] = useState('')
+  const [isAutocompleteFocused, setIsAutocompleteFocused] = useState(false)
 
   useEffect(() => {
     onSearchJobLabels(searchedLabel)
@@ -79,11 +80,30 @@ const Step2Component = ({ onNext }) => {
           options={jobsMatchingCriterions}
           getOptionLabel={({ key, label }) => `${key}${SEPARATOR}${label}`}
           renderOption={({ label }) => label}
-          renderInput={(inputParams) => <JobTextField {...inputParams} label="Rechercher un type de métier" variant="filled" />}
+          renderInput={
+            (inputParams) => (
+              <JobTextField
+                {...inputParams}
+                label="Rechercher un type de métier"
+                variant="filled"
+                openOnFocus
+              />
+            )
+          }
           noOptionsText="Pas de résultat"
           loading={isLoading}
           loadingText="Chargement…"
           filterOptions={filterOptions}
+          style={{
+            position: isMobile && isAutocompleteFocused ? 'fixed' : 'static',
+            top: 0,
+            left: 0,
+            width: '100%',
+            zIndex: 10,
+            backgroundColor: '#f9f9f9'
+          }}
+          onFocus={(() => setIsAutocompleteFocused(true))}
+          onBlur={(() => setIsAutocompleteFocused(false))}
         />
       </div>
 
