@@ -20,32 +20,32 @@ const MainLayout = styled.div`
 `
 
 const ItemLayout = styled.div`
-  background: #FFFFFF;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  margin: auto;
-  width: 100%;
-  width: 336px;
-  max-width: 336px;
-  padding: 16px;
-  margin-bottom: 16px;
-  margin-left: 8px;
-  margin-right: 8px;
+  ${({ isMobile }) => (isMobile
+    ? `
+    background: #FFFFFF;
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 1px;
+  ` : `
+    background: #FFFFFF;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    margin: auto;
+    width: 100%;
+    width: 336px;
+    max-width: 336px;
+    padding: 16px;
+    margin-bottom: 16px;
+    margin-left: 8px;
+    margin-right: 8px;
+  `)}
 `
 
 const MainLayoutMobile = styled.div`
   padding-bottom: 130px;
 `
 
-const ItemLayoutMobile = styled.div`
-  background: #FFFFFF;
-  width: 100%;
-  padding: 16px;
-  margin-bottom: 1px;
-`
-
 const ItemContentLayout = styled.div`
-
 `
 
 const ItemTitleLayout = styled.div`
@@ -137,6 +137,7 @@ const ElementLine = styled.div`
 const PanelCityLife = ({ city }) => {
   const { onGetCityAmenities, cityAmenities } = useCities()
   const size = useWindowSize()
+  const isMobile = isMobileView(size)
 
   useEffect(() => {
     if (city && city.insee_com) {
@@ -158,237 +159,165 @@ const PanelCityLife = ({ city }) => {
     education = cityAmenities.find((k) => k.key === 'education')?.tab
   }
 
-  return (
-    <>
-      {!isMobileView(size) && (
-      <MainLayout>
-        <div>
-          <ItemLayout>
-            <ItemTitleLayout>
-              Description de la ville
-            </ItemTitleLayout>
-            <ItemContentLayout>
-              {(city.description || '').replace('Écouter', '')}
-            </ItemContentLayout>
-          </ItemLayout>
+  const mainCityElement = (
+    <ItemLayout isMobile={isMobile}>
+      <ItemTitleLayout>
+        Description de la ville
+      </ItemTitleLayout>
+      <ItemContentLayout>
+        {(city.description || '').replace('Écouter', '')}
+      </ItemContentLayout>
+    </ItemLayout>
+  )
 
-          {transports.length > 0 && (
-          <ItemLayout>
-            <ItemTitleLayout>
-              Transports à proximité
-            </ItemTitleLayout>
-            <ItemContentLayout>
-              {transports.map((t) => (
-                <ElementLine key={t.label}>
-                  <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
-                  <p className="title">
-                    {t.label}
-                    {' '}
-                    de
-                    {' '}
-                    {ucFirstOnly(city.nom_comm)}
-                  </p>
-                  <p className="details">{t.total}</p>
-                </ElementLine>
-              ))}
-            </ItemContentLayout>
-          </ItemLayout>
-          )}
+  const cultureElement = culture.length > 0 && (
+    <ItemLayout isMobile={isMobile}>
+      <ItemTitleLayout>
+        Culture & Loisirs
+      </ItemTitleLayout>
+      <ItemContentLayout>
+        {culture.map((t) => (
+          <ElementObject key={t.label}>
+            <div className="image-block"><img src={`/icons/${t.icon} `} alt={t.label} /></div>
+            <p className="title">
+              {t.label}
+            </p>
+            <p className="details">{t.total}</p>
+          </ElementObject>
+        ))}
+      </ItemContentLayout>
+    </ItemLayout>
+  )
 
-          {health.length > 0 && (
-          <ItemLayout>
-            <ItemTitleLayout>
-              Santé
-            </ItemTitleLayout>
-            <ItemContentLayout>
-              {health.map((t) => (
-                <ElementObject key={t.label}>
-                  <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
-                  <p className="title">
-                    {t.label}
-                  </p>
-                  <p className="details">{t.total}</p>
-                </ElementObject>
-              ))}
-            </ItemContentLayout>
-          </ItemLayout>
-          )}
-        </div>
+  const environmentElement = (
+    <ItemLayout isMobile={isMobile}>
+      <ItemTitleLayout>
+        Environnement
+      </ItemTitleLayout>
+      <ItemContentLayout>
+        <ElementLine>
+          <i className="material-icons">domain</i>
+          <p className="title">
+            Qualité de l
+            {'\''}
+            air moyenne
+          </p>
+          <p className="details">A venir</p>
+        </ElementLine>
+        <ElementLine>
+          <i className="material-icons">domain</i>
+          <p className="title">Parcs et jardins</p>
+          <p className="details">A venir</p>
+        </ElementLine>
+      </ItemContentLayout>
+    </ItemLayout>
+  )
 
-        <div>
-          {culture.length > 0 && (
-          <ItemLayout>
-            <ItemTitleLayout>
-              Culture & Loisirs
-            </ItemTitleLayout>
-            <ItemContentLayout>
-              {culture.map((t) => (
-                <ElementObject key={t.label}>
-                  <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
-                  <p className="title">
-                    {t.label}
-                  </p>
-                  <p className="details">{t.total}</p>
-                </ElementObject>
-              ))}
-            </ItemContentLayout>
-          </ItemLayout>
-          )}
+  const transportElement = transports.length > 0 && (
+    <ItemLayout isMobile={isMobile}>
+      <ItemTitleLayout>
+        Transports à proximité
+      </ItemTitleLayout>
+      <ItemContentLayout>
+        {transports.map((t) => (
+          <ElementLine key={t.label}>
+            <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
+            <p className="title">
+              {t.label}
+              {' '}
+              de
+              {' '}
+              {ucFirstOnly(city.nom_comm)}
+            </p>
+            <p className="details">{t.total}</p>
+          </ElementLine>
+        ))}
+      </ItemContentLayout>
+    </ItemLayout>
+  )
 
-          <ItemLayout>
-            <ItemTitleLayout>
-              Environnement
-            </ItemTitleLayout>
-            <ItemContentLayout>
-              <ElementLine>
-                <i className="material-icons">domain</i>
-                <p className="title">
-                  Qualité de l
-                  {'\''}
-                  air moyenne
-                </p>
-                <p className="details">A venir</p>
-              </ElementLine>
-              <ElementLine>
-                <i className="material-icons">domain</i>
-                <p className="title">Parcs et jardins</p>
-                <p className="details">A venir</p>
-              </ElementLine>
-            </ItemContentLayout>
-          </ItemLayout>
+  const servicesElement = services.length > 0 && (
+    <ItemLayout isMobile={isMobile}>
+      <ItemTitleLayout>
+        Services
+      </ItemTitleLayout>
+      <ItemContentLayout>
+        {services.map((t) => (
+          <ElementObject key={t.label}>
+            <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
+            <p className="title">
+              {t.label}
+            </p>
+            <p className="details">{t.total}</p>
+          </ElementObject>
+        ))}
+      </ItemContentLayout>
+    </ItemLayout>
+  )
 
-          {services.length > 0 && (
-          <ItemLayout>
-            <ItemTitleLayout>
-              Services
-            </ItemTitleLayout>
-            <ItemContentLayout>
-              {services.map((t) => (
-                <ElementObject key={t.label}>
-                  <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
-                  <p className="title">
-                    {t.label}
-                  </p>
-                  <p className="details">{t.total}</p>
-                </ElementObject>
-              ))}
-            </ItemContentLayout>
-          </ItemLayout>
-          )}
-        </div>
-      </MainLayout>
-      )}
-      {isMobileView(size) && (
-      <MainLayoutMobile>
-        <ItemLayoutMobile>
-          <ItemTitleLayout>
-            Description de la ville
-          </ItemTitleLayout>
-          <ItemContentLayout>
-            {(city.description || '').replace('Écouter', '')}
-          </ItemContentLayout>
-        </ItemLayoutMobile>
+  const healthElement = health.length > 0 && (
+    <ItemLayout isMobile={isMobile}>
+      <ItemTitleLayout>
+        Santé
+      </ItemTitleLayout>
+      <ItemContentLayout>
+        {health.map((t) => (
+          <ElementObject key={t.label}>
+            <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
+            <p className="title">
+              {t.label}
+            </p>
+            <p className="details">{t.total}</p>
+          </ElementObject>
+        ))}
+      </ItemContentLayout>
+    </ItemLayout>
+  )
 
-        {culture.length > 0 && (
-          <ItemLayoutMobile>
-            <ItemTitleLayout>
-              Culture & Loisirs
-            </ItemTitleLayout>
-            <ItemContentLayout>
-              {culture.map((t) => (
-                <ElementObject key={t.label}>
-                  <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
-                  <p className="title">
-                    {t.label}
-                  </p>
-                  <p className="details">{t.total}</p>
-                </ElementObject>
-              ))}
-            </ItemContentLayout>
-          </ItemLayoutMobile>
-        )}
+  const educationElement = (
+    <ItemLayout isMobile={isMobile}>
+      <ItemTitleLayout>
+        Education
+      </ItemTitleLayout>
+      <ItemContentLayout>
+        {education.map((t) => (
+          <ElementObject key={t.label}>
+            <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
+            <p className="title">
+              {t.label}
+            </p>
+            <p className="details">{t.total}</p>
+          </ElementObject>
+        ))}
+        {education.length === 0 && (<b>À venir</b>)}
+      </ItemContentLayout>
+    </ItemLayout>
+  )
 
-        {transports.length > 0 && (
-        <ItemLayoutMobile>
-          <ItemTitleLayout>
-            Transports à proximité
-          </ItemTitleLayout>
-          <ItemContentLayout>
-            {transports.map((t) => (
-              <ElementLine key={t.label}>
-                <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
-                <p className="title">
-                  {t.label}
-                  {' '}
-                  de
-                  {' '}
-                  {ucFirstOnly(city.nom_comm)}
-                </p>
-                <p className="details">{t.total}</p>
-              </ElementLine>
-            ))}
-          </ItemContentLayout>
-        </ItemLayoutMobile>
-        )}
+  return isMobile ? (
+    <MainLayoutMobile>
+      {mainCityElement}
+      {cultureElement}
+      {transportElement}
+      {healthElement}
+      {servicesElement}
+      {educationElement}
+    </MainLayoutMobile>
+  ) : (
+    <MainLayout>
+      <div>
+        {mainCityElement}
+        {transportElement}
+        {healthElement}
+      </div>
 
-        {health.length > 0 && (
-        <ItemLayoutMobile>
-          <ItemTitleLayout>
-            Santé
-          </ItemTitleLayout>
-          <ItemContentLayout>
-            {health.map((t) => (
-              <ElementObject key={t.label}>
-                <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
-                <p className="title">
-                  {t.label}
-                </p>
-                <p className="details">{t.total}</p>
-              </ElementObject>
-            ))}
-          </ItemContentLayout>
-        </ItemLayoutMobile>
-        )}
-
-        {services.length > 0 && (
-        <ItemLayoutMobile>
-          <ItemTitleLayout>
-            Services
-          </ItemTitleLayout>
-          <ItemContentLayout>
-            {services.map((t) => (
-              <ElementObject key={t.label}>
-                <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
-                <p className="title">
-                  {t.label}
-                </p>
-                <p className="details">{t.total}</p>
-              </ElementObject>
-            ))}
-          </ItemContentLayout>
-        </ItemLayoutMobile>
-        )}
-
-        <ItemLayoutMobile>
-          <ItemTitleLayout>
-            Education
-          </ItemTitleLayout>
-          <ItemContentLayout>
-            {education.map((t) => (
-              <ElementObject key={t.label}>
-                <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
-                <p className="title">
-                  {t.label}
-                </p>
-                <p className="details">{t.total}</p>
-              </ElementObject>
-            ))}
-            {education.length === 0 && (<b>À venir</b>)}
-          </ItemContentLayout>
-        </ItemLayoutMobile>
-      </MainLayoutMobile>
-      )}
-    </>
+      <div>
+        {cultureElement}
+        {environmentElement}
+        {servicesElement}
+        {educationElement}
+      </div>
+    </MainLayout>
   )
 }
 
