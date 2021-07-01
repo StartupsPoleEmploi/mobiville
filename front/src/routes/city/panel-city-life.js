@@ -148,26 +148,14 @@ const PanelCityLife = ({ city }) => {
   let culture = []
   let health = []
   let services = []
+  let education = []
+
   if (cityAmenities) {
-    const findTransport = cityAmenities.find((k) => k.key === 'transport')
-    if (findTransport) {
-      transports = findTransport.tab
-    }
-
-    const findCulture = cityAmenities.find((k) => k.key === 'culture')
-    if (findCulture) {
-      culture = findCulture.tab
-    }
-
-    const findHealth = cityAmenities.find((k) => k.key === 'health')
-    if (findHealth) {
-      health = findHealth.tab
-    }
-
-    const findServices = cityAmenities.find((k) => k.key === 'services')
-    if (findServices) {
-      services = findServices.tab
-    }
+    transports = cityAmenities.find((k) => k.key === 'transport')?.tab
+    culture = cityAmenities.find((k) => k.key === 'culture')?.tab
+    health = cityAmenities.find((k) => k.key === 'health')?.tab
+    services = cityAmenities.find((k) => k.key === 'services')?.tab
+    education = cityAmenities.find((k) => k.key === 'education')?.tab
   }
 
   return (
@@ -380,6 +368,24 @@ const PanelCityLife = ({ city }) => {
           </ItemContentLayout>
         </ItemLayoutMobile>
         )}
+
+        <ItemLayoutMobile>
+          <ItemTitleLayout>
+            Education
+          </ItemTitleLayout>
+          <ItemContentLayout>
+            {education.map((t) => (
+              <ElementObject key={t.label}>
+                <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
+                <p className="title">
+                  {t.label}
+                </p>
+                <p className="details">{t.total}</p>
+              </ElementObject>
+            ))}
+            {education.length === 0 && (<b>À venir</b>)}
+          </ItemContentLayout>
+        </ItemLayoutMobile>
       </MainLayoutMobile>
       )}
     </>
