@@ -1,4 +1,4 @@
-export const CULTURE_CRITERIONS = [{
+export const CULTURE_CRITERION = [{
   label: 'Cinéma',
   code: 'F303',
   icon: 'cinema.svg',
@@ -32,7 +32,7 @@ export const CULTURE_CRITERIONS = [{
   icon: 'piscine.svg',
 }]
 
-export const TRANSPORT_CRITERIONS = [{
+export const TRANSPORT_CRITERION = [{
   label: 'Aéroport',
   code: 'E102',
   icon: 'aeroport.svg',
@@ -42,7 +42,7 @@ export const TRANSPORT_CRITERIONS = [{
   icon: 'gare.svg',
 }]
 
-export const HEALTH_CRITERIOS = [{
+export const HEALTH_CRITERION = [{
   label: 'Médecins',
   code: 'D201',
   icon: 'medecin.svg',
@@ -64,7 +64,7 @@ export const HEALTH_CRITERIOS = [{
   icon: 'urgences.svg',
 }]
 
-export const SERVICES_CRITERIOS = [{
+export const SERVICES_CRITERION = [{
   label: 'Poste',
   code: 'A206',
   icon: 'poste.svg',
@@ -90,9 +90,48 @@ export const SERVICES_CRITERIOS = [{
   icon: 'boulangerie.svg',
 }]
 
+export const SERVICES_EDUCATION = [
+  {
+    label: 'Crèches',
+    code: 'D502',
+    icon: 'crayon.svg',
+  },
+  {
+    label: 'Écoles maternelles',
+    code: 'C101',
+    icon: 'playground.svg',
+  },
+  {
+    label: 'Écoles primaires',
+    code: 'C104',
+    icon: 'kindergarten.svg',
+  },
+  {
+    label: 'Collèges',
+    code: 'C201',
+    icon: 'school.svg',
+  },
+  {
+    label: 'Lycées gen & techno',
+    code: 'C301',
+    icon: 'science.svg',
+  },
+  {
+    label: 'Lycées pro',
+    code: 'C302',
+    icon: 'manual.svg',
+  },
+  {
+    label: 'Universités',
+    code: 'C501',
+    icon: 'education.svg',
+  },
+]
+
 export const ALL_LIFE_CRITERIONS_LIST = [
-  {key: 'culture', tab: CULTURE_CRITERIONS}, 
-  {key: 'transport', tab: TRANSPORT_CRITERIONS},
-  {key: 'health', tab: HEALTH_CRITERIOS},
-  {key: 'services', tab: SERVICES_CRITERIOS},
+  {key: 'culture', tab: CULTURE_CRITERION},
+  {key: 'transport', tab: TRANSPORT_CRITERION},
+  {key: 'health', tab: HEALTH_CRITERION},
+  {key: 'services', tab: SERVICES_CRITERION},
+  {key: 'education', tab: SERVICES_EDUCATION},
 ]
