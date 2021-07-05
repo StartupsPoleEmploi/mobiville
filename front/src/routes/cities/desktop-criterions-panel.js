@@ -183,26 +183,6 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
               <FormControl>
                 <Controller
                   control={control}
-                  name="rome"
-                  defaultValue=""
-                  as={(
-                    <Select
-                      style={{ marginLeft: 16 }}
-                    >
-                      {criterions && criterions.codeRomes
-            && criterions.codeRomes.map((rome) => (
-              <MenuItem key={rome.key} value={rome.key}>
-                {rome.label}
-              </MenuItem>
-            ))}
-                    </Select>
-    )}
-                />
-              </FormControl>
-
-              <FormControl>
-                <Controller
-                  control={control}
                   name="environment"
                   defaultValue=""
                   as={(
