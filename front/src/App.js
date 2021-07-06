@@ -1,4 +1,5 @@
 import React from 'react'
+import CssBaseline from '@material-ui/core/CssBaseline'
 import { Routes } from './routes/routes'
 
 function App() {
@@ -12,7 +13,12 @@ function App() {
   script.async = true
   document.body.appendChild(script)
 
-  return (<Routes />)
+  return (
+    <>
+      <CssBaseline />
+      <Routes />
+    </>
+  )
 }
 
 export default App

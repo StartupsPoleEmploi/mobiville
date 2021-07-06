@@ -1,15 +1,3 @@
-.MuiInputBase-root {
-	&:before {
-		display: none !important;
-	}
-}
-
 .MuiSelect-select {
-	height: 48px !important;
 	background-color: #e4e9ed !important;
-}
-
-.MuiSelect-selectMenu {
-	line-height: 48px !important;
-	padding: 0 8px !important;
 }

@@ -42,7 +42,6 @@ const SearchBar = styled.div`
 
 const SearchFormControl = styled(FormControl)`
   margin-right: 16px !important;
-  background-color: #e4e9ed;
 `
 
 const Infopanel = styled.div`
@@ -184,7 +183,7 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <SearchPanel>
             <SearchBar className="wrapper">
-              <SearchFormControl>
+              <SearchFormControl variant="filled">
                 <InputLabel htmlFor="panel-select-environment" shrink>Environnement</InputLabel>
                 <Controller
                   control={control}
@@ -216,7 +215,7 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
                 />
               </SearchFormControl>
 
-              <SearchFormControl>
+              <SearchFormControl variant="filled">
                 <InputLabel htmlFor="panel-select-city-size" shrink>Taille de ville</InputLabel>
                 <Controller
                   control={control}
@@ -243,7 +242,7 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
                 />
               </SearchFormControl>
 
-              <SearchFormControl>
+              <SearchFormControl variant="filled">
                 <InputLabel htmlFor="panel-select-region" shrink>Région</InputLabel>
                 <Controller
                   control={control}
