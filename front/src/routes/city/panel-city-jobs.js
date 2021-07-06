@@ -1,12 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import moment from 'moment'
+
+import {
+  FormControl,
+  MenuItem,
+  InputLabel,
+  Select
+} from '@material-ui/core'
+
 import { useProfessions } from '../../common/contexts/professionsContext'
 import { COLOR_GRAY, COLOR_TEXT_PRIMARY, COLOR_TEXT_SECONDARY } from '../../constants/colors'
 import { useCities } from '../../common/contexts/citiesContext'
 import { thereAre } from '../../utils/utils'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
+
+const ONE_DAY = 'ONE_DAY'
+const THREE_DAY = 'THREE_DAY'
+const ONE_WEEK = 'ONE_WEEK'
+const TWO_WEEKS = 'TWO_WEEKS'
+const ONE_MONTH = 'ONE_MONTH'
 
 const MainLayout = styled.div`
   display: flex;
@@ -129,6 +144,11 @@ const PanelCityJobs = ({ city, rome }) => {
   } = useCities()
   const size = useWindowSize()
   const [infosTravail, setInfosTravail] = useState(null)
+  const [dateFilter, setDateFilter] = useState('')
+  const [contractFilters, setContractFilters] = useState([])
+  const [durationFilters, setDurationFilters] = useState([])
+  const [contractFilter, setContractFilter] = useState('')
+  const [durationFilter, setDurationFilter] = useState('')
 
   useEffect(() => {
     if (city && rome && rome.length) {
@@ -136,6 +156,18 @@ const PanelCityJobs = ({ city, rome }) => {
       onSearchInfosTravail({ code_rome: rome[0], insee: city.insee_com }).then(setInfosTravail)
     }
   }, [city])
+
+  useEffect(() => {
+    setContractFilters(professions.reduce((prev, { typeContrat }) => {
+      if (prev.includes(typeContrat) || !typeContrat) return prev
+      return prev.concat(typeContrat)
+    }, []))
+
+    setDurationFilters(professions.reduce((prev, { dureeTravailLibelleConverti }) => {
+      if (prev.includes(dureeTravailLibelleConverti) || !dureeTravailLibelleConverti) return prev
+      return prev.concat(dureeTravailLibelleConverti)
+    }, []))
+  }, [professions])
 
   let romeLabel = ''
   if (criterions && criterions.codeRomes && rome && rome.length) {
@@ -148,6 +180,26 @@ const PanelCityJobs = ({ city, rome }) => {
       }
     }
   }
+
+  const displayedProfessions = professions.filter((profession) => {
+    if (!profession.id) return false
+
+    if (dateFilter) {
+      const currentMoment = moment()
+      const creationMoment = moment(profession.dateCreation)
+
+      if (dateFilter === ONE_DAY && currentMoment.isAfter(creationMoment.add(1, 'days'))) return false
+      if (dateFilter === THREE_DAY && currentMoment.isAfter(creationMoment.add(3, 'days'))) return false
+      if (dateFilter === ONE_WEEK && currentMoment.isAfter(creationMoment.add(7, 'days'))) return false
+      if (dateFilter === TWO_WEEKS && currentMoment.isAfter(creationMoment.add(14, 'days'))) return false
+      if (dateFilter === ONE_MONTH && currentMoment.isAfter(creationMoment.add(1, 'month'))) return false
+    }
+
+    if (contractFilter && profession.typeContrat !== contractFilter) return false
+    if (durationFilter && profession.dureeTravailLibelleConverti !== durationFilter) return false
+
+    return true
+  })
 
   return (
     <MainLayout isMobileView={isMobileView(size)}>
@@ -180,18 +232,102 @@ const PanelCityJobs = ({ city, rome }) => {
           </StatistiqueLayout>
           <JobLayout>
             <JobTitleLayout>
-              {professions.length}
+              {displayedProfessions.length}
               {' '}
               offre
-              {professions.length > 1 ? 's' : ''}
+              {displayedProfessions.length > 1 ? 's' : ''}
               {' pour '}
               {romeLabel}
               {' '}
               dans un rayon de 30 km
             </JobTitleLayout>
             <JobContentLayout>
+              <div>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="filter-date-creation" shrink>
+                    Date de création
+                  </InputLabel>
+                  <Select
+                    displayEmpty
+                    inputProps={{
+                      id: 'filter-date-creation'
+                    }}
+                    value={dateFilter}
+                    onChange={(event) => setDateFilter(event.target.value)}
+                  >
+                    <MenuItem value="">Toutes les offres</MenuItem>
+                    <MenuItem value={ONE_DAY}>
+                      Un jour
+                    </MenuItem>
+                    <MenuItem value={THREE_DAY}>
+                      Trois jours
+                    </MenuItem>
+                    <MenuItem value={ONE_WEEK}>
+                      Une semaine
+                    </MenuItem>
+                    <MenuItem value={TWO_WEEKS}>
+                      Deux semaines
+                    </MenuItem>
+                    <MenuItem value={ONE_MONTH}>
+                      Un mois
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="filter-contract" shrink>
+                    Contrat
+                  </InputLabel>
+                  <Select
+                    displayEmpty
+                    inputProps={{
+                      id: 'filter-contract'
+                    }}
+                    value={contractFilter}
+                    onChange={(event) => setContractFilter(event.target.value)}
+                  >
+                    <MenuItem value="" />
+                    {contractFilters.map(
+                      (filter) => (
+                        <MenuItem
+                          value={filter}
+                        >
+                          {filter}
+                        </MenuItem>
+                      )
+                    )}
+                  </Select>
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="filter-duration" shrink>
+                    Durée hebdo.
+                  </InputLabel>
+                  <Select
+                    displayEmpty
+                    inputProps={{
+                      id: 'filter-duration'
+                    }}
+                    value={durationFilter}
+                    onChange={(event) => setDurationFilter(event.target.value)}
+                  >
+                    <MenuItem value="" />
+                    {durationFilters.map(
+                      (filter) => (
+                        <MenuItem
+                          value={filter}
+                        >
+                          {filter}
+                        </MenuItem>
+                      )
+                    )}
+                  </Select>
+                </FormControl>
+
+              </div>
+
               {isLoadingProfessions && <p>Chargement des métiers</p>}
-              {professions.filter((p) => p && p.id).map((p) => {
+              {displayedProfessions.map((p) => {
                 // We truncate too long descriptions
                 const description = p.description.length > MAX_DESCRIPTION_LENGTH
                   ? p.description.slice(0, MAX_DESCRIPTION_LENGTH).concat(
