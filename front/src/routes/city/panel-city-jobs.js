@@ -21,7 +21,7 @@ const MainLayout = styled.div`
       margin-right: 0;
       margin-bottom: 2px;
       box-shadow: none;
-      border-radius: 0;  
+      border-radius: 0;
       width: 100%;
     }
   ` : '')}
@@ -115,6 +115,8 @@ const JobItem = styled.div`
   }
 `
 
+const MAX_DESCRIPTION_LENGTH = 280
+
 const PanelCityJobs = ({ city, rome }) => {
   const {
     isLoading: isLoadingProfessions,
@@ -189,13 +191,22 @@ const PanelCityJobs = ({ city, rome }) => {
             </JobTitleLayout>
             <JobContentLayout>
               {isLoadingProfessions && <p>Chargement des métiers</p>}
-              {professions.filter((p) => p && p.id).map((p) => (
-                <JobItem key={p.id}>
-                  { /* eslint-disable-next-line */ }
+              {professions.filter((p) => p && p.id).map((p) => {
+                // We truncate too long descriptions
+                const description = p.description.length > MAX_DESCRIPTION_LENGTH
+                  ? p.description.slice(0, MAX_DESCRIPTION_LENGTH).concat(
+                    p.description.slice(MAX_DESCRIPTION_LENGTH).split(' ')[0]
+                  )
+                    .concat('…') : p.description
+                return (
+                  <JobItem key={p.id}>
+                    { /* eslint-disable-next-line */ }
                   <a href={p.origineOffre.urlOrigine} target="_blank" tag-exit="offres-d-emplois">
                     <p className="title">{p.appellationlibelle}</p>
                     {p.entreprise && p.entreprise.nom && (<p className="enterprise">{p.entreprise.nom}</p>)}
-                    <p className="description">{p.description}</p>
+                    <p className="description">
+                      {description}
+                    </p>
                     <div className="actions">
                       <p className="date">{thereAre(p.dateCreation)}</p>
                       <p className="type">
@@ -207,8 +218,9 @@ const PanelCityJobs = ({ city, rome }) => {
                       </p>
                     </div>
                   </a>
-                </JobItem>
-              ))}
+                  </JobItem>
+                )
+              })}
             </JobContentLayout>
           </JobLayout>
         </>
