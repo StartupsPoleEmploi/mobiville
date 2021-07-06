@@ -10,8 +10,9 @@ export function ProfessionsProvider(props) {
 
   const onSearch = useCallback((params) => {
     _setIsLoading(true)
-    searchProfessions(params).then((profs) => {
-      _setProfessions(orderBy(profs, ['dateCreation'], ['desc']))
+
+    return searchProfessions(params).then((jobs) => {
+      _setProfessions(orderBy(jobs, ['dateCreation'], ['desc']))
     })
       .then(() => _setIsLoading(false))
   }, [])
