@@ -1,6 +1,5 @@
 import {
   FormControl,
-  Input,
   InputLabel,
   MenuItem,
   Select,
@@ -61,19 +60,17 @@ const Step3Component = ({ onNext, values }) => {
   return (
     <Wrapper>
       <Title>Quelle région vous intéresse ?</Title>
-      <FormControl>
-        <InputLabel htmlFor="age-native-simple">Région</InputLabel>
+      <FormControl variant="filled">
+        <InputLabel shrink htmlFor="step-region-select-label">Région</InputLabel>
         <Select
-          value={regions && regions.length > 0 ? regions[0] : ''}
+          value={regions?.[0] || ''}
           displayEmpty
           onChange={toggleRegion}
-          input={<Input />}
           inputProps={{
-            name: 'Région',
-            id: 'age-native-simple'
+            id: 'step-region-select-label'
           }}
         >
-          <MenuItem selected value="">
+          <MenuItem value="">
             Toutes les regions
           </MenuItem>
           {list.map((r) => (
