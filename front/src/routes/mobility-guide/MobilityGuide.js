@@ -167,7 +167,7 @@ const MobilityGuide = () => {
           <h2>Etape 4:</h2>
           <p>
             <b>
-              Vous allez bientôt déménager
+              Ça y est ! Vous avez déménagé !
             </b>
 
           </p>
