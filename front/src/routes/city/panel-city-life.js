@@ -309,13 +309,13 @@ const PanelCityLife = ({ city }) => {
         {mainCityElement}
         {transportElement}
         {healthElement}
+        {educationElement}
       </div>
 
       <div>
         {cultureElement}
         {environmentElement}
         {servicesElement}
-        {educationElement}
       </div>
     </MainLayout>
   )
