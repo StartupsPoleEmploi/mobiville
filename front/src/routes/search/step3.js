@@ -29,7 +29,7 @@ const Title = styled.h1`
 
 const InfoText = styled(Typography)`
   && {
-    margin: 24px 0;
+    padding: 8px 0 16px 0;
   }
 `
 
@@ -60,6 +60,11 @@ const Step3Component = ({ onNext, values }) => {
   return (
     <Wrapper>
       <Title>Quelle région vous intéresse ?</Title>
+
+      <InfoText>
+        Seules les régions avec des fortes probabilités d’embauche s’affichent.
+      </InfoText>
+
       <FormControl variant="filled">
         <InputLabel shrink htmlFor="step-region-select-label">Région</InputLabel>
         <Select
@@ -81,12 +86,6 @@ const Step3Component = ({ onNext, values }) => {
 
         </Select>
       </FormControl>
-
-      {values?.code_rome?.length && (
-        <InfoText>
-          Seules les régions avec des fortes probabilités d’embauche s’affichent.
-        </InfoText>
-      )}
 
       <Button
         style={{
