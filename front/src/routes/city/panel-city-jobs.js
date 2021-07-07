@@ -7,7 +7,9 @@ import {
   FormControl,
   MenuItem,
   InputLabel,
-  Select
+  Select,
+  Checkbox,
+  ListItemText
 } from '@material-ui/core'
 
 import { useProfessions } from '../../common/contexts/professionsContext'
@@ -22,6 +24,7 @@ const THREE_DAY = 'THREE_DAY'
 const ONE_WEEK = 'ONE_WEEK'
 const TWO_WEEKS = 'TWO_WEEKS'
 const ONE_MONTH = 'ONE_MONTH'
+const ALL_TIME = 'ALL_TIME'
 
 const MainLayout = styled.div`
   display: flex;
@@ -130,6 +133,23 @@ const JobItem = styled.div`
   }
 `
 
+const StyledFormControl = styled(FormControl).attrs({
+  variant: 'outlined'
+})`
+  min-width: 100px;
+  margin-left: 16px;
+
+  .MuiInputBase-root {
+    border-radius: 32px;
+    overflow: hidden;
+  }
+
+  /* Revert global style from form.scss that needs to be removed */
+  .MuiSelect-select {
+    background-color: white !important;
+  }
+`
+
 const MAX_DESCRIPTION_LENGTH = 280
 
 const PanelCityJobs = ({ city, rome }) => {
@@ -144,11 +164,11 @@ const PanelCityJobs = ({ city, rome }) => {
   } = useCities()
   const size = useWindowSize()
   const [infosTravail, setInfosTravail] = useState(null)
-  const [dateFilter, setDateFilter] = useState('')
+  const [dateFilter, setDateFilter] = useState(ALL_TIME)
+  const [availableContractFilters, setAvailableContractFilters] = useState([])
+  const [availableDurationFilters, setAvailableDurationFilters] = useState([])
   const [contractFilters, setContractFilters] = useState([])
   const [durationFilters, setDurationFilters] = useState([])
-  const [contractFilter, setContractFilter] = useState('')
-  const [durationFilter, setDurationFilter] = useState('')
 
   useEffect(() => {
     if (city && rome && rome.length) {
@@ -158,12 +178,12 @@ const PanelCityJobs = ({ city, rome }) => {
   }, [city])
 
   useEffect(() => {
-    setContractFilters(professions.reduce((prev, { typeContrat }) => {
+    setAvailableContractFilters(professions.reduce((prev, { typeContrat }) => {
       if (prev.includes(typeContrat) || !typeContrat) return prev
       return prev.concat(typeContrat)
     }, []))
 
-    setDurationFilters(professions.reduce((prev, { dureeTravailLibelleConverti }) => {
+    setAvailableDurationFilters(professions.reduce((prev, { dureeTravailLibelleConverti }) => {
       if (prev.includes(dureeTravailLibelleConverti) || !dureeTravailLibelleConverti) return prev
       return prev.concat(dureeTravailLibelleConverti)
     }, []))
@@ -195,8 +215,13 @@ const PanelCityJobs = ({ city, rome }) => {
       if (dateFilter === ONE_MONTH && currentMoment.isAfter(creationMoment.add(1, 'month'))) return false
     }
 
-    if (contractFilter && profession.typeContrat !== contractFilter) return false
-    if (durationFilter && profession.dureeTravailLibelleConverti !== durationFilter) return false
+    if (contractFilters.length && !contractFilters.includes(profession.typeContrat)) return false
+    if (
+      durationFilters.length
+      && !durationFilters.includes(profession.dureeTravailLibelleConverti)
+    ) {
+      return false
+    }
 
     return true
   })
@@ -232,19 +257,20 @@ const PanelCityJobs = ({ city, rome }) => {
           </StatistiqueLayout>
           <JobLayout>
             <JobTitleLayout>
-              {displayedProfessions.length}
-              {' '}
-              offre
-              {displayedProfessions.length > 1 ? 's' : ''}
-              {' pour '}
-              {romeLabel}
-              {' '}
-              dans un rayon de 30 km
-            </JobTitleLayout>
-            <JobContentLayout>
               <div>
-                <FormControl fullWidth>
-                  <InputLabel htmlFor="filter-date-creation" shrink>
+                {displayedProfessions.length}
+                {' '}
+                offre
+                {displayedProfessions.length > 1 ? 's' : ''}
+                {' pour '}
+                {romeLabel}
+                {' '}
+                dans un rayon de 30 km
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 8 }}>
+                <StyledFormControl>
+                  <InputLabel htmlFor="filter-date-creation">
                     Date de création
                   </InputLabel>
                   <Select
@@ -252,10 +278,11 @@ const PanelCityJobs = ({ city, rome }) => {
                     inputProps={{
                       id: 'filter-date-creation'
                     }}
+                    label="Date de création"
                     value={dateFilter}
                     onChange={(event) => setDateFilter(event.target.value)}
                   >
-                    <MenuItem value="">Toutes les offres</MenuItem>
+                    <MenuItem value={ALL_TIME}>Toutes les offres</MenuItem>
                     <MenuItem value={ONE_DAY}>
                       Un jour
                     </MenuItem>
@@ -272,60 +299,68 @@ const PanelCityJobs = ({ city, rome }) => {
                       Un mois
                     </MenuItem>
                   </Select>
-                </FormControl>
+                </StyledFormControl>
 
-                <FormControl fullWidth>
-                  <InputLabel htmlFor="filter-contract" shrink>
+                <StyledFormControl>
+                  <InputLabel htmlFor="filter-contract">
                     Contrat
                   </InputLabel>
                   <Select
-                    displayEmpty
                     inputProps={{
                       id: 'filter-contract'
                     }}
-                    value={contractFilter}
-                    onChange={(event) => setContractFilter(event.target.value)}
+                    label="Contrat"
+                    multiple
+                    value={contractFilters}
+                    onChange={(event) => {
+                      setContractFilters(event.target.value)
+                    }}
+                    renderValue={(selected) => selected.join(', ')}
                   >
-                    <MenuItem value="" />
-                    {contractFilters.map(
+                    {availableContractFilters.map(
                       (filter) => (
                         <MenuItem
                           value={filter}
                         >
-                          {filter}
+                          <Checkbox checked={contractFilters.includes(filter)} />
+                          <ListItemText primary={filter} />
                         </MenuItem>
                       )
                     )}
                   </Select>
-                </FormControl>
+                </StyledFormControl>
 
-                <FormControl fullWidth>
-                  <InputLabel htmlFor="filter-duration" shrink>
-                    Durée hebdo.
+                <StyledFormControl>
+                  <InputLabel htmlFor="filter-duration">
+                    Durée
                   </InputLabel>
                   <Select
-                    displayEmpty
                     inputProps={{
                       id: 'filter-duration'
                     }}
-                    value={durationFilter}
-                    onChange={(event) => setDurationFilter(event.target.value)}
+                    label="Durée"
+                    multiple
+                    value={durationFilters}
+                    onChange={(event) => {
+                      setDurationFilters(event.target.value)
+                    }}
+                    renderValue={(selected) => selected.join(', ')}
                   >
-                    <MenuItem value="" />
-                    {durationFilters.map(
+                    {availableDurationFilters.map(
                       (filter) => (
                         <MenuItem
                           value={filter}
                         >
-                          {filter}
+                          <Checkbox checked={durationFilters.includes(filter)} />
+                          <ListItemText primary={filter} />
                         </MenuItem>
                       )
                     )}
                   </Select>
-                </FormControl>
-
+                </StyledFormControl>
               </div>
-
+            </JobTitleLayout>
+            <JobContentLayout>
               {isLoadingProfessions && <p>Chargement des métiers</p>}
               {displayedProfessions.map((p) => {
                 // We truncate too long descriptions
@@ -347,10 +382,7 @@ const PanelCityJobs = ({ city, rome }) => {
                       <p className="date">{thereAre(p.dateCreation)}</p>
                       <p className="type">
                         {p.typeContrat}
-                        {' '}
-                        -
-                        {' '}
-                        {p.dureeTravailLibelleConverti}
+                        {p.dureeTravailLibelleConverti && ` - ${p.dureeTravailLibelleConverti}`}
                       </p>
                     </div>
                   </a>
