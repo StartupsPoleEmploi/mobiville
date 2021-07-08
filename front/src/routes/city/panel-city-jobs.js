@@ -19,13 +19,6 @@ import { thereAre } from '../../utils/utils'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 
-const ONE_DAY = 'ONE_DAY'
-const THREE_DAY = 'THREE_DAY'
-const ONE_WEEK = 'ONE_WEEK'
-const TWO_WEEKS = 'TWO_WEEKS'
-const ONE_MONTH = 'ONE_MONTH'
-const ALL_TIME = 'ALL_TIME'
-
 const MainLayout = styled.div`
   display: flex;
   align-items: flex-start;
@@ -152,6 +145,18 @@ const StyledFormControl = styled(FormControl).attrs({
 
 const MAX_DESCRIPTION_LENGTH = 280
 
+const ONE_DAY = 'ONE_DAY'
+const THREE_DAY = 'THREE_DAY'
+const ONE_WEEK = 'ONE_WEEK'
+const TWO_WEEKS = 'TWO_WEEKS'
+const ONE_MONTH = 'ONE_MONTH'
+const ALL_TIME = 'ALL_TIME'
+
+const OTHER_CONTRACTS = 'Autres'
+const CONTRACT_TYPES = ['CDI', 'CDD', 'MIS', OTHER_CONTRACTS]
+const OTHER_DURATIONS = 'Non renseigné'
+const DURATION_TYPES = ['Temps plein', 'Temps partiel', OTHER_DURATIONS]
+
 const PanelCityJobs = ({ city, rome }) => {
   const {
     isLoading: isLoadingProfessions,
@@ -178,15 +183,27 @@ const PanelCityJobs = ({ city, rome }) => {
   }, [city])
 
   useEffect(() => {
-    setAvailableContractFilters(professions.reduce((prev, { typeContrat }) => {
-      if (prev.includes(typeContrat) || !typeContrat) return prev
-      return prev.concat(typeContrat)
-    }, []))
+    const contractObject = { [OTHER_CONTRACTS]: 0 }
+    const durationObject = { [OTHER_DURATIONS]: 0 }
 
-    setAvailableDurationFilters(professions.reduce((prev, { dureeTravailLibelleConverti }) => {
-      if (prev.includes(dureeTravailLibelleConverti) || !dureeTravailLibelleConverti) return prev
-      return prev.concat(dureeTravailLibelleConverti)
-    }, []))
+    professions.forEach(({ typeContrat, dureeTravailLibelleConverti }) => {
+      if (CONTRACT_TYPES.includes(typeContrat)) {
+        contractObject[typeContrat] = (contractObject[typeContrat] || 0) + 1
+      } else {
+        contractObject[OTHER_CONTRACTS] = (contractObject[typeContrat] || 0) + 1
+      }
+
+      if (DURATION_TYPES.includes(dureeTravailLibelleConverti)) {
+        durationObject[dureeTravailLibelleConverti] = (
+          durationObject[dureeTravailLibelleConverti] || 0
+        ) + 1
+      } else {
+        durationObject[OTHER_DURATIONS] = (durationObject[OTHER_DURATIONS] || 0) + 1
+      }
+    })
+
+    setAvailableContractFilters(contractObject)
+    setAvailableDurationFilters(durationObject)
   }, [professions])
 
   let romeLabel = ''
@@ -215,11 +232,26 @@ const PanelCityJobs = ({ city, rome }) => {
       if (dateFilter === ONE_MONTH && currentMoment.isAfter(creationMoment.add(1, 'month'))) return false
     }
 
-    if (contractFilters.length && !contractFilters.includes(profession.typeContrat)) return false
-    if (
-      durationFilters.length
-      && !durationFilters.includes(profession.dureeTravailLibelleConverti)
-    ) {
+    if (contractFilters.length) {
+      // If we have contracts, 2 choices :
+      // - It’s a contract type we handle specifically (eg. CDI, CDD, MIS)
+      // - It’s a contract type we do not handle (and we only match it when "others" is selected)
+      if (
+        !contractFilters.includes(profession.typeContrat)
+        && CONTRACT_TYPES.includes(profession.typeContrat)
+      ) {
+        return false
+      }
+    }
+
+    // if we have a duration filter, either it’s filled (and we handle it explicitely)
+    // or it’s undefined in the data, which means it’s in our "other" category
+    if (durationFilters.length && (
+      (
+        profession.dureeTravailLibelleConverti
+        && !durationFilters.includes(profession.dureeTravailLibelleConverti)
+      ) || (!profession.dureeTravailLibelleConverti && !durationFilters.includes(OTHER_DURATIONS))
+    )) {
       return false
     }
 
@@ -317,13 +349,13 @@ const PanelCityJobs = ({ city, rome }) => {
                     }}
                     renderValue={(selected) => selected.join(', ')}
                   >
-                    {availableContractFilters.map(
+                    {Object.keys(availableContractFilters).map(
                       (filter) => (
                         <MenuItem
                           value={filter}
                         >
                           <Checkbox checked={contractFilters.includes(filter)} />
-                          <ListItemText primary={filter} />
+                          <ListItemText primary={`${filter} (${availableContractFilters[filter]})`} />
                         </MenuItem>
                       )
                     )}
@@ -346,13 +378,13 @@ const PanelCityJobs = ({ city, rome }) => {
                     }}
                     renderValue={(selected) => selected.join(', ')}
                   >
-                    {availableDurationFilters.map(
+                    {Object.keys(availableDurationFilters).map(
                       (filter) => (
                         <MenuItem
                           value={filter}
                         >
                           <Checkbox checked={durationFilters.includes(filter)} />
-                          <ListItemText primary={filter} />
+                          <ListItemText primary={`${filter} (${availableDurationFilters[filter]})`} />
                         </MenuItem>
                       )
                     )}
@@ -369,6 +401,9 @@ const PanelCityJobs = ({ city, rome }) => {
                     p.description.slice(MAX_DESCRIPTION_LENGTH).split(' ')[0]
                   )
                     .concat('…') : p.description
+
+                const contractLabel = p.typeContrat === 'CDI' || p.typeContrat === 'CDD' ? p.typeContrat : p.typeContratLibelle
+
                 return (
                   <JobItem key={p.id}>
                     { /* eslint-disable-next-line */ }
@@ -381,7 +416,7 @@ const PanelCityJobs = ({ city, rome }) => {
                     <div className="actions">
                       <p className="date">{thereAre(p.dateCreation)}</p>
                       <p className="type">
-                        {p.typeContrat}
+                        {contractLabel}
                         {p.dureeTravailLibelleConverti && ` - ${p.dureeTravailLibelleConverti}`}
                       </p>
                     </div>
