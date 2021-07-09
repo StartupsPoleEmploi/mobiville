@@ -151,3 +151,48 @@ Paris, Lyon et Marseille sont trois villes avec des spéciales : Le référentie
 13055;13000;MARSEILLE;BOUCHES-DU-RHONE;PROVENCE-ALPES-COTE D'AZUR;Préfecture de région;29.0;178.0;861.6;43.2999009436,5.38227869795;"{""type"": ""Polygon"", ""coordinates"": [[[5.372144736531373, 43.290965444448595], [5.371008366340329, 43.29359128652747], [5.373616424523343, 43.29499198426251], [5.375021899598046, 43.30159390045778], [5.390502166127308, 43.30939746657357], [5.393048242612156, 43.3042292209066], [5.389078069139432, 43.300312137417784], [5.385563774200395, 43.29429693114428], [5.381847823036012, 43.295908846993086], [5.380357790047036, 43.29294477171], [5.372144736531373, 43.290965444448595]]]}";36589;;99;3;13;93
 69123;69000;LYON;RHONE;RHONE-ALPES;Préfecture de région;197.0;153.0;513.2;45.7699284397,4.82922464978;"{""type"": ""Polygon"", ""coordinates"": [[[4.830490136783295, 45.764711873086085], [4.828234329945935, 45.767324545508124], [4.819695911085194, 45.767156356147254], [4.812869224911417, 45.771301526436304], [4.835619846255646, 45.77462664189978], [4.839738601584955, 45.77307334284989], [4.839756688763879, 45.766272510421146], [4.830490136783295, 45.764711873086085]]]}";36605;;99;1;69;82
 ```
+
+## Architecture
+
+```plantuml
+node "OVH" {
+package Data {
+left to right direction
+file "cities-tension-utf8.csv"
+file "anciennes-nouvelles-regions.json"
+file "lexique-bassins.csv"
+file "mobiville_bassin_offre_full_xxx.bz2" as datalakefile
+}
+  [Docker NGINX]
+  [Docker API]
+  [Docker Database]
+  [Docker Backup]
+
+
+}
+
+node "gitlab" {
+   [Pipeline]
+}
+
+node "OVH datalake" {
+   [backup]
+   [datalake]
+}
+
+
+cloud {
+  [Internet]
+  [Wikipedia]
+}
+
+[Docker NGINX] -d--> [Internet]
+[Docker API] <-> [Docker Database]
+[Docker API] <-> [Docker NGINX]
+[Wikipedia] --> [Docker API]
+[Pipeline] -u--> [Docker API]
+[Pipeline] -u--> [Docker NGINX]
+[Docker Backup] -l--> [backup]
+Data --> [Docker API]
+[datalake] -l--> datalakefile
+```
