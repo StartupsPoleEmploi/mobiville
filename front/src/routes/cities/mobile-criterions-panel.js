@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { omit } from 'lodash'
 import { Typography } from '@material-ui/core'
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'
@@ -11,7 +12,7 @@ const EmptySpace = styled.div`
   height: 216px;
 `
 
-const Wrapper = styled.div` 
+const Wrapper = styled.div`
   padding: 16px 16px 20px 16px;
   background-color: white;
   margin-bottom: 16px;
@@ -59,24 +60,26 @@ const SubInfo = styled.div`
 `
 
 const MobileCriterionsPanel = ({ criterions, total }) => {
-  const { criterions: allCriterios } = useCities()
+  const { criterions: allCriterions } = useCities()
+
+  const usableCriterions = omit(criterions, 'code_criterion')
 
   const findCriterionsValue = (val) => {
-    let findedLabel = null
-    if (allCriterios) {
-      Object.values(allCriterios).forEach((allCrit) => {
+    let foundLabel = null
+    if (allCriterions) {
+      Object.values(allCriterions).forEach((allCrit) => {
         const find = allCrit.find((c) => (c.key && c.key === val) || (c.id && c.id === val))
         if (find) {
-          findedLabel = ucFirst(find.label.toLowerCase())
+          foundLabel = ucFirst(find.label.toLowerCase())
         }
       })
     }
 
-    return findedLabel
+    return foundLabel
   }
 
   const tagsList = []
-  Object.values(criterions).forEach((crit) => {
+  Object.values(usableCriterions).forEach((crit) => {
     crit.forEach((val) => {
       const searchValue = findCriterionsValue(val)
       if (searchValue) {
