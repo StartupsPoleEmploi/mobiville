@@ -88,8 +88,8 @@ Nb metropole : 6
 
 ## Données et sources de données
 
-Liste des villes -> Fichier importé depuis le fichier cities-france.csv (Un appel depuis la route http://localhost/api/sync/sync-cities supprime et remplace totalement les données des villes)
-Le fichier cities-france.csv est issue du site data.gouv.fr et est mis à jours tout les ans. A voir comment l'importer de nous chez Mobiville.
+Liste des villes -> Fichier importé depuis le fichier `cities-france.csv` (Un appel depuis la route http://localhost/api/sync/sync-cities supprime et remplace totalement les données des villes)
+Le fichier `cities-france.csv` est issue du site data.gouv.fr et est mis à jours tout les ans. A voir comment l'importer de nous chez Mobiville.
 
 Format d'une ville:
 - code_comm: 
@@ -109,20 +109,20 @@ Format d'une ville:
 - nom_comm: Nom de la commune,
 - code_arr:
 - population: Population en milier (Info de 2017),
-- distance_from_sea: Distance par rapport à la mer par rapport au centre. (Valeur à null puis un cron teste le point geographique le plus proche celon le fichier france-shape-side-sea.geo.json),
-- average_temperature: Température moyenne de la ville sur toute l'année des 10 dernieres années avec 3 ans de retard. (Valeur à null puis un cron chercher la balise météorologie la plus proche de la ville. Les balises sont issues de donneespubliques.meteofrance.fr. Pour info, il n'y a pas beaucoup de balise en France, quelques centaines),
+- distance_from_sea: Distance par rapport à la mer par rapport au centre. (Valeur à null puis un cron teste le point geographique le plus proche selon le fichier `france-shape-side-sea.geo.json`),
+- average_temperature: Température moyenne de la ville sur toute l'année des 10 dernieres années avec 3 ans de retard. (Valeur à null puis un cron chercher la balise météorologie la plus proche de la ville. Les balises sont issues de `donneespubliques.meteofrance.fr`. Pour info, il n'y a pas beaucoup de balise en France, quelques centaines),
 - description: Description de la ville. (Valeur à null puis un cron demande à l'api wikipedia la description),
-- average_houseselled: Prix moyen du m2 des logements (Valeur à null puis un cron demande au fichier dvf-communes-2019.csv issue de data.gouv.fr),
-- city_house_tension: Definition du niveau de tension (Valeur à null puis un cron demande au fichier dvf-communes-2019.csv issue de data.gouv.fr),
-- average_houserent: Prix moyen du loyer des appartement au m2 (Value à null puis un demande au fichier indicateurs-loyers-appartements.csv issue de data.gouv.fr),
+- average_houseselled: Prix moyen du m2 des logements (Valeur à null puis un cron demande au fichier `dvf-communes-2019.csv` issue de data.gouv.fr),
+- city_house_tension: Definition du niveau de tension (Valeur à null puis un cron demande au fichier `dvf-communes-2019.csv` issue de data.gouv.fr),
+- average_houserent: Prix moyen du loyer des appartement au m2 (Value à null puis un demande au fichier `indicateurs-loyers-appartements.csv` issue de data.gouv.fr),
 - photo: Url de photo de la ville. (Valeur à null puis un cron demande à l'api wikipedia la photo),
 
 
-Liste des villes en tensions -> Fichier importé depuis le fichier cities-tension-utf8.csv (Un appel depuis la route http://localhost/api/sync/sync-profession-in-tension)
+Liste des villes en tensions -> Fichier importé depuis le fichier `cities-tension-utf8.csv` (Un appel depuis la route http://localhost/api/sync/sync-profession-in-tension)
 
-Liste des villes <-> bassins  -> Fichier importé depuis le fichier lexique-bassins.csv (Un appel depuis la route http://localhost/api/sync/sync-cities)
+Liste des villes <-> bassins  -> Fichier importé depuis le fichier `lexique-bassins.csv` (Un appel depuis la route http://localhost/api/sync/sync-cities)
 
-Liste des regions, nouvelle nomenclature -> Fichier importé depuis le fichier anciennes-nouvelles-regions.json (Un appel depuis la route http://localhost/api/sync/sync-regions)
+Liste des regions, nouvelle nomenclature -> Fichier importé depuis le fichier `anciennes-nouvelles-regions.json` (Un appel depuis la route http://localhost/api/sync/sync-regions)
 
 
 
@@ -163,10 +163,7 @@ stack "mobiville" {
   [Docker Database]
 
   package Data {  
-left to right direction
-file "cities-tension-utf8.csv"
-file "anciennes-nouvelles-regions.json"
-file "lexique-bassins.csv"
+collections "fichiers de données"
 file "mobiville_bassin_offre_full_xxx.bz2" as datalakefile
 }
 }
