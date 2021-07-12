@@ -156,16 +156,20 @@ Paris, Lyon et Marseille sont trois villes avec des spéciales : Le référentie
 
 ```plantuml
 node "OVH" {
-package Data {
+
+stack "mobiville" {
+  [Docker NGINX]
+  [Docker API]
+  [Docker Database]
+
+  package Data {  
 left to right direction
 file "cities-tension-utf8.csv"
 file "anciennes-nouvelles-regions.json"
 file "lexique-bassins.csv"
 file "mobiville_bassin_offre_full_xxx.bz2" as datalakefile
 }
-  [Docker NGINX]
-  [Docker API]
-  [Docker Database]
+}
   [Docker Backup]
 
 
@@ -192,7 +196,8 @@ cloud {
 [Wikipedia] --> [Docker API]
 [Pipeline] -u--> [Docker API]
 [Pipeline] -u--> [Docker NGINX]
-[Docker Backup] -l--> [backup]
+[Docker Backup] -d--> [backup]
+mobiville --> [Docker Backup]
 Data --> [Docker API]
 [datalake] -l--> datalakefile
 ```
