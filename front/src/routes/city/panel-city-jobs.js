@@ -136,11 +136,6 @@ const StyledFormControl = styled(FormControl).attrs({
     border-radius: 32px;
     overflow: hidden;
   }
-
-  /* Revert global style from form.scss that needs to be removed */
-  .MuiSelect-select {
-    background-color: white !important;
-  }
 `
 
 const MAX_DESCRIPTION_LENGTH = 280
