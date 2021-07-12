@@ -282,7 +282,7 @@ const PanelCityJobs = ({ city, rome }) => {
           </StatistiqueLayout>
           <JobLayout>
             <JobTitleLayout>
-              <div>
+              <div style={{ paddingBottom: '16px' }}>
                 {displayedProfessions.length}
                 {' '}
                 offre
