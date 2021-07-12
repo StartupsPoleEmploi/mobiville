@@ -170,8 +170,6 @@ const PanelCityJobs = ({ city, rome }) => {
   const size = useWindowSize()
   const [infosTravail, setInfosTravail] = useState(null)
   const [dateFilter, setDateFilter] = useState(ALL_TIME)
-  const [availableContractFilters, setAvailableContractFilters] = useState([])
-  const [availableDurationFilters, setAvailableDurationFilters] = useState([])
   const [contractFilters, setContractFilters] = useState([])
   const [durationFilters, setDurationFilters] = useState([])
 
@@ -182,31 +180,10 @@ const PanelCityJobs = ({ city, rome }) => {
     }
   }, [city])
 
-  useEffect(() => {
-    const contractObject = { [OTHER_CONTRACTS]: 0 }
-    const durationObject = { [OTHER_DURATIONS]: 0 }
-
-    professions.forEach(({ typeContrat, dureeTravailLibelleConverti }) => {
-      if (CONTRACT_TYPES.includes(typeContrat)) {
-        contractObject[typeContrat] = (contractObject[typeContrat] || 0) + 1
-      } else {
-        contractObject[OTHER_CONTRACTS] = (contractObject[typeContrat] || 0) + 1
-      }
-
-      if (DURATION_TYPES.includes(dureeTravailLibelleConverti)) {
-        durationObject[dureeTravailLibelleConverti] = (
-          durationObject[dureeTravailLibelleConverti] || 0
-        ) + 1
-      } else {
-        durationObject[OTHER_DURATIONS] = (durationObject[OTHER_DURATIONS] || 0) + 1
-      }
-    })
-
-    setAvailableContractFilters(contractObject)
-    setAvailableDurationFilters(durationObject)
-  }, [professions])
-
+  const contractCountObject = {}
+  const durationCountObject = {}
   let romeLabel = ''
+
   if (criterions && criterions.codeRomes && rome && rome.length) {
     const finded = criterions.codeRomes.find((c) => c.key === rome[0])
     if (finded) {
@@ -256,6 +233,22 @@ const PanelCityJobs = ({ city, rome }) => {
     }
 
     return true
+  })
+
+  displayedProfessions.forEach(({ typeContrat, dureeTravailLibelleConverti }) => {
+    if (CONTRACT_TYPES.includes(typeContrat)) {
+      contractCountObject[typeContrat] = (contractCountObject[typeContrat] || 0) + 1
+    } else {
+      contractCountObject[OTHER_CONTRACTS] = (contractCountObject[typeContrat] || 0) + 1
+    }
+
+    if (DURATION_TYPES.includes(dureeTravailLibelleConverti)) {
+      durationCountObject[dureeTravailLibelleConverti] = (
+        durationCountObject[dureeTravailLibelleConverti] || 0
+      ) + 1
+    } else {
+      durationCountObject[OTHER_DURATIONS] = (durationCountObject[OTHER_DURATIONS] || 0) + 1
+    }
   })
 
   return (
@@ -347,17 +340,29 @@ const PanelCityJobs = ({ city, rome }) => {
                     onChange={(event) => {
                       setContractFilters(event.target.value)
                     }}
-                    renderValue={(selected) => selected.join(', ')}
+                    // quick & dirty replace of the only label that needs it
+                    renderValue={(selected) => selected.join(', ').replace('MIS', 'Intérim')}
                   >
-                    {Object.keys(availableContractFilters).map(
-                      (filter) => (
-                        <MenuItem
-                          value={filter}
-                        >
-                          <Checkbox checked={contractFilters.includes(filter)} />
-                          <ListItemText primary={`${filter} (${availableContractFilters[filter]})`} />
-                        </MenuItem>
-                      )
+                    {CONTRACT_TYPES.map(
+                      (filter) => {
+                        const isChecked = contractFilters.includes(filter)
+                        const label = filter.concat(
+                          contractFilters.length === 0 || isChecked
+                            ? ` (${contractCountObject[filter] || 0})`
+                            : ''
+                        )
+                        return (
+                          <MenuItem
+                            value={filter}
+                          >
+                            <Checkbox checked={isChecked} />
+                            <ListItemText
+                              // quick & dirty replace of the only label that needs it
+                              primary={label.replace('MIS', 'Intérim')}
+                            />
+                          </MenuItem>
+                        )
+                      }
                     )}
                   </Select>
                 </StyledFormControl>
@@ -378,15 +383,24 @@ const PanelCityJobs = ({ city, rome }) => {
                     }}
                     renderValue={(selected) => selected.join(', ')}
                   >
-                    {Object.keys(availableDurationFilters).map(
-                      (filter) => (
-                        <MenuItem
-                          value={filter}
-                        >
-                          <Checkbox checked={durationFilters.includes(filter)} />
-                          <ListItemText primary={`${filter} (${availableDurationFilters[filter]})`} />
-                        </MenuItem>
-                      )
+                    {DURATION_TYPES.map(
+                      (filter) => {
+                        const isChecked = durationFilters.includes(filter)
+                        const label = filter.concat(
+                          durationFilters.length === 0 || isChecked
+                            ? ` (${durationCountObject[filter] || 0})`
+                            : ''
+                        )
+
+                        return (
+                          <MenuItem
+                            value={filter}
+                          >
+                            <Checkbox checked={durationFilters.includes(filter)} />
+                            <ListItemText primary={label} />
+                          </MenuItem>
+                        )
+                      }
                     )}
                   </Select>
                 </StyledFormControl>
