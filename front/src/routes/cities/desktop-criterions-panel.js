@@ -87,7 +87,7 @@ const SubmitButton = styled.input`
   cursor: pointer;
 `
 
-const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
+const DesktopCriterionsPanel = ({ paramsUrl, total, onSubmit }) => {
   const {
     criterions,
     environmentCriterions,
@@ -105,46 +105,13 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
     }
   })
 
-  const onSubmit = (data) => {
-    let params = { code_rome: [paramsUrl.code_rome || criterions.codeRomes[0].key] }
-
-    if (data.city) {
-      const tab = (params.code_criterion || [])
-      tab.push(data.city)
-      params = { ...params, code_criterion: tab }
-    }
-
-    if (data.environment) {
-      const tab = (params.code_criterion || [])
-      tab.push(data.environment)
-      params = { ...params, code_criterion: tab }
-    }
-
-    if (data.region) {
-      params = { ...params, code_region: [data.region] }
-    }
-
-    if (data.from) {
-      params = { ...params, from: [data.from.id] }
-    }
-
-    const pushParams = []
-    Object.entries(params).forEach(([key, value]) => {
-      pushParams.push(`${key}=${value.join(',')}`)
-    })
-
-    redirectTo(pushParams.join('&'))
-  }
-
   useEffect(() => {
-    if (criterions == null || criterions.criterions === undefined || !paramsUrl) {
+    if (!criterions?.criterions || !paramsUrl) {
       return
     }
 
-    const rome = paramsUrl && paramsUrl.code_rome
-    && paramsUrl.code_rome.length ? paramsUrl.code_rome[0] : ''
-    const region = paramsUrl && paramsUrl.code_region
-    && paramsUrl.code_region.length ? paramsUrl.code_region[0] : ''
+    const rome = paramsUrl?.code_rome?.[0] || ''
+    const region = paramsUrl?.code_region?.[0] || ''
 
     const values = []
     values.push({ name: 'rome', value: rome })
@@ -153,12 +120,14 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
     if (criterions.criterions && paramsUrl?.code_criterion) {
       const environmentFound = environmentCriterions
         .find((c) => paramsUrl.code_criterion.indexOf(c.key) !== -1)
+
       if (environmentFound) {
         values.push({ name: 'environment', value: environmentFound.key })
       }
 
       const cityFound = cityCriterions
         .find((c) => paramsUrl.code_criterion.indexOf(c.key) !== -1)
+
       if (cityFound) {
         values.push({ name: 'city', value: cityFound.key })
       }
@@ -167,7 +136,7 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
     values.forEach(({ name, value }) => setValue(name, value, { shouldDirty: true }))
   }, [paramsUrl, criterions])
 
-  if (criterions == null || criterions.criterions === undefined) {
+  if (!criterions?.criterions) {
     return <div />
   }
 
@@ -283,13 +252,12 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
 DesktopCriterionsPanel.propTypes = {
   paramsUrl: PropTypes.object,
   total: PropTypes.number,
-  redirectTo: PropTypes.func
+  onSubmit: PropTypes.func.isRequired
 }
 
 DesktopCriterionsPanel.defaultProps = {
   paramsUrl: [],
-  total: 0,
-  redirectTo: () => {}
+  total: 0
 }
 
 export default React.memo(DesktopCriterionsPanel)

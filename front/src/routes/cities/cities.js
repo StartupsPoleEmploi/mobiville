@@ -95,8 +95,23 @@ const CitiesPage = () => {
     return url
   }
 
-  const onRedirectTo = (to) => {
-    history.push({ pathname: '/cities', search: `?${to}&n=${new Date().getTime()}` })
+  const onSubmit = ({
+    city, environment, region
+  }) => {
+    const data = {
+      code_rome: [params.code_rome || params.codeRomes[0].key],
+      code_region: [region]
+    }
+
+    if (city || environment) {
+      data.code_criterion = [[city, environment].filter((c) => c).join(',')]
+    }
+
+    const pushParams = Object.entries(data)
+      .map(
+        ([key, value]) => `${key}=${value.join(',')}`
+      )
+    history.push({ pathname: '/cities', search: `?${pushParams.join('&')}&n=${new Date().getTime()}` })
   }
 
   const showMobileCriterionsSelection = (bool) => setShowMobileCriterionsSelection(bool)
@@ -104,10 +119,10 @@ const CitiesPage = () => {
 
   if (showMobilePanel) {
     return (
-      <MainLayout>
+      <MainLayout menu={{ visible: !showMobileCriterionsSelection }}>
         <MobileCriterionsSelection
-          criterions={params}
-          redirectTo={onRedirectTo}
+          paramsUrl={params}
+          onSubmit={onSubmit}
           showMobileCriterionsSelection={showMobileCriterionsSelection}
           total={totalCities}
         />
@@ -117,21 +132,23 @@ const CitiesPage = () => {
 
   return (
     <MainLayout>
-      {isMobile
-        ? (
-          <MobileCriterionsPanel
-            criterions={params}
-            showMobileCriterionsSelection={showMobileCriterionsSelection}
-            total={totalCities}
-          />
-        )
-        : (
-          <DesktopCriterionsPanel
-            paramsUrl={params}
-            total={totalCities}
-            redirectTo={onRedirectTo}
-          />
-        )}
+      {!isLoading && (
+        isMobile
+          ? (
+            <MobileCriterionsPanel
+              criterions={params}
+              showMobileCriterionsSelection={showMobileCriterionsSelection}
+              total={totalCities}
+            />
+          )
+          : (
+            <DesktopCriterionsPanel
+              paramsUrl={params}
+              total={totalCities}
+              onSubmit={onSubmit}
+            />
+          )
+      )}
 
       {isLoading && (<p style={{ margin: '2rem auto' }}>Chargement...</p>)}
 

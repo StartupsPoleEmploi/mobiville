@@ -131,11 +131,20 @@ export function CitiesProvider(props) {
       setJobsMatchingCriterions(results.codeRomes)
 
       _setEnvironmentCriterions(
-        results.criterions.filter((c) => c.tag === 'environment').map(({ key, label }) => ({ key, label }))
+        results.criterions.filter((c) => c.tag === 'environment').map(({ key, label, icon }) => ({ key, label, icon }))
       )
 
       _setCityCriterions(
-        results.criterions.filter((c) => c.tag === 'city').map(({ key, label, subLabel }) => ({ key, label, subLabel }))
+        results.criterions
+          .filter((c) => c.tag === 'city')
+          .map(({
+            key, label, subLabel, icon
+          }) => ({
+            key,
+            label,
+            subLabel,
+            icon
+          }))
       )
 
       _setRegionCriterions(
