@@ -30,6 +30,9 @@ export function CitiesProvider(props) {
   const [sortCriterions, setSortCriterions] = useState('')
   const [cityTenement, _setCityTenement] = useState(null)
   const [cityAmenities, _setCityAmenities] = useState(null)
+  const [environmentCriterions, _setEnvironmentCriterions] = useState([])
+  const [cityCriterions, _setCityCriterions] = useState([])
+  const [regionCriterions, _setRegionCriterions] = useState([])
 
   const onSearch = useCallback((params, index = 0, oldCities = []) => {
     _setIsLoading(true)
@@ -126,6 +129,18 @@ export function CitiesProvider(props) {
     getCriterions().then((results) => {
       _setCriterions(results)
       setJobsMatchingCriterions(results.codeRomes)
+
+      _setEnvironmentCriterions(
+        results.criterions.filter((c) => c.tag === 'environment').map(({ key, label }) => ({ key, label }))
+      )
+
+      _setCityCriterions(
+        results.criterions.filter((c) => c.tag === 'city').map(({ key, label, subLabel }) => ({ key, label, subLabel }))
+      )
+
+      _setRegionCriterions(
+        results.regions.map(({ id, label }) => ({ key: id, label }))
+      )
     })
   }, [])
 
@@ -147,6 +162,9 @@ export function CitiesProvider(props) {
         cityAmenities,
         totalCities,
         jobsMatchingCriterions,
+        environmentCriterions,
+        cityCriterions,
+        regionCriterions,
         // function
         setCity,
         onSearch,

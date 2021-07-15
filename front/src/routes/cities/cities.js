@@ -9,6 +9,7 @@ import CityItem from './city-item'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 import DesktopCriterionsPanel from './desktop-criterions-panel'
+import MobileCriterionsSelection from './mobile-criterions-selection'
 
 import noResultsPic from '../../assets/images/no_results.svg'
 
@@ -43,6 +44,7 @@ const CitiesPage = () => {
   } = useCities()
   const [params, setParams] = useState(null)
   const [offset, setOffset] = useState(0)
+  const [showMobilePanel, setShowMobileCriterionsSelection] = useState(false)
   const size = useWindowSize()
   const location = useLocation()
   const history = useHistory()
@@ -94,16 +96,35 @@ const CitiesPage = () => {
   }
 
   const onRedirectTo = (to) => {
-    // add test log
     history.push({ pathname: '/cities', search: `?${to}&n=${new Date().getTime()}` })
   }
 
+  const showMobileCriterionsSelection = (bool) => setShowMobileCriterionsSelection(bool)
   const isMobile = isMobileView(size)
+
+  if (showMobilePanel) {
+    return (
+      <MainLayout>
+        <MobileCriterionsSelection
+          criterions={params}
+          redirectTo={onRedirectTo}
+          showMobileCriterionsSelection={showMobileCriterionsSelection}
+          total={totalCities}
+        />
+      </MainLayout>
+    )
+  }
 
   return (
     <MainLayout>
       {isMobile
-        ? <MobileCriterionsPanel criterions={params} total={totalCities} />
+        ? (
+          <MobileCriterionsPanel
+            criterions={params}
+            showMobileCriterionsSelection={showMobileCriterionsSelection}
+            total={totalCities}
+          />
+        )
         : (
           <DesktopCriterionsPanel
             paramsUrl={params}

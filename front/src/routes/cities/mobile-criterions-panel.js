@@ -59,7 +59,7 @@ const SubInfo = styled.div`
   }
 `
 
-const MobileCriterionsPanel = ({ criterions, total }) => {
+const MobileCriterionsSelection = ({ criterions, showMobileCriterionsSelection, total }) => {
   const { criterions: allCriterions } = useCities()
 
   const usableCriterions = omit(criterions, 'code_criterion')
@@ -93,6 +93,7 @@ const MobileCriterionsPanel = ({ criterions, total }) => {
       <Wrapper>
         <Title>Mes critères</Title>
         <TagsBlock>
+          <Tag onClick={() => showMobileCriterionsSelection(true)}>Modifier</Tag>
           {tagsList.map((t) => (<Tag key={t}>{t}</Tag>))}
         </TagsBlock>
         <SubInfo>
@@ -108,14 +109,15 @@ const MobileCriterionsPanel = ({ criterions, total }) => {
   )
 }
 
-MobileCriterionsPanel.propTypes = {
+MobileCriterionsSelection.propTypes = {
   criterions: PropTypes.object,
+  showMobileCriterionsSelection: PropTypes.func.isRequired,
   total: PropTypes.number
 }
 
-MobileCriterionsPanel.defaultProps = {
+MobileCriterionsSelection.defaultProps = {
   criterions: [],
   total: 0
 }
 
-export default MobileCriterionsPanel
+export default MobileCriterionsSelection
