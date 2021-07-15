@@ -55,7 +55,7 @@ const CitiesPage = () => {
   }, [location])
 
   useEffect(() => {
-    if (params && params.code_rome && !isLoading) {
+    if (params && params.code_rome) {
       onSearch({ ...params, sortBy: sortCriterions })
     }
   }, [params, sortCriterions])
@@ -65,10 +65,6 @@ const CitiesPage = () => {
       setOffset(window.pageYOffset)
     }
   }, [])
-
-  // on list change replace on the top
-  // window.scrollTo(0, 0)
-  // setItemsViews(10)
 
   useEffect(() => {
     const heightCheck = window.innerHeight * 1.5
@@ -102,34 +98,42 @@ const CitiesPage = () => {
     history.push({ pathname: '/cities', search: `?${to}&n=${new Date().getTime()}` })
   }
 
+  const isMobile = isMobileView(size)
+
   return (
     <MainLayout>
-      {isMobileView(size) && <MobileCriterionsPanel criterions={params} total={totalCities} />}
-      {!isMobileView(size) && (
-      <DesktopCriterionsPanel
-        paramsUrl={params}
-        total={totalCities}
-        redirectTo={onRedirectTo}
-      />
-      )}
-      {isLoading && cities.length === 0 && (<p>Chargement...</p>)}
-      {!isLoading && cities.length === 0 && (
-        <NotFoundContainer>
-          <img
-            alt=""
-            src={noResultsPic}
-            style={{ marginBottom: '2rem' }}
+      {isMobile
+        ? <MobileCriterionsPanel criterions={params} total={totalCities} />
+        : (
+          <DesktopCriterionsPanel
+            paramsUrl={params}
+            total={totalCities}
+            redirectTo={onRedirectTo}
           />
-          Aucune ville correspondante
-          <br />
-          Modifiez vos critères
-        </NotFoundContainer>
+        )}
+
+      {isLoading && (<p style={{ margin: '2rem auto' }}>Chargement...</p>)}
+
+      {!isLoading && (
+        cities.length === 0 ? (
+          <NotFoundContainer>
+            <img
+              alt=""
+              src={noResultsPic}
+              style={{ marginBottom: '2rem' }}
+            />
+            Aucune ville correspondante
+            <br />
+            Modifiez vos critères
+          </NotFoundContainer>
+        ) : (
+          <CitiesArea isMobile={isMobile}>
+            {cities.map((city) => (
+              <Items key={city.id} to={getCityUrl(city)}><CityItem city={city} /></Items>
+            ))}
+          </CitiesArea>
+        )
       )}
-      <CitiesArea isMobile={isMobileView(size)}>
-        {cities.map((c) => (
-          <Items key={c.id} to={getCityUrl(c)}><CityItem city={c} /></Items>
-        ))}
-      </CitiesArea>
     </MainLayout>
   )
 }

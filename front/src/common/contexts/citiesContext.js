@@ -22,7 +22,7 @@ export function CitiesProvider(props) {
   const [jobsMatchingCriterions, setJobsMatchingCriterions] = useState([])
   const [city, setCity] = useState(null)
   const [criterions, _setCriterions] = useState(null)
-  const [isLoading, _setIsLoading] = useState(false)
+  const [isLoading, _setIsLoading] = useState(true)
   const [isLoadingCity, _setIsLoadingCity] = useState(false)
   const [isLoadingLocation, _setIsLoadingLocation] = useState(false)
   const [isLoadingTenement, _setIsLoadingTenement] = useState(false)
@@ -32,10 +32,10 @@ export function CitiesProvider(props) {
   const [cityAmenities, _setCityAmenities] = useState(null)
 
   const onSearch = useCallback((params, index = 0, oldCities = []) => {
+    _setIsLoading(true)
     if (index === 0) {
       _setCities([])
     }
-    _setIsLoading(true)
 
     apiSearchCities({ ...params, index }).then((c) => {
       if (index === 0) {
@@ -45,7 +45,9 @@ export function CitiesProvider(props) {
       }
       _setTotalCities(c.total)
     })
-      .then(() => _setIsLoading(false))
+      .then(() => {
+        _setIsLoading(false)
+      })
   }, [])
 
   const onLoadCity = useCallback((id) => {
