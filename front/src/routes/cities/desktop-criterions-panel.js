@@ -89,7 +89,10 @@ const SubmitButton = styled.input`
 
 const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
   const {
-    criterions
+    criterions,
+    environmentCriterions,
+    cityCriterions,
+    regionCriterions
   } = useCities()
   const {
     control, handleSubmit, setValue
@@ -134,38 +137,34 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
   }
 
   useEffect(() => {
-    if (criterions == null || criterions.criterions === undefined) {
+    if (criterions == null || criterions.criterions === undefined || !paramsUrl) {
       return
     }
 
-    if (paramsUrl) {
-      const rome = paramsUrl && paramsUrl.code_rome
+    const rome = paramsUrl && paramsUrl.code_rome
     && paramsUrl.code_rome.length ? paramsUrl.code_rome[0] : ''
-      const region = paramsUrl && paramsUrl.code_region
+    const region = paramsUrl && paramsUrl.code_region
     && paramsUrl.code_region.length ? paramsUrl.code_region[0] : ''
 
-      const values = []
-      values.push({ name: 'rome', value: rome })
-      values.push({ name: 'region', value: region })
+    const values = []
+    values.push({ name: 'rome', value: rome })
+    values.push({ name: 'region', value: region })
 
-      if (criterions.criterions && paramsUrl && paramsUrl.code_criterion) {
-        const envFinded = criterions.criterions
-          .filter((c) => c.tag === 'environment')
-          .find((c) => paramsUrl.code_criterion.indexOf(c.key) !== -1)
-        if (envFinded) {
-          values.push({ name: 'environment', value: envFinded.key })
-        }
-
-        const cityFinded = criterions.criterions
-          .filter((c) => c.tag === 'city')
-          .find((c) => paramsUrl.code_criterion.indexOf(c.key) !== -1)
-        if (cityFinded) {
-          values.push({ name: 'city', value: cityFinded.key })
-        }
+    if (criterions.criterions && paramsUrl?.code_criterion) {
+      const environmentFound = environmentCriterions
+        .find((c) => paramsUrl.code_criterion.indexOf(c.key) !== -1)
+      if (environmentFound) {
+        values.push({ name: 'environment', value: environmentFound.key })
       }
 
-      values.forEach(({ name, value }) => setValue(name, value, { shouldDirty: true }))
+      const cityFound = cityCriterions
+        .find((c) => paramsUrl.code_criterion.indexOf(c.key) !== -1)
+      if (cityFound) {
+        values.push({ name: 'city', value: cityFound.key })
+      }
     }
+
+    values.forEach(({ name, value }) => setValue(name, value, { shouldDirty: true }))
   }, [paramsUrl, criterions])
 
   if (criterions == null || criterions.criterions === undefined) {
@@ -194,17 +193,14 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
                       <MenuItem value="">
                         Peu importe
                       </MenuItem>
-                      {criterions
-                      && criterions.criterions
-                        ? criterions.criterions
-                          .filter((c) => c.tag === 'environment').map((rome) => (
-                            <MenuItem
-                              key={rome.key}
-                              value={rome.key}
-                            >
-                              {rome.label}
-                            </MenuItem>
-                          )) : null}
+                      {environmentCriterions.map((rome) => (
+                        <MenuItem
+                          key={rome.key}
+                          value={rome.key}
+                        >
+                          {rome.label}
+                        </MenuItem>
+                      ))}
                     </Select>
                   )}
                 />
@@ -226,12 +222,11 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
                       <MenuItem selected value="">
                         Peu importe
                       </MenuItem>
-                      {criterions && criterions.criterions
-                        ? criterions.criterions.filter((c) => c.tag === 'city').map((rome) => (
-                          <MenuItem key={rome.key} value={rome.key}>
-                            {rome.label}
-                          </MenuItem>
-                        )) : null}
+                      {cityCriterions.map((rome) => (
+                        <MenuItem key={rome.key} value={rome.key}>
+                          {rome.label}
+                        </MenuItem>
+                      ))}
                     </Select>
                   )}
                 />
@@ -253,12 +248,11 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
                       <MenuItem selected value="">
                         Toutes les regions
                       </MenuItem>
-                      {criterions && criterions.regions
-                    && criterions.regions.map((rome) => (
-                      <MenuItem key={rome.id} value={rome.id}>
-                        {rome.label}
-                      </MenuItem>
-                    ))}
+                      {regionCriterions.map((rome) => (
+                        <MenuItem key={rome.key} value={rome.key}>
+                          {rome.label}
+                        </MenuItem>
+                      ))}
                     </Select>
                   )}
                 />
