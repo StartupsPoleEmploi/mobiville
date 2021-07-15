@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { omit } from 'lodash'
 import { Typography } from '@material-ui/core'
+import TuneIcon from '@material-ui/icons/Tune'
+
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'
 import { COLOR_GRAY, COLOR_PRIMARY } from '../../constants/colors'
@@ -93,7 +95,21 @@ const MobileCriterionsSelection = ({ criterions, showMobileCriterionsSelection, 
       <Wrapper>
         <Title>Mes critères</Title>
         <TagsBlock>
-          <Tag onClick={() => showMobileCriterionsSelection(true)}>Modifier</Tag>
+          <Tag
+            onClick={() => showMobileCriterionsSelection(true)}
+            role="button"
+            tabIndex="0"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              background: '#191970',
+              color: '#fff',
+              cursor: 'pointer'
+            }}
+          >
+            <TuneIcon fontSize="small" style={{ marginRight: 8 }} />
+            Modifier
+          </Tag>
           {tagsList.map((t) => (<Tag key={t}>{t}</Tag>))}
         </TagsBlock>
         <SubInfo>
