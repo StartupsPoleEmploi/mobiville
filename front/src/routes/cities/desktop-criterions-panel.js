@@ -103,12 +103,7 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, redirectTo }) => {
   })
 
   const onSubmit = (data) => {
-    let params = { }
-    if (data.rome) {
-      params = { ...params, code_rome: [data.rome] }
-    } else if (criterions.codeRomes && criterions.codeRomes.length) {
-      params = { ...params, code_rome: [criterions.codeRomes[0].key] }
-    }
+    let params = { code_rome: [paramsUrl.code_rome || criterions.codeRomes[0].key] }
 
     if (data.city) {
       const tab = (params.code_criterion || [])
