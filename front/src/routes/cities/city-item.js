@@ -2,12 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Typography } from '@material-ui/core'
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+
 import { ucFirst } from '../../utils/utils'
 import { COLOR_GRAY, COLOR_PRIMARY, COLOR_TEXT_PRIMARY } from '../../constants/colors'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 
-const Wrapper = styled.div` 
+const Wrapper = styled.div`
   margin-top: 16px;
   margin-bottom: ${(props) => (props.isMobile ? '16px' : '32px')};
   display: flex;
@@ -70,20 +72,14 @@ const InformationsBlock = styled.div`
 `
 
 const ViewMore = styled.p`
-  text-align: right;
   font-size: 14px;
-  line-height: 16px;
   font-weight: 500;
   color: ${COLOR_PRIMARY};
   margin-top: 12px;
   margin-bottom: 0;
-
-  span {
-    font-size: 14px;
-    margin-left: 6px;
-    position: relative;
-    top: 2px;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 `
 
 const CityItem = ({ city }) => {
@@ -160,7 +156,7 @@ const CityItem = ({ city }) => {
         </TagsBlock>
         <ViewMore>
           En savoir plus
-          <span className="material-icons">arrow_forward</span>
+          <ArrowForwardIcon fontSize="small" style={{ marginLeft: 8 }} />
         </ViewMore>
       </InformationsBlock>
     </Wrapper>
