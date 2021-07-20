@@ -1,9 +1,8 @@
-/* eslint-disable */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import styled from "styled-components"
+import styled from 'styled-components'
 import {
-  Button as MuiButton, FormControl, InputLabel, MenuItem, Select
+  FormControl, InputLabel, MenuItem, Select
 } from '@material-ui/core'
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
 
@@ -13,7 +12,6 @@ import { COLOR_PRIMARY, COLOR_TEXT_SECONDARY } from '../../constants/colors'
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'
 
-
 // TODO use svg components
 const IconBlock = styled.i`
   color: ${COLOR_PRIMARY};
@@ -22,7 +20,7 @@ const IconBlock = styled.i`
 `
 
 const BackButton = styled.button.attrs({
-  type: "button"
+  type: 'button'
 })`
   cursor: pointer;
   border: none;
@@ -38,23 +36,19 @@ const H1 = styled.h1`
   font-size: 18px;
 `
 
-const H2 = styled.h2`
-  font-size: 14px;
-`
-
 const CUSTOM_SUB_LABELS = {
-  "small-city": "- 20 000 habitants",
-  "medium-city": "- 50 000 habitants",
-  "big-city": "- 200 000 habitants",
-  "extra-big-city": "+ 200 000 habitants",
+  'small-city': '- 20 000 habitants',
+  'medium-city': '- 50 000 habitants',
+  'big-city': '- 200 000 habitants',
+  'extra-big-city': '+ 200 000 habitants'
 }
 
 const getButtonStyle = (isSelected) => ({
-  width: "auto",
+  width: 'auto',
   height: 40,
-  display: "inline",
-  border: !isSelected ? "none" : `1px solid ${COLOR_PRIMARY}`,
-  borderRadius: "44px",
+  display: 'inline',
+  border: !isSelected ? 'none' : `1px solid ${COLOR_PRIMARY}`,
+  borderRadius: '44px',
   marginLeft: 8,
   marginBottom: 8,
   lineHeight: 1
@@ -75,8 +69,7 @@ const Icon = (props) => (
 const MobileCriterionsSelection = ({
   paramsUrl,
   onSubmit,
-  showMobileCriterionsSelection,
-  total
+  showMobileCriterionsSelection
 }) => {
   const {
     environmentCriterions,
@@ -88,12 +81,12 @@ const MobileCriterionsSelection = ({
   const [selectedCitySize, setSelectedCitySize] = useState(
     cityCriterions.find(
       ({ key }) => (paramsUrl.code_criterion || []).includes(key)
-    )?.key || ""
+    )?.key || ''
   )
   const [selectedEnvironment, setSelectedEnvironment] = useState(
     environmentCriterions.find(
       ({ key }) => (paramsUrl.code_criterion || []).includes(key)
-    )?.key || ""
+    )?.key || ''
   )
 
   const onValidate = () => {
@@ -113,7 +106,7 @@ const MobileCriterionsSelection = ({
       <H1>Ajuster mes critères</H1>
       <div>
         <p id="mobile-citerions-selection-env">
-          <b>Quel environnement recherchez-vous ?</b>
+          <b>Quel environnement recherchez-vous ?</b>
         </p>
         <div
           role="radiogroup"
@@ -140,12 +133,12 @@ const MobileCriterionsSelection = ({
             }
           )}
           <Button
-            onClick={() => setSelectedEnvironment("")}
+            onClick={() => setSelectedEnvironment('')}
             light
             column
-            style={getButtonStyle(selectedEnvironment === "")}
+            style={getButtonStyle(selectedEnvironment === '')}
             role="radio"
-            aria-checked={selectedEnvironment === ""}
+            aria-checked={selectedEnvironment === ''}
           >
             Tous les environnements
           </Button>
@@ -153,14 +146,14 @@ const MobileCriterionsSelection = ({
       </div>
 
       <div>
-        <p id="mobile-citerions-selection-city"><b>Lieu de travail ?</b></p>
+        <p id="mobile-citerions-selection-city"><b>Lieu de travail ?</b></p>
         <div
           role="radiogroup"
           aria-labelledby="mobile-citerions-selection-city"
         >
           {cityCriterions.map((criterion) => {
-              const isSelected = criterion.key === selectedCitySize
-              return (
+            const isSelected = criterion.key === selectedCitySize
+            return (
               <Button
                 onClick={() => setSelectedCitySize(criterion.key)}
                 light
@@ -179,22 +172,22 @@ const MobileCriterionsSelection = ({
                     <br />
                     <span style={{ fontSize: 10, color: COLOR_TEXT_SECONDARY }}>
                       {CUSTOM_SUB_LABELS[criterion.key]}
-                      </span>
+                    </span>
                   </div>
                 </ButtonContentWrapper>
               </Button>
             )
           })}
           <Button
-            onClick={() => setSelectedCitySize("")}
+            onClick={() => setSelectedCitySize('')}
             light
             column
             style={{
-              ...getButtonStyle(selectedCitySize === ""),
+              ...getButtonStyle(selectedCitySize === ''),
               height: 46
             }}
             role="radio"
-            aria-checked={selectedCitySize === ""}
+            aria-checked={selectedCitySize === ''}
           >
             Toutes les tailles
           </Button>
@@ -202,7 +195,7 @@ const MobileCriterionsSelection = ({
       </div>
 
       <div>
-        <p id="mobile-citerions-selection-city"><b>Dans quelle région ?</b></p>
+        <p id="mobile-citerions-selection-city"><b>Dans quelle région ?</b></p>
 
         <FormControl fullWidth variant="filled">
           <InputLabel shrink htmlFor="criterion-region-select-label">Région</InputLabel>
@@ -229,27 +222,23 @@ const MobileCriterionsSelection = ({
 
       <div
         style={{
-          position: "fixed",
-          bottom: "32px",
-          width: "calc(100% - 32px)"
+          position: 'fixed',
+          bottom: '32px',
+          width: 'calc(100% - 32px)'
         }}
       >
-      <Button onClick={onValidate}>
-        Afficher les résultats
-      </Button>
+        <Button onClick={onValidate}>
+          Afficher les résultats
+        </Button>
       </div>
     </div>
   )
 }
 
 MobileCriterionsSelection.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
   paramsUrl: PropTypes.object.isRequired,
-  showMobileCriterionsSelection: PropTypes.func.isRequired,
-  total: PropTypes.number
-}
-
-MobileCriterionsSelection.defaultProps = {
-  total: 0
+  showMobileCriterionsSelection: PropTypes.func.isRequired
 }
 
 export default MobileCriterionsSelection
