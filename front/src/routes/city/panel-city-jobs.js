@@ -11,9 +11,12 @@ import {
   Checkbox,
   ListItemText
 } from '@material-ui/core'
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 
 import { useProfessions } from '../../common/contexts/professionsContext'
-import { COLOR_GRAY, COLOR_TEXT_PRIMARY, COLOR_TEXT_SECONDARY } from '../../constants/colors'
+import {
+  COLOR_GRAY, COLOR_PRIMARY, COLOR_TEXT_PRIMARY, COLOR_TEXT_SECONDARY
+} from '../../constants/colors'
 import { useCities } from '../../common/contexts/citiesContext'
 import { thereAre } from '../../utils/utils'
 import { useWindowSize } from '../../common/hooks/window-size'
@@ -107,8 +110,7 @@ const JobItem = styled.div`
     }
 
     .description {
-      margin-top: 8px;
-      margin-bottom: 16px;
+      margin: 8px 0;
       font-size: 12px;
       color: black;
       max-height: 98px;
@@ -136,6 +138,15 @@ const StyledFormControl = styled(FormControl).attrs({
     border-radius: 32px;
     overflow: hidden;
   }
+`
+
+const ViewMore = styled.p`
+  font-weight: 500;
+  color: ${COLOR_PRIMARY};
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 `
 
 const MAX_DESCRIPTION_LENGTH = 280
@@ -422,6 +433,12 @@ const PanelCityJobs = ({ city, rome }) => {
                     <p className="description">
                       {description}
                     </p>
+
+                    <ViewMore>
+                      En savoir plus
+                      <ArrowForwardIcon fontSize="small" style={{ marginLeft: 8 }} />
+                    </ViewMore>
+
                     <div className="actions">
                       <p className="date">{thereAre(p.dateCreation)}</p>
                       <p className="type">
