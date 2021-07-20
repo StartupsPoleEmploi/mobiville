@@ -42,7 +42,12 @@ const ALL_STEPS = [
   {
     key: 'rome',
     components: lazy(() => import('./step2'))
-  }, {
+  },
+  {
+    key: 'rome-list',
+    components: lazy(() => import('./RomeList'))
+  },
+  {
     key: 'region',
     components: lazy(() => import('./step3'))
   }, {
@@ -113,19 +118,24 @@ const SearchPage = () => {
 
   const Component = ALL_STEPS[index].components
 
+  const displayedStep = Math.max(index - 1, 0) + 1 // calculated step 1 & 2 should display as 1
+
   return (
     <MainLayout>
-      <ProgressBar style={{ width: `${((index + 1) * 100) / ALL_STEPS.length}%` }} />
+      <ProgressBar style={{ width: `${((displayedStep) * 100) / (ALL_STEPS.length - 1)}%` }} />
       <LimitedWrapper isMobile={isMobile}>
         <BackWrapper isMobile={isMobile}>
-          <ArrowBackOutlinedIcon style={{ cursor: 'pointer' }} onClick={() => onNextStep({}, -1)} />
+          <ArrowBackOutlinedIcon
+            style={{ cursor: 'pointer' }}
+            onClick={() => onNextStep({}, -1)}
+          />
         </BackWrapper>
         <StepBlock>
           Etape
           {' '}
-          {index + 1}
+          {displayedStep}
           /
-          {ALL_STEPS.length}
+          {ALL_STEPS.length - 1}
         </StepBlock>
         <Component onNext={onNextStep} values={values} />
       </LimitedWrapper>

@@ -3,8 +3,10 @@ import {
 } from '@material-ui/core'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+
 import { useCities } from '../../common/contexts/citiesContext'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
@@ -58,8 +60,17 @@ const Step2Component = ({ onNext }) => {
 
   return (
     <Wrapper>
-      <Title isMobile={isMobile}>Quel métier ou compétences recherchez-vous ?</Title>
-      <p>Pour le moment, le service est disponible uniquement pour certains métiers.</p>
+      <Title isMobile={isMobile}>Quel métier ou compétences recherchez-vous ?</Title>
+      <p>
+        Pour le moment, le service est disponible uniquement pour
+        {' '}
+        <Link
+          to="/rechercher/rome-list"
+          title="Accéder à la liste des métiers Mobiville"
+        >
+          certains métiers.
+        </Link>
+      </p>
 
       <div>
         <Autocomplete
