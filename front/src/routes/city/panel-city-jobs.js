@@ -78,10 +78,13 @@ const JobLayout = styled.div`
 `
 
 const JobContentLayout = styled.div`
-
+  display: flex;
+  flex-wrap: wrap;
 `
 
 const JobTitleLayout = styled.div`
+  display: flex;
+  align-items: center;
   font-weight: bold;
   font-size: 14px;
   padding-bottom: 16px;
@@ -129,14 +132,18 @@ const JobItem = styled.div`
 `
 
 const StyledFormControl = styled(FormControl).attrs({
-  variant: 'outlined'
+  variant: 'filled'
 })`
-  min-width: 100px;
+  width: 100px;
   margin-left: 16px;
 
   .MuiInputBase-root {
-    border-radius: 32px;
+    border-radius: 8px;
     overflow: hidden;
+  }
+
+  .MuiFilledInput-underline::before {
+    border-bottom: none;
   }
 `
 
@@ -175,7 +182,7 @@ const PanelCityJobs = ({ city, rome }) => {
   } = useCities()
   const size = useWindowSize()
   const [infosTravail, setInfosTravail] = useState(null)
-  const [dateFilter, setDateFilter] = useState(ALL_TIME)
+  const [dateFilter, setDateFilter] = useState('')
   const [contractFilters, setContractFilters] = useState([])
   const [durationFilters, setDurationFilters] = useState([])
 
@@ -288,24 +295,23 @@ const PanelCityJobs = ({ city, rome }) => {
           </StatistiqueLayout>
           <JobLayout>
             <JobTitleLayout>
-              <div style={{ paddingBottom: '16px' }}>
+              <div style={{ flex: '0 1 40%' }}>
                 {displayedProfessions.length}
                 {' '}
                 offre
                 {displayedProfessions.length > 1 ? 's' : ''}
                 {' pour '}
                 {romeLabel}
-                {' '}
-                dans un rayon de 30 km
+                <br />
+                <span style={{ fontSize: 12 }}>Dans un rayon de 30 km</span>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 8 }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', flex: '0 0 60%' }}>
                 <StyledFormControl>
                   <InputLabel htmlFor="filter-date-creation">
-                    Date de création
+                    Date
                   </InputLabel>
                   <Select
-                    displayEmpty
                     inputProps={{
                       id: 'filter-date-creation'
                     }}
@@ -313,7 +319,6 @@ const PanelCityJobs = ({ city, rome }) => {
                     value={dateFilter}
                     onChange={(event) => setDateFilter(event.target.value)}
                   >
-                    <MenuItem value={ALL_TIME}>Toutes les offres</MenuItem>
                     <MenuItem value={ONE_DAY}>
                       Un jour
                     </MenuItem>
@@ -328,6 +333,9 @@ const PanelCityJobs = ({ city, rome }) => {
                     </MenuItem>
                     <MenuItem value={ONE_MONTH}>
                       Un mois
+                    </MenuItem>
+                    <MenuItem value={ALL_TIME}>
+                      Toutes les offres
                     </MenuItem>
                   </Select>
                 </StyledFormControl>
@@ -412,6 +420,7 @@ const PanelCityJobs = ({ city, rome }) => {
                 </StyledFormControl>
               </div>
             </JobTitleLayout>
+
             <JobContentLayout>
               {isLoadingProfessions && <p>Chargement des métiers</p>}
               {displayedProfessions.map((p) => {
