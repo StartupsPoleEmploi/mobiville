@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { omit } from 'lodash'
 import { Typography } from '@material-ui/core'
 import TuneIcon from '@material-ui/icons/Tune'
 
@@ -64,8 +63,6 @@ const SubInfo = styled.div`
 const MobileCriterionsSelection = ({ criterions, showMobileCriterionsSelection, total }) => {
   const { criterions: allCriterions } = useCities()
 
-  const usableCriterions = omit(criterions, 'code_criterion')
-
   const findCriterionsValue = (val) => {
     let foundLabel = null
     if (allCriterions) {
@@ -80,15 +77,13 @@ const MobileCriterionsSelection = ({ criterions, showMobileCriterionsSelection, 
     return foundLabel
   }
 
-  const tagsList = []
-  Object.values(usableCriterions).forEach((crit) => {
-    crit.forEach((val) => {
-      const searchValue = findCriterionsValue(val)
-      if (searchValue) {
-        tagsList.push(searchValue)
-      }
-    })
-  })
+  const tagsList = Object.values(criterions)
+    .reduce((prev, criterionsArray) => ([...prev, ...criterionsArray]), [])
+    .reduce((prev, criterion) => {
+      const searchValue = findCriterionsValue(criterion)
+      if (!searchValue || prev.includes(searchValue)) return prev
+      return prev.concat(searchValue)
+    }, [])
 
   return (
     <EmptySpace>
