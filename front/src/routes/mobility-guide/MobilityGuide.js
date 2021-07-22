@@ -101,7 +101,7 @@ const MobilityGuide = () => {
             </ul>
           </p>
           <p>
-            <Link to="/aides/22-aide-pour-la-recherche-demploi">
+            <Link to="/aides/38-aide-pour-la-recherche-demploi">
               Découvrir l'aide et les conditions
               <ArrowForward />
             </Link>
@@ -147,10 +147,10 @@ const MobilityGuide = () => {
           <p>
             Déménager peut vous couter moins cher !
             <br />
-            C'est le cas avec l'aide "1000 euros pour le rapprochement domicile-travail"
+            C'est le cas avec l'aide "Mon job mon logement" qui vous permet d'avoir 1000 euros
           </p>
           <p>
-            <Link to="/aides/17-aide-de-1-000-pour-le-rapprochement-domicile-travail">
+            <Link to="/aides/50-mon-job-mon-logement">
               Découvrir cette aide
               <ArrowForward />
             </Link>
