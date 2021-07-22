@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 import {
-  COLOR_SECONDARY, COLOR_BACKGROUND, COLOR_GRAY
+  COLOR_PRIMARY, COLOR_SECONDARY, COLOR_BACKGROUND, COLOR_GRAY
 } from '../../constants/colors'
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirstOnly } from '../../utils/utils'
+
+const MAX_DESCRIPTION_LENGTH = 700
 
 const MainLayout = styled.div`
   display: flex;
@@ -134,10 +137,25 @@ const ElementLine = styled.div`
   }
 `
 
+const ViewMore = styled.button.attrs({
+  type: 'button'
+})`
+  font-weight: 500;
+  color: ${COLOR_PRIMARY};
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  border: none;
+  background: white;
+  cursor: pointer;
+`
+
 const PanelCityLife = ({ city }) => {
   const { onGetCityAmenities, cityAmenities } = useCities()
   const size = useWindowSize()
   const isMobile = isMobileView(size)
+
+  const [showFullDescription, setShowFullDescription] = useState(false)
 
   useEffect(() => {
     if (city && city.insee_com) {
@@ -159,13 +177,31 @@ const PanelCityLife = ({ city }) => {
     education = cityAmenities.find((k) => k.key === 'education')?.tab
   }
 
+  const description = (city.description || '').replace('Écouter', '')
+
+  // We truncate too long descriptions
+  const displayedDescription = description.length > MAX_DESCRIPTION_LENGTH && !showFullDescription
+    ? description.slice(0, MAX_DESCRIPTION_LENGTH).concat(
+      description.slice(MAX_DESCRIPTION_LENGTH).split(' ')[0]
+    )
+      .concat('…') : description
+
   const mainCityElement = (
     <ItemLayout isMobile={isMobile}>
       <ItemTitleLayout>
         Description de la ville
       </ItemTitleLayout>
       <ItemContentLayout>
-        {(city.description || '').replace('Écouter', '')}
+        {displayedDescription}
+        {description.length > MAX_DESCRIPTION_LENGTH && !showFullDescription && (
+          <div>
+
+            <ViewMore onClick={() => setShowFullDescription(true)}>
+              En savoir plus
+              <ArrowForwardIcon fontSize="small" style={{ marginLeft: 8 }} />
+            </ViewMore>
+          </div>
+        )}
       </ItemContentLayout>
     </ItemLayout>
   )
