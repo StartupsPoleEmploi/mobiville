@@ -46,6 +46,7 @@ export default sequelizeInstance => {
   )
 
   Model.associate = function(models) {
+    Model.hasOne(models.romeCodes, { foreignKey: 'code', sourceKey: 'code_rome' })
     return models
   }
 

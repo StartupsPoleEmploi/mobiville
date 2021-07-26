@@ -2,7 +2,7 @@ import Sequelize from 'sequelize'
 
 export default sequelizeInstance => {
   const Model = sequelizeInstance.define(
-    'romeskills',
+    'romeCodes',
     {
       id: {
         type: Sequelize.INTEGER,
@@ -11,11 +11,11 @@ export default sequelizeInstance => {
         autoIncrement: true,
         unique: true,
       },
-      code_rome: {
-        type: Sequelize.STRING(255),
+      code: {
+        type: Sequelize.STRING(5),
         allowNull: false,
       },
-      skill_label: {
+      label: {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
@@ -29,23 +29,21 @@ export default sequelizeInstance => {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },
-      deleted_at: {
-        type: Sequelize.DATE,
-      },
     },
     {
       timestamps: true,
-      paranoid: true,
       underscored: true,
-      indexes: [{ fields: ['code_rome'] }],
+      indexes: [
+        {
+          fields: ['code'],
+          unique: true,
+        },
+      ],
     }
   )
 
+
   Model.associate = function(models) {
-    Model.hasOne(models.tensions, { foreignKey: 'rome', sourceKey: 'code_rome' })
-    Model.hasOne(models.romeCodes, { foreignKey: 'code', sourceKey: 'code_rome' })
-
-
     return models
   }
 
