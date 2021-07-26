@@ -65,7 +65,7 @@ const Step2Component = ({ onNext }) => {
         Pour le moment, le service est disponible uniquement pour
         {' '}
         <Link
-          to="/rechercher/rome-list"
+          to="/ogr-list"
           title="Accéder à la liste des métiers Mobiville"
         >
           certains métiers.
