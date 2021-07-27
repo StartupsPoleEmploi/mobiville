@@ -1,4 +1,4 @@
-import { Op } from 'sequelize'
+import { Op, col, fn } from 'sequelize'
 import { getOgrFromRome } from '../utils/pe-api'
 import { sleep } from '../utils/utils'
 
@@ -49,6 +49,31 @@ export default (sequelizeInstance, Model) => {
       }
     })
   }
-  
+
+  Model.fetchAllAvailable = async () => {
+    const availableRomeCodes = (await Model.models.regionsTensions.findAll({
+      attributes: ['rome'],
+      group: ['rome'],
+    })).map(({rome }) => rome)
+
+
+    const result = await Model.findAll({
+      attributes: ['code_rome', 'ogr_label'],
+      include: {
+        attributes: ['label'],
+        model: Model.models.romeCodes,
+      },
+      where: {
+        code_rome: availableRomeCodes,
+      },
+    })
+
+    return result.map(row => ({
+      rome: row.code_rome,
+      romeLabel: row.romeCode.label,
+      ogrLabel: row.ogr_label,
+    }))
+  }
+
   return Model
 }
