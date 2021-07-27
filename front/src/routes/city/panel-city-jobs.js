@@ -428,8 +428,8 @@ const PanelCityJobs = ({ city, rome }) => {
             <JobContentLayout>
               {isLoadingProfessions && <p>Chargement des métiers</p>}
               {displayedProfessions.map((p) => {
-                // We truncate too long descriptions
-                const description = p.description.length > MAX_DESCRIPTION_LENGTH
+                // We truncate too long descriptions. "?", as it seems they can be absent.
+                const description = p.description?.length > MAX_DESCRIPTION_LENGTH
                   ? p.description.slice(0, MAX_DESCRIPTION_LENGTH).concat(
                     p.description.slice(MAX_DESCRIPTION_LENGTH).split(' ')[0]
                   )
