@@ -136,6 +136,7 @@ const StyledFormControl = styled(FormControl).attrs({
 })`
   width: 100px;
   margin-left: 16px;
+  margin-bottom: 8px;
 
   .MuiInputBase-root {
     border-radius: 8px;
@@ -295,7 +296,7 @@ const PanelCityJobs = ({ city, rome }) => {
           </StatistiqueLayout>
           <JobLayout>
             <JobTitleLayout>
-              <div style={{ flex: '0 1 40%' }}>
+              <div style={{ flex: '0 1 35%' }}>
                 {displayedProfessions.length}
                 {' '}
                 offre
@@ -306,7 +307,10 @@ const PanelCityJobs = ({ city, rome }) => {
                 <span style={{ fontSize: 12 }}>Dans un rayon de 30 km</span>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', flex: '0 0 60%' }}>
+              <div style={{
+                display: 'flex', justifyContent: 'flex-end', flex: '0 0 65%', flexWrap: 'wrap'
+              }}
+              >
                 <StyledFormControl>
                   <InputLabel htmlFor="filter-date-creation">
                     Date
