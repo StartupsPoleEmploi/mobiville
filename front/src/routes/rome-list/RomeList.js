@@ -143,7 +143,7 @@ const Link = styled(_Link)`
   color: #000;
 `
 
-const OgrList = () => {
+const RomeList = () => {
   const size = useWindowSize()
   const isMobile = isMobileView(size)
 
@@ -231,4 +231,4 @@ const OgrList = () => {
   )
 }
 
-export default OgrList
+export default RomeList

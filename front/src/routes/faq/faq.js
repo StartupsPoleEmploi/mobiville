@@ -24,7 +24,7 @@ const QUESTION_ANSWERS = [
       <>
         Le service cible en priorité
         {' '}
-        <Link to="/ogr-list">les métiers</Link>
+        <Link to="/rome-list">les métiers</Link>
         {' '}
         dans lesquels il y a des difficultés de
         {' '}
