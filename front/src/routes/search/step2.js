@@ -1,11 +1,12 @@
 import {
   TextField
 } from '@material-ui/core'
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
-import React, { useEffect, useState } from 'react'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { throttle } from 'lodash'
 
 import { useCities } from '../../common/contexts/citiesContext'
 import { useWindowSize } from '../../common/hooks/window-size'
@@ -36,15 +37,10 @@ const JobTextField = styled(TextField)`
 // impossible separator to find in a job name, used to detect a user has selected on autocomplete
 const SEPARATOR = '||=|=||'
 
-// Small tweak to allow matching on both "aide-soignant" and "aide soignant"
-const filterOptions = createFilterOptions({
-  stringify: (option) => option.label.concat(option.label.replace(/-/g, ' '))
-})
-
 const Step2Component = ({ onNext }) => {
   const size = useWindowSize()
   const {
-    isLoading,
+    isLoadingJobsMatchingCriterion,
     jobsMatchingCriterions,
     onSearchJobLabels
   } = useCities()
@@ -52,8 +48,13 @@ const Step2Component = ({ onNext }) => {
   const [searchedLabel, setSearchedLabel] = useState('')
   const [isAutocompleteFocused, setIsAutocompleteFocused] = useState(false)
 
+  const throttledOnSearchJobLabels = useMemo(
+    () => throttle((search) => onSearchJobLabels(search), 200),
+    []
+  )
+
   useEffect(() => {
-    onSearchJobLabels(searchedLabel)
+    throttledOnSearchJobLabels(searchedLabel)
   }, [searchedLabel])
 
   const isMobile = isMobileView(size)
@@ -103,9 +104,9 @@ const Step2Component = ({ onNext }) => {
             )
           }
           noOptionsText="Pas de résultat"
-          loading={isLoading}
+          loading={isLoadingJobsMatchingCriterion}
           loadingText="Chargement…"
-          filterOptions={filterOptions}
+          filterOptions={(x) => x}
           style={{
             position: isMobile && isAutocompleteFocused ? 'fixed' : 'static',
             top: 0,

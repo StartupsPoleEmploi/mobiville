@@ -1,19 +1,19 @@
-import { Op, col, fn } from 'sequelize'
+import { QueryTypes } from 'sequelize'
 import { getOgrFromRome } from '../utils/pe-api'
 import { sleep } from '../utils/utils'
 
 export default (sequelizeInstance, Model) => {
   Model.syncRomeOgrs = async () => {
     console.log('SYNC ROME OGRS - START')
-    const getRomesSync = (await Model.findAll({group: 'code_rome'})).map(r => (r.code_rome))
-    const getAllRomesToNeedSync = (await Model.models.tensions.findAll({group: 'rome'})).map(r => (r.rome))
+    const getRomesSync = (await Model.findAll({ group: 'code_rome' })).map(r => (r.code_rome))
+    const getAllRomesToNeedSync = (await Model.models.tensions.findAll({ group: 'rome' })).map(r => (r.rome))
 
-    for(let i = 0; i < getAllRomesToNeedSync.length; i++) {
+    for (let i = 0; i < getAllRomesToNeedSync.length; i++) {
       const codeRome = getAllRomesToNeedSync[i]
-      if(getRomesSync.indexOf(codeRome) === -1) {
+      if (getRomesSync.indexOf(codeRome) === -1) {
         // sync
         const result = (await getOgrFromRome(codeRome) || [])
-        for(let x = 0; x < result.length; x++) {
+        for (let x = 0; x < result.length; x++) {
           const element = result[x]
           await Model.create({
             code_rome: codeRome,
@@ -31,19 +31,24 @@ export default (sequelizeInstance, Model) => {
     console.log('SYNC ROME OGRS - END')
   }
 
-  Model.searchByLabel = async (label) => {
-    return (await Model.findAll({
-      where: {
-        ogr_label: {
-          // replace space by wildcard to allow for simple search of "aide-soignant" for "aide soignant"
-          [Op.like]: `%${(label || '').toLowerCase().trim().replace(/ /g, '_')}%`,
-        },
-      },
-      limit: 20,
-      group: ['ogr_label'],
-      raw: true,
-    })).map(e => {
+  Model.searchByLabel = async (searchedWords) => {
+    const labelForQuery = `*${(searchedWords || '')
+      .split(' ')
+      .join('*')}*`
+      .replace(/[+-<>()~*"@]/ig, ' ') // filter special characters
+
+    const queryResult = await sequelizeInstance.query(`
+      SELECT code_rome, ogr_label, match(ogr_label) against(? IN BOOLEAN MODE) as relevance FROM romeogrs
+      WHERE match(ogr_label) against(? IN BOOLEAN MODE) ORDER BY relevance DESC LIMIT 10`, {
+      replacements: [labelForQuery, labelForQuery],
+      type: QueryTypes.SELECT,
+      model: Model,
+      mapToModel: true,
+    })
+
+    return queryResult.map(e => {
       return {
+        ...e,
         codeRome: e.code_rome,
         label: e.ogr_label,
       }
@@ -54,7 +59,7 @@ export default (sequelizeInstance, Model) => {
     const availableRomeCodes = (await Model.models.regionsTensions.findAll({
       attributes: ['rome'],
       group: ['rome'],
-    })).map(({rome }) => rome)
+    })).map(({ rome }) => rome)
 
 
     const result = await Model.findAll({

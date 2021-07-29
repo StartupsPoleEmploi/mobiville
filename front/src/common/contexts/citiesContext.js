@@ -27,6 +27,7 @@ export function CitiesProvider(props) {
   const [isLoadingLocation, _setIsLoadingLocation] = useState(false)
   const [isLoadingTenement, _setIsLoadingTenement] = useState(false)
   const [isLoadingAmenities, _setIsLoadingAmenities] = useState(false)
+  const [isLoadingJobsMatchingCriterion, setIsLoadingJobsMatchingCriterion] = useState(false)
   const [sortCriterions, setSortCriterions] = useState('')
   const [cityTenement, _setCityTenement] = useState(null)
   const [cityAmenities, _setCityAmenities] = useState(null)
@@ -107,21 +108,24 @@ export function CitiesProvider(props) {
       return
     }
 
+    setIsLoadingJobsMatchingCriterion(true)
+
     searchJobLabels({ label }).then((results) => {
       // augment rome labels with job title matches
       setJobsMatchingCriterions(
-        criterions.codeRomes.reduce((prev, { key, label: romeLabel }) => {
-          const result = results.find(
-            ({ codeRome }) => codeRome === key
-          )
-          if (!result) return prev
+        results.reduce((prev, result) => {
+          const {
+            key: romeKey,
+            label: romeLabel
+          } = criterions.codeRomes.find(({ key }) => result.codeRome === key)
 
           return prev.concat({
-            key,
+            key: romeKey,
             label: romeLabel.concat(` (${result.label}, …)`)
           })
         }, [])
       )
+      setIsLoadingJobsMatchingCriterion(false)
     })
   }, [criterions])
 
@@ -164,6 +168,7 @@ export function CitiesProvider(props) {
         isLoading,
         isLoadingCity,
         isLoadingLocation,
+        isLoadingJobsMatchingCriterion,
         sortCriterions,
         isLoadingTenement,
         cityTenement,
