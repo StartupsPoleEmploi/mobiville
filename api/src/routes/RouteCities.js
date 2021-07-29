@@ -40,7 +40,7 @@ export default class RouteCities extends Route {
       this.model.models.stats.addStats({values: {codeRegion, codeCriterion, codeRome, from}, session_id: ctx.session.id})
     }
     let result = await this.model.search({codeRegion, codeCriterion, codeRome})
-    
+
     switch (sortBy) {
     case 'mer':
       result = orderBy(result, ['distance_from_sea'], ['asc'])
@@ -138,15 +138,15 @@ export default class RouteCities extends Route {
   async amenitiesCity(ctx) {
     const {insee} = ctx.params
     const cacheList = await this.model.getCacheLivingEnvironment(insee) || {}
-    const list = JSON.parse(JSON.stringify(ALL_LIFE_CRITERIONS_LIST))   
-    
+    const list = JSON.parse(JSON.stringify(ALL_LIFE_CRITERIONS_LIST))
+
     for(let i = 0; i < list.length; i++) {
       for(let x = 0; x < list[i].tab.length; x++) {
         list[i].tab[x].total = cacheList[list[i].key + '-' + list[i].tab[x].label] || 0
       }
       list[i].tab = list[i].tab.filter(i => i.total)
     }
-    
+
     this.sendOk(ctx, list)
   }
 
