@@ -18,7 +18,7 @@ const MobilityGuide = lazy(() => import('./mobility-guide/MobilityGuide'))
 const RomeList = lazy(() => import('./rome-list/RomeList'))
 
 export const Routes = () => (
-  <Suspense fallback={<p>loading...</p>}>
+  <Suspense fallback={<p>Chargement...</p>}>
     <Router>
       <Switch>
         <Route exact path="/" component={Home} />
