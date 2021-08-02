@@ -68,8 +68,9 @@ const Step5Component = ({ onNext, values }) => {
           .filter((f) => f.tag === 'environment')
           .map((c) => {
             let available = true
-            const isTooBigForCountrySide = values.code_city[0].includes(BIG_CITY)
-              || values.code_city[0].includes(MEDIUM_CITY)
+            const codeCity = values.code_city?.[0] || ''
+            const isTooBigForCountrySide = codeCity.includes(BIG_CITY)
+              || codeCity.includes(MEDIUM_CITY)
 
             if (isTooBigForCountrySide && c.key === CAMPAGNE) {
               // handles special case : a medium or big city isn’t a countryside city…
@@ -117,7 +118,7 @@ Step5Component.propTypes = {
 }
 
 Step5Component.defaultProps = {
-  onNext: () => {},
+  onNext: () => { },
   values: {}
 }
 

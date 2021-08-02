@@ -32,8 +32,9 @@ export default class RouteCities extends Route {
     }),
   })
   async search(ctx) {
-    const {code_region: codeRegionTemp = [], code_criterion: codeCriterion = [], code_rome: codeRome = [], from = [], index = 0, sortBy} = this.body(ctx)
+    const { code_region: codeRegionTemp = [], code_criterion: codeCriterionTemp = [], code_rome: codeRome = [], from = [], index = 0, sortBy } = this.body(ctx)
     const codeRegion = compact(codeRegionTemp) // temporary fix, as the front may send an array containing an empty string in code_region
+    const codeCriterion = compact(codeCriterionTemp)
 
     if(index === 0) {
       this.model.models.stats.addStats({values: {codeRegion, codeCriterion, codeRome, from}, session_id: ctx.session.id})
