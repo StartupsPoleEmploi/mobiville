@@ -7,7 +7,7 @@ const models = db.initModels()
 const doSync = async () => {
   try {
     const amenities = await getAmenitiesDatas()
-    const status = await models.amenities.sync({amenities})
+    const status = await models.amenities.sync({ amenities })
     console.log('Success! Status:', status)
     process.exit(0)
 

@@ -1,25 +1,88 @@
+import { Op } from 'sequelize'
+import { chunk, omit } from 'lodash'
+
+const PARIS_CODE = 75056
+const MARSEILLE_CODE = 13055
+const LYON_CODE = 69123
+
 export default (sequelizeInstance, Model) => {
-  Model.sync = async ({amenities}) => {
+  Model.sync = async ({ amenities }) => {
     await Model.deleteAll()
 
     let nbInserted = 0
     console.log('START SYNC AMENITIES')
-    sequelizeInstance.options.logging = false
-    for(let i = 0; i < amenities.length; i++) {
+
+    // general case
+
+    const allData = []
+    for (let i = 0; i < amenities.length; i++) {
       const data = {}
       for (const [key, value] of Object.entries(amenities[i])) {
         data[key] = value || null
       }
 
-      nbInserted ++
-      await Model.create({...data, logging: false})
+      nbInserted++
+      allData.push(data)
     }
-    sequelizeInstance.options.logging = true
+
+    // using chunks to avoid going past memory limits
+    for (const dataChunk of chunk(allData, 10000)) {
+      await Model.bulkCreate(dataChunk)
+    }
+
+
+
     console.log('END SYNC AMENITIES')
 
     return {
       'nb read': amenities.length,
       'nb inserted': nbInserted,
+    }
+  }
+
+
+  Model.syncSpecialCities = async () => {
+    // for Paris, Lyon, Marseille
+    console.log('START SYNC AMENITIES FOR SPECIAL CITIES')
+    const citiesArray = [
+      {
+        like: 'PARIS%ARRONDISSEMENT',
+        code: PARIS_CODE,
+      }, {
+        like: 'MARSEILLE%ARRONDISSEMENT',
+        code: MARSEILLE_CODE,
+      }, {
+        like: 'LYON%ARRONDISSEMENT',
+        code: LYON_CODE,
+      },
+    ]
+
+
+    for (const cityData of citiesArray) {
+      const districts = await Model.models.cities.findAll({
+        attributes: ['insee_com'],
+        where: {
+          nom_comm: {
+            [Op.like]: cityData.like,
+          },
+        },
+      })
+
+      const inseeComs = districts.map(({ insee_com }) => insee_com)
+
+      const amenities = await Model.findAll({ where: { depcom: inseeComs } })
+
+      const amenitiesToAdd = amenities.map(amenity => ({
+        ...omit(amenity.dataValues, 'id'),
+        depcom: cityData.code,
+      }))
+
+      // using chunks to avoid going past memory limits
+      for (const dataChunk of chunk(amenitiesToAdd, 10000)) {
+        await Model.bulkCreate(dataChunk)
+      }
+
+      console.log('END SYNC AMENITIES FOR SPECIAL CITIES')
     }
   }
 
@@ -223,11 +286,11 @@ export default (sequelizeInstance, Model) => {
       G104 - Information touristique
     */
 
-    if(typeof type === 'string') {
+    if (typeof type === 'string') {
       type = [type]
     }
 
-    const total = (await Model.count({where: {depcom: codeCom, typequ: type}}))
+    const total = (await Model.count({ where: { depcom: codeCom, typequ: type } }))
 
     return total
   }

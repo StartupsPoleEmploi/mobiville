@@ -13,7 +13,8 @@
     "sync:cities": "babel-node ./src/scripts/syncCities.js",
     "sync:regions": "babel-node ./src/scripts/syncRegions.js",
     "sync:professionsInTension": "babel-node ./src/scripts/syncProfessionsInTension.js",
-    "sync:amenities": "babel-node ./src/scripts/syncAmenities.js"
+    "sync:amenities": "babel-node ./src/scripts/syncAmenities.js",
+    "sync:amenitiesSpecial": "babel-node ./src/scripts/syncSpecialAmenities.js"
   },
   "dependencies": {
     "async": "^3.2.0",
