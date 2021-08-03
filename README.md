@@ -40,7 +40,9 @@ Et exécuter les commandes de synchronisation :
 yarn run sync:cities # 2 minutes long
 yarn run sync:regions # 2 minutes long
 yarn run sync:professionsInTension # almost instant
-yarn run sync:amenities # This will take about 3 HOURS
+yarn run sync:amenities # This will take about 10 minutes
+yarn run sync:amenitiesSpecial # This will take about 2 minutes, needs to be run after the previous script
+
 ```
 
 ## Construire les images
