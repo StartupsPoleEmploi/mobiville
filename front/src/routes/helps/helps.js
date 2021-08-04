@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { orderBy } from 'lodash'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import slug from 'slug'
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
@@ -13,7 +13,7 @@ import {
 } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { ucFirstOnly } from '../../utils/utils'
-import { paramUrlToObject } from '../../utils/url'
+import { objectToQueryString, paramUrlToObject } from '../../utils/url'
 
 const Title = styled.p`
   color: ${COLOR_TEXT_PRIMARY};
@@ -94,7 +94,7 @@ const HelpsPanel = styled.div`
   ` : '')}
 `
 
-const CategoryTag = styled.div`
+const CategoryTag = styled(Link)`
   background: ${COLOR_GRAY};
   border-radius: 8px;
   width: 108px;
@@ -129,7 +129,7 @@ const CategoryTag = styled.div`
   ` : '')}
 `
 
-const Tag = styled.div`
+const Tag = styled(Link)`
   background: ${COLOR_GRAY};
   border-radius: 44px;
   padding: 8px;
@@ -243,8 +243,6 @@ const SITUATIONS = [{
 const HelpsPage = ({ location: { search } }) => {
   const { previews, onLoadPreviews } = useHelps()
   const size = useWindowSize()
-  const history = useHistory()
-  const location = useLocation()
 
   useEffect(() => {
     onLoadPreviews()
@@ -256,36 +254,42 @@ const HelpsPage = ({ location: { search } }) => {
   const project = CATEGORIES.find(({ key }) => projectParam === key) || null
   const situation = SITUATIONS.find(({ key }) => situationParam === key) || null
 
-  let list
+  let list = previews.filter((preview) => {
+    if (situation) {
+      if (!preview.who.toLowerCase().includes(situation.text.toLowerCase())) {
+        return false
+      }
+    }
 
-  if (situation) {
-    list = previews.filter(
-      (preview) => preview.who.toLowerCase().indexOf(situation.text.toLowerCase()) !== -1
-    )
-  } else if (project) {
-    list = previews.filter(
-      (preview) => preview.situtation.toLowerCase().indexOf(project.key.toLowerCase()) !== -1
-    )
-  } else {
+    if (project) {
+      if (!preview.situtation.toLowerCase().includes(project.key.toLowerCase())) {
+        return false
+      }
+    }
+
+    return true
+  })
+
+  if (!situation && !project) {
     list = orderBy(previews, ['count_vue'], ['desc']).slice(0, 4)
   }
 
   return (
     <MainLayout>
       {!isMobileView(size) && (
-      <Header>
-        <div className="wrapper">
-          <img src="/Generique_Aides.png" alt="help" />
-          <div className="text">
-            <h2>
-              Vous avez besoin d
-              {'\''}
-              aide pour votre projet de mobilité ?
-            </h2>
-            <p>Découvrez les solutions pour accélérer votre projet</p>
+        <Header>
+          <div className="wrapper">
+            <img src="/Generique_Aides.png" alt="help" />
+            <div className="text">
+              <h2>
+                Vous avez besoin d
+                {'\''}
+                aide pour votre projet de mobilité ?
+              </h2>
+              <p>Découvrez les solutions pour accélérer votre projet</p>
+            </div>
           </div>
-        </div>
-      </Header>
+        </Header>
       )}
       <Container isMobile={isMobileView(size)}>
         <CategoryPanel>
@@ -297,7 +301,10 @@ const HelpsPage = ({ location: { search } }) => {
               <CategoryTag
                 key={c.text}
                 selected={project && c.key === project.key}
-                onClick={() => history.replace({ pathname: location.pathname, search: selected ? '' : `?project=${c.key}` })}
+                to={`/aides${objectToQueryString({
+                  project: selected ? '' : c.key,
+                  situation: situation?.key
+                })}`}
               >
                 <img src={c.icon} alt={c.text} />
                 <p>{c.text}</p>
@@ -311,7 +318,10 @@ const HelpsPage = ({ location: { search } }) => {
               <Tag
                 key={c.text}
                 selected={selected}
-                onClick={() => history.replace({ pathname: location.pathname, search: selected ? '' : `?situation=${c.key}` })}
+                to={`/aides${objectToQueryString({
+                  project: project?.key,
+                  situation: selected ? '' : c.key
+                })}`}
               >
                 <p>{c.text}</p>
               </Tag>
