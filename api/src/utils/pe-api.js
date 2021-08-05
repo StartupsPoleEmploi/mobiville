@@ -28,10 +28,18 @@ export async function searchJob({codeRome = [], insee = [], distance = 10}) {
   }).then(result => (result.data))
 }
 
-export async function infosTravail({codeProfession, codeRegion}) {
+export async function infosTravail({codeProfession, codeRegion }) {
   const token = await getAccessToken()
   // CONVERTIR CODE ROME EN PCS_PROFESSION_CODE
   return axios.get(`https://api.emploi-store.fr/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "d9090eaf-65cd-41cb-816f-7249897a3e51" WHERE "AREA_CODE" = '${codeRegion}' AND "PCS_PROFESSION_CODE" = '${codeProfession}'`, {
+    headers: {Authorization: `Bearer ${token}`},
+  }).then(result => (result.data))
+}
+
+
+export async function infosTensionTravail({codeRome, codeRegion}) {
+  const token = await getAccessToken()
+  return axios.get(`https://api.emploi-store.fr/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "266f691f-bce8-4443-808e-8e5aa125cf17" WHERE "ROME_PROFESSION_CARD_CODE" LIKE '${codeRome}' AND "AREA_CODE" = '${codeRegion}'`, {
     headers: {Authorization: `Bearer ${token}`},
   }).then(result => (result.data))
 }
