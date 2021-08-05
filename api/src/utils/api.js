@@ -85,6 +85,11 @@ export const getAllRegions = () => {
   return JSON.parse(rawdata).regions.map(r => ({...r.fields}))
 }
 
+export const getRegionsSocialHousing = () => {
+  let rawdata = readFileSync(__dirname + '/../assets/datas/regions-social-housing.json')
+  return JSON.parse(rawdata)
+}
+
 export function getAveragePricing() {
   return new Promise((resolve, reject) => {
     readFile(__dirname + '/../assets/datas/dvf-communes-2019.csv', (err, data) => {
