@@ -56,7 +56,14 @@ const StatistiqueTitleLayout = styled.p`
   margin-top: 0;
 `
 
-const StatistiqueItem = styled.div`
+const StatsContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+`
+
+const StatsItem = styled.div`
+  flex: 0 1 40%;
+
   img {
     display: block;
     margin: auto;
@@ -279,19 +286,36 @@ const PanelCityJobs = ({ city, rome }) => {
               {' '}
               {city.nom_comm}
             </StatistiqueTitleLayout>
-            <StatistiqueItem>
-              <img src="/icons/euro.svg" alt="euro" />
-              <p>Salaire brut</p>
-              {infosTravail && infosTravail.min ? (
-                <p>
-                  {infosTravail.min}
-                  € à
-                  {' '}
-                  {infosTravail.max}
-                  €
-                </p>
-              ) : (<p>A venir</p>)}
-            </StatistiqueItem>
+            <StatsContainer>
+              {infosTravail?.tension
+                && (
+                <StatsItem>
+                  <div>
+                    <img src="/icons/trending-up.svg" alt="" />
+                    <p>
+                      {infosTravail.tension}
+                      {' '}
+                      offres pour 10 demandeurs
+                    </p>
+                  </div>
+                </StatsItem>
+                )}
+
+              <StatsItem>
+                <img src="/icons/euro.svg" alt="" />
+                <p>Salaire brut</p>
+                {infosTravail?.min ? (
+                  <p>
+                    {infosTravail.min}
+                    € à
+                    {' '}
+                    {infosTravail.max}
+                    €
+                  </p>
+
+                ) : (<p>A venir</p>)}
+              </StatsItem>
+            </StatsContainer>
 
           </StatistiqueLayout>
           <JobLayout>

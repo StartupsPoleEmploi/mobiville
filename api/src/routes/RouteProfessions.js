@@ -1,6 +1,6 @@
 import Route from './Route'
 import {Types} from '../utils/types'
-import { searchJob, infosTravail } from '../utils/pe-api'
+import { searchJob, infosTravail, infosTensionTravail } from '../utils/pe-api'
 import { meanBy } from 'lodash'
 
 
@@ -42,10 +42,10 @@ export default class RouteProfessions extends Route {
 
     const result = await searchJob({codeRome, insee: getInseeCodesForSearch(insee), distance: 30})
     if(result) {
-      this.sendOk(ctx, result.resultats)  
+      this.sendOk(ctx, result.resultats)
     } else {
       this.sendOk(ctx, [])
-    }    
+    }
   }
 
   /**
@@ -71,21 +71,39 @@ export default class RouteProfessions extends Route {
     const pcs = await this.model.models.tensions.findOne({
       where: {
         rome: code_rome,
-      }, 
+      },
       raw: true,
     })
 
     if(city && pcs) {
-      const result = await infosTravail({codeProfession: pcs.pcs, codeRegion: city.code_dept})
-      if(result && result.result && result.result.records) {
+      const [infosResult, statsResult] = await Promise.all([
+        infosTravail({codeProfession: pcs.pcs, codeRegion: city.code_dept, codeRome: code_rome }),
+        infosTensionTravail({ codeRegion: city.code_dept, codeRome: code_rome }),
+      ])
 
-        const records = result.result.records.map(r => ({...r, MINIMUM_SALARY: +r.MINIMUM_SALARY, MAXIMUM_SALARY: +r.MAXIMUM_SALARY}))
-        this.sendOk(ctx, {min: meanBy(records, 'MINIMUM_SALARY'), max: meanBy(records, 'MAXIMUM_SALARY')})  
+      let tension = null
+      if (statsResult && statsResult.result && statsResult.result.records) {
+        const found = statsResult.result.records.find(record => record.AREA_TYPE_NAME === 'Département')
+        if (found) {
+          tension = found.TENSION_RATIO || null
+        }
+      }
+
+      if (infosResult && infosResult.result && infosResult.result.records) {
+        const records = infosResult.result.records.map(r => ({...r, MINIMUM_SALARY: +r.MINIMUM_SALARY, MAXIMUM_SALARY: +r.MAXIMUM_SALARY}))
+        this.sendOk(
+          ctx,
+          {
+            min: meanBy(records, 'MINIMUM_SALARY'),
+            max: meanBy(records, 'MAXIMUM_SALARY'),
+            tension,
+          }
+        )
       } else {
         this.sendOk(ctx, null)
-      } 
+      }
     } else {
       this.sendOk(ctx, null)
-    }   
+    }
   }
 }
