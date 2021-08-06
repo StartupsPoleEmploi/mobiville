@@ -6,7 +6,6 @@ services:
     ports:
       - '80:80'
     volumes:
-      - './nginx/conf.d:/etc/nginx/conf.d'
       - './logs/nginx:/var/log/nginx'
     environment:
       - TZ=Europe/Paris
