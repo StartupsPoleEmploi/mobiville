@@ -22,6 +22,7 @@ export function CitiesProvider(props) {
   const [jobsMatchingCriterions, setJobsMatchingCriterions] = useState([])
   const [city, setCity] = useState(null)
   const [criterions, _setCriterions] = useState(null)
+  const [criterionsError, setCriterionError] = useState(null)
   const [isLoading, _setIsLoading] = useState(true)
   const [isLoadingCity, _setIsLoadingCity] = useState(false)
   const [isLoadingLocation, _setIsLoadingLocation] = useState(false)
@@ -155,6 +156,7 @@ export function CitiesProvider(props) {
         results.regions.map(({ id, label }) => ({ key: id, label }))
       )
     })
+      .catch((err) => setCriterionError(err))
   }, [])
 
   return (
@@ -165,6 +167,7 @@ export function CitiesProvider(props) {
         searchCities,
         city,
         criterions,
+        criterionsError,
         isLoading,
         isLoadingCity,
         isLoadingLocation,

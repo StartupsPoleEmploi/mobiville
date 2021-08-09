@@ -11,6 +11,7 @@ import { COLOR_PRIMARY } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { paramUrlToObject } from '../../utils/url'
+import ErrorPage from '../error/ErrorPage'
 
 const StepBlock = styled(Typography)`
   && {
@@ -55,7 +56,7 @@ const ALL_STEPS = [
 ]
 
 const SearchPage = () => {
-  const { criterions } = useCities()
+  const { criterions, criterionsError } = useCities()
   const size = useWindowSize()
   const { stepName } = useParams()
   const index = ALL_STEPS.findIndex((f) => f.key === stepName)
@@ -63,6 +64,10 @@ const SearchPage = () => {
   const location = useLocation()
   const values = paramUrlToObject(location.search)
   const isMobile = isMobileView(size)
+
+  if (criterionsError) {
+    return <ErrorPage />
+  }
 
   if (!criterions) {
     return <p>Chargement...</p>
