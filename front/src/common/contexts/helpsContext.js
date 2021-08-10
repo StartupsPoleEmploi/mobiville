@@ -12,14 +12,16 @@ export function HelpsProvider(props) {
   const onLoadPreviews = useCallback(() => {
     if (previews.length === 0) {
       _setIsLoading(true)
-      apiLoadHelpPreviews().then(_setPreviews)
+      apiLoadHelpPreviews()
+        .then(_setPreviews)
         .then(() => _setIsLoading(false))
     }
   }, [])
 
   const onLoadPreviewId = useCallback((id) => {
     _setIsLoading(true)
-    apiLoadHelpPreviewId(id).then(_setHelp)
+    apiLoadHelpPreviewId(id)
+      .then(_setHelp)
       .then(() => _setIsLoading(false))
   }, [])
 
@@ -32,7 +34,7 @@ export function HelpsProvider(props) {
         isLoading,
         // function
         onLoadPreviews,
-        onLoadPreviewId
+        onLoadPreviewId,
       }}
     />
   )

@@ -60,14 +60,20 @@ const SubInfo = styled.div`
   }
 `
 
-const MobileCriterionsSelection = ({ criterions, showMobileCriterionsSelection, total }) => {
+const MobileCriterionsSelection = ({
+  criterions,
+  showMobileCriterionsSelection,
+  total,
+}) => {
   const { criterions: allCriterions } = useCities()
 
   const findCriterionsValue = (val) => {
     let foundLabel = null
     if (allCriterions) {
       Object.values(allCriterions).forEach((allCrit) => {
-        const find = allCrit.find((c) => (c.key && c.key === val) || (c.id && c.id === val))
+        const find = allCrit.find(
+          (c) => (c.key && c.key === val) || (c.id && c.id === val)
+        )
         if (find) {
           foundLabel = ucFirst(find.label.toLowerCase())
         }
@@ -78,7 +84,7 @@ const MobileCriterionsSelection = ({ criterions, showMobileCriterionsSelection, 
   }
 
   const tagsList = Object.values(criterions)
-    .reduce((prev, criterionsArray) => ([...prev, ...criterionsArray]), [])
+    .reduce((prev, criterionsArray) => [...prev, ...criterionsArray], [])
     .reduce((prev, criterion) => {
       const searchValue = findCriterionsValue(criterion)
       if (!searchValue || prev.includes(searchValue)) return prev
@@ -99,18 +105,19 @@ const MobileCriterionsSelection = ({ criterions, showMobileCriterionsSelection, 
               alignItems: 'center',
               background: '#191970',
               color: '#fff',
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
           >
             <TuneIcon fontSize="small" style={{ marginRight: 8 }} />
             Modifier
           </Tag>
-          {tagsList.map((t) => (<Tag key={t}>{t}</Tag>))}
+          {tagsList.map((t) => (
+            <Tag key={t}>{t}</Tag>
+          ))}
         </TagsBlock>
         <SubInfo>
           <Typography>
-            <span>{total}</span>
-            {' '}
+            <span>{total}</span>{' '}
             {total > 1 ? 'villes correspondantes' : 'ville correspondant'}
           </Typography>
           <CitiesFilterList />
@@ -123,12 +130,12 @@ const MobileCriterionsSelection = ({ criterions, showMobileCriterionsSelection, 
 MobileCriterionsSelection.propTypes = {
   criterions: PropTypes.object,
   showMobileCriterionsSelection: PropTypes.func.isRequired,
-  total: PropTypes.number
+  total: PropTypes.number,
 }
 
 MobileCriterionsSelection.defaultProps = {
   criterions: [],
-  total: 0
+  total: 0,
 }
 
 export default MobileCriterionsSelection

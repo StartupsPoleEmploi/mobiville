@@ -2,7 +2,8 @@ import React, { Suspense, lazy } from 'react'
 import {
   BrowserRouter as Router,
   Redirect,
-  Route, Switch
+  Route,
+  Switch,
 } from 'react-router-dom'
 
 const Home = lazy(() => import('./home/home'))

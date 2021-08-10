@@ -1,6 +1,4 @@
-import {
-  Typography
-} from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
@@ -45,10 +43,19 @@ const Step5Component = ({ onNext, values }) => {
 
   const getStyleOfButton = (r) => {
     const style = {
-      width: 'calc(50% - 15px)', height: 80, marginRight: 15, marginBottom: 15, border: 'none'
+      width: 'calc(50% - 15px)',
+      height: 80,
+      marginRight: 15,
+      marginBottom: 15,
+      border: 'none',
     }
 
-    if (r && values && values.code_criterion && values.code_criterion.indexOf(r.key) !== -1) {
+    if (
+      r &&
+      values &&
+      values.code_criterion &&
+      values.code_criterion.indexOf(r.key) !== -1
+    ) {
       style.backgroundColor = '#5EECE8'
     }
 
@@ -69,14 +76,16 @@ const Step5Component = ({ onNext, values }) => {
           .map((c) => {
             let available = true
             const codeCity = values.code_city?.[0] || ''
-            const isTooBigForCountrySide = codeCity.includes(BIG_CITY)
-              || codeCity.includes(MEDIUM_CITY)
+            const isTooBigForCountrySide =
+              codeCity.includes(BIG_CITY) || codeCity.includes(MEDIUM_CITY)
 
             if (isTooBigForCountrySide && c.key === CAMPAGNE) {
               // handles special case : a medium or big city isn’t a countryside city…
               available = false
             } else if (values.code_region && values.code_region.length) {
-              const reg = criterions.regions.find((r) => r.id === values.code_region[0])
+              const reg = criterions.regions.find(
+                (r) => r.id === values.code_region[0]
+              )
               if (reg) {
                 const allCrit = reg.criterions[values.code_rome[0]] || []
                 if (allCrit.indexOf(c.key) === -1) {
@@ -85,14 +94,16 @@ const Step5Component = ({ onNext, values }) => {
               }
             }
 
-            return ({ ...c, available })
+            return { ...c, available }
           })
           .map((c) => (
             <Button
               key={c.key}
               light
               column
-              onClick={() => (c.available ? onNext({ environment: c.key }) : '')}
+              onClick={() =>
+                c.available ? onNext({ environment: c.key }) : ''
+              }
               style={getStyleOfButton(c)}
             >
               <Icon>{c.icon}</Icon>
@@ -114,12 +125,12 @@ const Step5Component = ({ onNext, values }) => {
 
 Step5Component.propTypes = {
   onNext: PropTypes.func,
-  values: PropTypes.object
+  values: PropTypes.object,
 }
 
 Step5Component.defaultProps = {
-  onNext: () => { },
-  values: {}
+  onNext: () => {},
+  values: {},
 }
 
 export default Step5Component

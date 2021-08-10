@@ -6,7 +6,8 @@ import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { MainLayout } from '../../components/main-layout'
 import {
-  COLOR_TEXT_PRIMARY, COLOR_TEXT_SECONDARY
+  COLOR_TEXT_PRIMARY,
+  COLOR_TEXT_SECONDARY,
 } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { ucFirstOnly } from '../../utils/utils'
@@ -20,7 +21,8 @@ const Header = styled.div`
   height: 92px;
   display: flex;
   justify-content: center;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12),
+    0px 1px 5px rgba(0, 0, 0, 0.2);
 
   p {
     text-align: center;
@@ -34,14 +36,17 @@ const Header = styled.div`
     position: relative;
   }
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     height: 76px;
     top: 0;
 
     p {
       font-size: 18px;
     }
-  ` : '')}
+  `
+      : ''}
 `
 
 const Container = styled.div`
@@ -50,13 +55,16 @@ const Container = styled.div`
   margin-top: 108px;
   padding-bottom: 92px;
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     margin-top: 76px;
-  ` : '')}
+  `
+      : ''}
 `
 
 const Tag = styled.div`
-  background: #FFFFFF;
+  background: #ffffff;
   border: 1px solid ${COLOR_TEXT_SECONDARY};
   color: ${COLOR_TEXT_PRIMARY};
   box-sizing: border-box;
@@ -69,8 +77,9 @@ const Tag = styled.div`
 `
 
 const Panel = styled.div`
-  background: #FFFFFF;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
+    0px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   padding: 16px;
   width: 100%;
@@ -79,14 +88,17 @@ const Panel = styled.div`
   margin-left: auto;
   margin-right: auto;
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     max-width: auto;
     margin-bottom: 2px;
     margin-left: 0;
     margin-right: 0;
     box-shadow: none;
     border-radius: 0;
-  ` : '')}
+  `
+      : ''}
 `
 
 const Title = styled(Typography)`
@@ -116,9 +128,12 @@ const HelpButton = styled.button`
   width: ${(props) => (props.isMobile ? 'calc(100% - 32px)' : '')};
   padding: ${(props) => (props.isMobile ? '0 12px' : '0 48px')} !important;
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     bottom: 70px;
-  ` : '')}
+  `
+      : ''}
 `
 
 const HelpDetailsPage = () => {
@@ -136,63 +151,76 @@ const HelpDetailsPage = () => {
   return (
     <MainLayout>
       {help && (
-      <>
-        <Header isMobile={isMobileView(size)}>
-          <p>
-            {help.title}
-          </p>
-        </Header>
-        <Container isMobile={isMobileView(size)}>
-          <Panel isMobile={isMobileView(size)}>
-            <Title>Objectif de l’aide</Title>
-            <Description>{help.goal}</Description>
-          </Panel>
-          <Panel isMobile={isMobileView(size)}>
-            <Title>
-              Descriptif de l
-              {'\''}
-              aide
-            </Title>
-            <Description dangerouslySetInnerHTML={{
-              __html: help.description
-            }}
-            />
-          </Panel>
-          <Panel isMobile={isMobileView(size)}>
-            <Title>Quand faire la demande ?</Title>
-            <Description dangerouslySetInnerHTML={{
-              __html: help.when
-            }}
-            />
-          </Panel>
-          <Panel isMobile={isMobileView(size)}>
-            <Title>Quelles conditions ?</Title>
-            <Description dangerouslySetInnerHTML={{
-              __html: help.conditions
-            }}
-            />
-          </Panel>
-          <Panel isMobile={isMobileView(size)}>
-            <Title>Est-elle cumulable ?</Title>
-            <Description dangerouslySetInnerHTML={{
-              __html: help.cumulable
-            }}
-            />
-          </Panel>
-          <Panel isMobile={isMobileView(size)}>
-            <Title>Public concerné</Title>
-            {help.who.split(',').map((t) => <Tag key={t}>{ucFirstOnly(t)}</Tag>)}
-          </Panel>
+        <>
+          <Header isMobile={isMobileView(size)}>
+            <p>{help.title}</p>
+          </Header>
+          <Container isMobile={isMobileView(size)}>
+            <Panel isMobile={isMobileView(size)}>
+              <Title>Objectif de l’aide</Title>
+              <Description>{help.goal}</Description>
+            </Panel>
+            <Panel isMobile={isMobileView(size)}>
+              <Title>
+                Descriptif de l{"'"}
+                aide
+              </Title>
+              <Description
+                dangerouslySetInnerHTML={{
+                  __html: help.description,
+                }}
+              />
+            </Panel>
+            <Panel isMobile={isMobileView(size)}>
+              <Title>Quand faire la demande ?</Title>
+              <Description
+                dangerouslySetInnerHTML={{
+                  __html: help.when,
+                }}
+              />
+            </Panel>
+            <Panel isMobile={isMobileView(size)}>
+              <Title>Quelles conditions ?</Title>
+              <Description
+                dangerouslySetInnerHTML={{
+                  __html: help.conditions,
+                }}
+              />
+            </Panel>
+            <Panel isMobile={isMobileView(size)}>
+              <Title>Est-elle cumulable ?</Title>
+              <Description
+                dangerouslySetInnerHTML={{
+                  __html: help.cumulable,
+                }}
+              />
+            </Panel>
+            <Panel isMobile={isMobileView(size)}>
+              <Title>Public concerné</Title>
+              {help.who.split(',').map((t) => (
+                <Tag key={t}>{ucFirstOnly(t)}</Tag>
+              ))}
+            </Panel>
 
-          { /* eslint-disable-next-line */ }
-          <a target="_blank" href={help.link} style={{ cursor: 'pointer' }} tag-exit={`faire-ma-demande/${help.title}`}>
-            <HelpButton className="btn primary" type="button" isMobile={isMobileView(size)}>Faire ma demande</HelpButton>
-          </a>
-
-        </Container>
-      </>
+            {/* eslint-disable-next-line */}
+            <a
+              target="_blank"
+              href={help.link}
+              style={{ cursor: 'pointer' }}
+              tag-exit={`faire-ma-demande/${help.title}`}
+            >
+              <HelpButton
+                className="btn primary"
+                type="button"
+                isMobile={isMobileView(size)}
+              >
+                Faire ma demande
+              </HelpButton>
+            </a>
+          </Container>
+        </>
       )}
-      {!help && (<p>Chargement...</p>)}
+      {!help && <p>Chargement...</p>}
     </MainLayout>
   )
 }

@@ -1,6 +1,4 @@
-import {
-  TextField
-} from '@material-ui/core'
+import { TextField } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -42,7 +40,7 @@ const Step2Component = ({ onNext }) => {
   const {
     isLoadingJobsMatchingCriterion,
     jobsMatchingCriterions,
-    onSearchJobLabels
+    onSearchJobLabels,
   } = useCities()
 
   const [searchedLabel, setSearchedLabel] = useState('')
@@ -61,14 +59,12 @@ const Step2Component = ({ onNext }) => {
 
   return (
     <Wrapper>
-      <Title isMobile={isMobile}>Quel métier ou compétences recherchez-vous ?</Title>
+      <Title isMobile={isMobile}>
+        Quel métier ou compétences recherchez-vous ?
+      </Title>
       <p>
-        Pour le moment, le service est disponible uniquement pour
-        {' '}
-        <Link
-          to="/rome-list"
-          title="Accéder à la liste des métiers Mobiville"
-        >
+        Pour le moment, le service est disponible uniquement pour{' '}
+        <Link to="/rome-list" title="Accéder à la liste des métiers Mobiville">
           certains métiers.
         </Link>
       </p>
@@ -93,16 +89,14 @@ const Step2Component = ({ onNext }) => {
           options={jobsMatchingCriterions}
           getOptionLabel={({ key, label }) => `${key}${SEPARATOR}${label}`}
           renderOption={({ label }) => label}
-          renderInput={
-            (inputParams) => (
-              <JobTextField
-                {...inputParams}
-                label="Rechercher un type de métier"
-                variant="filled"
-                openOnFocus
-              />
-            )
-          }
+          renderInput={(inputParams) => (
+            <JobTextField
+              {...inputParams}
+              label="Rechercher un type de métier"
+              variant="filled"
+              openOnFocus
+            />
+          )}
           noOptionsText="Pas de résultat"
           loading={isLoadingJobsMatchingCriterion}
           loadingText="Chargement…"
@@ -113,10 +107,10 @@ const Step2Component = ({ onNext }) => {
             left: 0,
             width: '100%',
             zIndex: 10,
-            backgroundColor: '#f9f9f9'
+            backgroundColor: '#f9f9f9',
           }}
-          onFocus={(() => setIsAutocompleteFocused(true))}
-          onBlur={(() => setIsAutocompleteFocused(false))}
+          onFocus={() => setIsAutocompleteFocused(true)}
+          onBlur={() => setIsAutocompleteFocused(false)}
         />
       </div>
     </Wrapper>
@@ -125,12 +119,12 @@ const Step2Component = ({ onNext }) => {
 
 Step2Component.propTypes = {
   onNext: PropTypes.func,
-  values: PropTypes.object
+  values: PropTypes.object,
 }
 
 Step2Component.defaultProps = {
   onNext: () => {},
-  values: {}
+  values: {},
 }
 
 export default Step2Component

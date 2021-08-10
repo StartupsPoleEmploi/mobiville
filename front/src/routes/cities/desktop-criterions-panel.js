@@ -3,11 +3,18 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {
   FormControl,
-  MenuItem, InputLabel, Select, Typography
+  MenuItem,
+  InputLabel,
+  Select,
+  Typography,
 } from '@material-ui/core'
 import { Controller, useForm } from 'react-hook-form'
 import { useCities } from '../../common/contexts/citiesContext'
-import { COLOR_BACKGROUND, COLOR_PRIMARY, COLOR_GRAY } from '../../constants/colors'
+import {
+  COLOR_BACKGROUND,
+  COLOR_PRIMARY,
+  COLOR_GRAY,
+} from '../../constants/colors'
 import CitiesFilterList from './cities-filter-list'
 
 const EmptySpace = styled.div`
@@ -92,17 +99,15 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, onSubmit }) => {
     criterions,
     environmentCriterions,
     cityCriterions,
-    regionCriterions
+    regionCriterions,
   } = useCities()
-  const {
-    control, handleSubmit, setValue
-  } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     defaultValues: {
       rome: '',
       region: '',
       environment: '',
-      city: ''
-    }
+      city: '',
+    },
   })
 
   useEffect(() => {
@@ -118,22 +123,26 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, onSubmit }) => {
     values.push({ name: 'region', value: region })
 
     if (criterions.criterions && paramsUrl?.code_criterion) {
-      const environmentFound = environmentCriterions
-        .find((c) => paramsUrl.code_criterion.indexOf(c.key) !== -1)
+      const environmentFound = environmentCriterions.find(
+        (c) => paramsUrl.code_criterion.indexOf(c.key) !== -1
+      )
 
       if (environmentFound) {
         values.push({ name: 'environment', value: environmentFound.key })
       }
 
-      const cityFound = cityCriterions
-        .find((c) => paramsUrl.code_criterion.indexOf(c.key) !== -1)
+      const cityFound = cityCriterions.find(
+        (c) => paramsUrl.code_criterion.indexOf(c.key) !== -1
+      )
 
       if (cityFound) {
         values.push({ name: 'city', value: cityFound.key })
       }
     }
 
-    values.forEach(({ name, value }) => setValue(name, value, { shouldDirty: true }))
+    values.forEach(({ name, value }) =>
+      setValue(name, value, { shouldDirty: true })
+    )
   }, [paramsUrl, criterions])
 
   if (!criterions?.criterions) {
@@ -147,45 +156,44 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, onSubmit }) => {
           <SearchPanel>
             <SearchBar className="wrapper">
               <SearchFormControl variant="filled">
-                <InputLabel htmlFor="panel-select-environment" shrink>Environnement</InputLabel>
+                <InputLabel htmlFor="panel-select-environment" shrink>
+                  Environnement
+                </InputLabel>
                 <Controller
                   control={control}
                   name="environment"
                   defaultValue=""
-                  as={(
+                  as={
                     <Select
                       displayEmpty
                       inputProps={{
-                        id: 'panel-select-environment'
+                        id: 'panel-select-environment',
                       }}
                     >
-                      <MenuItem value="">
-                        Peu importe
-                      </MenuItem>
+                      <MenuItem value="">Peu importe</MenuItem>
                       {environmentCriterions.map((rome) => (
-                        <MenuItem
-                          key={rome.key}
-                          value={rome.key}
-                        >
+                        <MenuItem key={rome.key} value={rome.key}>
                           {rome.label}
                         </MenuItem>
                       ))}
                     </Select>
-                  )}
+                  }
                 />
               </SearchFormControl>
 
               <SearchFormControl variant="filled">
-                <InputLabel htmlFor="panel-select-city-size" shrink>Taille de ville</InputLabel>
+                <InputLabel htmlFor="panel-select-city-size" shrink>
+                  Taille de ville
+                </InputLabel>
                 <Controller
                   control={control}
                   name="city"
                   defaultValue=""
-                  as={(
+                  as={
                     <Select
                       displayEmpty
                       inputProps={{
-                        id: 'panel-select-city-size'
+                        id: 'panel-select-city-size',
                       }}
                     >
                       <MenuItem selected value="">
@@ -197,21 +205,23 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, onSubmit }) => {
                         </MenuItem>
                       ))}
                     </Select>
-                  )}
+                  }
                 />
               </SearchFormControl>
 
               <SearchFormControl variant="filled">
-                <InputLabel htmlFor="panel-select-region" shrink>Région</InputLabel>
+                <InputLabel htmlFor="panel-select-region" shrink>
+                  Région
+                </InputLabel>
                 <Controller
                   control={control}
                   name="region"
                   defaultValue=""
-                  as={(
+                  as={
                     <Select
                       displayEmpty
                       inputProps={{
-                        id: 'panel-select-city-size'
+                        id: 'panel-select-city-size',
                       }}
                     >
                       <MenuItem selected value="">
@@ -223,7 +233,7 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, onSubmit }) => {
                         </MenuItem>
                       ))}
                     </Select>
-                  )}
+                  }
                 />
               </SearchFormControl>
               <SubmitButton type="submit" value="Rechercher" />
@@ -232,14 +242,14 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, onSubmit }) => {
         </form>
         <Infopanel>
           <p>
-            Les villes qui vous sont proposées sont les villes où il y a des offres et peu de
-            concurrence, afin d’accélérer votre recherche d’emploi.
+            Les villes qui vous sont proposées sont les villes où il y a des
+            offres et peu de concurrence, afin d’accélérer votre recherche
+            d’emploi.
           </p>
         </Infopanel>
         <SubInfo>
           <Typography>
-            <span>{total}</span>
-            {' '}
+            <span>{total}</span>{' '}
             {total > 1 ? 'villes correspondantes' : 'ville correspondante'}
           </Typography>
           <CitiesFilterList />
@@ -252,12 +262,12 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, onSubmit }) => {
 DesktopCriterionsPanel.propTypes = {
   paramsUrl: PropTypes.object,
   total: PropTypes.number,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
 }
 
 DesktopCriterionsPanel.defaultProps = {
   paramsUrl: [],
-  total: 0
+  total: 0,
 }
 
 export default React.memo(DesktopCriterionsPanel)

@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import {
-  FormControl, InputLabel, MenuItem, Select
-} from '@material-ui/core'
+import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core'
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
 
 import { Button } from '../../components/button'
@@ -20,7 +18,7 @@ const IconBlock = styled.i`
 `
 
 const BackButton = styled.button.attrs({
-  type: 'button'
+  type: 'button',
 })`
   cursor: pointer;
   border: none;
@@ -40,7 +38,7 @@ const CUSTOM_SUB_LABELS = {
   'small-city': '- 20 000 habitants',
   'medium-city': '- 50 000 habitants',
   'big-city': '- 200 000 habitants',
-  'extra-big-city': '+ 200 000 habitants'
+  'extra-big-city': '+ 200 000 habitants',
 }
 
 const getButtonStyle = (isSelected) => ({
@@ -51,7 +49,7 @@ const getButtonStyle = (isSelected) => ({
   borderRadius: '44px',
   marginLeft: 8,
   marginBottom: 8,
-  lineHeight: 1
+  lineHeight: 1,
 })
 
 // These icons need to be refactored to correctly use Material UI icon component
@@ -60,7 +58,7 @@ const Icon = (props) => (
     className="material-icons"
     style={{
       marginRight: 8,
-      marginBottom: 0
+      marginBottom: 0,
     }}
     {...props}
   />
@@ -69,23 +67,20 @@ const Icon = (props) => (
 const MobileCriterionsSelection = ({
   paramsUrl,
   onSubmit,
-  showMobileCriterionsSelection
+  showMobileCriterionsSelection,
 }) => {
-  const {
-    environmentCriterions,
-    cityCriterions,
-    regionCriterions
-  } = useCities()
+  const { environmentCriterions, cityCriterions, regionCriterions } =
+    useCities()
 
   const [selectedRegion, setSelectedRegion] = useState(paramsUrl.code_region)
   const [selectedCitySize, setSelectedCitySize] = useState(
-    cityCriterions.find(
-      ({ key }) => (paramsUrl.code_criterion || []).includes(key)
+    cityCriterions.find(({ key }) =>
+      (paramsUrl.code_criterion || []).includes(key)
     )?.key || ''
   )
   const [selectedEnvironment, setSelectedEnvironment] = useState(
-    environmentCriterions.find(
-      ({ key }) => (paramsUrl.code_criterion || []).includes(key)
+    environmentCriterions.find(({ key }) =>
+      (paramsUrl.code_criterion || []).includes(key)
     )?.key || ''
   )
 
@@ -93,7 +88,7 @@ const MobileCriterionsSelection = ({
     onSubmit({
       city: selectedCitySize,
       environment: selectedEnvironment,
-      region: selectedRegion
+      region: selectedRegion,
     })
     showMobileCriterionsSelection(false)
   }
@@ -108,30 +103,25 @@ const MobileCriterionsSelection = ({
         <p id="mobile-citerions-selection-env">
           <b>Quel environnement recherchez-vous ?</b>
         </p>
-        <div
-          role="radiogroup"
-          aria-labelledby="mobile-citerions-selection-env"
-        >
-          {environmentCriterions.map(
-            (criterion) => {
-              const isSelected = criterion.key === selectedEnvironment
-              return (
-                <Button
-                  onClick={() => setSelectedEnvironment(criterion.key)}
-                  light
-                  column
-                  style={getButtonStyle(isSelected)}
-                  role="radio"
-                  aria-checked={isSelected}
-                >
-                  <ButtonContentWrapper>
-                    <Icon>{criterion.icon}</Icon>
-                    {criterion.label}
-                  </ButtonContentWrapper>
-                </Button>
-              )
-            }
-          )}
+        <div role="radiogroup" aria-labelledby="mobile-citerions-selection-env">
+          {environmentCriterions.map((criterion) => {
+            const isSelected = criterion.key === selectedEnvironment
+            return (
+              <Button
+                onClick={() => setSelectedEnvironment(criterion.key)}
+                light
+                column
+                style={getButtonStyle(isSelected)}
+                role="radio"
+                aria-checked={isSelected}
+              >
+                <ButtonContentWrapper>
+                  <Icon>{criterion.icon}</Icon>
+                  {criterion.label}
+                </ButtonContentWrapper>
+              </Button>
+            )
+          })}
           <Button
             onClick={() => setSelectedEnvironment('')}
             light
@@ -146,7 +136,9 @@ const MobileCriterionsSelection = ({
       </div>
 
       <div>
-        <p id="mobile-citerions-selection-city"><b>Lieu de travail ?</b></p>
+        <p id="mobile-citerions-selection-city">
+          <b>Lieu de travail ?</b>
+        </p>
         <div
           role="radiogroup"
           aria-labelledby="mobile-citerions-selection-city"
@@ -160,7 +152,7 @@ const MobileCriterionsSelection = ({
                 column
                 style={{
                   ...getButtonStyle(isSelected),
-                  height: 46
+                  height: 46,
                 }}
                 role="radio"
                 aria-checked={isSelected}
@@ -184,7 +176,7 @@ const MobileCriterionsSelection = ({
             column
             style={{
               ...getButtonStyle(selectedCitySize === ''),
-              height: 46
+              height: 46,
             }}
             role="radio"
             aria-checked={selectedCitySize === ''}
@@ -195,27 +187,28 @@ const MobileCriterionsSelection = ({
       </div>
 
       <div>
-        <p id="mobile-citerions-selection-city"><b>Dans quelle région ?</b></p>
+        <p id="mobile-citerions-selection-city">
+          <b>Dans quelle région ?</b>
+        </p>
 
         <FormControl fullWidth variant="filled">
-          <InputLabel shrink htmlFor="criterion-region-select-label">Région</InputLabel>
+          <InputLabel shrink htmlFor="criterion-region-select-label">
+            Région
+          </InputLabel>
           <Select
             value={selectedRegion || ''}
             displayEmpty
             onChange={(event) => setSelectedRegion(event.target.value)}
             inputProps={{
-              id: 'criterion-region-select-label'
+              id: 'criterion-region-select-label',
             }}
           >
-            <MenuItem value="">
-              Toutes les regions
-            </MenuItem>
+            <MenuItem value="">Toutes les regions</MenuItem>
             {regionCriterions.map((criterion) => (
               <MenuItem key={criterion.key} value={criterion.key}>
                 {ucFirst(criterion.label.toLowerCase())}
               </MenuItem>
             ))}
-
           </Select>
         </FormControl>
       </div>
@@ -224,12 +217,10 @@ const MobileCriterionsSelection = ({
         style={{
           position: 'fixed',
           bottom: '32px',
-          width: 'calc(100% - 32px)'
+          width: 'calc(100% - 32px)',
         }}
       >
-        <Button onClick={onValidate}>
-          Afficher les résultats
-        </Button>
+        <Button onClick={onValidate}>Afficher les résultats</Button>
       </div>
     </div>
   )
@@ -238,7 +229,7 @@ const MobileCriterionsSelection = ({
 MobileCriterionsSelection.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   paramsUrl: PropTypes.object.isRequired,
-  showMobileCriterionsSelection: PropTypes.func.isRequired
+  showMobileCriterionsSelection: PropTypes.func.isRequired,
 }
 
 export default MobileCriterionsSelection

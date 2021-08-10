@@ -8,8 +8,7 @@ import IMGPE from '../assets/images/img-footer-pe.png'
 import IMGEUROPE from '../assets/images/img-footer-europe.png'
 import IMGAL from '../assets/images/img-footer-al.png'
 
-const MainSpace = styled.div`
-`
+const MainSpace = styled.div``
 
 const Wrapper = styled.div`
   padding: 64px 0;
@@ -30,7 +29,9 @@ const Line = styled.div`
     color: white;
   }
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     flex-direction: column;
     align-items: center;
 
@@ -42,7 +43,8 @@ const Line = styled.div`
         margin-bottom: 0;
       }
     }
-  ` : '')}
+  `
+      : ''}
 `
 
 const Item = styled.div`
@@ -75,12 +77,18 @@ export const Footer = () => {
             <Item>
               <CustomLink to="/legal">Mentions légales</CustomLink>
             </Item>
-            <Item><CustomLink to="/faq">FAQ</CustomLink></Item>
             <Item>
-              <a href="/stats" target="_blank" rel="noreferrer">Statistiques</a>
+              <CustomLink to="/faq">FAQ</CustomLink>
             </Item>
             <Item>
-              <a href="mailto:contact@mobiville.pole-emploi.fr">contact@mobiville.pole-emploi.fr</a>
+              <a href="/stats" target="_blank" rel="noreferrer">
+                Statistiques
+              </a>
+            </Item>
+            <Item>
+              <a href="mailto:contact@mobiville.pole-emploi.fr">
+                contact@mobiville.pole-emploi.fr
+              </a>
             </Item>
           </Line>
         </Wrapper>
@@ -88,9 +96,23 @@ export const Footer = () => {
       <div style={{ backgroundColor: COLOR_TEXT_SECONDARY }}>
         <Wrapper>
           <Line isMobile={isMobileView(size)}>
-            <a href="https://www.pole-emploi.fr/" target="_blank" rel="noreferrer"><img src={IMGPE} alt="pole emploi" /></a>
-            <a href="http://www.fse.gouv.fr/" target="_blank" rel="noreferrer"><img src={IMGEUROPE} alt="europe" /></a>
-            <a href="https://www.actionlogement.fr/" target="_blank" rel="noreferrer"><img src={IMGAL} alt="action logement" /></a>
+            <a
+              href="https://www.pole-emploi.fr/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img src={IMGPE} alt="pole emploi" />
+            </a>
+            <a href="http://www.fse.gouv.fr/" target="_blank" rel="noreferrer">
+              <img src={IMGEUROPE} alt="europe" />
+            </a>
+            <a
+              href="https://www.actionlogement.fr/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img src={IMGAL} alt="action logement" />
+            </a>
           </Line>
           <CopyRight>COPYRIGHT 2021 - MOBIVILLE</CopyRight>
         </Wrapper>

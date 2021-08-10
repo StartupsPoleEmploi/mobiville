@@ -1,6 +1,4 @@
-import React, {
-  lazy, memo
-} from 'react'
+import React, { lazy, memo } from 'react'
 import styled from 'styled-components'
 import { Typography } from '@material-ui/core'
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
@@ -42,17 +40,20 @@ const BackWrapper = styled.div`
 const ALL_STEPS = [
   {
     key: 'rome',
-    components: lazy(() => import('./step2'))
-  }, {
+    components: lazy(() => import('./step2')),
+  },
+  {
     key: 'region',
-    components: lazy(() => import('./step3'))
-  }, {
+    components: lazy(() => import('./step3')),
+  },
+  {
     key: 'cadre',
-    components: lazy(() => import('./step4'))
-  }, {
+    components: lazy(() => import('./step4')),
+  },
+  {
     key: 'environement',
-    components: lazy(() => import('./step5'))
-  }
+    components: lazy(() => import('./step5')),
+  },
 ]
 
 const SearchPage = () => {
@@ -102,7 +103,10 @@ const SearchPage = () => {
       val = { ...values, ...newValues }
     }
 
-    val = { ...val, code_criterion: (val.code_city || []).concat(val.code_environment || []) }
+    val = {
+      ...val,
+      code_criterion: (val.code_city || []).concat(val.code_environment || []),
+    }
 
     const params = []
     Object.entries(val).forEach(([key, value]) => {
@@ -120,17 +124,18 @@ const SearchPage = () => {
 
   return (
     <MainLayout>
-      <ProgressBar style={{ width: `${((index + 1) * 100) / ALL_STEPS.length}%` }} />
+      <ProgressBar
+        style={{ width: `${((index + 1) * 100) / ALL_STEPS.length}%` }}
+      />
       <LimitedWrapper isMobile={isMobile}>
         <BackWrapper isMobile={isMobile}>
-          <ArrowBackOutlinedIcon style={{ cursor: 'pointer' }} onClick={() => onNextStep({}, -1)} />
+          <ArrowBackOutlinedIcon
+            style={{ cursor: 'pointer' }}
+            onClick={() => onNextStep({}, -1)}
+          />
         </BackWrapper>
         <StepBlock>
-          Etape
-          {' '}
-          {index + 1}
-          /
-          {ALL_STEPS.length}
+          Etape {index + 1}/{ALL_STEPS.length}
         </StepBlock>
         <Component onNext={onNextStep} values={values} />
       </LimitedWrapper>

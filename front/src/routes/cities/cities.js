@@ -39,9 +39,8 @@ const CitiesArea = styled.div`
 `
 
 const CitiesPage = () => {
-  const {
-    cities, isLoading, onSearch, totalCities, sortCriterions
-  } = useCities()
+  const { cities, isLoading, onSearch, totalCities, sortCriterions } =
+    useCities()
   const size = useWindowSize()
   const location = useLocation()
   const history = useHistory()
@@ -72,11 +71,18 @@ const CitiesPage = () => {
     const heightCheck = window.innerHeight * 1.5
     const { body } = document
     const html = document.documentElement
-    const contentHeight = Math.max(body.scrollHeight, body.offsetHeight,
-      html.clientHeight, html.scrollHeight, html.offsetHeight)
+    const contentHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    )
 
     if (
-      contentHeight - window.scrollY < heightCheck && !isLoading && cities.length
+      contentHeight - window.scrollY < heightCheck &&
+      !isLoading &&
+      cities.length
     ) {
       // can load next page
       if (totalCities > cities.length) {
@@ -95,26 +101,27 @@ const CitiesPage = () => {
     return url
   }
 
-  const onSubmit = ({
-    city, environment, region
-  }) => {
+  const onSubmit = ({ city, environment, region }) => {
     const data = {
       code_rome: [params.code_rome || params.codeRomes[0].key],
-      code_region: [region]
+      code_region: [region],
     }
 
     if (city || environment) {
       data.code_criterion = [[city, environment].filter((c) => c).join(',')]
     }
 
-    const pushParams = Object.entries(data)
-      .map(
-        ([key, value]) => `${key}=${value.join(',')}`
-      )
-    history.push({ pathname: '/cities', search: `?${pushParams.join('&')}&n=${new Date().getTime()}` })
+    const pushParams = Object.entries(data).map(
+      ([key, value]) => `${key}=${value.join(',')}`
+    )
+    history.push({
+      pathname: '/cities',
+      search: `?${pushParams.join('&')}&n=${new Date().getTime()}`,
+    })
   }
 
-  const showMobileCriterionsSelection = (bool) => setShowMobileCriterionsSelection(bool)
+  const showMobileCriterionsSelection = (bool) =>
+    setShowMobileCriterionsSelection(bool)
   const isMobile = isMobileView(size)
 
   if (showMobilePanel) {
@@ -132,52 +139,46 @@ const CitiesPage = () => {
 
   return (
     <MainLayout>
-      {isMobile
-        ? (
-          <MobileCriterionsPanel
-            criterions={params}
-            showMobileCriterionsSelection={showMobileCriterionsSelection}
-            total={totalCities}
-          />
-        )
-        : (
-          <DesktopCriterionsPanel
-            paramsUrl={params}
-            total={totalCities}
-            onSubmit={onSubmit}
-          />
-        )}
+      {isMobile ? (
+        <MobileCriterionsPanel
+          criterions={params}
+          showMobileCriterionsSelection={showMobileCriterionsSelection}
+          total={totalCities}
+        />
+      ) : (
+        <DesktopCriterionsPanel
+          paramsUrl={params}
+          total={totalCities}
+          onSubmit={onSubmit}
+        />
+      )}
 
-      {cities.length === 0
-        ? !isLoading && (
+      {cities.length === 0 ? (
+        !isLoading && (
           <NotFoundContainer>
-            <img
-              alt=""
-              src={noResultsPic}
-              style={{ marginBottom: '2rem' }}
-            />
+            <img alt="" src={noResultsPic} style={{ marginBottom: '2rem' }} />
             Aucune ville correspondante
             <br />
             Modifiez vos critères
           </NotFoundContainer>
-        ) : (
-          <CitiesArea isMobile={isMobile}>
-            {cities.map((city) => (
-              <Items key={city.id} to={getCityUrl(city)}><CityItem city={city} /></Items>
-            ))}
-          </CitiesArea>
-        )}
+        )
+      ) : (
+        <CitiesArea isMobile={isMobile}>
+          {cities.map((city) => (
+            <Items key={city.id} to={getCityUrl(city)}>
+              <CityItem city={city} />
+            </Items>
+          ))}
+        </CitiesArea>
+      )}
 
-      {isLoading && (<p style={{ margin: '2rem auto' }}>Chargement...</p>)}
-
+      {isLoading && <p style={{ margin: '2rem auto' }}>Chargement...</p>}
     </MainLayout>
   )
 }
 
-CitiesPage.propTypes = {
-}
+CitiesPage.propTypes = {}
 
-CitiesPage.defaultProps = {
-}
+CitiesPage.defaultProps = {}
 
 export default React.memo(CitiesPage)

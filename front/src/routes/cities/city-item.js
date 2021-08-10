@@ -5,7 +5,11 @@ import { Typography } from '@material-ui/core'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 
 import { ucFirst } from '../../utils/utils'
-import { COLOR_GRAY, COLOR_PRIMARY, COLOR_TEXT_PRIMARY } from '../../constants/colors'
+import {
+  COLOR_GRAY,
+  COLOR_PRIMARY,
+  COLOR_TEXT_PRIMARY,
+} from '../../constants/colors'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 
@@ -15,8 +19,9 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: ${(props) => (props.isMobile ? 'column' : 'row')};
   align-items: ${(props) => (props.isMobile ? 'stretch' : 'center')};
-  background: #FFFFFF;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
+    0px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
 `
 
@@ -86,7 +91,7 @@ const CityItem = ({ city }) => {
   const size = useWindowSize()
 
   if (!city) {
-    return (<div />)
+    return <div />
   }
 
   let { photo } = city
@@ -102,57 +107,49 @@ const CityItem = ({ city }) => {
 
   return (
     <Wrapper isMobile={isMobileView(size)}>
-      <Image style={{ backgroundImage: `url(${photo})` }} isMobile={isMobileView(size)} />
+      <Image
+        style={{ backgroundImage: `url(${photo})` }}
+        isMobile={isMobileView(size)}
+      />
       <InformationsBlock>
-        <Title>
-          {ucFirst(city.nom_comm.toLowerCase())}
-        </Title>
+        <Title>{ucFirst(city.nom_comm.toLowerCase())}</Title>
         <Description>
           {(city.description || '').replace('Écouter', '')}
         </Description>
         <TagsBlock>
           {city.distance_from_sea !== null && city.distance_from_sea <= 10 && (
-          <Tag>
-            Mer
-            {' < '}
-            10km
-          </Tag>
+            <Tag>
+              Mer
+              {' < '}
+              10km
+            </Tag>
           )}
-          {city.distance_from_sea !== null
-          && city.distance_from_sea > 10
-          && city.distance_from_sea <= 20 && (
-          <Tag>
-            Mer
-            {' < '}
-            20km
-          </Tag>
-          )}
-          {city.distance_from_sea !== null
-          && city.distance_from_sea > 20
-          && city.distance_from_sea <= 30 && (
-          <Tag>
-            Mer
-            {' < '}
-            30km
-          </Tag>
-          )}
+          {city.distance_from_sea !== null &&
+            city.distance_from_sea > 10 &&
+            city.distance_from_sea <= 20 && (
+              <Tag>
+                Mer
+                {' < '}
+                20km
+              </Tag>
+            )}
+          {city.distance_from_sea !== null &&
+            city.distance_from_sea > 20 &&
+            city.distance_from_sea <= 30 && (
+              <Tag>
+                Mer
+                {' < '}
+                30km
+              </Tag>
+            )}
           {city.city_size_label && <Tag>{city.city_size_label}</Tag>}
           {city.population && (
-          <Tag>
-            {parseInt(city.population * 1000, 10)}
-            {' '}
-            habitants
-          </Tag>
+            <Tag>{parseInt(city.population * 1000, 10)} habitants</Tag>
           )}
-          {city.z_moyen && (
-          <Tag>
-            Altitude moyenne
-            {' '}
-            {city.z_moyen}
-            m
-          </Tag>
+          {city.z_moyen && <Tag>Altitude moyenne {city.z_moyen}m</Tag>}
+          {city['region.new_name'] && (
+            <Tag>{ucFirst(city['region.new_name'].toLowerCase())}</Tag>
           )}
-          {city['region.new_name'] && <Tag>{ucFirst(city['region.new_name'].toLowerCase())}</Tag>}
         </TagsBlock>
         <ViewMore>
           En savoir plus
@@ -164,10 +161,9 @@ const CityItem = ({ city }) => {
 }
 
 CityItem.propTypes = {
-  city: PropTypes.object.isRequired
+  city: PropTypes.object.isRequired,
 }
 
-CityItem.defaultProps = {
-}
+CityItem.defaultProps = {}
 
 export default CityItem

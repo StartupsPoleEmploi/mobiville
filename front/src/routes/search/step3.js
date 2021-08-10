@@ -3,7 +3,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Typography
+  Typography,
 } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
@@ -34,9 +34,7 @@ const InfoText = styled(Typography)`
 `
 
 const Step3Component = ({ onNext, values }) => {
-  const {
-    criterions
-  } = useCities()
+  const { criterions } = useCities()
   const [regions, setRegions] = useState([])
   const [list, setList] = useState([])
 
@@ -51,7 +49,11 @@ const Step3Component = ({ onNext, values }) => {
     }
 
     if (values.code_rome && values.code_rome.length) {
-      setList(criterions.regions.filter((r) => r.criterions && r.criterions[values.code_rome[0]]))
+      setList(
+        criterions.regions.filter(
+          (r) => r.criterions && r.criterions[values.code_rome[0]]
+        )
+      )
     } else {
       setList([...criterions.regions])
     }
@@ -66,36 +68,35 @@ const Step3Component = ({ onNext, values }) => {
       </InfoText>
 
       <FormControl variant="filled">
-        <InputLabel shrink htmlFor="step-region-select-label">Région</InputLabel>
+        <InputLabel shrink htmlFor="step-region-select-label">
+          Région
+        </InputLabel>
         <Select
           value={regions?.[0] || ''}
           displayEmpty
           onChange={toggleRegion}
           inputProps={{
-            id: 'step-region-select-label'
+            id: 'step-region-select-label',
           }}
         >
-          <MenuItem value="">
-            Toutes les regions
-          </MenuItem>
+          <MenuItem value="">Toutes les regions</MenuItem>
           {list.map((r) => (
             <MenuItem key={r.id} value={r.id}>
               {ucFirst(r.label.toLowerCase())}
             </MenuItem>
           ))}
-
         </Select>
       </FormControl>
 
       <Button
         style={{
-          fontWeight: 'normal', margin: '32px 0', boxShadow: '0 4px 5px 0 rgba(0,0,0,0.2)'
+          fontWeight: 'normal',
+          margin: '32px 0',
+          boxShadow: '0 4px 5px 0 rgba(0,0,0,0.2)',
         }}
         onClick={() => onNext({ regions })}
       >
-        Suivant
-        {' '}
-        {regions.length > NB_MAX_REGION ? `(max ${NB_MAX_REGION})` : ''}
+        Suivant {regions.length > NB_MAX_REGION ? `(max ${NB_MAX_REGION})` : ''}
       </Button>
     </Wrapper>
   )
@@ -103,12 +104,12 @@ const Step3Component = ({ onNext, values }) => {
 
 Step3Component.propTypes = {
   onNext: PropTypes.func,
-  values: PropTypes.object
+  values: PropTypes.object,
 }
 
 Step3Component.defaultProps = {
   onNext: () => {},
-  values: {}
+  values: {},
 }
 
 export default Step3Component

@@ -6,16 +6,12 @@ const Wrap = styled.div`
   flex: 1;
 `
 
-export const Espace = (params) => (
-  <Wrap {...params} />
-)
+export const Espace = (params) => <Wrap {...params} />
 
 Espace.propTypes = {
-  params: PropTypes.oneOfType([
-    PropTypes.any
-  ])
+  params: PropTypes.oneOfType([PropTypes.any]),
 }
 
 Espace.defaultProps = {
-  params: {}
+  params: {},
 }

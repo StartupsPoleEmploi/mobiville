@@ -5,7 +5,10 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 import {
-  COLOR_PRIMARY, COLOR_SECONDARY, COLOR_BACKGROUND, COLOR_GRAY
+  COLOR_PRIMARY,
+  COLOR_SECONDARY,
+  COLOR_BACKGROUND,
+  COLOR_GRAY,
 } from '../../constants/colors'
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirstOnly } from '../../utils/utils'
@@ -23,13 +26,15 @@ const MainLayout = styled.div`
 `
 
 const ItemLayout = styled.div`
-  ${({ isMobile }) => (isMobile
-    ? `
+  ${({ isMobile }) =>
+    isMobile
+      ? `
     background: #FFFFFF;
     width: 100%;
     padding: 16px;
     margin-bottom: 1px;
-  ` : `
+  `
+      : `
     background: #FFFFFF;
     box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
@@ -41,15 +46,14 @@ const ItemLayout = styled.div`
     margin-bottom: 16px;
     margin-left: 8px;
     margin-right: 8px;
-  `)}
+  `}
 `
 
 const MainLayoutMobile = styled.div`
   padding-bottom: 130px;
 `
 
-const ItemContentLayout = styled.div`
-`
+const ItemContentLayout = styled.div``
 
 const ItemTitleLayout = styled.div`
   font-weight: bold;
@@ -138,7 +142,7 @@ const ElementLine = styled.div`
 `
 
 const ViewMore = styled.button.attrs({
-  type: 'button'
+  type: 'button',
 })`
   font-weight: 500;
   color: ${COLOR_PRIMARY};
@@ -180,22 +184,21 @@ const PanelCityLife = ({ city }) => {
   const description = (city.description || '').replace('Écouter', '')
 
   // We truncate too long descriptions
-  const displayedDescription = description.length > MAX_DESCRIPTION_LENGTH && !showFullDescription
-    ? description.slice(0, MAX_DESCRIPTION_LENGTH).concat(
-      description.slice(MAX_DESCRIPTION_LENGTH).split(' ')[0]
-    )
-      .concat('…') : description
+  const displayedDescription =
+    description.length > MAX_DESCRIPTION_LENGTH && !showFullDescription
+      ? description
+          .slice(0, MAX_DESCRIPTION_LENGTH)
+          .concat(description.slice(MAX_DESCRIPTION_LENGTH).split(' ')[0])
+          .concat('…')
+      : description
 
   const mainCityElement = (
     <ItemLayout isMobile={isMobile}>
-      <ItemTitleLayout>
-        Description de la ville
-      </ItemTitleLayout>
+      <ItemTitleLayout>Description de la ville</ItemTitleLayout>
       <ItemContentLayout>
         {displayedDescription}
         {description.length > MAX_DESCRIPTION_LENGTH && !showFullDescription && (
           <div>
-
             <ViewMore onClick={() => setShowFullDescription(true)}>
               En savoir plus
               <ArrowForwardIcon fontSize="small" style={{ marginLeft: 8 }} />
@@ -208,16 +211,14 @@ const PanelCityLife = ({ city }) => {
 
   const cultureElement = culture.length > 0 && (
     <ItemLayout isMobile={isMobile}>
-      <ItemTitleLayout>
-        Culture & Loisirs
-      </ItemTitleLayout>
+      <ItemTitleLayout>Culture & Loisirs</ItemTitleLayout>
       <ItemContentLayout>
         {culture.map((t) => (
           <ElementObject key={t.label}>
-            <div className="image-block"><img src={`/icons/${t.icon} `} alt={t.label} /></div>
-            <p className="title">
-              {t.label}
-            </p>
+            <div className="image-block">
+              <img src={`/icons/${t.icon} `} alt={t.label} />
+            </div>
+            <p className="title">{t.label}</p>
             <p className="details">{t.total}</p>
           </ElementObject>
         ))}
@@ -227,15 +228,12 @@ const PanelCityLife = ({ city }) => {
 
   const environmentElement = (
     <ItemLayout isMobile={isMobile}>
-      <ItemTitleLayout>
-        Environnement
-      </ItemTitleLayout>
+      <ItemTitleLayout>Environnement</ItemTitleLayout>
       <ItemContentLayout>
         <ElementLine>
           <i className="material-icons">domain</i>
           <p className="title">
-            Qualité de l
-            {'\''}
+            Qualité de l{"'"}
             air moyenne
           </p>
           <p className="details">A venir</p>
@@ -251,19 +249,15 @@ const PanelCityLife = ({ city }) => {
 
   const transportElement = transports.length > 0 && (
     <ItemLayout isMobile={isMobile}>
-      <ItemTitleLayout>
-        Transports à proximité
-      </ItemTitleLayout>
+      <ItemTitleLayout>Transports à proximité</ItemTitleLayout>
       <ItemContentLayout>
         {transports.map((t) => (
           <ElementLine key={t.label}>
-            <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
+            <div className="image-block">
+              <img src={`/icons/${t.icon}`} alt={t.label} />
+            </div>
             <p className="title">
-              {t.label}
-              {' '}
-              de
-              {' '}
-              {ucFirstOnly(city.nom_comm)}
+              {t.label} de {ucFirstOnly(city.nom_comm)}
             </p>
             <p className="details">{t.total}</p>
           </ElementLine>
@@ -274,16 +268,14 @@ const PanelCityLife = ({ city }) => {
 
   const servicesElement = services.length > 0 && (
     <ItemLayout isMobile={isMobile}>
-      <ItemTitleLayout>
-        Services
-      </ItemTitleLayout>
+      <ItemTitleLayout>Services</ItemTitleLayout>
       <ItemContentLayout>
         {services.map((t) => (
           <ElementObject key={t.label}>
-            <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
-            <p className="title">
-              {t.label}
-            </p>
+            <div className="image-block">
+              <img src={`/icons/${t.icon}`} alt={t.label} />
+            </div>
+            <p className="title">{t.label}</p>
             <p className="details">{t.total}</p>
           </ElementObject>
         ))}
@@ -293,16 +285,14 @@ const PanelCityLife = ({ city }) => {
 
   const healthElement = health.length > 0 && (
     <ItemLayout isMobile={isMobile}>
-      <ItemTitleLayout>
-        Santé
-      </ItemTitleLayout>
+      <ItemTitleLayout>Santé</ItemTitleLayout>
       <ItemContentLayout>
         {health.map((t) => (
           <ElementObject key={t.label}>
-            <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
-            <p className="title">
-              {t.label}
-            </p>
+            <div className="image-block">
+              <img src={`/icons/${t.icon}`} alt={t.label} />
+            </div>
+            <p className="title">{t.label}</p>
             <p className="details">{t.total}</p>
           </ElementObject>
         ))}
@@ -312,20 +302,18 @@ const PanelCityLife = ({ city }) => {
 
   const educationElement = (
     <ItemLayout isMobile={isMobile}>
-      <ItemTitleLayout>
-        Education
-      </ItemTitleLayout>
+      <ItemTitleLayout>Education</ItemTitleLayout>
       <ItemContentLayout>
         {education.map((t) => (
           <ElementObject key={t.label}>
-            <div className="image-block"><img src={`/icons/${t.icon}`} alt={t.label} /></div>
-            <p className="title">
-              {t.label}
-            </p>
+            <div className="image-block">
+              <img src={`/icons/${t.icon}`} alt={t.label} />
+            </div>
+            <p className="title">{t.label}</p>
             <p className="details">{t.total}</p>
           </ElementObject>
         ))}
-        {education.length === 0 && (<b>À venir</b>)}
+        {education.length === 0 && <b>À venir</b>}
       </ItemContentLayout>
     </ItemLayout>
   )
@@ -358,10 +346,9 @@ const PanelCityLife = ({ city }) => {
 }
 
 PanelCityLife.propTypes = {
-  city: PropTypes.object.isRequired
+  city: PropTypes.object.isRequired,
 }
 
-PanelCityLife.defaultProps = {
-}
+PanelCityLife.defaultProps = {}
 
 export default PanelCityLife

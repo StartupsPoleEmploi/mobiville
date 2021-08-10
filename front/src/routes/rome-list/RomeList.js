@@ -27,59 +27,60 @@ const MAIN_HEADER_SIZE = 0
 
 const MAIN_CATEGORIES = {
   A: {
-    label: 'Agriculture et Pêche, Espaces naturels et Espaces verts, Soins aux animaux',
-    svg: aSVG
+    label:
+      'Agriculture et Pêche, Espaces naturels et Espaces verts, Soins aux animaux',
+    svg: aSVG,
   },
   B: {
     label: "Arts et Façonnage d'ouvrages d'art",
-    svg: bSVG
+    svg: bSVG,
   },
   C: {
     label: 'Banque, Assurance, Immobilier',
-    svg: cSVG
+    svg: cSVG,
   },
   D: {
     label: 'Commerce, Vente et Grande distribution',
-    svg: dSVG
+    svg: dSVG,
   },
   E: {
-    label: 'Communication, Média et Multimédia'
+    label: 'Communication, Média et Multimédia',
   },
   F: {
     label: 'Construction, Bâtiment et Travaux publics',
-    svg: fSVG
+    svg: fSVG,
   },
   G: {
     label: 'Hôtellerie-Restauration, Tourisme, Loisirs et Animation',
-    svg: gSVG
+    svg: gSVG,
   },
   H: {
     label: 'Industrie',
-    svg: hSVG
+    svg: hSVG,
   },
   I: {
     label: 'Installation et Maintenance',
-    svg: iSVG
+    svg: iSVG,
   },
   J: {
     label: 'Santé',
-    svg: jSVG
+    svg: jSVG,
   },
   L: {
-    label: 'Spectacle'
+    label: 'Spectacle',
   },
   K: {
     label: 'Services à la personne et à la collectivité',
-    svg: kSVG
+    svg: kSVG,
   },
   M: {
     label: "Support à l'entreprise",
-    svg: mSVG
+    svg: mSVG,
   },
   N: {
     label: 'Transport et Logistique',
-    svg: nSVG
-  }
+    svg: nSVG,
+  },
 }
 
 const Wrapper = styled.div`
@@ -102,11 +103,10 @@ const H1 = styled.h1`
   padding: 0 10px;
   width: 100%;
   position: ${({ isMobile }) => (isMobile ? 'fixed' : 'static')};
-    box-shadow: ${({ isMobile }) => (
-    isMobile
-      ? '0 0 #fff, 0px 3px 4px rgba(0,0,0,0.12), 0px 1px 5px rgba(0,0,0,0.2)'
-      : 'none'
-  )};
+    box-shadow: ${({ isMobile }) =>
+      isMobile
+        ? '0 0 #fff, 0px 3px 4px rgba(0,0,0,0.12), 0px 1px 5px rgba(0,0,0,0.2)'
+        : 'none'};
 
   + * {
     margin-top: ${({ isMobile }) => (isMobile ? `${PAGE_HEADER_SIZE}px` : '0')};
@@ -115,8 +115,9 @@ const H1 = styled.h1`
 `
 
 const CategoryDiv = styled.div`
-  background: #FFFFFF;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
+    0px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 16px;
   padding: 16px;
   margin-bottom: 16px;
@@ -154,20 +155,24 @@ const RomeList = () => {
     setIsLoading(true)
 
     axios.get('/api/ogrs').then((response) => {
-      response.data.data.sort((a, b) => (deburr(a.romeLabel) < deburr(b.romeLabel) ? 1 : -1))
-
-      const groupedData = sortBy(
-        response.data.data,
-        ['romeLabel', 'ogrLabel']
+      response.data.data.sort((a, b) =>
+        deburr(a.romeLabel) < deburr(b.romeLabel) ? 1 : -1
       )
-        .reduce((prev, { rome, romeLabel, ogrLabel }) => ({
+
+      const groupedData = sortBy(response.data.data, [
+        'romeLabel',
+        'ogrLabel',
+      ]).reduce(
+        (prev, { rome, romeLabel, ogrLabel }) => ({
           ...prev,
           [rome]: {
             rome,
             label: romeLabel,
-            ogrs: (prev[rome]?.ogrs || []).concat(ogrLabel)
-          }
-        }), {})
+            ogrs: (prev[rome]?.ogrs || []).concat(ogrLabel),
+          },
+        }),
+        {}
+      )
 
       const keys = Object.keys(groupedData)
       keys.sort((a, b) => (deburr(a) > deburr(b) ? 1 : -1))
@@ -177,7 +182,9 @@ const RomeList = () => {
 
         return {
           ...prev,
-          [romeFirstChar]: (prev[romeFirstChar] || []).concat(groupedData[rome])
+          [romeFirstChar]: (prev[romeFirstChar] || []).concat(
+            groupedData[rome]
+          ),
         }
       }, {})
 
@@ -187,37 +194,35 @@ const RomeList = () => {
   }, [])
 
   if (isLoading) {
-    return (
-      <div style={{ margin: 'auto' }}>Chargement…</div>
-    )
+    return <div style={{ margin: 'auto' }}>Chargement…</div>
   }
 
   return (
     <MainLayout>
       {isMobile && (
-      <H1 isMobile>
-        <Link to="/rechercher" style={{ marginRight: 8, marginTop: 6 }}>
-          <ArrowBackOutlinedIcon />
-        </Link>
-        Les métiers disponibles sur Mobiville
-      </H1>
-      )}
-      <Wrapper style={{ marginTop: isMobile ? PAGE_HEADER_SIZE : 0 }}>
-        {!isMobile && (
-        <H1>
+        <H1 isMobile>
+          <Link to="/rechercher" style={{ marginRight: 8, marginTop: 6 }}>
+            <ArrowBackOutlinedIcon />
+          </Link>
           Les métiers disponibles sur Mobiville
         </H1>
-        )}
+      )}
+      <Wrapper style={{ marginTop: isMobile ? PAGE_HEADER_SIZE : 0 }}>
+        {!isMobile && <H1>Les métiers disponibles sur Mobiville</H1>}
         {Object.keys(dataByCategory).map((categoryLetter) => (
           <CategoryDiv key={categoryLetter}>
-            {MAIN_CATEGORIES[categoryLetter].svg && <img src={MAIN_CATEGORIES[categoryLetter].svg} alt="" />}
+            {MAIN_CATEGORIES[categoryLetter].svg && (
+              <img src={MAIN_CATEGORIES[categoryLetter].svg} alt="" />
+            )}
             <H2>{MAIN_CATEGORIES[categoryLetter].label}</H2>
             <Ul>
               {Object.keys(dataByCategory[categoryLetter]).map((index) => (
                 <Li key={dataByCategory[categoryLetter][index].rome}>
                   <Link
                     to={`/rechercher/region?code_rome=${dataByCategory[categoryLetter][index].rome}`}
-                    title={dataByCategory[categoryLetter][index].ogrs.join(', ')}
+                    title={dataByCategory[categoryLetter][index].ogrs.join(
+                      ', '
+                    )}
                   >
                     {dataByCategory[categoryLetter][index].label}
                   </Link>
