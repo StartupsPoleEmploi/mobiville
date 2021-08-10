@@ -71,11 +71,11 @@ const Text = styled(Typography)`
 `
 
 const MENU_LINK = [{
-  path: '/', icon: 'house', label: 'Accueil', selected: false
+  path: '/', icon: 'house', label: 'Accueil'
 }, {
-  path: '/rechercher', icon: 'explore', label: 'Recherche', selected: false
+  path: '/rechercher', icon: 'explore', label: 'Recherche', activePaths: ['rechercher', 'cities']
 }, {
-  path: '/aides', icon: 'map', label: 'Les aides', selected: false
+  path: '/aides', icon: 'map', label: 'Les aides', activePaths: ['/aides']
 }]
 
 export const MenuMobile = () => {
@@ -83,7 +83,13 @@ export const MenuMobile = () => {
   const location = useLocation()
 
   useEffect(() => {
-    setMenuLink(MENU_LINK.map((m) => ({ ...m, selected: m.path === location.pathname })))
+    setMenuLink(
+      MENU_LINK.map((m) => ({
+        ...m,
+        selected: m.path === location.pathname
+          || (m.activePaths && m.activePaths.some((path) => location.pathname.includes(path)))
+      }))
+    )
   }, [location])
 
   return (
