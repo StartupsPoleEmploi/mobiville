@@ -4,8 +4,8 @@ module.exports = {
     es2021: true
   },
   extends: [
-    'plugin:react/recommended',
-    'airbnb'
+    'react-app',
+    'prettier'
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -30,6 +30,8 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'newline-per-chained-call': ['error', { ignoreChainWithDepth: 2 }],
     'react/jsx-props-no-spreading': ['off'],
-    'react/forbid-prop-types': [0]
+    'react/forbid-prop-types': [0],
+    'react/jsx-one-expression-per-line': 0,
+    "comma-dangle": 0
   }
 }

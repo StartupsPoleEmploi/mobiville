@@ -1,6 +1,8 @@
 import {
   CircularProgress,
-  FormControl, TextField, Typography
+  FormControl,
+  TextField,
+  Typography,
 } from '@material-ui/core'
 import { toast } from 'react-toastify'
 import React, { useEffect, useState } from 'react'
@@ -58,14 +60,20 @@ const GpsIcon = styled.i`
 const Waiting = styled(CircularProgress)`
   && {
     margin-right: 8px;
-    color: #00B9B6;
+    color: #00b9b6;
   }
 `
 
 const Step1Component = ({ onNext, values }) => {
   const [loadingLocalisation, setLoadingLocalisation] = useState(false)
   const {
-    onSearchByLocation, setCity, onSearchByName, onSearchById, city, searchCities, isLoadingLocation
+    onSearchByLocation,
+    setCity,
+    onSearchByName,
+    onSearchById,
+    city,
+    searchCities,
+    isLoadingLocation,
   } = useCities()
   const [inputValue, setInputValue] = useState('')
   const size = useWindowSize()
@@ -86,13 +94,14 @@ const Step1Component = ({ onNext, values }) => {
       .then(() => setLoadingLocalisation(false))
       .catch(() => {
         toast.warn('Impossible de vous localiser !', {
-          autoClose: 5000
+          autoClose: 5000,
         })
         setLoadingLocalisation(false)
       })
   }
 
-  const searchNewCities = (event) => onSearchByName({ name: event.target.value })
+  const searchNewCities = (event) =>
+    onSearchByName({ name: event.target.value })
 
   useEffect(() => {
     if (city) {
@@ -123,26 +132,33 @@ const Step1Component = ({ onNext, values }) => {
           options={searchCities.filter((s) => s.id !== null)}
           loading={isLoadingLocation}
           noOptionsText="Aucun résultat"
-          renderInput={(params) => <Input {...params} onKeyUp={searchNewCities} label="Ville" />}
+          renderInput={(params) => (
+            <Input {...params} onKeyUp={searchNewCities} label="Ville" />
+          )}
         />
       </FormLine>
       {isMobileView(size) && (
         <Button light onClick={locateMe}>
-          {!loadingLocalisation && <GpsIcon className="material-icons">gps_fixed</GpsIcon>}
+          {!loadingLocalisation && (
+            <GpsIcon className="material-icons">gps_fixed</GpsIcon>
+          )}
           {loadingLocalisation && <Waiting size={22} />}
           Me localiser
         </Button>
       )}
       <Espace />
       {city && (
-      <Button
-        style={{
-          border: 'none', fontWeight: 'normal', margin: '32px 0', boxShadow: '0 4px 5px 0 rgba(0,0,0,0.2)'
-        }}
-        onClick={() => onNext({ from: city })}
-      >
-        Suivant
-      </Button>
+        <Button
+          style={{
+            border: 'none',
+            fontWeight: 'normal',
+            margin: '32px 0',
+            boxShadow: '0 4px 5px 0 rgba(0,0,0,0.2)',
+          }}
+          onClick={() => onNext({ from: city })}
+        >
+          Suivant
+        </Button>
       )}
     </Wrapper>
   )
@@ -150,12 +166,12 @@ const Step1Component = ({ onNext, values }) => {
 
 Step1Component.propTypes = {
   onNext: PropTypes.func,
-  values: PropTypes.object
+  values: PropTypes.object,
 }
 
 Step1Component.defaultProps = {
   onNext: () => {},
-  values: {}
+  values: {},
 }
 
 export default Step1Component

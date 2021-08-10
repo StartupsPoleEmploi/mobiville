@@ -2,7 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { MainLayout } from '../../components/main-layout'
-import { COLOR_TEXT_PRIMARY, COLOR_PRIMARY, COLOR_GRAY } from '../../constants/colors'
+import {
+  COLOR_TEXT_PRIMARY,
+  COLOR_PRIMARY,
+  COLOR_GRAY,
+} from '../../constants/colors'
 import STEP1 from '../../assets/images/01-Selectionnez.png'
 import STEP2 from '../../assets/images/02-Ajoutez.png'
 import STEP3 from '../../assets/images/03-Decouvrez.png'
@@ -24,7 +28,9 @@ const Block = styled.div`
     }
   }
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     > .wrapper {
       flex-direction: column;
       margin-left: 16px;
@@ -35,7 +41,8 @@ const Block = styled.div`
         margin-right: 0;
       }
     }  
-  ` : '')}
+  `
+      : ''}
 `
 
 const ImageBlock = styled.div`
@@ -45,11 +52,14 @@ const ImageBlock = styled.div`
   background-position: center;
   background-repeat: no-repeat;
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     width: 256px;
     height: 256px;
     margin-bottom: 16px;  
-  ` : '')}
+  `
+      : ''}
 `
 
 const VideoBlock = styled.video`
@@ -66,10 +76,13 @@ const Title = styled.h1`
   font-weight: bold;
   color: ${COLOR_TEXT_PRIMARY};
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     font-size: 18px;
   
-  ` : '')}
+  `
+      : ''}
 `
 
 const Description = styled.h3`
@@ -78,9 +91,12 @@ const Description = styled.h3`
   font-weight: bold;
   color: ${COLOR_TEXT_PRIMARY};
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     font-size: 14px;
-  ` : '')}
+  `
+      : ''}
 `
 
 const Action = styled(Link)`
@@ -104,13 +120,16 @@ const How = styled.div`
   max-width: 688px;
   width: 100%;
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     margin: 32px auto;
 
     > h1 {
       margin-bottom: 32px;
     }
-  ` : '')}
+  `
+      : ''}
 `
 
 const BlockLine = styled.div`
@@ -124,7 +143,9 @@ const BlockLine = styled.div`
     margin-left: 8px;
   }
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     margin-bottom: 32px;
     margin-left: 16px;
     margin-right: 16px;
@@ -138,7 +159,8 @@ const BlockLine = styled.div`
     > div:last-child {
       margin-left: 0;
     }
-  ` : '')}
+  `
+      : ''}
 `
 
 const Panel = styled.div`
@@ -163,9 +185,12 @@ const DescriptionText = styled.p`
 const EmptyPanel = styled.div`
   flex: 1;
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     display: none;
-  ` : '')}
+  `
+      : ''}
 `
 
 const HomePage = () => {
@@ -176,35 +201,32 @@ const HomePage = () => {
       <Block isMobile={isMobileView(size)}>
         <div className="wrapper">
           {isMobileView(size) && (
-          <ImageBlock
-            style={{ backgroundImage: 'url(/00-Hero-Homepage.png)' }}
-            isMobile={isMobileView(size)}
-          />
+            <ImageBlock
+              style={{ backgroundImage: 'url(/00-Hero-Homepage.png)' }}
+              isMobile={isMobileView(size)}
+            />
           )}
           <TextBlock>
             <Title isMobile={isMobileView(size)}>
-              Vous souhaitez
-              bouger pour retrouver un emploi ?
+              Vous souhaitez bouger pour retrouver un emploi ?
             </Title>
             <Description isMobile={isMobileView(size)}>
-              Trouver
-              le job dans la ville de vos rêves
-
+              Trouver le job dans la ville de vos rêves
             </Description>
             <Action to="/rechercher">Trouver ma ville</Action>
           </TextBlock>
           {!isMobileView(size) && (
-          <VideoBlock loop muted autoPlay>
-            <source
-              src="/videos/Hero-mobiville-320px.mp4"
-              type="video/mp4"
-            />
-          </VideoBlock>
+            <VideoBlock loop muted autoPlay>
+              <source src="/videos/Hero-mobiville-320px.mp4" type="video/mp4" />
+            </VideoBlock>
           )}
         </div>
       </Block>
 
-      <Block style={{ backgroundColor: COLOR_GRAY }} isMobile={isMobileView(size)}>
+      <Block
+        style={{ backgroundColor: COLOR_GRAY }}
+        isMobile={isMobileView(size)}
+      >
         <div className="wrapper">
           <ImageBlock
             style={{ backgroundImage: 'url(/Generique_Aides.png)' }}
@@ -212,14 +234,11 @@ const HomePage = () => {
           />
           <TextBlock>
             <Title isMobile={isMobileView(size)}>
-              Vous avez besoin d
-              {'\''}
+              Vous avez besoin d{"'"}
               aide pour votre projet de mobilité ?
             </Title>
             <Description isMobile={isMobileView(size)}>
-              Découvrez les
-              solutions pour accélérer votre projet
-
+              Découvrez les solutions pour accélérer votre projet
             </Description>
             <Action to="/aides">Découvrir les aides</Action>
           </TextBlock>
@@ -227,19 +246,17 @@ const HomePage = () => {
       </Block>
 
       <How isMobile={isMobileView(size)}>
-        <Title
-          style={{ textAlign: 'center' }}
-          isMobile={isMobileView(size)}
-        >
+        <Title style={{ textAlign: 'center' }} isMobile={isMobileView(size)}>
           Comment ça marche ?
-
         </Title>
 
         <BlockLine isMobile={isMobileView(size)}>
           <Panel>
             <img src={STEP1} alt="Sélectionnez" />
             <NumberText>1</NumberText>
-            <DescriptionText>Sélectionnez votre métier parmi la liste proposée</DescriptionText>
+            <DescriptionText>
+              Sélectionnez votre métier parmi la liste proposée
+            </DescriptionText>
           </Panel>
           <EmptyPanel isMobile={isMobileView(size)} />
         </BlockLine>
@@ -250,9 +267,7 @@ const HomePage = () => {
             <img src={STEP2} alt="Ajoutez" />
             <NumberText>2</NumberText>
             <DescriptionText>
-              Ajoutez vos critères professionnels
-              et votre cadre de vie idéal
-
+              Ajoutez vos critères professionnels et votre cadre de vie idéal
             </DescriptionText>
           </Panel>
         </BlockLine>
@@ -262,9 +277,7 @@ const HomePage = () => {
             <img src={STEP3} alt="Découvrez" />
             <NumberText>3</NumberText>
             <DescriptionText>
-              Découvrez des villes qui vous
-              correspondent et qui recrutent
-
+              Découvrez des villes qui vous correspondent et qui recrutent
             </DescriptionText>
           </Panel>
           <EmptyPanel isMobile={isMobileView(size)} />
@@ -275,7 +288,9 @@ const HomePage = () => {
           <Panel>
             <img src={STEP4} alt="Identifiez" />
             <NumberText>4</NumberText>
-            <DescriptionText>Identifiez les aides qui vont faciliter votre projet</DescriptionText>
+            <DescriptionText>
+              Identifiez les aides qui vont faciliter votre projet
+            </DescriptionText>
           </Panel>
         </BlockLine>
 

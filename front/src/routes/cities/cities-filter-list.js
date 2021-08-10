@@ -39,10 +39,7 @@ const SpaceItem = styled.div`
 `
 
 const CitiesFilterList = () => {
-  const {
-    setSortCriterions,
-    sortCriterions
-  } = useCities()
+  const { setSortCriterions, sortCriterions } = useCities()
 
   useEffect(() => {
     setSortCriterions('')
@@ -57,8 +54,7 @@ const CitiesFilterList = () => {
       >
         <MenuItem value="">
           <SpaceItem>
-            Nombre d
-            {'\''}
+            Nombre d{"'"}
             habitants
             <FilterListIcon />
           </SpaceItem>
@@ -80,10 +76,8 @@ const CitiesFilterList = () => {
   )
 }
 
-CitiesFilterList.propTypes = {
-}
+CitiesFilterList.propTypes = {}
 
-CitiesFilterList.defaultProps = {
-}
+CitiesFilterList.defaultProps = {}
 
 export default CitiesFilterList

@@ -8,7 +8,7 @@ import {
   searchCityByName,
   getCityTenement,
   getCityAmenities,
-  searchJobLabels
+  searchJobLabels,
 } from '../../api/cities.api'
 
 const EMPTY_CITY = { id: null, nom_comm: 'Non trouvée', description: '' }
@@ -28,7 +28,8 @@ export function CitiesProvider(props) {
   const [isLoadingLocation, _setIsLoadingLocation] = useState(false)
   const [isLoadingTenement, _setIsLoadingTenement] = useState(false)
   const [isLoadingAmenities, _setIsLoadingAmenities] = useState(false)
-  const [isLoadingJobsMatchingCriterion, setIsLoadingJobsMatchingCriterion] = useState(false)
+  const [isLoadingJobsMatchingCriterion, setIsLoadingJobsMatchingCriterion] =
+    useState(false)
   const [sortCriterions, setSortCriterions] = useState('')
   const [cityTenement, _setCityTenement] = useState(null)
   const [cityAmenities, _setCityAmenities] = useState(null)
@@ -42,14 +43,15 @@ export function CitiesProvider(props) {
       _setCities([])
     }
 
-    apiSearchCities({ ...params, index }).then((c) => {
-      if (index === 0) {
-        _setCities(c.list)
-      } else {
-        _setCities(oldCities.concat(c.list))
-      }
-      _setTotalCities(c.total)
-    })
+    apiSearchCities({ ...params, index })
+      .then((c) => {
+        if (index === 0) {
+          _setCities(c.list)
+        } else {
+          _setCities(oldCities.concat(c.list))
+        }
+        _setTotalCities(c.total)
+      })
       .then(() => {
         _setIsLoading(false)
       })
@@ -57,37 +59,45 @@ export function CitiesProvider(props) {
 
   const onLoadCity = useCallback((id) => {
     _setIsLoadingCity(true)
-    loadCity(id).then(setCity)
+    loadCity(id)
+      .then(setCity)
       .then(() => _setIsLoadingCity(false))
   })
 
   const onSearchByLocation = useCallback(({ latitude, longitude }) => {
     _setIsLoadingLocation(true)
-    searchCityByLocation({ latitude, longitude }).then(setCity)
+    searchCityByLocation({ latitude, longitude })
+      .then(setCity)
       .then(() => _setIsLoadingLocation(false))
   })
 
   const onSearchByName = useCallback(({ id, name }) => {
     _setIsLoadingLocation(true)
-    searchCityByName({ id, name }).then((c) => {
-      if (c.length === 0) {
-        _setSearchCities([EMPTY_CITY])
-      } else {
-        _setSearchCities(c)
-      }
+    searchCityByName({ id, name })
+      .then((c) => {
+        if (c.length === 0) {
+          _setSearchCities([EMPTY_CITY])
+        } else {
+          _setSearchCities(c)
+        }
 
-      return c
-    })
+        return c
+      })
       .then(() => _setIsLoadingLocation(false))
-      .catch(() => { _setSearchCities([EMPTY_CITY]); _setIsLoadingLocation(false) })
+      .catch(() => {
+        _setSearchCities([EMPTY_CITY])
+        _setIsLoadingLocation(false)
+      })
   })
 
-  const onSearchById = useCallback((id) => searchCityByName({ id }).then((c) => {
-    if (c.length === 0) {
-      return EMPTY_CITY
-    }
-    return c[0]
-  }))
+  const onSearchById = useCallback((id) =>
+    searchCityByName({ id }).then((c) => {
+      if (c.length === 0) {
+        return EMPTY_CITY
+      }
+      return c[0]
+    })
+  )
 
   const onGetCityTenement = useCallback((id) => {
     _setIsLoadingTenement(true)
@@ -103,59 +113,61 @@ export function CitiesProvider(props) {
       .then(() => _setIsLoadingAmenities(false))
   })
 
-  const onSearchJobLabels = useCallback((label) => {
-    if (!label.trim()) {
-      setJobsMatchingCriterions(criterions.codeRomes)
-      return
-    }
+  const onSearchJobLabels = useCallback(
+    (label) => {
+      if (!label.trim()) {
+        setJobsMatchingCriterions(criterions.codeRomes)
+        return
+      }
 
-    setIsLoadingJobsMatchingCriterion(true)
+      setIsLoadingJobsMatchingCriterion(true)
 
-    searchJobLabels({ label }).then((results) => {
-      // augment rome labels with job title matches
-      setJobsMatchingCriterions(
-        results.reduce((prev, result) => {
-          const {
-            key: romeKey,
-            label: romeLabel
-          } = criterions.codeRomes.find(({ key }) => result.codeRome === key)
+      searchJobLabels({ label }).then((results) => {
+        // augment rome labels with job title matches
+        setJobsMatchingCriterions(
+          results.reduce((prev, result) => {
+            const { key: romeKey, label: romeLabel } =
+              criterions.codeRomes.find(({ key }) => result.codeRome === key)
 
-          return prev.concat({
-            key: romeKey,
-            label: romeLabel.concat(` (${result.label}, …)`)
-          })
-        }, [])
-      )
-      setIsLoadingJobsMatchingCriterion(false)
-    })
-  }, [criterions])
+            return prev.concat({
+              key: romeKey,
+              label: romeLabel.concat(` (${result.label}, …)`),
+            })
+          }, [])
+        )
+        setIsLoadingJobsMatchingCriterion(false)
+      })
+    },
+    [criterions]
+  )
 
   useEffect(() => {
-    getCriterions().then((results) => {
-      _setCriterions(results)
-      setJobsMatchingCriterions(results.codeRomes)
+    getCriterions()
+      .then((results) => {
+        _setCriterions(results)
+        setJobsMatchingCriterions(results.codeRomes)
 
-      _setEnvironmentCriterions(
-        results.criterions.filter((c) => c.tag === 'environment').map(({ key, label, icon }) => ({ key, label, icon }))
-      )
+        _setEnvironmentCriterions(
+          results.criterions
+            .filter((c) => c.tag === 'environment')
+            .map(({ key, label, icon }) => ({ key, label, icon }))
+        )
 
-      _setCityCriterions(
-        results.criterions
-          .filter((c) => c.tag === 'city')
-          .map(({
-            key, label, subLabel, icon
-          }) => ({
-            key,
-            label,
-            subLabel,
-            icon
-          }))
-      )
+        _setCityCriterions(
+          results.criterions
+            .filter((c) => c.tag === 'city')
+            .map(({ key, label, subLabel, icon }) => ({
+              key,
+              label,
+              subLabel,
+              icon,
+            }))
+        )
 
-      _setRegionCriterions(
-        results.regions.map(({ id, label }) => ({ key: id, label }))
-      )
-    })
+        _setRegionCriterions(
+          results.regions.map(({ id, label }) => ({ key: id, label }))
+        )
+      })
       .catch((err) => setCriterionError(err))
   }, [])
 
@@ -192,7 +204,7 @@ export function CitiesProvider(props) {
         setSortCriterions,
         onGetCityTenement,
         onGetCityAmenities,
-        onSearchJobLabels
+        onSearchJobLabels,
       }}
     />
   )

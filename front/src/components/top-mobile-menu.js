@@ -37,18 +37,25 @@ const Container = styled.div`
   position: fixed;
   display: flex;
   padding: 0 16px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12),
+    0px 1px 5px rgba(0, 0, 0, 0.2);
   align-items: center;
 `
 
 export const TopMobileMenu = () => (
   <MainSpace>
     <Container>
-      <Link to="/"><LogoImage src={LOGO} alt="logo" /></Link>
+      <Link to="/">
+        <LogoImage src={LOGO} alt="logo" />
+      </Link>
       <div className="flex-1" />
       <Text>Proposé par</Text>
-      <a href="https://www.actionlogement.fr/" target="_blank" rel="noreferrer"><LogoImagePartener src={LOGO_AL} alt="Action logement" /></a>
-      <a href="https://www.pole-emploi.fr/" target="_blank" rel="noreferrer"><LogoImagePartener src={LOGO_PE} alt="Pôle Emploi" /></a>
+      <a href="https://www.actionlogement.fr/" target="_blank" rel="noreferrer">
+        <LogoImagePartener src={LOGO_AL} alt="Action logement" />
+      </a>
+      <a href="https://www.pole-emploi.fr/" target="_blank" rel="noreferrer">
+        <LogoImagePartener src={LOGO_PE} alt="Pôle Emploi" />
+      </a>
     </Container>
   </MainSpace>
 )

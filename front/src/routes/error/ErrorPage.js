@@ -19,11 +19,7 @@ const Container = styled.div`
 const ErrorPage = () => (
   <MainLayout>
     <Container>
-      <img
-        alt=""
-        src={techErrorPic}
-        style={{ marginBottom: '2rem' }}
-      />
+      <img alt="" src={techErrorPic} style={{ marginBottom: '2rem' }} />
       Problème technique
       <br />
       Veuillez réessayer plus tard

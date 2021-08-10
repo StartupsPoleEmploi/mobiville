@@ -14,8 +14,9 @@ const Wrapper = styled.div`
   left: 0;
   right: 0;
   z-index: 10;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
-  background: #FFFFFF;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12),
+    0px 1px 5px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
 `
 
 const MainWrapper = styled.div`
@@ -33,7 +34,8 @@ const Item = styled(Link)`
     position: relative;
     display: flex;
     align-item: center;
-    color: ${(props) => (props.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY)};
+    color: ${(props) =>
+      props.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY};
   }
 `
 
@@ -61,26 +63,43 @@ const LogoImagePartener = styled.img`
   margin-left: 16px;
 `
 
-const MENU_LINK = [{
-  path: '/', icon: 'home', label: 'Accueil', selected: false
-}, {
-  path: '/rechercher', icon: 'explore', label: 'Recherche', selected: false
-}, {
-  path: '/aides', icon: 'map', label: 'Les aides', selected: false
-}]
+const MENU_LINK = [
+  {
+    path: '/',
+    icon: 'home',
+    label: 'Accueil',
+    selected: false,
+  },
+  {
+    path: '/rechercher',
+    icon: 'explore',
+    label: 'Recherche',
+    selected: false,
+  },
+  {
+    path: '/aides',
+    icon: 'map',
+    label: 'Les aides',
+    selected: false,
+  },
+]
 
 export const MenuDesktop = () => {
   const [menuLink, setMenuLink] = useState(MENU_LINK)
   const location = useLocation()
 
   useEffect(() => {
-    setMenuLink(MENU_LINK.map((m) => ({ ...m, selected: m.path === location.pathname })))
+    setMenuLink(
+      MENU_LINK.map((m) => ({ ...m, selected: m.path === location.pathname }))
+    )
   }, [location])
 
   return (
     <Wrapper>
       <MainWrapper className="wrapper">
-        <Link to="/"><LogoImage src={LOGO} alt="logo" /></Link>
+        <Link to="/">
+          <LogoImage src={LOGO} alt="logo" />
+        </Link>
         {menuLink.map((m) => (
           <Item key={m.path} to={m.path} selected={m.selected}>
             <Icon className="material-icons">{m.icon}</Icon>
@@ -89,15 +108,21 @@ export const MenuDesktop = () => {
         ))}
         <div className="flex-1" />
         <Text>Proposé par</Text>
-        <a href="https://www.actionlogement.fr/" target="_blank" rel="noreferrer"><LogoImagePartener src={LOGO_AL} alt="Action logement" /></a>
-        <a href="https://www.pole-emploi.fr/" target="_blank" rel="noreferrer"><LogoImagePartener src={LOGO_PE} alt="Pôle Emploi" /></a>
+        <a
+          href="https://www.actionlogement.fr/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <LogoImagePartener src={LOGO_AL} alt="Action logement" />
+        </a>
+        <a href="https://www.pole-emploi.fr/" target="_blank" rel="noreferrer">
+          <LogoImagePartener src={LOGO_PE} alt="Pôle Emploi" />
+        </a>
       </MainWrapper>
     </Wrapper>
   )
 }
 
-MenuDesktop.propTypes = {
-}
+MenuDesktop.propTypes = {}
 
-MenuDesktop.defaultProps = {
-}
+MenuDesktop.defaultProps = {}

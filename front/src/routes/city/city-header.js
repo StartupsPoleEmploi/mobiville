@@ -6,14 +6,19 @@ import PersonIcon from '@material-ui/icons/Person'
 import { Link, useHistory } from 'react-router-dom'
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
 import { useCities } from '../../common/contexts/citiesContext'
-import { COLOR_PRIMARY, COLOR_TEXT_SECONDARY, COLOR_SECONDARY } from '../../constants/colors'
+import {
+  COLOR_PRIMARY,
+  COLOR_TEXT_SECONDARY,
+  COLOR_SECONDARY,
+} from '../../constants/colors'
 import { ucFirstOnly } from '../../utils/utils'
 import { isMobileView } from '../../constants/mobile'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { useScroll } from '../../common/hooks/use-scroll'
 
 const MainLayout = styled.div`
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12),
+    0px 1px 5px rgba(0, 0, 0, 0.2);
   background-color: white;
   padding-top: ${(props) => (props.isMobile ? '0' : '72px')};
   z-index: 1;
@@ -71,7 +76,9 @@ const CityPreview = styled.div`
   align-items: center;
   flex-wrap: wrap;
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     > *:first-child {
       margin-left: 32px;
     }
@@ -79,7 +86,8 @@ const CityPreview = styled.div`
     a {
       margin-top: 16px;
     }
-  ` : '')};
+  `
+      : ''};
 `
 
 const CityTab = styled.div`
@@ -104,7 +112,8 @@ const CityTabMobile = styled.div`
 
 const TabItem = styled.button`
   && {
-    color: ${(props) => (props.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY)};
+    color: ${(props) =>
+      props.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY};
     font-weight: 500;
     font-size: 14px;
     margin-right: ${(props) => (props.fixedView ? '24px' : '68px')};
@@ -117,7 +126,7 @@ const TabItem = styled.button`
     background: none;
     border: none;
     white-space: nowrap;
-    
+
     &:before {
       content: ' ';
       display: ${(props) => (props.selected ? 'block' : 'none')};
@@ -134,7 +143,8 @@ const TabItem = styled.button`
 
 const TabItemMobile = styled.button`
   && {
-    color: ${(props) => (props.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY)};
+    color: ${(props) =>
+      props.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY};
     font-weight: 500;
     font-size: 14px;
     margin-right: 0;
@@ -148,7 +158,7 @@ const TabItemMobile = styled.button`
     background: none;
     border: none;
     white-space: nowrap;
-    
+
     &:before {
       content: ' ';
       display: ${(props) => (props.selected ? 'block' : 'none')};
@@ -185,17 +195,18 @@ const PreviewItem = styled.div`
 
   b {
     font-size: 12px;
-    margin-top:  2px;
+    margin-top: 2px;
     display: block;
     font-weight: 700;
   }
 `
 
 const FixedLayout = styled.div`
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
-  background-color: white; 
-  position: fixed;   
-  top: 76px; 
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12),
+    0px 1px 5px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  position: fixed;
+  top: 76px;
   left: 0;
   right: 0;
   height: 124px;
@@ -203,10 +214,11 @@ const FixedLayout = styled.div`
 `
 
 const FixedLayoutMobile = styled.div`
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
-  background-color: white; 
-  position: fixed;   
-  top: 0; 
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12),
+    0px 1px 5px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  position: fixed;
+  top: 0;
   left: 0;
   right: 0;
   height: 92px;
@@ -224,8 +236,9 @@ const SpaceArrowBackOutlinedIconMobileFull = styled.div`
   top: 16px;
   left: 16px;
   cursor: pointer;
-  background: #FFFFFF;
-  box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.14), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 4px 5px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.14), 0px 3px 14px rgba(0, 0, 0, 0.12),
+    0px 4px 5px rgba(0, 0, 0, 0.2);
   width: 32px;
   height: 32px;
   border-radius: 32px;
@@ -234,8 +247,7 @@ const SpaceArrowBackOutlinedIconMobileFull = styled.div`
   justify-content: center;
 `
 
-const ArrowBackOutlinedIconMobileFull = styled(ArrowBackOutlinedIcon)`
-`
+const ArrowBackOutlinedIconMobileFull = styled(ArrowBackOutlinedIcon)``
 
 const ArrowBackOutlinedIconDesktopSmall = styled(ArrowBackOutlinedIcon)`
   position: absolute;
@@ -269,15 +281,15 @@ const HeaderLink = styled(Link)`
     div {
       font-weight: 500;
       font-size: 12px;
-      color: #336E7B;
+      color: #336e7b;
       padding: 8px;
-      border: 2px solid #336E7B;
+      border: 2px solid #336e7b;
       border-radius: 30px;
       margin-left: 8px;
       font-weight: 500;
       white-space: nowrap;
     }
-  }        
+  }
 `
 
 export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
@@ -287,24 +299,30 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
   const history = useHistory()
 
   const onBack = () => {
-    history.push({ pathname: '/cities', search: localStorage.getItem('lastSearch') })
+    history.push({
+      pathname: '/cities',
+      search: localStorage.getItem('lastSearch'),
+    })
   }
 
   return (
     <>
       <MainLayout isMobile={isMobileView(size)}>
-        <ImageView style={{ backgroundImage: `url(${city.photo || `/regions/region-${city['region.new_code']}.jpg`})` }} isMobile={isMobileView(size)}>
+        <ImageView
+          style={{
+            backgroundImage: `url(${
+              city.photo || `/regions/region-${city['region.new_code']}.jpg`
+            })`,
+          }}
+          isMobile={isMobileView(size)}
+        >
           {!isMobileView(size) && (
-          <ArrowBackOutlinedIconDesktopFull
-            onClick={onBack}
-          />
+            <ArrowBackOutlinedIconDesktopFull onClick={onBack} />
           )}
           {isMobileView(size) && (
-          <SpaceArrowBackOutlinedIconMobileFull
-            onClick={onBack}
-          >
-            <ArrowBackOutlinedIconMobileFull />
-          </SpaceArrowBackOutlinedIconMobileFull>
+            <SpaceArrowBackOutlinedIconMobileFull onClick={onBack}>
+              <ArrowBackOutlinedIconMobileFull />
+            </SpaceArrowBackOutlinedIconMobileFull>
           )}
         </ImageView>
         <Region>{ucFirstOnly(city['region.new_name'])}</Region>
@@ -324,89 +342,32 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
                 °C
               </b>
             </PreviewItem>
-            <HeaderLink to={`/aides?code_region=${city['region.new_code']}&insee_com=${city.insee_com}`}>
+            <HeaderLink
+              to={`/aides?code_region=${city['region.new_code']}&insee_com=${city.insee_com}`}
+            >
               <img src="/icons/superhero.svg" alt="superhero" />
-              <PreviewItem>
-                Découvrir les aides
-              </PreviewItem>
+              <PreviewItem>Découvrir les aides</PreviewItem>
             </HeaderLink>
           </CityPreview>
           {isMobileView(size) && (
-          <CityTabMobile>
-            {tabList.map((t, i) => (
-              <TabItemMobile
-                isMobile={isMobileView(size)}
-                key={t.key}
-                selected={t.key === tabSelected}
-                onClick={() => onSelectTab(i)}
-              >
-                {t.label}
-              </TabItemMobile>
-            ))}
-          </CityTabMobile>
-          )}
-          {!isMobileView(size) && (
-          <CityTab>
-            {tabList.map((t, i) => (
-              <TabItem
-                isMobile={isMobileView(size)}
-                key={t.key}
-                selected={t.key === tabSelected}
-                onClick={() => onSelectTab(i)}
-              >
-                {t.label}
-              </TabItem>
-            ))}
-          </CityTab>
-          )}
-        </SecondSection>
-      </MainLayout>
-      {scrollY >= 296 && (
-        <>
-          {isMobileView(size) && (
-          <FixedLayoutMobile>
-            <BackLine isMobile={isMobileView(size)}>
-              <ArrowBackOutlinedIconMobileSmall onClick={onBack} />
-            </BackLine>
-            <NameMobile
-              fixedView
-            >
-              {ucFirstOnly(city.nom_comm)}
-
-            </NameMobile>
-            <CityTabMobile
-              fixedView
-            >
+            <CityTabMobile>
               {tabList.map((t, i) => (
-                <TabItem
-                  fixedView
+                <TabItemMobile
+                  isMobile={isMobileView(size)}
                   key={t.key}
                   selected={t.key === tabSelected}
                   onClick={() => onSelectTab(i)}
                 >
                   {t.label}
-                </TabItem>
+                </TabItemMobile>
               ))}
             </CityTabMobile>
-          </FixedLayoutMobile>
           )}
           {!isMobileView(size) && (
-          <FixedLayout>
-            <BackLine>
-              <ArrowBackOutlinedIconDesktopSmall onClick={onBack} />
-            </BackLine>
-            <Name
-              fixedView
-            >
-              {ucFirstOnly(city.nom_comm)}
-
-            </Name>
-            <CityTab
-              fixedView
-            >
+            <CityTab>
               {tabList.map((t, i) => (
                 <TabItem
-                  fixedView
+                  isMobile={isMobileView(size)}
                   key={t.key}
                   selected={t.key === tabSelected}
                   onClick={() => onSelectTab(i)}
@@ -415,7 +376,50 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
                 </TabItem>
               ))}
             </CityTab>
-          </FixedLayout>
+          )}
+        </SecondSection>
+      </MainLayout>
+      {scrollY >= 296 && (
+        <>
+          {isMobileView(size) && (
+            <FixedLayoutMobile>
+              <BackLine isMobile={isMobileView(size)}>
+                <ArrowBackOutlinedIconMobileSmall onClick={onBack} />
+              </BackLine>
+              <NameMobile fixedView>{ucFirstOnly(city.nom_comm)}</NameMobile>
+              <CityTabMobile fixedView>
+                {tabList.map((t, i) => (
+                  <TabItem
+                    fixedView
+                    key={t.key}
+                    selected={t.key === tabSelected}
+                    onClick={() => onSelectTab(i)}
+                  >
+                    {t.label}
+                  </TabItem>
+                ))}
+              </CityTabMobile>
+            </FixedLayoutMobile>
+          )}
+          {!isMobileView(size) && (
+            <FixedLayout>
+              <BackLine>
+                <ArrowBackOutlinedIconDesktopSmall onClick={onBack} />
+              </BackLine>
+              <Name fixedView>{ucFirstOnly(city.nom_comm)}</Name>
+              <CityTab fixedView>
+                {tabList.map((t, i) => (
+                  <TabItem
+                    fixedView
+                    key={t.key}
+                    selected={t.key === tabSelected}
+                    onClick={() => onSelectTab(i)}
+                  >
+                    {t.label}
+                  </TabItem>
+                ))}
+              </CityTab>
+            </FixedLayout>
           )}
         </>
       )}
@@ -426,11 +430,11 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
 CityHeader.propTypes = {
   tabList: PropTypes.array,
   tabSelected: PropTypes.string,
-  onSelectTab: PropTypes.func
+  onSelectTab: PropTypes.func,
 }
 
 CityHeader.defaultProps = {
   tabList: [],
   tabSelected: '',
-  onSelectTab: () => {}
+  onSelectTab: () => {},
 }

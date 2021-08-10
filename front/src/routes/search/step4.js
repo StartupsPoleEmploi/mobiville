@@ -1,6 +1,4 @@
-import {
-  Typography
-} from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
@@ -50,10 +48,19 @@ const Step4Component = ({ onNext, values }) => {
 
   const getStyleOfButton = (r, index = 0) => {
     const style = {
-      width: 'calc(50% - 7.5px)', height: 98, marginRight: (index + 1) % 2 !== 0 ? 15 : 0, marginBottom: 15, border: 'none'
+      width: 'calc(50% - 7.5px)',
+      height: 98,
+      marginRight: (index + 1) % 2 !== 0 ? 15 : 0,
+      marginBottom: 15,
+      border: 'none',
     }
 
-    if (r && values && values.code_criterion && values.code_criterion.indexOf(r.key) !== -1) {
+    if (
+      r &&
+      values &&
+      values.code_criterion &&
+      values.code_criterion.indexOf(r.key) !== -1
+    ) {
       style.border = `2px solid ${COLOR_PRIMARY}`
     }
 
@@ -74,7 +81,9 @@ const Step4Component = ({ onNext, values }) => {
           .map((c) => {
             let available = true
             if (values.code_region && values.code_region.length) {
-              const reg = criterions.regions.find((r) => r.id === values.code_region[0])
+              const reg = criterions.regions.find(
+                (r) => r.id === values.code_region[0]
+              )
               if (reg) {
                 const allCrit = reg.criterions[values.code_rome[0]] || []
                 if (allCrit.indexOf(c.key) === -1) {
@@ -83,7 +92,7 @@ const Step4Component = ({ onNext, values }) => {
               }
             }
 
-            return ({ ...c, available })
+            return { ...c, available }
           })
           .map((c, index) => (
             <Button
@@ -113,12 +122,12 @@ const Step4Component = ({ onNext, values }) => {
 
 Step4Component.propTypes = {
   onNext: PropTypes.func,
-  values: PropTypes.object
+  values: PropTypes.object,
 }
 
 Step4Component.defaultProps = {
-  onNext: () => { },
-  values: {}
+  onNext: () => {},
+  values: {},
 }
 
 export default Step4Component

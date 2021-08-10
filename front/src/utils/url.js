@@ -16,9 +16,10 @@ export const paramUrlToObject = (paramsUrl = '') => {
   return object
 }
 
-export const objectToQueryString = (params = {}) => Object.entries(params)
-  .reduce((prev, [key, value]) => {
-    if (!value) return prev
-    return prev.concat(`${key}=${encodeURIComponent(value)}&`)
-  }, '?')
-  .slice(0, -1)
+export const objectToQueryString = (params = {}) =>
+  Object.entries(params)
+    .reduce((prev, [key, value]) => {
+      if (!value) return prev
+      return prev.concat(`${key}=${encodeURIComponent(value)}&`)
+    }, '?')
+    .slice(0, -1)

@@ -2,7 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { Button as ButtonUI } from '@material-ui/core'
-import { COLOR_GRAY, COLOR_PRIMARY, COLOR_TEXT_PRIMARY } from '../constants/colors'
+import {
+  COLOR_GRAY,
+  COLOR_PRIMARY,
+  COLOR_TEXT_PRIMARY,
+} from '../constants/colors'
 
 const Bt = styled(ButtonUI)`
   && {
@@ -37,11 +41,14 @@ const Bt = styled(ButtonUI)`
   }
 `
 
-export const Button = ({
-  children, style, light, onClick, column
-}) => {
+export const Button = ({ children, style, light, onClick, column }) => {
   const lightStyle = {
-    backgroundColor: COLOR_GRAY, color: COLOR_TEXT_PRIMARY, borderColor: COLOR_PRIMARY, borderRadius: '8px', fontWeight: 'normal', fontSize: 14
+    backgroundColor: COLOR_GRAY,
+    color: COLOR_TEXT_PRIMARY,
+    borderColor: COLOR_PRIMARY,
+    borderRadius: '8px',
+    fontWeight: 'normal',
+    fontSize: 14,
   }
   let newStyle = style
   if (light) {
@@ -58,20 +65,17 @@ export const Button = ({
 Button.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
+    PropTypes.node,
   ]).isRequired,
-  style: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.number
-  ]),
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
   light: PropTypes.bool,
   onClick: PropTypes.func,
-  column: PropTypes.bool
+  column: PropTypes.bool,
 }
 
 Button.defaultProps = {
   style: {},
   light: false,
   onClick: () => {},
-  column: false
+  column: false,
 }

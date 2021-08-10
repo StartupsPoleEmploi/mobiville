@@ -9,7 +9,10 @@ import { useWindowSize } from '../../common/hooks/window-size'
 import { MainLayout } from '../../components/main-layout'
 import {
   COLOR_BACKGROUND,
-  COLOR_GRAY, COLOR_PRIMARY, COLOR_TEXT_PRIMARY, COLOR_TEXT_SECONDARY
+  COLOR_GRAY,
+  COLOR_PRIMARY,
+  COLOR_TEXT_PRIMARY,
+  COLOR_TEXT_SECONDARY,
 } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { ucFirstOnly } from '../../utils/utils'
@@ -58,7 +61,9 @@ const Container = styled.div`
   padding: 0 16px;
   align-items: flex-start;
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     display: block;
     margin: 0 0 64px 0;
     padding: 0;
@@ -69,29 +74,35 @@ const Container = styled.div`
       box-shadow: none;
       margin-right: 0;
     }
-  ` : '')}
+  `
+      : ''}
 `
 
 const CategoryPanel = styled.div`
   width: 424px;
   min-width: 424px;
   margin-right: 16px;
-  background: #FFFFFF;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
+    0px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   padding: 16px 0 32px 16px;
 `
 
 const HelpsPanel = styled.div`
   flex: 1;
-  background: #FFFFFF;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
+    0px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   padding: 24px 16px 32px 16px;
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     padding: 0;
-  ` : '')}
+  `
+      : ''}
 `
 
 const CategoryTag = styled(Link)`
@@ -120,13 +131,16 @@ const CategoryTag = styled(Link)`
     padding: 0;
   }
 
-  ${(props) => (props.selected ? `
+  ${(props) =>
+    props.selected
+      ? `
     border: 2px solid ${COLOR_PRIMARY};
 
     p {
       color: ${COLOR_PRIMARY};
     }
-  ` : '')}
+  `
+      : ''}
 `
 
 const Tag = styled(Link)`
@@ -146,20 +160,25 @@ const Tag = styled(Link)`
     padding: 0;
   }
 
-  ${(props) => (props.selected ? `
+  ${(props) =>
+    props.selected
+      ? `
     background: ${COLOR_PRIMARY};
 
     p {
       color: white;
     }
-  ` : '')}
+  `
+      : ''}
 `
 
 const TitleHelps = styled.div`
   margin-top: 0;
   margin-bottom: 16px;
 
-  ${(props) => (props.isMobile ? `
+  ${(props) =>
+    props.isMobile
+      ? `
     background-color: ${COLOR_BACKGROUND};
     height: 48px;
     line-height: 48px;
@@ -167,7 +186,8 @@ const TitleHelps = styled.div`
     padding-left: 16px;
     padding-right: 16px;
     margin-bottom: 0;
-  ` : '')}
+  `
+      : ''}
 `
 
 const Item = styled(Link)`
@@ -193,7 +213,7 @@ const Item = styled(Link)`
   }
 
   .tag {
-    background: #FFFFFF;
+    background: #ffffff;
     border: 1px solid ${COLOR_TEXT_SECONDARY};
     color: ${COLOR_TEXT_PRIMARY};
     box-sizing: border-box;
@@ -205,40 +225,52 @@ const Item = styled(Link)`
     font-size: 12px;
   }
 
-  ${(props) => (props.ismobile === 'true' ? `
+  ${(props) =>
+    props.ismobile === 'true'
+      ? `
     padding: 20px 16px 16px 16px;
     border-top: none;
     border-bottom: 2px solid ${COLOR_BACKGROUND};
-  ` : '')}
+  `
+      : ''}
 `
 
-const CATEGORIES = [{
-  key: 'emploi',
-  icon: '/icons/emploi.svg',
-  text: 'Je recherche un emploi'
-}, {
-  key: 'logement',
-  icon: '/icons/logement.svg',
-  text: 'Je recherche un logement'
-}, {
-  key: 'déménage',
-  icon: '/icons/demenagement.svg',
-  text: 'Je déménage prochainement'
-}]
+const CATEGORIES = [
+  {
+    key: 'emploi',
+    icon: '/icons/emploi.svg',
+    text: 'Je recherche un emploi',
+  },
+  {
+    key: 'logement',
+    icon: '/icons/logement.svg',
+    text: 'Je recherche un logement',
+  },
+  {
+    key: 'déménage',
+    icon: '/icons/demenagement.svg',
+    text: 'Je déménage prochainement',
+  },
+]
 
-const SITUATIONS = [{
-  key: 'emploi',
-  text: 'Demandeur d\'emploi'
-}, {
-  key: 'salarie',
-  text: 'Salarié'
-}, {
-  key: 'Moins de 26 ans',
-  text: 'Moins de 26 ans'
-}, {
-  key: 'Plus de 26 ans',
-  text: 'Plus de 26 ans'
-}]
+const SITUATIONS = [
+  {
+    key: 'emploi',
+    text: "Demandeur d'emploi",
+  },
+  {
+    key: 'salarie',
+    text: 'Salarié',
+  },
+  {
+    key: 'Moins de 26 ans',
+    text: 'Moins de 26 ans',
+  },
+  {
+    key: 'Plus de 26 ans',
+    text: 'Plus de 26 ans',
+  },
+]
 
 const HelpsPage = ({ location: { search } }) => {
   const { previews, onLoadPreviews } = useHelps()
@@ -249,7 +281,9 @@ const HelpsPage = ({ location: { search } }) => {
   }, [])
 
   const projectParam = decodeURI(paramUrlToObject(search).project?.[0] || '')
-  const situationParam = decodeURI(paramUrlToObject(search).situation?.[0] || '')
+  const situationParam = decodeURI(
+    paramUrlToObject(search).situation?.[0] || ''
+  )
 
   const project = CATEGORIES.find(({ key }) => projectParam === key) || null
   const situation = SITUATIONS.find(({ key }) => situationParam === key) || null
@@ -262,7 +296,9 @@ const HelpsPage = ({ location: { search } }) => {
     }
 
     if (project) {
-      if (!preview.situtation.toLowerCase().includes(project.key.toLowerCase())) {
+      if (
+        !preview.situtation.toLowerCase().includes(project.key.toLowerCase())
+      ) {
         return false
       }
     }
@@ -282,8 +318,7 @@ const HelpsPage = ({ location: { search } }) => {
             <img src="/Generique_Aides.png" alt="help" />
             <div className="text">
               <h2>
-                Vous avez besoin d
-                {'\''}
+                Vous avez besoin d{"'"}
                 aide pour votre projet de mobilité ?
               </h2>
               <p>Découvrez les solutions pour accélérer votre projet</p>
@@ -303,7 +338,7 @@ const HelpsPage = ({ location: { search } }) => {
                 selected={project && c.key === project.key}
                 to={`/aides${objectToQueryString({
                   project: selected ? '' : c.key,
-                  situation: situation?.key
+                  situation: situation?.key,
                 })}`}
               >
                 <img src={c.icon} alt={c.text} />
@@ -320,7 +355,7 @@ const HelpsPage = ({ location: { search } }) => {
                 selected={selected}
                 to={`/aides${objectToQueryString({
                   project: project?.key,
-                  situation: selected ? '' : c.key
+                  situation: selected ? '' : c.key,
                 })}`}
               >
                 <p>{c.text}</p>
@@ -329,12 +364,24 @@ const HelpsPage = ({ location: { search } }) => {
           })}
         </CategoryPanel>
         <HelpsPanel isMobile={isMobileView(size)}>
-          <TitleHelps isMobile={isMobileView(size)}>{project || situation ? 'Mes aides disponibles' : 'Les aides les plus consultées'}</TitleHelps>
+          <TitleHelps isMobile={isMobileView(size)}>
+            {project || situation
+              ? 'Mes aides disponibles'
+              : 'Les aides les plus consultées'}
+          </TitleHelps>
           {list.map((item) => (
-            <Item key={item.id} to={`/aides/${item.id}-${slug(item.title)}`} ismobile={isMobileView(size) ? 'true' : 'false'}>
+            <Item
+              key={item.id}
+              to={`/aides/${item.id}-${slug(item.title)}`}
+              ismobile={isMobileView(size) ? 'true' : 'false'}
+            >
               <p className="first-title">{item.title}</p>
               <p className="second-title">{item.goal}</p>
-              {item.who.split(',').map((t) => <p className="tag" key={t}>{ucFirstOnly(t)}</p>)}
+              {item.who.split(',').map((t) => (
+                <p className="tag" key={t}>
+                  {ucFirstOnly(t)}
+                </p>
+              ))}
             </Item>
           ))}
         </HelpsPanel>
@@ -345,13 +392,13 @@ const HelpsPage = ({ location: { search } }) => {
 
 HelpsPage.propTypes = {
   location: PropTypes.shape({
-    search: PropTypes.string.isRequired
-  })
+    search: PropTypes.string.isRequired,
+  }),
 }
 
 HelpsPage.defaultProps = {
   location: {
-    search: ''
-  }
+    search: '',
+  },
 }
 export default HelpsPage

@@ -11,11 +11,12 @@ const Wrapper = styled.div`
   right: 0;
   bottom: 0;
   z-index: 1;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
+    0px 1px 3px rgba(0, 0, 0, 0.2);
 `
 
 const MainWrapper = styled.div`
-  background: #FFFFFF;
+  background: #ffffff;
   height: 60px;
   display: flex;
   align-items: stretch;
@@ -33,7 +34,8 @@ const Item = styled(Link)`
     flex-direction: column;
     align-item: center;
     justify-content: center;
-    color: ${(props) => (props.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY)};
+    color: ${(props) =>
+      props.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY};
 
     &:before {
       content: ' ';
@@ -70,13 +72,25 @@ const Text = styled(Typography)`
   }
 `
 
-const MENU_LINK = [{
-  path: '/', icon: 'house', label: 'Accueil'
-}, {
-  path: '/rechercher', icon: 'explore', label: 'Recherche', activePaths: ['rechercher', 'cities']
-}, {
-  path: '/aides', icon: 'map', label: 'Les aides', activePaths: ['/aides']
-}]
+const MENU_LINK = [
+  {
+    path: '/',
+    icon: 'house',
+    label: 'Accueil',
+  },
+  {
+    path: '/rechercher',
+    icon: 'explore',
+    label: 'Recherche',
+    activePaths: ['rechercher', 'cities'],
+  },
+  {
+    path: '/aides',
+    icon: 'map',
+    label: 'Les aides',
+    activePaths: ['/aides'],
+  },
+]
 
 export const MenuMobile = () => {
   const [menuLink, setMenuLink] = useState(MENU_LINK)
@@ -86,8 +100,10 @@ export const MenuMobile = () => {
     setMenuLink(
       MENU_LINK.map((m) => ({
         ...m,
-        selected: m.path === location.pathname
-          || (m.activePaths && m.activePaths.some((path) => location.pathname.includes(path)))
+        selected:
+          m.path === location.pathname ||
+          (m.activePaths &&
+            m.activePaths.some((path) => location.pathname.includes(path))),
       }))
     )
   }, [location])
@@ -106,8 +122,6 @@ export const MenuMobile = () => {
   )
 }
 
-MenuMobile.propTypes = {
-}
+MenuMobile.propTypes = {}
 
-MenuMobile.defaultProps = {
-}
+MenuMobile.defaultProps = {}

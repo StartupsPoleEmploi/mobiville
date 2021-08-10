@@ -32,7 +32,11 @@ const HelpButton = styled.button`
 `
 
 const CityPage = ({ location: { search } }) => {
-  const tabList = [{ key: 'job', label: 'Emploi' }, { key: 'life', label: 'Cadre de vie' }, { key: 'tenement', label: 'Logement' }]
+  const tabList = [
+    { key: 'job', label: 'Emploi' },
+    { key: 'life', label: 'Cadre de vie' },
+    { key: 'tenement', label: 'Logement' },
+  ]
   const { onLoadCity, isLoadingCity, city } = useCities()
   const { insee, place } = useParams()
   const params = paramUrlToObject(search)
@@ -57,8 +61,8 @@ const CityPage = ({ location: { search } }) => {
 
   return (
     <MainLayout menu={{ visible: !isMobileView(size) }}>
-      {isLoadingCity && (<p>Loading...</p>)}
-      {!isLoadingCity && !city && (<p>Non trouvée</p>)}
+      {isLoadingCity && <p>Loading...</p>}
+      {!isLoadingCity && !city && <p>Non trouvée</p>}
       {!isLoadingCity && city && (
         <>
           <CityHeader
@@ -67,14 +71,20 @@ const CityPage = ({ location: { search } }) => {
             onSelectTab={setTagSelected}
           />
           <ContentBlock isMobile={isMobileView(size)}>
-            {tabKey === 'job' && <PanelCityJobs city={city} rome={params && params.code_rome ? params.code_rome : null} />}
+            {tabKey === 'job' && (
+              <PanelCityJobs
+                city={city}
+                rome={params && params.code_rome ? params.code_rome : null}
+              />
+            )}
             {tabKey === 'life' && <PanelCityLife city={city} />}
             {tabKey === 'tenement' && <PanelCityLogement city={city} />}
-            <Link
-              to="/mobility-guide"
-              style={{ cursor: 'pointer' }}
-            >
-              <HelpButton className="btn primary" type="button" isMobile={isMobileView(size)}>
+            <Link to="/mobility-guide" style={{ cursor: 'pointer' }}>
+              <HelpButton
+                className="btn primary"
+                type="button"
+                isMobile={isMobileView(size)}
+              >
                 Choisir cette ville
               </HelpButton>
             </Link>
@@ -87,14 +97,14 @@ const CityPage = ({ location: { search } }) => {
 
 CityPage.propTypes = {
   location: PropTypes.shape({
-    search: PropTypes.string.isRequired
-  })
+    search: PropTypes.string.isRequired,
+  }),
 }
 
 CityPage.defaultProps = {
   location: {
-    search: ''
-  }
+    search: '',
+  },
 }
 
 export default CityPage

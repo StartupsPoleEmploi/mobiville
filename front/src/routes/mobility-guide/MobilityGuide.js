@@ -23,11 +23,10 @@ const ContentBlock = styled.div`
   margin: ${(props) => (props.isMobile ? '0' : '16px 0')};
   padding: 8px 16px 16px;
   background-color: #fff;
-  box-shadow: ${(props) => (
+  box-shadow: ${(props) =>
     props.isMobile
       ? 'none'
-      : '0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2)'
-  )};
+      : '0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2)'};
   border-radius: 8px;
 `
 
@@ -43,15 +42,16 @@ const H1 = styled.h1`
   margin: 0;
   padding: 0 10px;
   width: 100%;
-  position: ${({ shouldUseFixedHeader }) => (shouldUseFixedHeader ? 'fixed' : 'static')};
-    box-shadow: ${({ shouldUseFixedHeader }) => (
-    shouldUseFixedHeader
-      ? '0 0 #fff, 0px 3px 4px rgba(0,0,0,0.12), 0px 1px 5px rgba(0,0,0,0.2)'
-      : 'none'
-  )};
+  position: ${({ shouldUseFixedHeader }) =>
+    shouldUseFixedHeader ? 'fixed' : 'static'};
+    box-shadow: ${({ shouldUseFixedHeader }) =>
+      shouldUseFixedHeader
+        ? '0 0 #fff, 0px 3px 4px rgba(0,0,0,0.12), 0px 1px 5px rgba(0,0,0,0.2)'
+        : 'none'};
 
   + * {
-    margin-top: ${({ shouldUseFixedHeader }) => (shouldUseFixedHeader ? `${PAGE_HEADER_SIZE}px` : '0')};
+    margin-top: ${({ shouldUseFixedHeader }) =>
+      shouldUseFixedHeader ? `${PAGE_HEADER_SIZE}px` : '0'};
   }
 }
 `
@@ -89,11 +89,16 @@ const MobilityGuide = () => {
       <Contents isMobile={isMobile}>
         <ContentBlock isMobile={isMobile}>
           <h2>Etape 1 :</h2>
-          <p><b>Vous avez choisi une ville et vous cherchez un emploi</b></p>
-          <p>Retournez sur la page précédente et choisissez l’offre d’emploi qui vous convient</p>
           <p>
-            En cas de déplacement pour un entretien d'embauche, vous pouvez bénéficier d'aides
-            financières, si vous êtes demandeur d'emploi :
+            <b>Vous avez choisi une ville et vous cherchez un emploi</b>
+          </p>
+          <p>
+            Retournez sur la page précédente et choisissez l’offre d’emploi qui
+            vous convient
+          </p>
+          <p>
+            En cas de déplacement pour un entretien d'embauche, vous pouvez
+            bénéficier d'aides financières, si vous êtes demandeur d'emploi :
             <br />
             <ul>
               <li>Prise en charge du billet de train</li>
@@ -110,11 +115,16 @@ const MobilityGuide = () => {
 
         <ContentBlock isMobile={isMobile}>
           <h2>Etape 2 :</h2>
-          <p><b>Vous êtes embauché(e) et vous recherchez un logement</b></p>
-          <p>Pour accéder à un logement, il faut impérativement une promesse d'embauche.</p>
           <p>
-            Découvrez des aides pour avoir un dosser de location en béton ou pour
-            accéder à un logement temporaire.
+            <b>Vous êtes embauché(e) et vous recherchez un logement</b>
+          </p>
+          <p>
+            Pour accéder à un logement, il faut impérativement une promesse
+            d'embauche.
+          </p>
+          <p>
+            Découvrez des aides pour avoir un dosser de location en béton ou
+            pour accéder à un logement temporaire.
           </p>
           <p>
             <Link to="/aides?project=logement">
@@ -125,8 +135,8 @@ const MobilityGuide = () => {
           <p>L’astuce Mobiville</p>
           <p>
             Vous souhaitez être accompagné dans votre recherche de logement ?
-            C'est possible en contactant un conseiller Logement dédié à votre projet.
-
+            C'est possible en contactant un conseiller Logement dédié à votre
+            projet.
           </p>
           <p>
             <A href="https://www.actionlogement.fr/demande-mobilite">
@@ -139,15 +149,13 @@ const MobilityGuide = () => {
         <ContentBlock isMobile={isMobile}>
           <h2>Etape 3 :</h2>
           <p>
-            <b>
-              Vous allez bientôt déménager
-            </b>
-
+            <b>Vous allez bientôt déménager</b>
           </p>
           <p>
             Déménager peut vous couter moins cher !
             <br />
-            C'est le cas avec l'aide "Mon job mon logement" qui vous permet d'avoir 1000 euros
+            C'est le cas avec l'aide "Mon job mon logement" qui vous permet
+            d'avoir 1000 euros
           </p>
           <p>
             <Link to="/aides/50-mon-job-mon-logement">
@@ -156,7 +164,8 @@ const MobilityGuide = () => {
             </Link>
           </p>
           <p>
-            La plupart de ces aides sont cumulables entre elles, donc n'hésitez pas à en profiter !
+            La plupart de ces aides sont cumulables entre elles, donc n'hésitez
+            pas à en profiter !
             <br />
             Au final, votre déménagement vous coûtera moins cher que ce que vous
             auriez pu imaginer !
@@ -166,26 +175,24 @@ const MobilityGuide = () => {
         <ContentBlock isMobile={isMobile}>
           <h2>Etape 4:</h2>
           <p>
-            <b>
-              Ça y est ! Vous avez déménagé !
-            </b>
-
+            <b>Ça y est ! Vous avez déménagé !</b>
           </p>
 
           <p>
             Bravo !!!
             <br />
-            Pensez à faire votre changement d'adresse postale ici pour déclarer vos nouvelles
-            coordonnées auprès de plusieurs services administratifs.
+            Pensez à faire votre changement d'adresse postale ici pour déclarer
+            vos nouvelles coordonnées auprès de plusieurs services
+            administratifs.
             <br />
-            Si vous êtes demandeur d’emploi, n’oubliez pas de vous désinscrire de Pôle Emploi après
-            votre période d’essai.
+            Si vous êtes demandeur d’emploi, n’oubliez pas de vous désinscrire
+            de Pôle Emploi après votre période d’essai.
           </p>
           <p>
             <b>Merci d’avoir utilisé notre service</b>
             <p>
-              Prenez quelques minutes pour nous donner votre avis et voter pour les prochaines
-              fonctionnalités.
+              Prenez quelques minutes pour nous donner votre avis et voter pour
+              les prochaines fonctionnalités.
             </p>
             <p>
               <A href="https://startupsbeta.typeform.com/to/pJJUS1Vg">
@@ -194,7 +201,6 @@ const MobilityGuide = () => {
               </A>
             </p>
           </p>
-
         </ContentBlock>
       </Contents>
     </MainLayout>
@@ -203,14 +209,14 @@ const MobilityGuide = () => {
 
 MobilityGuide.propTypes = {
   location: PropTypes.shape({
-    search: PropTypes.string.isRequired
-  })
+    search: PropTypes.string.isRequired,
+  }),
 }
 
 MobilityGuide.defaultProps = {
   location: {
-    search: ''
-  }
+    search: '',
+  },
 }
 
 export default MobilityGuide
