@@ -30,8 +30,6 @@ export default (sequelizeInstance, Model) => {
       await Model.bulkCreate(dataChunk)
     }
 
-
-
     console.log('END SYNC AMENITIES')
 
     return {
@@ -40,7 +38,6 @@ export default (sequelizeInstance, Model) => {
     }
   }
 
-
   Model.syncSpecialCities = async () => {
     // for Paris, Lyon, Marseille
     console.log('START SYNC AMENITIES FOR SPECIAL CITIES')
@@ -48,15 +45,16 @@ export default (sequelizeInstance, Model) => {
       {
         like: 'PARIS%ARRONDISSEMENT',
         code: PARIS_CODE,
-      }, {
+      },
+      {
         like: 'MARSEILLE%ARRONDISSEMENT',
         code: MARSEILLE_CODE,
-      }, {
+      },
+      {
         like: 'LYON%ARRONDISSEMENT',
         code: LYON_CODE,
       },
     ]
-
 
     for (const cityData of citiesArray) {
       const districts = await Model.models.cities.findAll({
@@ -72,7 +70,7 @@ export default (sequelizeInstance, Model) => {
 
       const amenities = await Model.findAll({ where: { depcom: inseeComs } })
 
-      const amenitiesToAdd = amenities.map(amenity => ({
+      const amenitiesToAdd = amenities.map((amenity) => ({
         ...omit(amenity.dataValues, 'id'),
         depcom: cityData.code,
       }))
@@ -290,11 +288,12 @@ export default (sequelizeInstance, Model) => {
       type = [type]
     }
 
-    const total = (await Model.count({ where: { depcom: codeCom, typequ: type } }))
+    const total = await Model.count({
+      where: { depcom: codeCom, typequ: type },
+    })
 
     return total
   }
-
 
   return Model
 }

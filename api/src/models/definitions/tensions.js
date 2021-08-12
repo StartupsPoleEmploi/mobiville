@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize'
 
-export default sequelizeInstance => {
+export default (sequelizeInstance) => {
   const Model = sequelizeInstance.define(
     'tensions',
     {
@@ -85,7 +85,7 @@ export default sequelizeInstance => {
     }
   )
 
-  Model.associate = function(models) {
+  Model.associate = function (models) {
     return models
   }
 

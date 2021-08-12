@@ -8,7 +8,15 @@ export default class RouteHelps extends Route {
   @Route.Get()
   async getPreviews(ctx) {
     const list = await this.model.findAll({
-      attributes: ['id', 'title', 'goal', 'who', 'section', 'situtation', 'count_vue'],
+      attributes: [
+        'id',
+        'title',
+        'goal',
+        'who',
+        'section',
+        'situtation',
+        'count_vue',
+      ],
       raw: true,
     })
     this.sendOk(ctx, list)
@@ -18,14 +26,14 @@ export default class RouteHelps extends Route {
     path: 'get-preview/:id',
   })
   async getPreviewId(ctx) {
-    const {id} = ctx.params
+    const { id } = ctx.params
 
     const element = await this.model.findOne({
-      where: {id},
+      where: { id },
     })
 
-    if(element) {
-      await element.update({count_vue: element.dataValues.count_vue + 1})
+    if (element) {
+      await element.update({ count_vue: element.dataValues.count_vue + 1 })
     }
 
     this.sendOk(ctx, element)

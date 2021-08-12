@@ -10,8 +10,8 @@ export default class Route extends RouteBase {
   async beforeRoute(ctx, infos, next) {
     // the "beforeRoute" function is executed before any call to a route belonging to the same class
     // (or a class ihneriting from it) is made.
-    
-    if(!ctx.session.id) {
+
+    if (!ctx.session.id) {
       ctx.session.id = crypto.generateToken()
     }
 
@@ -28,20 +28,6 @@ export default class Route extends RouteBase {
   }
   userId(ctx) {
     return this.user(ctx) ? this.user(ctx).id : null
-  }
-
-  async addUserInfoInBody(ctx, id) {
-    /* if (!id && ctx.state.user) {
-      id = ctx.state.user.id;
-    }
-    this.assertUnauthorized(id);
-
-    const user = await this.models.users.findById(id, { attributes: ['email'], raw: true });
-    this.assertUnauthorized(user);
-    ctx.body.user = user;
-
-    return user;*/
-    return null
   }
 }
 

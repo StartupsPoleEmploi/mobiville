@@ -1,13 +1,13 @@
 import { getPCSByRome } from '../utils/api'
 
 export default (sequelizeInstance, Model) => {
-  Model.syncTensions = async ({tensions}) => {
+  Model.syncTensions = async ({ tensions }) => {
     await Model.deleteAll()
 
     let nbInserted = 0
-    for(let i = 0; i < tensions.length; i++) {
+    for (let i = 0; i < tensions.length; i++) {
       const tension = tensions[i]
-      nbInserted ++
+      nbInserted++
       await Model.create(tension)
     }
 
@@ -16,31 +16,35 @@ export default (sequelizeInstance, Model) => {
       'nb inserted': nbInserted,
     }
   }
-  
+
   Model.allCitiesId = async (code_rome = []) => {
     let options = {}
-    if(code_rome.length > 0) {
+    if (code_rome.length > 0) {
       options = {
         rome: code_rome,
         ...options,
       }
     }
 
-    const listBassinId = (await Model.findAll({
-      attributes: ['bassin_id'],
-      where: {
-        ...options,
-      },
-      raw: true,
-    })).map(s => (s.bassin_id))
+    const listBassinId = (
+      await Model.findAll({
+        attributes: ['bassin_id'],
+        where: {
+          ...options,
+        },
+        raw: true,
+      })
+    ).map((s) => s.bassin_id)
 
-    const inseeCode = (await Model.models.bassins.findAll({
-      attributes: ['code_commune_insee'],
-      where: {
-        bassin_id: listBassinId,
-      },
-      raw: true,
-    })).map(s => (s.code_commune_insee))
+    const inseeCode = (
+      await Model.models.bassins.findAll({
+        attributes: ['code_commune_insee'],
+        where: {
+          bassin_id: listBassinId,
+        },
+        raw: true,
+      })
+    ).map((s) => s.code_commune_insee)
 
     return inseeCode
   }
@@ -56,7 +60,7 @@ export default (sequelizeInstance, Model) => {
       order: ['rome_label'],
     })
 
-    Model.jobList = result.map(result => ({ 
+    Model.jobList = result.map((result) => ({
       label: result.rome_label,
       rome: result.rome,
     }))
@@ -74,11 +78,11 @@ export default (sequelizeInstance, Model) => {
       },
     })
 
-    for(let i = 0; i < result.length; i++) {
+    for (let i = 0; i < result.length; i++) {
       const row = result[i]
       const pcs = await getPCSByRome(row.dataValues.rome, row.dataValues.fap)
 
-      await row.update({pcs})
+      await row.update({ pcs })
     }
   }
 

@@ -29,7 +29,7 @@
 		}
 	},
 	"lint-staged": {
-		"front/src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+		"{front,api}/src/**/*.{js,jsx,ts,tsx,css,scss,md}": [
 			"eslint --fix",
 			"prettier --write"
 		]

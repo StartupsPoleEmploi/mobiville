@@ -5,6 +5,5 @@ module.exports = {
       force: true,
     })
   },
-  down: async (/*queryInterface /*, Sequelize*/) => {
-  },
+  down: async (/*queryInterface /*, Sequelize*/) => {},
 }

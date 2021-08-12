@@ -2,11 +2,7 @@ import { Types as ksTypes } from 'koa-smart'
 
 const general = {
   boolean: (defaultValue = false) =>
-    ksTypes
-      .boolean()
-      .truthy(['1', 1])
-      .falsy(['0', 0])
-      .default(defaultValue),
+    ksTypes.boolean().truthy(['1', 1]).falsy(['0', 0]).default(defaultValue),
 }
 /*
 const User = {

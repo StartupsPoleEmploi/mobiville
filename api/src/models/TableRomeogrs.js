@@ -5,14 +5,18 @@ import { sleep } from '../utils/utils'
 export default (sequelizeInstance, Model) => {
   Model.syncRomeOgrs = async () => {
     console.log('SYNC ROME OGRS - START')
-    const getRomesSync = (await Model.findAll({ group: 'code_rome' })).map(r => (r.code_rome))
-    const getAllRomesToNeedSync = (await Model.models.tensions.findAll({ group: 'rome' })).map(r => (r.rome))
+    const getRomesSync = (await Model.findAll({ group: 'code_rome' })).map(
+      (r) => r.code_rome
+    )
+    const getAllRomesToNeedSync = (
+      await Model.models.tensions.findAll({ group: 'rome' })
+    ).map((r) => r.rome)
 
     for (let i = 0; i < getAllRomesToNeedSync.length; i++) {
       const codeRome = getAllRomesToNeedSync[i]
       if (getRomesSync.indexOf(codeRome) === -1) {
         // sync
-        const result = (await getOgrFromRome(codeRome) || [])
+        const result = (await getOgrFromRome(codeRome)) || []
         for (let x = 0; x < result.length; x++) {
           const element = result[x]
           await Model.create({
@@ -34,19 +38,21 @@ export default (sequelizeInstance, Model) => {
   Model.searchByLabel = async (searchedWords) => {
     const labelForQuery = `*${(searchedWords || '')
       .split(' ')
-      .join('*')}*`
-      .replace(/[+-<>()~*"@]/ig, ' ') // filter special characters
+      .join('*')}*`.replace(/[+-<>()~*"@]/gi, ' ') // filter special characters
 
-    const queryResult = await sequelizeInstance.query(`
+    const queryResult = await sequelizeInstance.query(
+      `
       SELECT code_rome, ogr_label, match(ogr_label) against(? IN BOOLEAN MODE) as relevance FROM romeogrs
-      WHERE match(ogr_label) against(? IN BOOLEAN MODE) ORDER BY relevance DESC LIMIT 10`, {
-      replacements: [labelForQuery, labelForQuery],
-      type: QueryTypes.SELECT,
-      model: Model,
-      mapToModel: true,
-    })
+      WHERE match(ogr_label) against(? IN BOOLEAN MODE) ORDER BY relevance DESC LIMIT 10`,
+      {
+        replacements: [labelForQuery, labelForQuery],
+        type: QueryTypes.SELECT,
+        model: Model,
+        mapToModel: true,
+      }
+    )
 
-    return queryResult.map(e => {
+    return queryResult.map((e) => {
       return {
         ...e,
         codeRome: e.code_rome,
@@ -56,11 +62,12 @@ export default (sequelizeInstance, Model) => {
   }
 
   Model.fetchAllAvailable = async () => {
-    const availableRomeCodes = (await Model.models.regionsTensions.findAll({
-      attributes: ['rome'],
-      group: ['rome'],
-    })).map(({ rome }) => rome)
-
+    const availableRomeCodes = (
+      await Model.models.regionsTensions.findAll({
+        attributes: ['rome'],
+        group: ['rome'],
+      })
+    ).map(({ rome }) => rome)
 
     const result = await Model.findAll({
       attributes: ['code_rome', 'ogr_label'],
@@ -73,7 +80,7 @@ export default (sequelizeInstance, Model) => {
       },
     })
 
-    return result.map(row => ({
+    return result.map((row) => ({
       rome: row.code_rome,
       romeLabel: row.romeCode.label,
       ogrLabel: row.ogr_label,

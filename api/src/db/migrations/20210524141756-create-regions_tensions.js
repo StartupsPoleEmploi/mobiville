@@ -43,11 +43,11 @@ module.exports = {
         indexes: [
           {
             fields: ['region_new_code', 'rome', 'criterion'],
-            unique: true
+            unique: true,
           },
           {
-            fields: ['rome']
-          }
+            fields: ['rome'],
+          },
         ],
       }
     )

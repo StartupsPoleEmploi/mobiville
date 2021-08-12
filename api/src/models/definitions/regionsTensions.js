@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize'
 
-export default sequelizeInstance => {
+export default (sequelizeInstance) => {
   const Model = sequelizeInstance.define(
     'regionsTensions',
     {
@@ -42,20 +42,22 @@ export default sequelizeInstance => {
       paranoid: true,
       underscored: true,
       indexes: [
-          {
-            fields: ['region_new_code', 'rome', 'criterion'],
-            unique: true
-          },
-          { 
-            fields: ['rome']
-          }
-        ],
+        {
+          fields: ['region_new_code', 'rome', 'criterion'],
+          unique: true,
+        },
+        {
+          fields: ['rome'],
+        },
+      ],
     }
   )
 
-
-  Model.associate = function(models) {
-    Model.hasOne(models.regions, { foreignKey: 'new_code', sourceKey: 'region_new_code' })
+  Model.associate = function (models) {
+    Model.hasOne(models.regions, {
+      foreignKey: 'new_code',
+      sourceKey: 'region_new_code',
+    })
 
     return models
   }

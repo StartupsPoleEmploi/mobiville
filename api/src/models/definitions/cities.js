@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize'
 
-export default sequelizeInstance => {
+export default (sequelizeInstance) => {
   const Model = sequelizeInstance.define(
     'cities',
     {
@@ -134,9 +134,15 @@ export default sequelizeInstance => {
     }
   )
 
-  Model.associate = function(models) {
-    Model.hasOne(models.bassins, { foreignKey: 'code_commune_insee', sourceKey: 'insee_com' })
-    Model.hasOne(models.regions, { foreignKey: 'former_code', sourceKey: 'code_reg' })
+  Model.associate = function (models) {
+    Model.hasOne(models.bassins, {
+      foreignKey: 'code_commune_insee',
+      sourceKey: 'insee_com',
+    })
+    Model.hasOne(models.regions, {
+      foreignKey: 'former_code',
+      sourceKey: 'code_reg',
+    })
 
     return models
   }

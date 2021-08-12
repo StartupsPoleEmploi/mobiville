@@ -7,7 +7,6 @@ export default class RouteOgrs extends Route {
 
   @Route.Get({ path: '/' })
   async get(ctx) {
-
     const result = await this.model.fetchAllAvailable()
 
     this.sendOk(ctx, result)
