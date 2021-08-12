@@ -21,7 +21,7 @@ import {
   COLOR_TEXT_SECONDARY,
 } from '../../constants/colors'
 import { useCities } from '../../common/contexts/citiesContext'
-import { thereAre } from '../../utils/utils'
+import { thereAre, ucFirstOnly } from '../../utils/utils'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 
@@ -310,7 +310,7 @@ const PanelCityJobs = ({ city, rome }) => {
         <>
           <StatistiqueLayout>
             <StatistiqueTitleLayout>
-              Statistique pour {romeLabel} à {city.nom_comm}
+              Statistique pour {romeLabel} à {ucFirstOnly(city.nom_comm)}
             </StatistiqueTitleLayout>
             <StatsContainer>
               {infosTravail?.tension && (
