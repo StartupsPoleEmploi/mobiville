@@ -8,7 +8,6 @@ const doSync = async () => {
     console.log('Success!')
 
     process.exit(0)
-
   } catch (err) {
     console.error(err)
     console.error('Error! Sync failed and will now exit')

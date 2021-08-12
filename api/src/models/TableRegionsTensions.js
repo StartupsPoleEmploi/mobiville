@@ -19,11 +19,15 @@ export default (sequelizeInstance, Model) => {
       for (const job of jobList) {
         const { rome } = job
         const citiesGroupedByRegion = groupBy(
-          (await Model.models.cities.search({ codeCriterion: [criterion.key], codeRome: [rome], logging: false })),
+          await Model.models.cities.search({
+            codeCriterion: [criterion.key],
+            codeRome: [rome],
+            logging: false,
+          }),
           'region.new_code'
         )
 
-        Object.keys(citiesGroupedByRegion).forEach(regionCode => {
+        Object.keys(citiesGroupedByRegion).forEach((regionCode) => {
           if (!romesByRegion[regionCode]) {
             romesByRegion[regionCode] = []
           }
@@ -34,13 +38,16 @@ export default (sequelizeInstance, Model) => {
         })
       }
 
-
       for (const regionCode of Object.keys(romesByRegion)) {
         const romes = romesByRegion[regionCode]
 
         for (const rome of romes) {
-          const hasDataInTable = tableData.find(row => {
-            return row.region_new_code === regionCode && row.rome === rome && row.criterion === criterion.key
+          const hasDataInTable = tableData.find((row) => {
+            return (
+              row.region_new_code === regionCode &&
+              row.rome === rome &&
+              row.criterion === criterion.key
+            )
           })
 
           if (hasDataInTable) continue
@@ -58,7 +65,8 @@ export default (sequelizeInstance, Model) => {
   }
 
   Model.fetch = async () => {
-    if (loading) throw new Error('Loading error, please try again in a few seconds') // initial loading only
+    if (loading)
+      throw new Error('Loading error, please try again in a few seconds') // initial loading only
 
     if (Model.cache) {
       return Model.cache
@@ -76,7 +84,7 @@ export default (sequelizeInstance, Model) => {
 
     let objectByRegions = {}
 
-    queryResult.forEach(row => {
+    queryResult.forEach((row) => {
       const regionName = row.region.new_name
 
       if (!objectByRegions[row.region_new_code]) {
@@ -91,19 +99,27 @@ export default (sequelizeInstance, Model) => {
       }
 
       if (!objectByRegions[row.region_new_code].criterions[row.rome]) {
-        objectByRegions[row.region_new_code].criterions[row.rome] = [row.criterion]
+        objectByRegions[row.region_new_code].criterions[row.rome] = [
+          row.criterion,
+        ]
         return
       }
 
-      if (objectByRegions[row.region_new_code].criterions[row.rome].includes(row.criterion)) return
+      if (
+        objectByRegions[row.region_new_code].criterions[row.rome].includes(
+          row.criterion
+        )
+      )
+        return
 
-      objectByRegions[row.region_new_code].criterions[row.rome].push(row.criterion)
+      objectByRegions[row.region_new_code].criterions[row.rome].push(
+        row.criterion
+      )
     })
 
     Model.cache = sortBy(toArray(objectByRegions), 'label')
     return Model.cache
   }
-
 
   return Model
 }

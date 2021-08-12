@@ -8,13 +8,13 @@ const models = db.initModels()
 const doSync = async () => {
   try {
     const bassins = await getAllBassins()
-    const statusBassins = await models.bassins.sync({bassins})
+    const statusBassins = await models.bassins.sync({ bassins })
 
     const tensions = await getAllTensions()
-    for(let i = 0; i < tensions.length; i++) {
-      tensions[i].rome_label = (await getRomeLabel(tensions[i].rome))
+    for (let i = 0; i < tensions.length; i++) {
+      tensions[i].rome_label = await getRomeLabel(tensions[i].rome)
     }
-    const statusTensions = await models.tensions.syncTensions({tensions})
+    const statusTensions = await models.tensions.syncTensions({ tensions })
 
     console.log('Success! Status:', statusTensions, statusBassins)
     process.exit(0)
@@ -25,5 +25,7 @@ const doSync = async () => {
   }
 }
 
-console.log('Starting synchronization for professions in tension. This should take about 2 minutes. Please wait for the confirmation message…')
+console.log(
+  'Starting synchronization for professions in tension. This should take about 2 minutes. Please wait for the confirmation message…'
+)
 doSync()

@@ -9,7 +9,10 @@ const doSync = async () => {
   try {
     const regions = await getAllRegions()
     const socialHousingData = getRegionsSocialHousing()
-    const status = await models.regions.syncRegions({regions, socialHousingData})
+    const status = await models.regions.syncRegions({
+      regions,
+      socialHousingData,
+    })
     console.log('Success! Status:', status)
     process.exit(0)
   } catch (err) {
@@ -19,5 +22,7 @@ const doSync = async () => {
   }
 }
 
-console.log('Starting synchronization for cities. This should be almost instanteneous. Please wait for the confirmation message…')
+console.log(
+  'Starting synchronization for cities. This should be almost instanteneous. Please wait for the confirmation message…'
+)
 doSync()

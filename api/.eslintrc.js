@@ -5,7 +5,7 @@ module.exports = {
     protractor: true,
     es6: true,
   },
-  extends: ['eslint:recommended'],
+  extends: ['eslint:recommended', 'prettier'],
   parser: 'babel-eslint',
   rules: {
     'max-len': [

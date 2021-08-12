@@ -10,7 +10,6 @@ const doSync = async () => {
     const status = await models.amenities.sync({ amenities })
     console.log('Success! Status:', status)
     process.exit(0)
-
   } catch (err) {
     console.error(err)
     console.error('Error! Sync failed and will now exit')
@@ -18,5 +17,7 @@ const doSync = async () => {
   }
 }
 
-console.log('Starting synchronization for amenities. This will take some time, please do not exit.')
+console.log(
+  'Starting synchronization for amenities. This will take some time, please do not exit.'
+)
 doSync()

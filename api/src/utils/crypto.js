@@ -29,9 +29,7 @@ export default class Crypto {
   }
 
   generatePassword() {
-    return Math.random()
-      .toString(36)
-      .slice(-8)
+    return Math.random().toString(36).slice(-8)
   }
 
   generateToken() {
@@ -59,10 +57,7 @@ export default class Crypto {
   }
 
   getRandomString(nbChar = 64) {
-    return cryptoM
-      .randomBytes(nbChar)
-      .toString('hex')
-      .substring(0, nbChar)
+    return cryptoM.randomBytes(nbChar).toString('hex').substring(0, nbChar)
   }
 }
 

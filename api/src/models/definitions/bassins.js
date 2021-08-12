@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize'
 
-export default sequelizeInstance => {
+export default (sequelizeInstance) => {
   const Model = sequelizeInstance.define(
     'bassins',
     {
@@ -61,12 +61,15 @@ export default sequelizeInstance => {
       timestamps: true,
       paranoid: true,
       underscored: true,
-      indexes: [{ fields: ['bassin_id'] },{ fields: ['code_commune_insee'] }],
+      indexes: [{ fields: ['bassin_id'] }, { fields: ['code_commune_insee'] }],
     }
   )
 
-  Model.associate = function(models) {
-    Model.hasMany(models.tensions, { foreignKey: 'bassin_id', sourceKey: 'bassin_id' })
+  Model.associate = function (models) {
+    Model.hasMany(models.tensions, {
+      foreignKey: 'bassin_id',
+      sourceKey: 'bassin_id',
+    })
 
     return models
   }

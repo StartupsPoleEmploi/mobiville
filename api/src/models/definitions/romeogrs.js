@@ -3,7 +3,7 @@ import Sequelize from 'sequelize'
 // Note : there is a full text index
 // on the ogr_label field
 
-export default sequelizeInstance => {
+export default (sequelizeInstance) => {
   const Model = sequelizeInstance.define(
     'romeogrs',
     {
@@ -49,7 +49,10 @@ export default sequelizeInstance => {
   )
 
   Model.associate = function (models) {
-    Model.hasOne(models.romeCodes, { foreignKey: 'code', sourceKey: 'code_rome' })
+    Model.hasOne(models.romeCodes, {
+      foreignKey: 'code',
+      sourceKey: 'code_rome',
+    })
     return models
   }
 

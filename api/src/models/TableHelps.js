@@ -1,4 +1,3 @@
-export default (sequelizeInstance, Model) => {  
-  
+export default (sequelizeInstance, Model) => {
   return Model
 }

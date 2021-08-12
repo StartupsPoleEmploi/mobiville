@@ -7,11 +7,14 @@ import db from '../db'
 import { addUtilsFunctionInTable } from './addUtilsFunctionInTable'
 import { ucFirst } from '../utils/utils'
 
-if(!config.database.url) {
+if (!config.database.url) {
   console.error(config.database)
   throw 'No database URL'
 }
-const dbInstance = new Sequelize(config.database.url, {...config.database, logging: process.env.ENABLE_DB_LOGGING ? console.log : false})
+const dbInstance = new Sequelize(config.database.url, {
+  ...config.database,
+  logging: process.env.ENABLE_DB_LOGGING ? console.log : false,
+})
 
 function initModelsByPath(sequelizeInstance, folderPath, globalName) {
   if (global[globalName]) {

@@ -14,14 +14,19 @@ const logger = winston.createLogger({
   ],
 })
 
-logger.add(new winston.transports.Console({
-  format: winston.format.combine(
-    winston.format.colorize(),
-    winston.format.printf(
-      ({ level, message, ...meta }) => `${level}: ${JSON.stringify(message, null, 4)} ${JSON.stringify(meta)}\n`,
+logger.add(
+  new winston.transports.Console({
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.printf(
+        ({ level, message, ...meta }) =>
+          `${level}: ${JSON.stringify(message, null, 4)} ${JSON.stringify(
+            meta
+          )}\n`
+      )
     ),
-  ),
-}))
+  })
+)
 
 export const log = (...args) => console.log(...args)
 export const logError = (...args) => console.error(...args)

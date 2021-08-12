@@ -1,9 +1,8 @@
 export default (sequelizeInstance, Model) => {
-  Model.syncRegions = async ({regions, socialHousingData}) => {
-
+  Model.syncRegions = async ({ regions, socialHousingData }) => {
     await Model.deleteAll()
 
-    for(let i = 0; i < regions.length; i++) {
+    for (let i = 0; i < regions.length; i++) {
       const region = regions[i]
 
       await Model.create(region)
@@ -12,7 +11,7 @@ export default (sequelizeInstance, Model) => {
     for (const { socialHousingDelay, name } of socialHousingData) {
       await Model.update(
         { average_delay_obtain_social_housing: socialHousingDelay },
-        { where: {former_name_normalized: name} }
+        { where: { former_name_normalized: name } }
       )
     }
 
@@ -30,9 +29,8 @@ export default (sequelizeInstance, Model) => {
       raw: true,
     })
 
-    return list.map(r => (r.former_code))
+    return list.map((r) => r.former_code)
   }
-
 
   return Model
 }

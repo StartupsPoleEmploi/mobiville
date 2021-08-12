@@ -8,7 +8,7 @@ const models = db.initModels()
 const doSync = async () => {
   try {
     const cities = await getAllCities()
-    const status = await models.cities.syncCities({cities})
+    const status = await models.cities.syncCities({ cities })
     console.log('Success! Status:', status)
     process.exit(0)
   } catch (err) {
@@ -18,5 +18,7 @@ const doSync = async () => {
   }
 }
 
-console.log('Starting synchronization for cities. This should take about 2 minutes. Please wait for the confirmation message…')
+console.log(
+  'Starting synchronization for cities. This should take about 2 minutes. Please wait for the confirmation message…'
+)
 doSync()

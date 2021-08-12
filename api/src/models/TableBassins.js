@@ -1,11 +1,11 @@
 export default (sequelizeInstance, Model) => {
-  Model.sync = async ({bassins}) => {
+  Model.sync = async ({ bassins }) => {
     await Model.deleteAll()
 
     let nbInserted = 0
-    for(let i = 0; i < bassins.length; i++) {
+    for (let i = 0; i < bassins.length; i++) {
       const tension = bassins[i]
-      nbInserted ++
+      nbInserted++
       await Model.create(tension)
     }
 
@@ -14,7 +14,6 @@ export default (sequelizeInstance, Model) => {
       'nb inserted': nbInserted,
     }
   }
-  
-  
+
   return Model
 }

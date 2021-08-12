@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize'
 
-export default sequelizeInstance => {
+export default (sequelizeInstance) => {
   const Model = sequelizeInstance.define(
     'romeskills',
     {
@@ -41,10 +41,15 @@ export default sequelizeInstance => {
     }
   )
 
-  Model.associate = function(models) {
-    Model.hasOne(models.tensions, { foreignKey: 'rome', sourceKey: 'code_rome' })
-    Model.hasOne(models.romeCodes, { foreignKey: 'code', sourceKey: 'code_rome' })
-
+  Model.associate = function (models) {
+    Model.hasOne(models.tensions, {
+      foreignKey: 'rome',
+      sourceKey: 'code_rome',
+    })
+    Model.hasOne(models.romeCodes, {
+      foreignKey: 'code',
+      sourceKey: 'code_rome',
+    })
 
     return models
   }

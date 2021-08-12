@@ -1,5 +1,5 @@
 module.exports = {
-  up: async (queryInterface/*, Sequelize*/) => {
+  up: async (queryInterface /*, Sequelize*/) => {
     await queryInterface.addIndex('regions', ['former_code'], {})
     await queryInterface.addIndex('regions', ['new_code'], {})
 
@@ -7,6 +7,5 @@ module.exports = {
 
     await queryInterface.addIndex('tensions', ['rome'], {})
   },
-  down: async (/*queryInterface /*, Sequelize*/) => {
-  },
+  down: async (/*queryInterface /*, Sequelize*/) => {},
 }

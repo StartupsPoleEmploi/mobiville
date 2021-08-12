@@ -9,7 +9,6 @@ export default class RouteCities extends Route {
     super({ ...params, model: 'cities' })
   }
 
-
   @Route.Get()
   async list(ctx) {
     this.sendOk(ctx, await this.model.findAll())
@@ -32,25 +31,39 @@ export default class RouteCities extends Route {
     }),
   })
   async search(ctx) {
-    const { code_region: codeRegionTemp = [], code_criterion: codeCriterionTemp = [], code_rome: codeRome = [], from = [], index = 0, sortBy } = this.body(ctx)
+    const {
+      code_region: codeRegionTemp = [],
+      code_criterion: codeCriterionTemp = [],
+      code_rome: codeRome = [],
+      from = [],
+      index = 0,
+      sortBy,
+    } = this.body(ctx)
     const codeRegion = compact(codeRegionTemp) // temporary fix, as the front may send an array containing an empty string in code_region
     const codeCriterion = compact(codeCriterionTemp)
 
-    if(index === 0) {
-      this.model.models.stats.addStats({values: {codeRegion, codeCriterion, codeRome, from}, session_id: ctx.session.id})
+    if (index === 0) {
+      this.model.models.stats.addStats({
+        values: { codeRegion, codeCriterion, codeRome, from },
+        session_id: ctx.session.id,
+      })
     }
-    let result = await this.model.search({codeRegion, codeCriterion, codeRome})
+    let result = await this.model.search({
+      codeRegion,
+      codeCriterion,
+      codeRome,
+    })
 
     switch (sortBy) {
-    case 'mer':
-      result = orderBy(result, ['distance_from_sea'], ['asc'])
-      break
-    case 'montagne':
-      result = orderBy(result, ['z_moyen'], ['desc'])
-      break
-    default:
-      result = orderBy(result, ['population'], ['desc'])
-      break
+      case 'mer':
+        result = orderBy(result, ['distance_from_sea'], ['asc'])
+        break
+      case 'montagne':
+        result = orderBy(result, ['z_moyen'], ['desc'])
+        break
+      default:
+        result = orderBy(result, ['population'], ['desc'])
+        break
     }
 
     this.sendOk(ctx, {
@@ -64,19 +77,22 @@ export default class RouteCities extends Route {
   async criterions(ctx) {
     const jobList = await this.model.models.tensions.fetchJobList()
 
-    this.sendOk(ctx, {criterions: CRITERIONS, regions: await this.model.models.regionsTensions.fetch(), codeRomes: jobList.map(job => ({
-      key: job.rome,
-      label: job.label,
-    }))})
+    this.sendOk(ctx, {
+      criterions: CRITERIONS,
+      regions: await this.model.models.regionsTensions.fetch(),
+      codeRomes: jobList.map((job) => ({
+        key: job.rome,
+        label: job.label,
+      })),
+    })
   }
 
   @Route.Get({
     path: 'load/:insee',
   })
   async loadCity(ctx) {
-    const {insee} = ctx.params
-    const details = await this.model.getCity({insee})
-
+    const { insee } = ctx.params
+    const details = await this.model.getCity({ insee })
 
     this.sendOk(ctx, details)
   }
@@ -92,9 +108,9 @@ export default class RouteCities extends Route {
     }),
   })
   async searchByLocation(ctx) {
-    const {latitude, longitude} = this.body(ctx)
+    const { latitude, longitude } = this.body(ctx)
 
-    const result = await this.model.searchByLocation({latitude, longitude})
+    const result = await this.model.searchByLocation({ latitude, longitude })
 
     this.sendOk(ctx, result)
   }
@@ -110,13 +126,13 @@ export default class RouteCities extends Route {
     }),
   })
   async searchByName(ctx) {
-    const {name, id} = this.body(ctx)
+    const { name, id } = this.body(ctx)
     let result
 
-    if(id) {
-      result = await this.model.searchById({id})
+    if (id) {
+      result = await this.model.searchById({ id })
     } else {
-      result = await this.model.searchByName({name})
+      result = await this.model.searchByName({ name })
     }
 
     this.sendOk(ctx, result)
@@ -126,25 +142,29 @@ export default class RouteCities extends Route {
     path: 'tenement/:insee',
   })
   async tenementCity(ctx) {
-    const {insee} = ctx.params
-    const details = await this.model.getCity({insee})
+    const { insee } = ctx.params
+    const details = await this.model.getCity({ insee })
 
-    this.sendOk(ctx, {nbSocialHousing: await this.model.models.socialhousings.getNbSocialHousing(details)})
+    this.sendOk(ctx, {
+      nbSocialHousing:
+        await this.model.models.socialhousings.getNbSocialHousing(details),
+    })
   }
 
   @Route.Get({
     path: 'amenities/:insee',
   })
   async amenitiesCity(ctx) {
-    const {insee} = ctx.params
-    const cacheList = await this.model.getCacheLivingEnvironment(insee) || {}
+    const { insee } = ctx.params
+    const cacheList = (await this.model.getCacheLivingEnvironment(insee)) || {}
     const list = JSON.parse(JSON.stringify(ALL_LIFE_CRITERIONS_LIST))
 
-    for(let i = 0; i < list.length; i++) {
-      for(let x = 0; x < list[i].tab.length; x++) {
-        list[i].tab[x].total = cacheList[list[i].key + '-' + list[i].tab[x].label] || 0
+    for (let i = 0; i < list.length; i++) {
+      for (let x = 0; x < list[i].tab.length; x++) {
+        list[i].tab[x].total =
+          cacheList[list[i].key + '-' + list[i].tab[x].label] || 0
       }
-      list[i].tab = list[i].tab.filter(i => i.total)
+      list[i].tab = list[i].tab.filter((i) => i.total)
     }
 
     this.sendOk(ctx, list)
@@ -153,13 +173,13 @@ export default class RouteCities extends Route {
   /**
    * @body {[string]} [label]
    */
-   @Route.Post({
-     bodyType: Types.object().keys({
-       label: Types.string().required(),
-     }),
-   })
+  @Route.Post({
+    bodyType: Types.object().keys({
+      label: Types.string().required(),
+    }),
+  })
   async searchBySkill(ctx) {
-    const {label} = this.body(ctx)
+    const { label } = this.body(ctx)
 
     // Temporarily disable the search by skill to only
     // use the search by job title (OGR)
@@ -170,5 +190,4 @@ export default class RouteCities extends Route {
 
     this.sendOk(ctx, resultFromSkill.concat(resultFromOgr))
   }
-
 }
