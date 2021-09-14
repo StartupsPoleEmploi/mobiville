@@ -325,7 +325,7 @@ const PanelCityJobs = ({ city, rome }) => {
               <StatsItem>
                 <img src="/icons/euro.svg" alt="" />
                 <p>Salaire brut</p>
-                {infosTravail?.min ? (
+                {infosTravail?.min > 0 ? (
                   <p>
                     {infosTravail.min}€ à {infosTravail.max}€
                   </p>
