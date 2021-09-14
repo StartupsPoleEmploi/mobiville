@@ -131,7 +131,6 @@ const JobItem = styled.div`
       margin: 8px 0;
       font-size: 12px;
       color: black;
-      max-height: 98px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -172,7 +171,7 @@ const ViewMore = styled.p`
   justify-content: flex-start;
 `
 
-const MAX_DESCRIPTION_LENGTH = 280
+const MAX_DESCRIPTION_LENGTH = 480
 
 const ONE_DAY = 'ONE_DAY'
 const THREE_DAY = 'THREE_DAY'
