@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
-import { paramUrlToObject } from '../../utils/url'
+import { objectToQueryString, paramUrlToObject } from '../../utils/url'
 import { CityHeader } from './city-header'
 import PanelCityJobs from './panel-city-jobs'
 import PanelCityLife from './panel-city-life'
@@ -31,7 +31,7 @@ const HelpButton = styled.button`
   padding: ${(props) => (props.isMobile ? '0 12px' : '0 48px')} !important;
 `
 
-const CityPage = ({ location: { search } }) => {
+const CityPage = ({ location: { pathname, search } }) => {
   const tabList = [
     { key: 'job', label: 'Emploi' },
     { key: 'life', label: 'Cadre de vie' },
@@ -43,12 +43,26 @@ const CityPage = ({ location: { search } }) => {
   const size = useWindowSize()
   const history = useHistory()
 
+  const [jobSearchValue, setJobSearchValue] = useState(
+    decodeURIComponent(params.jobSearch?.[0] || '')
+  )
+
   useEffect(() => {
     const extract = insee.split('-')
     if (extract && extract.length) {
       onLoadCity(extract[0])
     }
   }, [])
+
+  useEffect(() => {
+    if (!jobSearchValue) return
+    if (jobSearchValue === decodeURIComponent(params.jobSearch?.[0])) return
+
+    history.replace({
+      pathname,
+      search: objectToQueryString({ ...params, jobSearch: jobSearchValue }),
+    })
+  }, [history, jobSearchValue, params, pathname])
 
   const setTagSelected = (tagIndex) => {
     const tag = tabList[tagIndex].key
@@ -75,6 +89,8 @@ const CityPage = ({ location: { search } }) => {
               <PanelCityJobs
                 city={city}
                 rome={params && params.code_rome ? params.code_rome : null}
+                searchValue={jobSearchValue}
+                setSearchValue={setJobSearchValue}
               />
             )}
             {tabKey === 'life' && <PanelCityLife city={city} />}

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import moment from 'moment'
-
 import {
   FormControl,
   MenuItem,
@@ -10,7 +9,11 @@ import {
   Select,
   Checkbox,
   ListItemText,
+  TextField,
+  InputAdornment,
 } from '@material-ui/core'
+
+import SearchIcon from '@material-ui/icons/Search'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 
 import { useProfessions } from '../../common/contexts/professionsContext'
@@ -185,7 +188,7 @@ const CONTRACT_TYPES = ['CDI', 'CDD', 'MIS', OTHER_CONTRACTS]
 const OTHER_DURATIONS = 'Non renseigné'
 const DURATION_TYPES = ['Temps plein', 'Temps partiel', OTHER_DURATIONS]
 
-const PanelCityJobs = ({ city, rome }) => {
+const PanelCityJobs = ({ city, rome, searchValue, setSearchValue }) => {
   const {
     isLoading: isLoadingProfessions,
     onSearch: onSearchProfessions,
@@ -281,6 +284,15 @@ const PanelCityJobs = ({ city, rome }) => {
       return false
     }
 
+    // Finally, this search filter
+    // Another way would be to access one by one every property we might want to search
+    // but this is faster and less error prone that accessing these objects with lose structure
+    const dataToSearch = JSON.stringify(profession).toLowerCase()
+
+    if (!dataToSearch.includes(searchValue.trim().toLowerCase())) {
+      return false
+    }
+
     return true
   })
 
@@ -336,6 +348,20 @@ const PanelCityJobs = ({ city, rome }) => {
             </StatsContainer>
           </StatistiqueLayout>
           <JobLayout>
+            <FormControl fullWidth style={{ paddingBottom: '16px' }}>
+              <TextField
+                label="Rechercher dans les offres"
+                value={searchValue}
+                onChange={(event) => setSearchValue(event.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </FormControl>
             <JobTitleLayout>
               <div style={{ flex: '0 1 35%' }}>
                 {displayedProfessions.length} offre
@@ -469,7 +495,6 @@ const PanelCityJobs = ({ city, rome }) => {
 
                 return (
                   <JobItem key={p.id}>
-                    {/* eslint-disable-next-line */}
                     <a
                       href={p.origineOffre.urlOrigine}
                       target="_blank"
