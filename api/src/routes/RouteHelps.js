@@ -16,6 +16,7 @@ export default class RouteHelps extends Route {
         'section',
         'situtation',
         'count_vue',
+        'slug',
       ],
       raw: true,
     })
@@ -23,13 +24,13 @@ export default class RouteHelps extends Route {
   }
 
   @Route.Get({
-    path: 'get-preview/:id',
+    path: 'get-preview/:slug',
   })
   async getPreviewId(ctx) {
-    const { id } = ctx.params
+    const { slug } = ctx.params
 
     const element = await this.model.findOne({
-      where: { id },
+      where: { slug },
     })
 
     if (element) {

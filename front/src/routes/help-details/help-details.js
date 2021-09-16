@@ -137,16 +137,15 @@ const HelpButton = styled.button`
 `
 
 const HelpDetailsPage = () => {
-  const { id } = useParams()
-  const { help, onLoadPreviewId } = useHelps()
+  const { slug } = useParams()
+  const { help, onLoadPreview } = useHelps()
   const size = useWindowSize()
 
   useEffect(() => {
-    if (id) {
-      const split = (id || '').split('-')
-      onLoadPreviewId(split[0])
+    if (slug) {
+      onLoadPreview(slug)
     }
-  }, [id])
+  }, [slug])
 
   return (
     <MainLayout>

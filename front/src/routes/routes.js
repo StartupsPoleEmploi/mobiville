@@ -31,7 +31,7 @@ export const Routes = () => (
         <Route exact path="/city/:insee" component={City} />
         <Route exact path="/city/:insee/:place" component={City} />
         <Route exact path="/aides" component={Helps} />
-        <Route exact path="/aides/:id" component={HelpDetailsPage} />
+        <Route exact path="/aides/:slug" component={HelpDetailsPage} />
         <Route exact path="/mobility-guide" component={MobilityGuide} />
         <Route exact path="/rome-list" component={RomeList} />
         <Route exact path="/compte" component={Account} />
