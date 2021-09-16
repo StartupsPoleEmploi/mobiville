@@ -56,24 +56,16 @@ export default (sequelizeInstance) => {
         allowNull: false,
         defaultValue: 0,
       },
-      created_at: {
-        allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW'),
-      },
-      updated_at: {
-        allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW'),
-      },
-      deleted_at: {
-        type: Sequelize.DATE,
+      slug: {
+        type: Sequelize.STRING(255),
+        unique: true,
       },
     },
     {
-      timestamps: true,
-      paranoid: true,
+      timestamps: false,
+      paranoid: false,
       underscored: true,
+      indexes: [{ fields: ['slug'] }],
     }
   )
 
