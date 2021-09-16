@@ -372,7 +372,7 @@ const HelpsPage = ({ location: { search } }) => {
           {list.map((item) => (
             <Item
               key={item.id}
-              to={`/aides/${item.id}-${slug(item.title)}`}
+              to={`/aides/${item.slug}`}
               ismobile={isMobileView(size) ? 'true' : 'false'}
             >
               <p className="first-title">{item.title}</p>

@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useCallback } from 'react'
-import { apiLoadHelpPreviews, apiLoadHelpPreviewId } from '../../api/helps.api'
+import { apiLoadHelpPreviews, apiLoadHelpPreview } from '../../api/helps.api'
 
 const HelpsContext = React.createContext()
 
@@ -18,9 +18,9 @@ export function HelpsProvider(props) {
     }
   }, [])
 
-  const onLoadPreviewId = useCallback((id) => {
+  const onLoadPreview = useCallback((slug) => {
     _setIsLoading(true)
-    apiLoadHelpPreviewId(id)
+    apiLoadHelpPreview(slug)
       .then(_setHelp)
       .then(() => _setIsLoading(false))
   }, [])
@@ -34,7 +34,7 @@ export function HelpsProvider(props) {
         isLoading,
         // function
         onLoadPreviews,
-        onLoadPreviewId,
+        onLoadPreview,
       }}
     />
   )
