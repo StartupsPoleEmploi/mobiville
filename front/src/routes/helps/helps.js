@@ -18,7 +18,7 @@ import { isMobileView } from '../../constants/mobile'
 import { ucFirstOnly } from '../../utils/utils'
 import { objectToQueryString, paramUrlToObject } from '../../utils/url'
 
-const Title = styled.p`
+const Title = styled.h1`
   color: ${COLOR_TEXT_PRIMARY};
   font-size: 18px;
   font-weight: 700;
@@ -317,10 +317,10 @@ const HelpsPage = ({ location: { search } }) => {
           <div className="wrapper">
             <img src="/Generique_Aides.png" alt="help" />
             <div className="text">
-              <h2>
+              <h1>
                 Vous avez besoin d{"'"}
                 aide pour votre projet de mobilité ?
-              </h2>
+              </h1>
               <p>Découvrez les solutions pour accélérer votre projet</p>
             </div>
           </div>
