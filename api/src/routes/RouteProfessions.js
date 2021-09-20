@@ -103,20 +103,24 @@ export default class RouteProfessions extends Route {
         }
       }
 
+      let min = null
+      let max = null
+
       if (infosResult && infosResult.result && infosResult.result.records) {
         const records = infosResult.result.records.map((r) => ({
           ...r,
           MINIMUM_SALARY: +r.MINIMUM_SALARY,
           MAXIMUM_SALARY: +r.MAXIMUM_SALARY,
         }))
-        this.sendOk(ctx, {
-          min: meanBy(records, 'MINIMUM_SALARY'),
-          max: meanBy(records, 'MAXIMUM_SALARY'),
-          tension,
-        })
-      } else {
-        this.sendOk(ctx, null)
+        min = meanBy(records, 'MINIMUM_SALARY')
+        max = meanBy(records, 'MAXIMUM_SALARY')
       }
+
+      this.sendOk(ctx, {
+        min,
+        max,
+        tension,
+      })
     } else {
       this.sendOk(ctx, null)
     }
