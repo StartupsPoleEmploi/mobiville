@@ -14,53 +14,31 @@ import { ucFirstOnly } from '../../utils/utils'
 
 const Header = styled.div`
   position: fixed;
-  top: 76px;
   left: 0;
   right: 0;
   background-color: white;
-  height: 92px;
   display: flex;
   justify-content: center;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12),
     0px 1px 5px rgba(0, 0, 0, 0.2);
+  top: ${({ isMobile }) => (isMobile ? '0' : '76px')};
+  height: ${({ isMobile }) => (isMobile ? '76px' : '92px')};
+`
 
-  p {
-    text-align: center;
-    font-weight: 500;
-    font-size: 24px;
-    margin: auto;
-    padding: 0;
-    color: ${COLOR_TEXT_PRIMARY};
-    max-width: 1041px;
-    width: 80%;
-    position: relative;
-  }
-
-  ${(props) =>
-    props.isMobile
-      ? `
-    height: 76px;
-    top: 0;
-
-    p {
-      font-size: 18px;
-    }
-  `
-      : ''}
+const H1 = styled.h1`
+  text-align: center;
+  font-weight: 500;
+  font-size: ${({ isMobile }) => (isMobile ? '18px' : '24px')};
+  margin: auto;
+  color: ${COLOR_TEXT_PRIMARY};
+  width: 80%;
 `
 
 const Container = styled.div`
   overflow: auto;
   height: 100%;
-  margin-top: 108px;
+  margin-top: ${({ isMobile }) => (isMobile ? '76px' : '108px')};
   padding-bottom: 92px;
-
-  ${(props) =>
-    props.isMobile
-      ? `
-    margin-top: 76px;
-  `
-      : ''}
 `
 
 const Tag = styled.div`
@@ -127,13 +105,7 @@ const HelpButton = styled.button`
   cursor: pointer;
   width: ${(props) => (props.isMobile ? 'calc(100% - 32px)' : '')};
   padding: ${(props) => (props.isMobile ? '0 12px' : '0 48px')} !important;
-
-  ${(props) =>
-    props.isMobile
-      ? `
-    bottom: 70px;
-  `
-      : ''}
+  bottom: ${({ isMobile }) => (isMobile ? '70px' : '')};
 `
 
 const HelpDetailsPage = () => {
@@ -147,19 +119,21 @@ const HelpDetailsPage = () => {
     }
   }, [slug])
 
+  const isMobile = isMobileView(size)
+
   return (
     <MainLayout>
       {help && (
         <>
-          <Header isMobile={isMobileView(size)}>
-            <p>{help.title}</p>
+          <Header isMobile={isMobile}>
+            <H1 isMobile={isMobile}>{help.title}</H1>
           </Header>
-          <Container isMobile={isMobileView(size)}>
-            <Panel isMobile={isMobileView(size)}>
+          <Container isMobile={isMobile}>
+            <Panel isMobile={isMobile}>
               <Title>Objectif de l’aide</Title>
               <Description>{help.goal}</Description>
             </Panel>
-            <Panel isMobile={isMobileView(size)}>
+            <Panel isMobile={isMobile}>
               <Title>
                 Descriptif de l{"'"}
                 aide
@@ -170,7 +144,7 @@ const HelpDetailsPage = () => {
                 }}
               />
             </Panel>
-            <Panel isMobile={isMobileView(size)}>
+            <Panel isMobile={isMobile}>
               <Title>Quand faire la demande ?</Title>
               <Description
                 dangerouslySetInnerHTML={{
@@ -178,7 +152,7 @@ const HelpDetailsPage = () => {
                 }}
               />
             </Panel>
-            <Panel isMobile={isMobileView(size)}>
+            <Panel isMobile={isMobile}>
               <Title>Quelles conditions ?</Title>
               <Description
                 dangerouslySetInnerHTML={{
@@ -186,7 +160,7 @@ const HelpDetailsPage = () => {
                 }}
               />
             </Panel>
-            <Panel isMobile={isMobileView(size)}>
+            <Panel isMobile={isMobile}>
               <Title>Est-elle cumulable ?</Title>
               <Description
                 dangerouslySetInnerHTML={{
@@ -194,7 +168,7 @@ const HelpDetailsPage = () => {
                 }}
               />
             </Panel>
-            <Panel isMobile={isMobileView(size)}>
+            <Panel isMobile={isMobile}>
               <Title>Public concerné</Title>
               {help.who.split(',').map((t) => (
                 <Tag key={t}>{ucFirstOnly(t)}</Tag>
@@ -211,7 +185,7 @@ const HelpDetailsPage = () => {
               <HelpButton
                 className="btn primary"
                 type="button"
-                isMobile={isMobileView(size)}
+                isMobile={isMobile}
               >
                 Faire ma demande
               </HelpButton>
