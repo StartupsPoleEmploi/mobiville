@@ -68,61 +68,60 @@ export default class RouteProfessions extends Route {
 
     //https://dares.travail-emploi.gouv.fr/donnees/la-nomenclature-des-familles-professionnelles-fap-2009
 
-    const city = await this.model.findOne({
-      where: { insee_com: insee },
-      raw: true,
-    })
+    const [city, pcs] = await Promise.all([
+      this.model.findOne({
+        where: { insee_com: insee },
+        raw: true,
+      }),
+      this.model.models.tensions.findOne({
+        where: {
+          rome: code_rome,
+        },
+        raw: true,
+      }),
+    ])
 
-    const pcs = await this.model.models.tensions.findOne({
-      where: {
-        rome: code_rome,
-      },
-      raw: true,
-    })
+    if (!city || !pcs) return this.sendOk(ctx, null)
 
-    if (city && pcs) {
-      const [infosResult, statsResult] = await Promise.all([
-        infosTravail({
-          codeProfession: pcs.pcs,
-          codeRegion: city.code_dept,
-          codeRome: code_rome,
-        }),
-        infosTensionTravail({
-          codeRegion: city.code_dept,
-          codeRome: code_rome,
-        }),
-      ])
+    const [infosResult, statsResult] = await Promise.all([
+      infosTravail({
+        codeProfession: pcs.pcs,
+        codeRegion: city.code_dept,
+        codeRome: code_rome,
+      }),
+      infosTensionTravail({
+        codeRegion: city.code_dept,
+        codeRome: code_rome,
+      }),
+    ])
 
-      let tension = null
-      if (statsResult && statsResult.result && statsResult.result.records) {
-        const found = statsResult.result.records.find(
-          (record) => record.AREA_TYPE_NAME === 'Département'
-        )
-        if (found) {
-          tension = found.TENSION_RATIO || null
-        }
+    let tension = null
+    if (statsResult && statsResult.result && statsResult.result.records) {
+      const found = statsResult.result.records.find(
+        (record) => record.AREA_TYPE_NAME === 'Département'
+      )
+      if (found) {
+        tension = found.TENSION_RATIO || null
       }
-
-      let min = null
-      let max = null
-
-      if (infosResult && infosResult.result && infosResult.result.records) {
-        const records = infosResult.result.records.map((r) => ({
-          ...r,
-          MINIMUM_SALARY: +r.MINIMUM_SALARY,
-          MAXIMUM_SALARY: +r.MAXIMUM_SALARY,
-        }))
-        min = meanBy(records, 'MINIMUM_SALARY')
-        max = meanBy(records, 'MAXIMUM_SALARY')
-      }
-
-      this.sendOk(ctx, {
-        min,
-        max,
-        tension,
-      })
-    } else {
-      this.sendOk(ctx, null)
     }
+
+    let min = null
+    let max = null
+
+    if (infosResult && infosResult.result && infosResult.result.records) {
+      const records = infosResult.result.records.map((r) => ({
+        ...r,
+        MINIMUM_SALARY: +r.MINIMUM_SALARY,
+        MAXIMUM_SALARY: +r.MAXIMUM_SALARY,
+      }))
+      min = meanBy(records, 'MINIMUM_SALARY')
+      max = meanBy(records, 'MAXIMUM_SALARY')
+    }
+
+    this.sendOk(ctx, {
+      min,
+      max,
+      tension,
+    })
   }
 }
