@@ -8,20 +8,7 @@ module.exports = {
   extends: ['eslint:recommended', 'prettier'],
   parser: 'babel-eslint',
   rules: {
-    'max-len': [
-      'error',
-      {
-        code: 160,
-        ignoreComments: true,
-        ignoreStrings: true,
-        ignoreTemplateLiterals: true,
-      },
-    ],
-    indent: ['error', 2],
-    quotes: ['error', 'single'],
-    'comma-dangle': ['error', 'always-multiline'],
-    semi: ['error', 'never'],
-    'space-infix-ops': ['error', { 'int32Hint': false }],
+    'space-infix-ops': ['error', { int32Hint: false }],
     'block-spacing': ['error', 'always'],
   },
 }
