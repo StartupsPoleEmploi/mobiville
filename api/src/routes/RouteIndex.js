@@ -1,10 +1,11 @@
 import Route from './Route'
 import packageJson from '../../package.json'
 
+export default
 @Route.Route({
   routeBase: '',
 })
-export default class RouteIndex extends Route {
+class RouteIndex extends Route {
   constructor(params) {
     super({ ...params })
   }
