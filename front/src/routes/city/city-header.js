@@ -47,16 +47,14 @@ const Region = styled(Typography)`
   }
 `
 
-const Name = styled.p`
-  && {
-    height: ${(props) => (props.fixedView ? '78px' : '46px')};
-    line-height: ${(props) => (props.fixedView ? '100px' : '46px')};
-    font-weight: 500;
-    font-size: 24px;
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+const CityName = styled.h1`
+  height: ${(props) => (props.fixedView ? '78px' : '46px')};
+  line-height: ${(props) => (props.fixedView ? '100px' : '46px')};
+  font-weight: 500;
+  font-size: 24px;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0;
 `
 
 const NameMobile = styled.p`
@@ -326,7 +324,7 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
           )}
         </ImageView>
         <Region>{ucFirstOnly(city['region.new_name'])}</Region>
-        <Name>{ucFirstOnly(city.nom_comm)}</Name>
+        <CityName>{ucFirstOnly(city.nom_comm)}</CityName>
         <SecondSection isMobile={isMobileView(size)}>
           <CityPreview isMobile={isMobileView(size)}>
             <img src="/icons/people.svg" alt="people" />
@@ -406,7 +404,7 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
               <BackLine>
                 <ArrowBackOutlinedIconDesktopSmall onClick={onBack} />
               </BackLine>
-              <Name fixedView>{ucFirstOnly(city.nom_comm)}</Name>
+              <CityName fixedView>{ucFirstOnly(city.nom_comm)}</CityName>
               <CityTab fixedView>
                 {tabList.map((t, i) => (
                   <TabItem
