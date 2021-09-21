@@ -155,7 +155,7 @@ const ViewMore = styled.button.attrs({
 `
 
 const PanelCityLife = ({ city }) => {
-  const { onGetCityAmenities, cityAmenities } = useCities()
+  const { onGetCityEquipments, cityEquipments } = useCities()
   const size = useWindowSize()
   const isMobile = isMobileView(size)
 
@@ -163,7 +163,7 @@ const PanelCityLife = ({ city }) => {
 
   useEffect(() => {
     if (city && city.insee_com) {
-      onGetCityAmenities(city.insee_com)
+      onGetCityEquipments(city.insee_com)
     }
   }, [city])
 
@@ -173,12 +173,12 @@ const PanelCityLife = ({ city }) => {
   let services = []
   let education = []
 
-  if (cityAmenities) {
-    transports = cityAmenities.find((k) => k.key === 'transport')?.tab
-    culture = cityAmenities.find((k) => k.key === 'culture')?.tab
-    health = cityAmenities.find((k) => k.key === 'health')?.tab
-    services = cityAmenities.find((k) => k.key === 'services')?.tab
-    education = cityAmenities.find((k) => k.key === 'education')?.tab
+  if (cityEquipments) {
+    transports = cityEquipments.find((k) => k.key === 'transport')?.tab
+    culture = cityEquipments.find((k) => k.key === 'culture')?.tab
+    health = cityEquipments.find((k) => k.key === 'health')?.tab
+    services = cityEquipments.find((k) => k.key === 'services')?.tab
+    education = cityEquipments.find((k) => k.key === 'education')?.tab
   }
 
   const description = (city.description || '').replace('Écouter', '')

@@ -4,7 +4,7 @@ const models = db.initModels()
 
 const doSync = async () => {
   try {
-    await models.amenities.syncSpecialCities()
+    await models.equipments.syncSpecialCities()
     console.log('Success!')
 
     process.exit(0)
@@ -16,7 +16,7 @@ const doSync = async () => {
 }
 
 console.log(`
-Starting synchronization for amenities in Paris, Lyon, Marseille.
-This will fail if the base amenities script hasn't populated the db yet
+Starting synchronization for equipments in Paris, Lyon, Marseille.
+This will fail if the base equipments script hasn't populated the db yet
 `)
 doSync()

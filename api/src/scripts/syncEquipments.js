@@ -1,13 +1,13 @@
 // A script to execute all syncs that were previously done in the sync route
-import { getAmenitiesDatas } from '../utils/api'
+import { getEquipmentsDatas } from '../utils/api'
 import db from '../models'
 
 const models = db.initModels()
 
 const doSync = async () => {
   try {
-    const amenities = await getAmenitiesDatas()
-    const status = await models.amenities.sync({ amenities })
+    const equipments = await getEquipmentsDatas()
+    const status = await models.equipments.sync({ equipments })
     console.log('Success! Status:', status)
     process.exit(0)
   } catch (err) {
@@ -18,6 +18,6 @@ const doSync = async () => {
 }
 
 console.log(
-  'Starting synchronization for amenities. This will take some time, please do not exit.'
+  'Starting synchronization for equipments. This will take some time, please do not exit.'
 )
 doSync()

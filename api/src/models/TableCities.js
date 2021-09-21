@@ -561,7 +561,7 @@ export default (sequelizeInstance, Model) => {
 
     for (let i = 0; i < list.length; i++) {
       for (let x = 0; x < list[i].tab.length; x++) {
-        const total = await Model.models.amenities.getTotal(
+        const total = await Model.models.equipments.getTotal(
           insee,
           list[i].tab[x].code
         )

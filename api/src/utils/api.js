@@ -159,7 +159,7 @@ export function getAverageHouseRent() {
   })
 }
 
-export function getAmenitiesDatas() {
+export function getEquipmentsDatas() {
   return new Promise((resolve, reject) => {
     readFile(
       __dirname + '/../assets/datas/bpe19_ensemble_xy.csv.gz',

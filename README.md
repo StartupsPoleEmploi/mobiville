@@ -6,9 +6,9 @@ Mobiville est un outil d’aide à la décision pour orienter les candidats à l
 
 ## Stack technique
 
-* une api (back) en node.js
-* un site web (front) en react
-* une base de donnée (MariaDB)
+- une api (back) en node.js
+- un site web (front) en react
+- une base de donnée (MariaDB)
 
 ## Installation
 
@@ -29,25 +29,26 @@ yarn
 2. `yarn build`
 3. `yarn start`
 
-
 ## API alimenter/synchroniser la base de donnée
 
 Entrer dans le container api
 `docker exec -it mobiville_api_1 /bin/bash`
 
 Et exécuter les commandes de synchronisation :
+
 ```
 yarn run sync:cities # 2 minutes long
 yarn run sync:professionsInTension # 2 minutes long
 yarn run sync:regions # almost instant
-yarn run sync:amenities # This will take about 10 minutes
-yarn run sync:amenitiesSpecial # This will take about 2 minutes, needs to be run after the previous script
+yarn run sync:equipments # This will take about 10 minutes
+yarn run sync:equipmentsSpecial # This will take about 2 minutes, needs to be run after the previous script
 
 ```
 
 ## Construire les images
 
 Créer et sauver les images docker à pousser sur le serveur
+
 ```
 yarn build:recette // création et sauvagarde desimages de recette
 scp images-docker // et copie sur le serveur cible
@@ -63,30 +64,30 @@ yarn start:test
 ## Logs
 
 View api logs
+
 ```
 yarn logs:api
 ```
 
 ## Les données
 
-Code rome I1401 (Informaticien)  
-Nb ville proche mer : 704  
-Nb ville proche en montagne : 2416  
-Nb ville à la campagne : 1978  
-Nb petite ville : 4831  
-Nb ville moyenne : 111  
-Nb grande ville : 52  
-Nb metropole : 6  
+Code rome I1401 (Informaticien)
+Nb ville proche mer : 704
+Nb ville proche en montagne : 2416
+Nb ville à la campagne : 1978
+Nb petite ville : 4831
+Nb ville moyenne : 111
+Nb grande ville : 52
+Nb metropole : 6
 
-
-Code rome J1501 (Aide soignant)  
-Nb ville proche mer : 2755  
-Nb ville proche en montagne : 10588  
-Nb ville à la campagne : 8681  
-Nb petite ville : 21482  
-Nb ville moyenne : 106  
-Nb grande ville : 47  
-Nb metropole : 6  
+Code rome J1501 (Aide soignant)
+Nb ville proche mer : 2755
+Nb ville proche en montagne : 10588
+Nb ville à la campagne : 8681
+Nb petite ville : 21482
+Nb ville moyenne : 106
+Nb grande ville : 47
+Nb metropole : 6
 
 ## Données et sources de données
 
@@ -94,7 +95,8 @@ Liste des villes -> Fichier importé depuis le fichier `cities-france.csv` (Un a
 Le fichier `cities-france.csv` est issue du site data.gouv.fr et est mis à jours tout les ans. A voir comment l'importer de nous chez Mobiville.
 
 Format d'une ville:
-- code_comm: 
+
+- code_comm:
 - nom_dept: Nom du département,
 - statut: Type de commune,
 - z_moyen: Altitude moyenne,
@@ -119,14 +121,11 @@ Format d'une ville:
 - average_houserent: Prix moyen du loyer des appartement au m2 (Value à null puis un demande au fichier `indicateurs-loyers-appartements.csv` issue de data.gouv.fr),
 - photo: Url de photo de la ville. (Valeur à null puis un cron demande à l'api wikipedia la photo),
 
-
 Liste des villes en tensions -> Fichier importé depuis le fichier `cities-tension-utf8.csv` (Un appel depuis la route http://localhost/api/sync/sync-profession-in-tension)
 
-Liste des villes <-> bassins  -> Fichier importé depuis le fichier `lexique-bassins.csv` (Un appel depuis la route http://localhost/api/sync/sync-cities)
+Liste des villes <-> bassins -> Fichier importé depuis le fichier `lexique-bassins.csv` (Un appel depuis la route http://localhost/api/sync/sync-cities)
 
 Liste des regions, nouvelle nomenclature -> Fichier importé depuis le fichier `anciennes-nouvelles-regions.json` (Un appel depuis la route http://localhost/api/sync/sync-regions)
-
-
 
 ## API
 
@@ -164,7 +163,7 @@ stack "mobiville" {
   [Docker API]
   [Docker Database]
 
-  package Data {  
+  package Data {
 collections "fichiers de données"
 file "mobiville_bassin_offre_full_xxx.bz2" as datalakefile
 }
