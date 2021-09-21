@@ -152,9 +152,9 @@ export default class RouteCities extends Route {
   }
 
   @Route.Get({
-    path: 'amenities/:insee',
+    path: 'equipments/:insee',
   })
-  async amenitiesCity(ctx) {
+  async equipmentsCity(ctx) {
     const { insee } = ctx.params
     const cacheList = (await this.model.getCacheLivingEnvironment(insee)) || {}
     const list = JSON.parse(JSON.stringify(ALL_LIFE_CRITERIONS_LIST))

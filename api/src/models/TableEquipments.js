@@ -6,18 +6,18 @@ const MARSEILLE_CODE = 13055
 const LYON_CODE = 69123
 
 export default (sequelizeInstance, Model) => {
-  Model.sync = async ({ amenities }) => {
+  Model.sync = async ({ equipments }) => {
     await Model.deleteAll()
 
     let nbInserted = 0
-    console.log('START SYNC AMENITIES')
+    console.log('START SYNC EQUIPMENTS')
 
     // general case
 
     const allData = []
-    for (let i = 0; i < amenities.length; i++) {
+    for (let i = 0; i < equipments.length; i++) {
       const data = {}
-      for (const [key, value] of Object.entries(amenities[i])) {
+      for (const [key, value] of Object.entries(equipments[i])) {
         data[key] = value || null
       }
 
@@ -30,17 +30,17 @@ export default (sequelizeInstance, Model) => {
       await Model.bulkCreate(dataChunk)
     }
 
-    console.log('END SYNC AMENITIES')
+    console.log('END SYNC EQUIPMENTS')
 
     return {
-      'nb read': amenities.length,
+      'nb read': equipments.length,
       'nb inserted': nbInserted,
     }
   }
 
   Model.syncSpecialCities = async () => {
     // for Paris, Lyon, Marseille
-    console.log('START SYNC AMENITIES FOR SPECIAL CITIES')
+    console.log('START SYNC EQUIPMENTS FOR SPECIAL CITIES')
     const citiesArray = [
       {
         like: 'PARIS%ARRONDISSEMENT',
@@ -68,10 +68,10 @@ export default (sequelizeInstance, Model) => {
 
       const inseeComs = districts.map(({ insee_com }) => insee_com)
 
-      const amenities = await Model.findAll({ where: { depcom: inseeComs } })
+      const equipments = await Model.findAll({ where: { depcom: inseeComs } })
 
-      const amenitiesToAdd = amenities.map((amenity) => ({
-        ...omit(amenity.dataValues, 'id'),
+      const amenitiesToAdd = equipments.map((equipment) => ({
+        ...omit(equipment.dataValues, 'id'),
         depcom: cityData.code,
       }))
 
@@ -80,7 +80,7 @@ export default (sequelizeInstance, Model) => {
         await Model.bulkCreate(dataChunk)
       }
 
-      console.log('END SYNC AMENITIES FOR SPECIAL CITIES')
+      console.log('END SYNC EQUIPMENTS FOR SPECIAL CITIES')
     }
   }
 

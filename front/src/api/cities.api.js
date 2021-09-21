@@ -30,9 +30,9 @@ export const getCityTenement = (insee) =>
     .get(`/api/cities/tenement/${insee}`)
     .then((response) => (response.data ? response.data.data : null))
 
-export const getCityAmenities = (insee) =>
+export const getCityEquipments = (insee) =>
   axios
-    .get(`/api/cities/amenities/${insee}`)
+    .get(`/api/cities/equipments/${insee}`)
     .then((response) => (response.data ? response.data.data : null))
 
 export const searchJobLabels = (body) =>

@@ -7,7 +7,7 @@ import {
   searchCityByLocation,
   searchCityByName,
   getCityTenement,
-  getCityAmenities,
+  getCityEquipments,
   searchJobLabels,
 } from '../../api/cities.api'
 
@@ -27,12 +27,12 @@ export function CitiesProvider(props) {
   const [isLoadingCity, _setIsLoadingCity] = useState(false)
   const [isLoadingLocation, _setIsLoadingLocation] = useState(false)
   const [isLoadingTenement, _setIsLoadingTenement] = useState(false)
-  const [isLoadingAmenities, _setIsLoadingAmenities] = useState(false)
+  const [isLoadingEquipments, _setIsLoadingEquipments] = useState(false)
   const [isLoadingJobsMatchingCriterion, setIsLoadingJobsMatchingCriterion] =
     useState(false)
   const [sortCriterions, setSortCriterions] = useState('')
   const [cityTenement, _setCityTenement] = useState(null)
-  const [cityAmenities, _setCityAmenities] = useState(null)
+  const [cityEquipments, _setCityEquipments] = useState(null)
   const [environmentCriterions, _setEnvironmentCriterions] = useState([])
   const [cityCriterions, _setCityCriterions] = useState([])
   const [regionCriterions, _setRegionCriterions] = useState([])
@@ -106,11 +106,11 @@ export function CitiesProvider(props) {
       .then(() => _setIsLoadingTenement(false))
   })
 
-  const onGetCityAmenities = useCallback((id) => {
-    _setIsLoadingAmenities(true)
-    getCityAmenities(id)
-      .then(_setCityAmenities)
-      .then(() => _setIsLoadingAmenities(false))
+  const onGetCityEquipments = useCallback((id) => {
+    _setIsLoadingEquipments(true)
+    getCityEquipments(id)
+      .then(_setCityEquipments)
+      .then(() => _setIsLoadingEquipments(false))
   })
 
   const onSearchJobLabels = useCallback(
@@ -187,8 +187,8 @@ export function CitiesProvider(props) {
         sortCriterions,
         isLoadingTenement,
         cityTenement,
-        isLoadingAmenities,
-        cityAmenities,
+        isLoadingEquipments,
+        cityEquipments,
         totalCities,
         jobsMatchingCriterions,
         environmentCriterions,
@@ -203,7 +203,7 @@ export function CitiesProvider(props) {
         onSearchById,
         setSortCriterions,
         onGetCityTenement,
-        onGetCityAmenities,
+        onGetCityEquipments,
         onSearchJobLabels,
       }}
     />
