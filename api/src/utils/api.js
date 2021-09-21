@@ -162,13 +162,13 @@ export function getAverageHouseRent() {
 export function getEquipmentsDatas() {
   return new Promise((resolve, reject) => {
     readFile(
-      __dirname + '/../assets/datas/bpe19_ensemble_xy.csv.gz',
+      __dirname + '/../assets/datas/bpe-2020-light.json.gz',
       (err, bufferData) => {
         if (err) return reject(err)
 
         ungzip(bufferData)
           .then((data) => {
-            resolve(csvToArrayJson(data.toString()))
+            resolve(JSON.parse(data.toString()))
           })
           .catch(err)
       }
