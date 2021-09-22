@@ -106,7 +106,7 @@ const MobilityGuide = () => {
             </ul>
           </p>
           <p>
-            <Link to="/aides/38-aide-pour-la-recherche-demploi">
+            <Link to="/aides/aide-pour-la-recherche-demploi">
               Découvrir l'aide et les conditions
               <ArrowForward />
             </Link>
@@ -158,7 +158,7 @@ const MobilityGuide = () => {
             d'avoir 1000 euros
           </p>
           <p>
-            <Link to="/aides/50-mon-job-mon-logement">
+            <Link to="/aides/mon-job-mon-logement">
               Découvrir cette aide
               <ArrowForward />
             </Link>
