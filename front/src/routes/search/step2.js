@@ -64,7 +64,7 @@ const Step2Component = ({ onNext }) => {
       </Title>
       <p>
         Pour le moment, le service est disponible uniquement pour{' '}
-        <Link to="/rome-list" title="Accéder à la liste des métiers Mobiville">
+        <Link to="/rome-list" title="Accéder à la liste des métiers">
           certains métiers.
         </Link>
       </p>
