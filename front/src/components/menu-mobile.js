@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Typography } from '@material-ui/core'
 import { COLOR_PRIMARY, COLOR_TEXT_SECONDARY } from '../constants/colors'
 
-const Wrapper = styled.div`
+const Nav = styled.nav`
   position: fixed;
   height: 60px;
   left: 0;
@@ -109,7 +109,7 @@ export const MenuMobile = () => {
   }, [location])
 
   return (
-    <Wrapper>
+    <Nav>
       <MainWrapper>
         {menuLink.map((m) => (
           <Item key={m.path} to={m.path} selected={m.selected}>
@@ -118,7 +118,7 @@ export const MenuMobile = () => {
           </Item>
         ))}
       </MainWrapper>
-    </Wrapper>
+    </Nav>
   )
 }
 

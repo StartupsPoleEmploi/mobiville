@@ -40,7 +40,7 @@ const Block = styled.div`
       > div:first-child {
         margin-right: 0;
       }
-    }  
+    }
   `
       : ''}
 `
@@ -57,7 +57,7 @@ const ImageBlock = styled.div`
       ? `
     width: 256px;
     height: 256px;
-    margin-bottom: 16px;  
+    margin-bottom: 16px;
   `
       : ''}
 `
@@ -80,7 +80,7 @@ const Title = styled.h1`
     props.isMobile
       ? `
     font-size: 18px;
-  
+
   `
       : ''}
 `
@@ -216,7 +216,7 @@ const HomePage = () => {
             <Action to="/rechercher">Trouver ma ville</Action>
           </TextBlock>
           {!isMobileView(size) && (
-            <VideoBlock loop muted autoPlay>
+            <VideoBlock loop muted autoPlay tabIndex="-1">
               <source src="/videos/Hero-mobiville-320px.mp4" type="video/mp4" />
             </VideoBlock>
           )}

@@ -9,13 +9,13 @@ import { useWindowSize } from '../common/hooks/window-size'
 import { Footer } from './footer'
 import { TopMobileMenu } from './top-mobile-menu'
 
-const Main = styled.div`
+const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
 `
 
-const Container = styled.div`
+const Main = styled.main`
   display: inline-block;
   width: 100%;
   flex: 1;
@@ -32,20 +32,20 @@ export const MainLayout = ({ children, menu, footer, topMobileMenu }) => {
   }, [location])
 
   return (
-    <Main>
+    <Container>
       {isMobileView(size) && topMobileMenu && <TopMobileMenu />}
       {isMobileView(size) && menu.visible && <MenuMobile {...menu} />}
       {!isMobileView(size) && menu.visible && <MenuDesktop {...menu} />}
-      <Container
+      <Main
         style={{
           paddingBottom: isMobileView(size) ? 60 : 0,
           paddingTop: isMobileView(size) ? 0 : 76,
         }}
       >
         {children}
-      </Container>
+      </Main>
       {footer && <Footer />}
-    </Main>
+    </Container>
   )
 }
 
