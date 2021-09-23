@@ -7,7 +7,7 @@ import LOGO from '../assets/images/LogoMobiville_gros.svg'
 import LOGO_AL from '../assets/images/logo-action-logement.png'
 import LOGO_PE from '../assets/images/logo-pole-emploi.png'
 
-const Wrapper = styled.div`
+const Header = styled.header`
   position: fixed;
   height: 76px;
   top: 0;
@@ -95,7 +95,7 @@ export const MenuDesktop = () => {
   }, [location])
 
   return (
-    <Wrapper>
+    <Header>
       <MainWrapper className="wrapper">
         <Link to="/">
           <LogoImage src={LOGO} alt="logo" />
@@ -119,7 +119,7 @@ export const MenuDesktop = () => {
           <LogoImagePartener src={LOGO_PE} alt="Pôle Emploi" />
         </a>
       </MainWrapper>
-    </Wrapper>
+    </Header>
   )
 }
 

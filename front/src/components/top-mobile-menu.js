@@ -6,10 +6,6 @@ import LOGO from '../assets/images/LogoMobiville_gros.svg'
 import LOGO_AL from '../assets/images/logo-action-logement.png'
 import LOGO_PE from '../assets/images/logo-pole-emploi.png'
 
-const MainSpace = styled.div`
-  height: 76px;
-`
-
 const Text = styled(Typography)`
   && {
     font-weight: 500;
@@ -28,7 +24,7 @@ const LogoImagePartener = styled.img`
   margin-left: 16px;
 `
 
-const Container = styled.div`
+const Header = styled.header`
   background-color: white;
   height: 76px;
   top: 0;
@@ -43,19 +39,17 @@ const Container = styled.div`
 `
 
 export const TopMobileMenu = () => (
-  <MainSpace>
-    <Container>
-      <Link to="/">
-        <LogoImage src={LOGO} alt="logo" />
-      </Link>
-      <div className="flex-1" />
-      <Text>Proposé par</Text>
-      <a href="https://www.actionlogement.fr/" target="_blank" rel="noreferrer">
-        <LogoImagePartener src={LOGO_AL} alt="Action logement" />
-      </a>
-      <a href="https://www.pole-emploi.fr/" target="_blank" rel="noreferrer">
-        <LogoImagePartener src={LOGO_PE} alt="Pôle Emploi" />
-      </a>
-    </Container>
-  </MainSpace>
+  <Header>
+    <Link to="/">
+      <LogoImage src={LOGO} alt="logo" />
+    </Link>
+    <div className="flex-1" />
+    <Text>Proposé par</Text>
+    <a href="https://www.actionlogement.fr/" target="_blank" rel="noreferrer">
+      <LogoImagePartener src={LOGO_AL} alt="Action logement" />
+    </a>
+    <a href="https://www.pole-emploi.fr/" target="_blank" rel="noreferrer">
+      <LogoImagePartener src={LOGO_PE} alt="Pôle Emploi" />
+    </a>
+  </Header>
 )

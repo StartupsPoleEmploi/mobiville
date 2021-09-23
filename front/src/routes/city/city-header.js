@@ -1,4 +1,3 @@
-import { Typography } from '@material-ui/core'
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
@@ -37,14 +36,9 @@ const ImageView = styled.div`
   border-radius: ${(props) => (props.isMobile ? '0' : '8px')};
 `
 
-const Region = styled(Typography)`
-  && {
-    height: 17px;
-    font-size: 12px;
-    text-align: center;
-    position: relative;
-    top: 10px;
-  }
+const TitlesContainer = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
 `
 
 const CityName = styled.h1`
@@ -55,6 +49,17 @@ const CityName = styled.h1`
   text-align: center;
   margin-top: 0;
   margin-bottom: 0;
+`
+
+const RegionName = styled.h2`
+  height: 17px;
+  font-size: 12px;
+  text-align: center;
+  position: relative;
+  top: 10px;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
 `
 
 const NameMobile = styled.p`
@@ -323,8 +328,12 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
             </SpaceArrowBackOutlinedIconMobileFull>
           )}
         </ImageView>
-        <Region>{ucFirstOnly(city['region.new_name'])}</Region>
-        <CityName>{ucFirstOnly(city.nom_comm)}</CityName>
+
+        <TitlesContainer>
+          <CityName>{ucFirstOnly(city.nom_comm)}</CityName>
+          <RegionName>{ucFirstOnly(city['region.new_name'])}</RegionName>
+        </TitlesContainer>
+
         <SecondSection isMobile={isMobileView(size)}>
           <CityPreview isMobile={isMobileView(size)}>
             <img src="/icons/people.svg" alt="people" />
