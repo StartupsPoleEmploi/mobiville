@@ -23,6 +23,34 @@ const Main = styled.main`
   flex-direction: column;
 `
 
+const GoToMainContent = styled.a`
+  left: -999px;
+  position: absolute;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: -999;
+
+  &:focus,
+  &:active {
+    color: #fff;
+    background-color: #000;
+    left: auto;
+    top: auto;
+    width: 30%;
+    height: auto;
+    overflow: auto;
+    margin: 10px 35%;
+    padding: 5px;
+    border-radius: 15px;
+    border: 4px solid yellow;
+    text-align: center;
+    font-size: 1.2em;
+    z-index: 999;
+  }
+`
+
 export const MainLayout = ({ children, menu, footer, topMobileMenu }) => {
   const size = useWindowSize()
   const location = useLocation()
@@ -33,10 +61,13 @@ export const MainLayout = ({ children, menu, footer, topMobileMenu }) => {
 
   return (
     <Container>
+      <GoToMainContent href="#main">Aller au contenu</GoToMainContent>
       {isMobileView(size) && topMobileMenu && <TopMobileMenu />}
       {isMobileView(size) && menu.visible && <MenuMobile {...menu} />}
       {!isMobileView(size) && menu.visible && <MenuDesktop {...menu} />}
       <Main
+        id="main"
+        tabIndex="-1"
         style={{
           paddingBottom: isMobileView(size) ? 60 : 0,
           paddingTop: isMobileView(size) ? 0 : 76,
