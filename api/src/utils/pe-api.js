@@ -52,11 +52,11 @@ export async function infosTravail({ codeProfession, codeRegion }) {
     .then((result) => result.data)
 }
 
-export async function infosTensionTravail({ codeRome, codeRegion }) {
+export async function infosTensionTravail({ codeRome, bassinId }) {
   const token = await getAccessToken()
   return axios
     .get(
-      `https://api.emploi-store.fr/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "266f691f-bce8-4443-808e-8e5aa125cf17" WHERE "ROME_PROFESSION_CARD_CODE" LIKE '${codeRome}' AND "AREA_CODE" = '${codeRegion}'`,
+      `https://api.emploi-store.fr/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "266f691f-bce8-4443-808e-8e5aa125cf17" WHERE "ROME_PROFESSION_CARD_CODE" LIKE '${codeRome}' AND "AREA_TYPE_CODE" = 'B' AND "AREA_CODE" = '${bassinId}'`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
