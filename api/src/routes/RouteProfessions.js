@@ -72,6 +72,7 @@ export default class RouteProfessions extends Route {
       this.model.findOne({
         where: { insee_com: insee },
         raw: true,
+        include: this.model.models.bassins,
       }),
       this.model.models.tensions.findOne({
         where: {
@@ -81,7 +82,9 @@ export default class RouteProfessions extends Route {
       }),
     ])
 
-    if (!city || !pcs) return this.sendOk(ctx, null)
+    const bassinId = city && city['bassin.bassin_id']
+
+    if (!bassinId || !pcs) return this.sendOk(ctx, null)
 
     const [infosResult, statsResult] = await Promise.all([
       infosTravail({
@@ -90,16 +93,15 @@ export default class RouteProfessions extends Route {
         codeRome: code_rome,
       }),
       infosTensionTravail({
-        codeRegion: city.code_dept,
+        bassinId,
         codeRome: code_rome,
       }),
     ])
 
     let tension = null
+
     if (statsResult && statsResult.result && statsResult.result.records) {
-      const found = statsResult.result.records.find(
-        (record) => record.AREA_TYPE_NAME === 'Département'
-      )
+      const found = statsResult.result.records[0]
       if (found) {
         tension = found.TENSION_RATIO || null
       }
