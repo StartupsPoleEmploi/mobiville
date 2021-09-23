@@ -172,6 +172,7 @@ const PanelCityLife = ({ city }) => {
   let health = []
   let services = []
   let education = []
+  let environment = []
 
   if (cityEquipments) {
     transports = cityEquipments.find((k) => k.key === 'transport')?.tab
@@ -179,6 +180,7 @@ const PanelCityLife = ({ city }) => {
     health = cityEquipments.find((k) => k.key === 'health')?.tab
     services = cityEquipments.find((k) => k.key === 'services')?.tab
     education = cityEquipments.find((k) => k.key === 'education')?.tab
+    environment = cityEquipments.find((k) => k.key === 'environment')?.tab
   }
 
   const description = (city.description || '').replace('Écouter', '')
@@ -226,6 +228,8 @@ const PanelCityLife = ({ city }) => {
     </ItemLayout>
   )
 
+  const remarkableGardens = environment.find(({ code }) => code === 'F310')
+
   const environmentElement = (
     <ItemLayout isMobile={isMobile}>
       <ItemTitleLayout>Environnement</ItemTitleLayout>
@@ -238,11 +242,13 @@ const PanelCityLife = ({ city }) => {
           </p>
           <p className="details">A venir</p>
         </ElementLine>
-        <ElementLine>
-          <i className="material-icons">domain</i>
-          <p className="title">Parcs et jardins</p>
-          <p className="details">A venir</p>
-        </ElementLine>
+        {remarkableGardens && (
+          <ElementLine>
+            <i className="material-icons">domain</i>
+            <p className="title">Jardins remarquables</p>
+            <p className="details">{remarkableGardens.total}</p>
+          </ElementLine>
+        )}
       </ItemContentLayout>
     </ItemLayout>
   )

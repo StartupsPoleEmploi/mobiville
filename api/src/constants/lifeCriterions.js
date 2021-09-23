@@ -153,10 +153,19 @@ export const SERVICES_EDUCATION = [
   },
 ]
 
+export const SERVICES_ENVIRONMENT = [
+  {
+    label: 'Jardins remarquables',
+    code: 'F310',
+    icon: '',
+  },
+]
+
 export const ALL_LIFE_CRITERIONS_LIST = [
   { key: 'culture', tab: CULTURE_CRITERION },
   { key: 'transport', tab: TRANSPORT_CRITERION },
   { key: 'health', tab: HEALTH_CRITERION },
   { key: 'services', tab: SERVICES_CRITERION },
   { key: 'education', tab: SERVICES_EDUCATION },
+  { key: 'environment', tab: SERVICES_ENVIRONMENT },
 ]
