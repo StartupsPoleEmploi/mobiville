@@ -38,10 +38,6 @@ variables:
 include:
   - template: Security/Secret-Detection.gitlab-ci.yml
 
-secret_detection:
-  variables:
-    SECRET_DETECTION_HISTORIC_SCAN: "true"
-
 
 test:sonar:
   extends: .sonarqube-check
