@@ -11,6 +11,7 @@ module.exports = {
     await queryInterface.removeColumn('amenities', 'an')
     await queryInterface.removeColumn('amenities', 'dciris')
     await queryInterface.removeColumn('amenities', 'dep')
+    await queryInterface.removeColumn('amenities', 'reg')
 
     await queryInterface.renameTable('amenities', 'equipments')
   },
