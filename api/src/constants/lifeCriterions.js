@@ -157,7 +157,7 @@ export const SERVICES_ENVIRONMENT = [
   {
     label: 'Jardins remarquables',
     code: 'F310',
-    icon: '',
+    icon: 'jardins-remarquables.svg',
   },
 ]
 
