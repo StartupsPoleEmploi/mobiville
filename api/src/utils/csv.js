@@ -1,7 +1,6 @@
-const parse = require('csv-parse')
-const { writeFileSync } = require('fs')
+import parse from 'csv-parse'
 
-function csvToArrayJson(data, options = {}) {
+export function csvToArrayJson(data, options = {}) {
   return new Promise((resolve, reject) => {
     parse(
       data,
@@ -21,8 +20,6 @@ function csvToArrayJson(data, options = {}) {
     list.map((tab) => {
       const obj = {}
       for (const p in tab) {
-        if (p !== 'depcom' && p !== 'typequ') continue
-
         obj[
           p
             .replace(/ /g, '_')
@@ -36,11 +33,3 @@ function csvToArrayJson(data, options = {}) {
     })
   )
 }
-
-function bidule() {
-  return csvToArrayJson().then((data) => {
-    writeFileSync('result.json', data)
-  })
-}
-
-module.exports = bidule
