@@ -61,6 +61,11 @@ const ItemTitleLayout = styled.div`
   padding-bottom: 16px;
 `
 
+const IconImg = styled.img`
+  width: 24px;
+  height: 24px;
+`
+
 const ElementObject = styled.div`
   width: 25%;
   display: inline-flex;
@@ -71,10 +76,6 @@ const ElementObject = styled.div`
 
   .material-icons {
     color: ${COLOR_SECONDARY};
-    margin-bottom: 6px;
-  }
-
-  .image-block {
     margin-bottom: 6px;
   }
 
@@ -107,6 +108,10 @@ const ElementLine = styled.div`
   background-color: ${COLOR_BACKGROUND};
   border-radius: 4px;
 
+  & img {
+    margin-right: 8px;
+  }
+
   .material-icons {
     color: ${COLOR_SECONDARY};
     margin-right: 8px;
@@ -116,17 +121,6 @@ const ElementLine = styled.div`
     height: 32px;
     line-height: 32px;
     text-align: center;
-  }
-
-  .image-block {
-    margin-right: 8px;
-    background-color: ${COLOR_GRAY};
-    border-radius: 4px;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   .title {
@@ -217,9 +211,7 @@ const PanelCityLife = ({ city }) => {
       <ItemContentLayout>
         {culture.map((t) => (
           <ElementObject key={t.label}>
-            <div className="image-block">
-              <img src={`/icons/${t.icon} `} alt={t.label} />
-            </div>
+            <IconImg src={`/icons/${t.icon} `} alt="" />
             <p className="title">{t.label}</p>
             <p className="details">{t.total}</p>
           </ElementObject>
@@ -236,15 +228,12 @@ const PanelCityLife = ({ city }) => {
       <ItemContentLayout>
         <ElementLine>
           <i className="material-icons">domain</i>
-          <p className="title">
-            Qualité de l{"'"}
-            air moyenne
-          </p>
+          <p className="title">Qualité de l'air moyenne</p>
           <p className="details">A venir</p>
         </ElementLine>
         {remarkableGardens && (
           <ElementLine>
-            <i className="material-icons">domain</i>
+            <IconImg src={`/icons/${remarkableGardens.icon}`} alt="" />
             <p className="title">Jardins remarquables</p>
             <p className="details">{remarkableGardens.total}</p>
           </ElementLine>
@@ -259,9 +248,7 @@ const PanelCityLife = ({ city }) => {
       <ItemContentLayout>
         {transports.map((t) => (
           <ElementLine key={t.label}>
-            <div className="image-block">
-              <img src={`/icons/${t.icon}`} alt={t.label} />
-            </div>
+            <IconImg src={`/icons/${t.icon}`} alt="" />
             <p className="title">
               {t.label} de {ucFirstOnly(city.nom_comm)}
             </p>
@@ -278,9 +265,7 @@ const PanelCityLife = ({ city }) => {
       <ItemContentLayout>
         {services.map((t) => (
           <ElementObject key={t.label}>
-            <div className="image-block">
-              <img src={`/icons/${t.icon}`} alt={t.label} />
-            </div>
+            <IconImg src={`/icons/${t.icon}`} alt="" />
             <p className="title">{t.label}</p>
             <p className="details">{t.total}</p>
           </ElementObject>
@@ -295,9 +280,7 @@ const PanelCityLife = ({ city }) => {
       <ItemContentLayout>
         {health.map((t) => (
           <ElementObject key={t.label}>
-            <div className="image-block">
-              <img src={`/icons/${t.icon}`} alt={t.label} />
-            </div>
+            <IconImg src={`/icons/${t.icon}`} alt="" />
             <p className="title">{t.label}</p>
             <p className="details">{t.total}</p>
           </ElementObject>
@@ -312,9 +295,7 @@ const PanelCityLife = ({ city }) => {
       <ItemContentLayout>
         {education.map((t) => (
           <ElementObject key={t.label}>
-            <div className="image-block">
-              <img src={`/icons/${t.icon}`} alt={t.label} />
-            </div>
+            <IconImg src={`/icons/${t.icon}`} alt="" />
             <p className="title">{t.label}</p>
             <p className="details">{t.total}</p>
           </ElementObject>
@@ -329,6 +310,7 @@ const PanelCityLife = ({ city }) => {
       {mainCityElement}
       {cultureElement}
       {transportElement}
+      {environmentElement}
       {healthElement}
       {servicesElement}
       {educationElement}
