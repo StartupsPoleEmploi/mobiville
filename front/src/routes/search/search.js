@@ -1,6 +1,9 @@
 import React, { lazy, memo } from 'react'
 import styled from 'styled-components'
 import { Typography } from '@material-ui/core'
+import { isEmpty } from 'lodash'
+import queryString from 'query-string'
+
 import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
@@ -8,7 +11,6 @@ import { MainLayout } from '../../components/main-layout'
 import { COLOR_PRIMARY } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { useWindowSize } from '../../common/hooks/window-size'
-import { paramUrlToObject } from '../../utils/url'
 import ErrorPage from '../error/ErrorPage'
 
 const StepBlock = styled(Typography)`
@@ -63,7 +65,7 @@ const SearchPage = () => {
   const index = ALL_STEPS.findIndex((f) => f.key === stepName)
   const history = useHistory()
   const location = useLocation()
-  const values = paramUrlToObject(location.search)
+  const values = queryString.parse(location.search)
   const isMobile = isMobileView(size)
 
   if (criterionsError) {
@@ -103,17 +105,13 @@ const SearchPage = () => {
       val = { ...values, ...newValues }
     }
 
-    val = {
-      ...val,
-      code_criterion: (val.code_city || []).concat(val.code_environment || []),
-    }
-
-    const params = []
+    const params = {}
     Object.entries(val).forEach(([key, value]) => {
-      params.push(`${key}=${value.join(',')}`)
+      if (isEmpty(value)) return
+      params[key] = value
     })
 
-    onNavigate(increase, `?${params.join('&')}`)
+    onNavigate(increase, `?${queryString.stringify(params)}`)
   }
 
   if (index === -1) {

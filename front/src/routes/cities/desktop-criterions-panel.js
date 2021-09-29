@@ -115,24 +115,26 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, onSubmit }) => {
       return
     }
 
-    const rome = paramsUrl?.code_rome?.[0] || ''
-    const region = paramsUrl?.code_region?.[0] || ''
+    const rome = paramsUrl.code_rome || ''
+    const region = paramsUrl.code_region || ''
 
     const values = []
     values.push({ name: 'rome', value: rome })
     values.push({ name: 'region', value: region })
 
-    if (criterions.criterions && paramsUrl?.code_criterion) {
+    if (paramsUrl.code_environment) {
       const environmentFound = environmentCriterions.find(
-        (c) => paramsUrl.code_criterion.indexOf(c.key) !== -1
+        (c) => paramsUrl.code_environment === c.key
       )
 
       if (environmentFound) {
         values.push({ name: 'environment', value: environmentFound.key })
       }
+    }
 
+    if (paramsUrl.code_city) {
       const cityFound = cityCriterions.find(
-        (c) => paramsUrl.code_criterion.indexOf(c.key) !== -1
+        (c) => paramsUrl.code_city === c.key
       )
 
       if (cityFound) {
@@ -143,11 +145,7 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, onSubmit }) => {
     values.forEach(({ name, value }) =>
       setValue(name, value, { shouldDirty: true })
     )
-  }, [paramsUrl, criterions])
-
-  if (!criterions?.criterions) {
-    return <div />
-  }
+  }, [paramsUrl, criterions, environmentCriterions, cityCriterions])
 
   return (
     <EmptySpace>

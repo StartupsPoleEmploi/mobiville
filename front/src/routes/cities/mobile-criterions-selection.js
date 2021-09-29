@@ -74,14 +74,11 @@ const MobileCriterionsSelection = ({
 
   const [selectedRegion, setSelectedRegion] = useState(paramsUrl.code_region)
   const [selectedCitySize, setSelectedCitySize] = useState(
-    cityCriterions.find(({ key }) =>
-      (paramsUrl.code_criterion || []).includes(key)
-    )?.key || ''
+    cityCriterions.find(({ key }) => paramsUrl.code_city === key)?.key || ''
   )
   const [selectedEnvironment, setSelectedEnvironment] = useState(
-    environmentCriterions.find(({ key }) =>
-      (paramsUrl.code_criterion || []).includes(key)
-    )?.key || ''
+    environmentCriterions.find(({ key }) => paramsUrl.code_environment === key)
+      ?.key || ''
   )
 
   const onValidate = () => {

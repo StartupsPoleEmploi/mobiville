@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
+import queryString from 'query-string'
+
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
-import { paramUrlToObject } from '../../utils/url'
 import MobileCriterionsPanel from './mobile-criterions-panel'
 import CityItem from './city-item'
 import { useWindowSize } from '../../common/hooks/window-size'
@@ -44,14 +45,14 @@ const CitiesPage = () => {
   const size = useWindowSize()
   const location = useLocation()
   const history = useHistory()
-  const [params, setParams] = useState(paramUrlToObject(location.search))
+  const [params, setParams] = useState(queryString.parse(location.search))
   const [offset, setOffset] = useState(0)
   const [showMobilePanel, setShowMobileCriterionsSelection] = useState(false)
 
   useEffect(() => {
     if (location.search) {
       localStorage.setItem('lastSearch', location.search)
-      setParams(paramUrlToObject(location.search))
+      setParams(queryString.parse(location.search))
     }
   }, [location])
 
@@ -95,7 +96,7 @@ const CitiesPage = () => {
     let url = `/city/${city.insee_com}-${city.nom_comm}`
 
     if (params && params.code_rome) {
-      url += `?code_rome=${params.code_rome.join(',')}`
+      url += `?code_rome=${params.code_rome}`
     }
 
     return url
@@ -105,18 +106,13 @@ const CitiesPage = () => {
     const data = {
       code_rome: [params.code_rome || params.codeRomes[0].key],
       code_region: [region],
+      code_city: city,
+      code_environment: environment,
     }
 
-    if (city || environment) {
-      data.code_criterion = [[city, environment].filter((c) => c).join(',')]
-    }
-
-    const pushParams = Object.entries(data).map(
-      ([key, value]) => `${key}=${value.join(',')}`
-    )
     history.push({
       pathname: '/cities',
-      search: `?${pushParams.join('&')}&n=${new Date().getTime()}`,
+      search: queryString.stringify(data),
     })
   }
 

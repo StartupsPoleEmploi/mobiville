@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import queryString from 'query-string'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
-import { objectToQueryString, paramUrlToObject } from '../../utils/url'
 import { CityHeader } from './city-header'
 import PanelCityJobs from './panel-city-jobs'
 import PanelCityLife from './panel-city-life'
@@ -39,12 +39,12 @@ const CityPage = ({ location: { pathname, search } }) => {
   ]
   const { onLoadCity, isLoadingCity, city } = useCities()
   const { insee, place } = useParams()
-  const params = paramUrlToObject(search)
+  const params = queryString.parse(search)
   const size = useWindowSize()
   const history = useHistory()
 
   const [jobSearchValue, setJobSearchValue] = useState(
-    decodeURIComponent(params.jobSearch?.[0] || '')
+    decodeURIComponent(params.jobSearch || '')
   )
 
   useEffect(() => {
@@ -56,11 +56,11 @@ const CityPage = ({ location: { pathname, search } }) => {
 
   useEffect(() => {
     if (!jobSearchValue) return
-    if (jobSearchValue === decodeURIComponent(params.jobSearch?.[0])) return
+    if (jobSearchValue === decodeURIComponent(params.jobSearch)) return
 
     history.replace({
       pathname,
-      search: objectToQueryString({ ...params, jobSearch: jobSearchValue }),
+      search: queryString.stringify({ ...params, jobSearch: jobSearchValue }),
     })
   }, [history, jobSearchValue, params, pathname])
 

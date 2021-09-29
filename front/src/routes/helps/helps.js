@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { orderBy } from 'lodash'
 import { Link } from 'react-router-dom'
+import queryString from 'query-string'
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { MainLayout } from '../../components/main-layout'
@@ -15,7 +16,6 @@ import {
 } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { ucFirstOnly } from '../../utils/utils'
-import { objectToQueryString, paramUrlToObject } from '../../utils/url'
 
 const Title = styled.h1`
   color: ${COLOR_TEXT_PRIMARY};
@@ -279,13 +279,12 @@ const HelpsPage = ({ location: { search } }) => {
     onLoadPreviews()
   }, [])
 
-  const projectParam = decodeURI(paramUrlToObject(search).project?.[0] || '')
-  const situationParam = decodeURI(
-    paramUrlToObject(search).situation?.[0] || ''
-  )
+  const parsedQueryString = queryString.parse(search)
 
-  const project = CATEGORIES.find(({ key }) => projectParam === key) || null
-  const situation = SITUATIONS.find(({ key }) => situationParam === key) || null
+  const project =
+    CATEGORIES.find(({ key }) => parsedQueryString.project === key) || null
+  const situation =
+    SITUATIONS.find(({ key }) => parsedQueryString.situation === key) || null
 
   let list = previews.filter((preview) => {
     if (situation) {
@@ -335,7 +334,7 @@ const HelpsPage = ({ location: { search } }) => {
               <CategoryTag
                 key={c.text}
                 selected={project && c.key === project.key}
-                to={`/aides${objectToQueryString({
+                to={`/aides?${queryString.stringify({
                   project: selected ? '' : c.key,
                   situation: situation?.key,
                 })}`}
@@ -352,7 +351,7 @@ const HelpsPage = ({ location: { search } }) => {
               <Tag
                 key={c.text}
                 selected={selected}
-                to={`/aides${objectToQueryString({
+                to={`/aides?${queryString.stringify({
                   project: project?.key,
                   situation: selected ? '' : c.key,
                 })}`}
