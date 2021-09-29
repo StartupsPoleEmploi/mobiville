@@ -83,13 +83,11 @@ const MobileCriterionsSelection = ({
     return foundLabel
   }
 
-  const tagsList = Object.values(criterions)
-    .reduce((prev, criterionsArray) => [...prev, ...criterionsArray], [])
-    .reduce((prev, criterion) => {
-      const searchValue = findCriterionsValue(criterion)
-      if (!searchValue || prev.includes(searchValue)) return prev
-      return prev.concat(searchValue)
-    }, [])
+  const tagsList = Object.values(criterions).reduce((prev, criterion) => {
+    const searchValue = findCriterionsValue(criterion)
+    if (!searchValue || prev.includes(searchValue)) return prev
+    return prev.concat(searchValue)
+  }, [])
 
   return (
     <EmptySpace>

@@ -53,8 +53,8 @@ const Step5Component = ({ onNext, values }) => {
     if (
       r &&
       values &&
-      values.code_criterion &&
-      values.code_criterion.indexOf(r.key) !== -1
+      values.code_city &&
+      values.code_city.indexOf(r.key) !== -1
     ) {
       style.backgroundColor = '#5EECE8'
     }
@@ -75,7 +75,7 @@ const Step5Component = ({ onNext, values }) => {
           .filter((f) => f.tag === 'environment')
           .map((c) => {
             let available = true
-            const codeCity = values.code_city?.[0] || ''
+            const codeCity = values.code_city || ''
             const isTooBigForCountrySide =
               codeCity.includes(BIG_CITY) || codeCity.includes(MEDIUM_CITY)
 
@@ -84,10 +84,10 @@ const Step5Component = ({ onNext, values }) => {
               available = false
             } else if (values.code_region && values.code_region.length) {
               const reg = criterions.regions.find(
-                (r) => r.id === values.code_region[0]
+                (r) => r.id === values.code_region
               )
               if (reg) {
-                const allCrit = reg.criterions[values.code_rome[0]] || []
+                const allCrit = reg.criterions[values.code_rome] || []
                 if (allCrit.indexOf(c.key) === -1) {
                   available = false
                 }

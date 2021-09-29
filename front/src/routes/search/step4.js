@@ -58,8 +58,8 @@ const Step4Component = ({ onNext, values }) => {
     if (
       r &&
       values &&
-      values.code_criterion &&
-      values.code_criterion.indexOf(r.key) !== -1
+      values.code_city &&
+      values.code_city.indexOf(r.key) !== -1
     ) {
       style.border = `2px solid ${COLOR_PRIMARY}`
     }
@@ -82,10 +82,11 @@ const Step4Component = ({ onNext, values }) => {
             let available = true
             if (values.code_region && values.code_region.length) {
               const reg = criterions.regions.find(
-                (r) => r.id === values.code_region[0]
+                (r) => r.id === values.code_region
               )
+
               if (reg) {
-                const allCrit = reg.criterions[values.code_rome[0]] || []
+                const allCrit = reg.criterions[values.code_rome] || []
                 if (allCrit.indexOf(c.key) === -1) {
                   available = false
                 }

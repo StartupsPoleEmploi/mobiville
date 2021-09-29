@@ -204,8 +204,8 @@ const PanelCityJobs = ({ city, rome, searchValue, setSearchValue }) => {
 
   useEffect(() => {
     if (city && rome && rome.length) {
-      onSearchProfessions({ code_rome: rome, insee: [city.insee_com] })
-      onSearchInfosTravail({ code_rome: rome[0], insee: city.insee_com }).then(
+      onSearchProfessions({ code_rome: [rome], insee: [city.insee_com] })
+      onSearchInfosTravail({ code_rome: rome, insee: city.insee_com }).then(
         setInfosTravail
       )
     }
@@ -216,7 +216,7 @@ const PanelCityJobs = ({ city, rome, searchValue, setSearchValue }) => {
   let romeLabel = ''
 
   if (criterions && criterions.codeRomes && rome && rome.length) {
-    const finded = criterions.codeRomes.find((c) => c.key === rome[0])
+    const finded = criterions.codeRomes.find((c) => c.key === rome)
     if (finded) {
       romeLabel = finded.label.toLowerCase()
 
