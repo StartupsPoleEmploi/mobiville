@@ -44,14 +44,14 @@ const Step3Component = ({ onNext, values }) => {
   }
 
   useEffect(() => {
-    if (values && values.code_region && values.code_region.length) {
-      setRegions([values.code_region])
+    if (values && values.codeRegion && values.codeRegion.length) {
+      setRegions([values.codeRegion])
     }
 
-    if (values.code_rome) {
+    if (values.codeRome) {
       setList(
         criterions.regions.filter(
-          (r) => r.criterions && r.criterions[values.code_rome]
+          (r) => r.criterions && r.criterions[values.codeRome]
         )
       )
     } else {

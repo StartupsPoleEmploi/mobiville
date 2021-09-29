@@ -92,15 +92,15 @@ const SearchPage = () => {
     let val = {}
 
     if (newValues.rome) {
-      val = { ...values, code_rome: [newValues.rome] }
+      val = { ...values, codeRome: [newValues.rome] }
     } else if (newValues.regions) {
-      val = { ...values, code_region: newValues.regions }
+      val = { ...values, codeRegion: newValues.regions }
     } else if (newValues.from) {
       val = { ...values, from: [newValues.from.id] }
     } else if (newValues.city) {
-      val = { ...values, code_city: [newValues.city] }
+      val = { ...values, codeCity: [newValues.city] }
     } else if (newValues.environment) {
-      val = { ...values, code_environment: [newValues.environment] }
+      val = { ...values, codeEnvironment: [newValues.environment] }
     } else {
       val = { ...values, ...newValues }
     }

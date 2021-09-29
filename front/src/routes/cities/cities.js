@@ -57,7 +57,7 @@ const CitiesPage = () => {
   }, [location])
 
   useEffect(() => {
-    if (params && params.code_rome) {
+    if (params && params.codeRome) {
       onSearch({ ...params, sortBy: sortCriterions })
     }
   }, [params, sortCriterions])
@@ -95,8 +95,8 @@ const CitiesPage = () => {
   const getCityUrl = (city) => {
     let url = `/city/${city.insee_com}-${city.nom_comm}`
 
-    if (params && params.code_rome) {
-      url += `?code_rome=${params.code_rome}`
+    if (params && params.codeRome) {
+      url += `?codeRome=${params.codeRome}`
     }
 
     return url
@@ -104,10 +104,10 @@ const CitiesPage = () => {
 
   const onSubmit = ({ city, environment, region }) => {
     const data = {
-      code_rome: [params.code_rome || params.codeRomes[0].key],
-      code_region: [region],
-      code_city: city,
-      code_environment: environment,
+      codeRome: [params.codeRome || params.codeRomes[0].key],
+      codeRegion: [region],
+      codeCity: city,
+      codeEnvironment: environment,
     }
 
     history.push({

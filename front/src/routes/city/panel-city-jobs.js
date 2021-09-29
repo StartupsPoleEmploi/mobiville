@@ -204,8 +204,8 @@ const PanelCityJobs = ({ city, rome, searchValue, setSearchValue }) => {
 
   useEffect(() => {
     if (city && rome && rome.length) {
-      onSearchProfessions({ code_rome: [rome], insee: [city.insee_com] })
-      onSearchInfosTravail({ code_rome: rome, insee: city.insee_com }).then(
+      onSearchProfessions({ codeRome: [rome], insee: [city.insee_com] })
+      onSearchInfosTravail({ codeRome: rome, insee: city.insee_com }).then(
         setInfosTravail
       )
     }
