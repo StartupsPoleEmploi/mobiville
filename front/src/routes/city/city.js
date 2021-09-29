@@ -88,7 +88,7 @@ const CityPage = ({ location: { pathname, search } }) => {
             {tabKey === 'job' && (
               <PanelCityJobs
                 city={city}
-                rome={params && params.code_rome ? params.code_rome : null}
+                rome={params && params.codeRome ? params.codeRome : null}
                 searchValue={jobSearchValue}
                 setSearchValue={setJobSearchValue}
               />

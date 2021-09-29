@@ -115,16 +115,16 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, onSubmit }) => {
       return
     }
 
-    const rome = paramsUrl.code_rome || ''
-    const region = paramsUrl.code_region || ''
+    const rome = paramsUrl.codeRome || ''
+    const region = paramsUrl.codeRegion || ''
 
     const values = []
     values.push({ name: 'rome', value: rome })
     values.push({ name: 'region', value: region })
 
-    if (paramsUrl.code_environment) {
+    if (paramsUrl.codeEnvironment) {
       const environmentFound = environmentCriterions.find(
-        (c) => paramsUrl.code_environment === c.key
+        (c) => paramsUrl.codeEnvironment === c.key
       )
 
       if (environmentFound) {
@@ -132,10 +132,8 @@ const DesktopCriterionsPanel = ({ paramsUrl, total, onSubmit }) => {
       }
     }
 
-    if (paramsUrl.code_city) {
-      const cityFound = cityCriterions.find(
-        (c) => paramsUrl.code_city === c.key
-      )
+    if (paramsUrl.codeCity) {
+      const cityFound = cityCriterions.find((c) => paramsUrl.codeCity === c.key)
 
       if (cityFound) {
         values.push({ name: 'city', value: cityFound.key })

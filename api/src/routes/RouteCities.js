@@ -22,10 +22,10 @@ export default class RouteCities extends Route {
    */
   @Route.Post({
     bodyType: Types.object().keys({
-      code_city: Types.string(),
-      code_region: Types.string(),
-      code_environment: Types.string(),
-      code_rome: Types.string(),
+      codeCity: Types.string(),
+      codeRegion: Types.string(),
+      codeEnvironment: Types.string(),
+      codeRome: Types.string(),
       from: Types.array().type(Types.string()),
       index: Types.number(),
       sortBy: Types.string(),
@@ -33,10 +33,10 @@ export default class RouteCities extends Route {
   })
   async search(ctx) {
     const {
-      code_city: codeCity,
-      code_region: codeRegion,
-      code_environment: codeEnvironment,
-      code_rome: codeRome,
+      codeCity,
+      codeRegion,
+      codeEnvironment,
+      codeRome,
       index = 0,
       sortBy,
     } = this.body(ctx)

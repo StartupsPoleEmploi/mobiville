@@ -72,12 +72,12 @@ const MobileCriterionsSelection = ({
   const { environmentCriterions, cityCriterions, regionCriterions } =
     useCities()
 
-  const [selectedRegion, setSelectedRegion] = useState(paramsUrl.code_region)
+  const [selectedRegion, setSelectedRegion] = useState(paramsUrl.codeRegion)
   const [selectedCitySize, setSelectedCitySize] = useState(
-    cityCriterions.find(({ key }) => paramsUrl.code_city === key)?.key || ''
+    cityCriterions.find(({ key }) => paramsUrl.codeCity === key)?.key || ''
   )
   const [selectedEnvironment, setSelectedEnvironment] = useState(
-    environmentCriterions.find(({ key }) => paramsUrl.code_environment === key)
+    environmentCriterions.find(({ key }) => paramsUrl.codeEnvironment === key)
       ?.key || ''
   )
 

@@ -350,7 +350,7 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
               </b>
             </PreviewItem>
             <HeaderLink
-              to={`/aides?code_region=${city['region.new_code']}&insee_com=${city.insee_com}`}
+              to={`/aides?codeRegion=${city['region.new_code']}&insee_com=${city.insee_com}`}
             >
               <img src="/icons/superhero.svg" alt="superhero" />
               <PreviewItem>Découvrir les aides</PreviewItem>

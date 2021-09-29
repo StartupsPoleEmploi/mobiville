@@ -219,7 +219,7 @@ const RomeList = () => {
               {Object.keys(dataByCategory[categoryLetter]).map((index) => (
                 <Li key={dataByCategory[categoryLetter][index].rome}>
                   <Link
-                    to={`/rechercher/region?code_rome=${dataByCategory[categoryLetter][index].rome}`}
+                    to={`/rechercher/region?codeRome=${dataByCategory[categoryLetter][index].rome}`}
                     title={dataByCategory[categoryLetter][index].ogrs.join(
                       ', '
                     )}
