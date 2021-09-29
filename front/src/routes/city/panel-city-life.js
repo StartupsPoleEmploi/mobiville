@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+import { IconButton, Tooltip } from '@material-ui/core'
+import InfoIcon from '@material-ui/icons/Info'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 import {
@@ -234,7 +236,14 @@ const PanelCityLife = ({ city }) => {
         {remarkableGardens && (
           <ElementLine>
             <IconImg src={`/icons/${remarkableGardens.icon}`} alt="" />
-            <p className="title">Jardins remarquables</p>
+            <p className="title">
+              <span>Jardins remarquables</span>
+              <Tooltip title="Ce label désigne les parcs et jardins d'exceptions">
+                <IconButton>
+                  <InfoIcon />
+                </IconButton>
+              </Tooltip>
+            </p>
             <p className="details">{remarkableGardens.total}</p>
           </ElementLine>
         )}
