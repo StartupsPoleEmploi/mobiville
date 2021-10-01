@@ -280,15 +280,25 @@ const HelpsPage = ({ location: { search } }) => {
   }, [])
 
   const parsedQueryString = queryString.parse(search)
+  const parsedSituations = parsedQueryString.situation
+    ? typeof parsedQueryString.situation === 'string'
+      ? [parsedQueryString.situation]
+      : parsedQueryString.situation
+    : []
 
   const project =
     CATEGORIES.find(({ key }) => parsedQueryString.project === key) || null
-  const situation =
-    SITUATIONS.find(({ key }) => parsedQueryString.situation === key) || null
+  const situations = SITUATIONS.filter(({ key }) =>
+    parsedSituations.includes(key)
+  )
 
   let list = previews.filter((preview) => {
-    if (situation) {
-      if (!preview.who.toLowerCase().includes(situation.text.toLowerCase())) {
+    if (situations.length) {
+      if (
+        !situations.every(({ text }) =>
+          preview.who.toLowerCase().includes(text.toLowerCase())
+        )
+      ) {
         return false
       }
     }
@@ -304,7 +314,7 @@ const HelpsPage = ({ location: { search } }) => {
     return true
   })
 
-  if (!situation && !project) {
+  if (!situations.length && !project) {
     list = orderBy(previews, ['count_vue'], ['desc']).slice(0, 4)
   }
 
@@ -336,7 +346,7 @@ const HelpsPage = ({ location: { search } }) => {
                 selected={project && c.key === project.key}
                 to={`/aides?${queryString.stringify({
                   project: selected ? '' : c.key,
-                  situation: situation?.key,
+                  situation: situations.map(({ key }) => key),
                 })}`}
               >
                 <img src={c.icon} alt={c.text} />
@@ -346,14 +356,17 @@ const HelpsPage = ({ location: { search } }) => {
           })}
           <SubTitle>Ma situation</SubTitle>
           {SITUATIONS.map((c) => {
-            const selected = situation && c.key === situation.key
+            const selected = situations.some(({ key }) => key === c.key)
+            const situationsForLink = selected
+              ? situations.filter(({ key }) => key !== c.key)
+              : situations.concat({ key: c.key })
             return (
               <Tag
                 key={c.text}
                 selected={selected}
                 to={`/aides?${queryString.stringify({
                   project: project?.key,
-                  situation: selected ? '' : c.key,
+                  situation: situationsForLink.map(({ key }) => key),
                 })}`}
               >
                 <p>{c.text}</p>
@@ -363,7 +376,7 @@ const HelpsPage = ({ location: { search } }) => {
         </CategoryPanel>
         <HelpsPanel isMobile={isMobileView(size)}>
           <TitleHelps isMobile={isMobileView(size)}>
-            {project || situation
+            {project || situations.length
               ? 'Mes aides disponibles'
               : 'Les aides les plus consultées'}
           </TitleHelps>
