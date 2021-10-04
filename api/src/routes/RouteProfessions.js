@@ -29,17 +29,17 @@ export default class RouteProfessions extends Route {
   }
 
   /**
-   * @body {[string]} [code_rome]
+   * @body {[string]} [codeRome]
    * @body {[string]} [insee]
    */
   @Route.Post({
     bodyType: Types.object().keys({
-      code_rome: Types.array().type(Types.string()).required(),
+      codeRome: Types.array().type(Types.string()).required(),
       insee: Types.array().type(Types.string()).required(),
     }),
   })
   async search(ctx) {
-    const { code_rome: codeRome, insee } = this.body(ctx)
+    const { codeRome, insee } = this.body(ctx)
 
     const result = await searchJob({
       codeRome,
@@ -54,17 +54,17 @@ export default class RouteProfessions extends Route {
   }
 
   /**
-   * @body {string} code_rome
+   * @body {string} codeRome
    * @body {string} insee
    */
   @Route.Post({
     bodyType: Types.object().keys({
-      code_rome: Types.string().required(),
+      codeRome: Types.string().required(),
       insee: Types.string().required(),
     }),
   })
   async infosTravail(ctx) {
-    const { code_rome, insee } = this.body(ctx)
+    const { codeRome, insee } = this.body(ctx)
 
     //https://dares.travail-emploi.gouv.fr/donnees/la-nomenclature-des-familles-professionnelles-fap-2009
 
@@ -76,7 +76,7 @@ export default class RouteProfessions extends Route {
       }),
       this.model.models.tensions.findOne({
         where: {
-          rome: code_rome,
+          rome: codeRome,
         },
         raw: true,
       }),
@@ -90,11 +90,11 @@ export default class RouteProfessions extends Route {
       infosTravail({
         codeProfession: pcs.pcs,
         codeRegion: city.code_dept,
-        codeRome: code_rome,
+        codeRome,
       }),
       infosTensionTravail({
         bassinId,
-        codeRome: code_rome,
+        codeRome,
       }),
     ])
 
