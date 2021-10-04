@@ -32,24 +32,18 @@ const SubTitle = styled.p`
 `
 
 const Header = styled.div`
-  height: 216px;
-  margin-bottom: 32px;
+  height: 246px;
   background: white;
+  margin: auto;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  max-width: 800px;
+`
 
-  > div {
-    display: flex;
-    align-items: center;
-    max-width: 800px;
-
-    img {
-      height: 216px;
-      margin-right: 64px;
-    }
-
-    p {
-      font-weight: bold;
-    }
-  }
+const HeaderImg = styled.img`
+  height: 216px;
+  margin-right: 64px;
 `
 
 const Container = styled.div`
@@ -61,20 +55,12 @@ const Container = styled.div`
   align-items: flex-start;
 
   ${(props) =>
-    props.isMobile
-      ? `
+    props.isMobile &&
+    `
     display: block;
     margin: 0 0 64px 0;
     padding: 0;
-
-    > div {
-      width: 100%;
-      border-radius: 0;
-      box-shadow: none;
-      margin-right: 0;
-    }
-  `
-      : ''}
+  `}
 `
 
 const CategoryPanel = styled.div`
@@ -82,8 +68,10 @@ const CategoryPanel = styled.div`
   min-width: 424px;
   margin-right: 16px;
   background: #ffffff;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
-    0px 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: ${({ isMobile }) =>
+    !isMobile
+      ? `0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2)`
+      : ''};
   border-radius: 8px;
   padding: 16px 0 32px 16px;
 `
@@ -91,17 +79,12 @@ const CategoryPanel = styled.div`
 const HelpsPanel = styled.div`
   flex: 1;
   background: #ffffff;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
-    0px 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: ${({ isMobile }) =>
+    !isMobile
+      ? `0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2)`
+      : ''};
   border-radius: 8px;
-  padding: 24px 16px 32px 16px;
-
-  ${(props) =>
-    props.isMobile
-      ? `
-    padding: 0;
-  `
-      : ''}
+  padding: ${({ isMobile }) => (isMobile ? '0' : '24px 16px 32px 16px')};
 `
 
 const CategoryTag = styled(Link)`
@@ -143,7 +126,7 @@ const CategoryTag = styled(Link)`
 `
 
 const Tag = styled(Link)`
-  background: ${COLOR_GRAY};
+  background: ${({ isMobile }) => (isMobile ? COLOR_PRIMARY : COLOR_GRAY)};
   border-radius: 44px;
   padding: 8px;
   margin-right: 8px;
@@ -152,23 +135,12 @@ const Tag = styled(Link)`
   cursor: pointer;
 
   p {
-    color: ${COLOR_TEXT_PRIMARY};
+    color: ${({ isMobile }) => (isMobile ? '#fff' : COLOR_TEXT_PRIMARY)};
     font-weight: 500;
     font-size: 12px;
     margin: 0;
     padding: 0;
   }
-
-  ${(props) =>
-    props.selected
-      ? `
-    background: ${COLOR_PRIMARY};
-
-    p {
-      color: white;
-    }
-  `
-      : ''}
 `
 
 const TitleHelps = styled.div`
@@ -318,24 +290,24 @@ const HelpsPage = ({ location: { search } }) => {
     list = orderBy(previews, ['count_vue'], ['desc']).slice(0, 4)
   }
 
+  const isMobile = isMobileView(size)
+
   return (
     <MainLayout>
-      {!isMobileView(size) && (
+      {!isMobile && (
         <Header>
-          <div className="wrapper">
-            <img src="/Generique_Aides.png" alt="help" />
-            <div className="text">
-              <h1>
-                Vous avez besoin d{"'"}
-                aide pour votre projet de mobilité ?
-              </h1>
-              <p>Découvrez les solutions pour accélérer votre projet</p>
-            </div>
+          <HeaderImg src="/Generique_Aides.png" alt="help" />
+          <div className="text">
+            <h1>
+              Vous avez besoin d{"'"}
+              aide pour votre projet de mobilité ?
+            </h1>
+            <p>Découvrez les solutions pour accélérer votre projet</p>
           </div>
         </Header>
       )}
-      <Container isMobile={isMobileView(size)}>
-        <CategoryPanel>
+      <Container isMobile={isMobile}>
+        <CategoryPanel isMobile={isMobile}>
           <Title>Découvrez les aides</Title>
           <SubTitle>Quel est votre projet ?</SubTitle>
           {CATEGORIES.map((c) => {
@@ -374,8 +346,8 @@ const HelpsPage = ({ location: { search } }) => {
             )
           })}
         </CategoryPanel>
-        <HelpsPanel isMobile={isMobileView(size)}>
-          <TitleHelps isMobile={isMobileView(size)}>
+        <HelpsPanel isMobile={isMobile}>
+          <TitleHelps isMobile={isMobile}>
             {project || situations.length
               ? 'Mes aides disponibles'
               : 'Les aides les plus consultées'}
@@ -384,7 +356,7 @@ const HelpsPage = ({ location: { search } }) => {
             <Item
               key={item.id}
               to={`/aides/${item.slug}`}
-              ismobile={isMobileView(size) ? 'true' : 'false'}
+              ismobile={isMobile ? 'true' : 'false'}
             >
               <p className="first-title">{item.title}</p>
               <p className="second-title">{item.goal}</p>
