@@ -71,6 +71,11 @@ export default (sequelizeInstance) => {
       sourceKey: 'bassin_id',
     })
 
+    Model.hasMany(models.bassinsJobs, {
+      foreignKey: 'bassin_id',
+      sourceKey: 'bassin_id',
+    })
+
     return models
   }
 

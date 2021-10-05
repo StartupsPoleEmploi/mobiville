@@ -150,6 +150,10 @@ const CityItem = ({ city }) => {
           {city['region.new_name'] && (
             <Tag>{ucFirst(city['region.new_name'].toLowerCase())}</Tag>
           )}
+
+          {city['bassin.bassinsJobs.number'] && (
+            <Tag>{city['bassin.bassinsJobs.number']} offres</Tag>
+          )}
         </TagsBlock>
         <ViewMore>
           En savoir plus
