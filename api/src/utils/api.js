@@ -1,9 +1,11 @@
 import config from 'config'
 import axios from 'axios'
 import { ungzip } from 'node-gzip'
+import { decompress as decompressBZ2 } from 'bz2'
 import { csvToArrayJson } from './csv'
 import { readFile, readFileSync } from 'fs'
 import parser from 'xml2json'
+import parse from 'csv-parse'
 
 let romeLabelFile = null
 
@@ -171,6 +173,38 @@ export function getEquipmentsDatas() {
             resolve(JSON.parse(data.toString()))
           })
           .catch(err)
+      }
+    )
+  })
+}
+
+export function getBassinJobsCount() {
+  return new Promise((resolve, reject) => {
+    readFile(
+      __dirname +
+        '/../assets/datas/mobiville_bassin_offre_full_202109290200.bz2',
+      (err, bufferData) => {
+        if (err) return reject(err)
+
+        let csvData
+        try {
+          const csvDataUIntArray = decompressBZ2(bufferData)
+          csvData = new TextDecoder().decode(csvDataUIntArray)
+        } catch (err) {
+          return reject(err)
+        }
+        parse(
+          csvData,
+          {
+            skip_empty_lines: true,
+            delimiter: ';',
+            trim: true,
+          },
+          (err, output) => {
+            if (err) return reject(err)
+            resolve(output)
+          }
+        )
       }
     )
   })

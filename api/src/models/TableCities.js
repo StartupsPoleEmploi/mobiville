@@ -116,17 +116,26 @@ export default (sequelizeInstance, Model) => {
             {
               attributes: [],
               model: Model.models.tensions,
-              require: true,
+              required: true,
               where: {
                 rome: codeRome,
               },
               order: [['ind_t', 'desc']],
             },
+            {
+              attributes: ['number'],
+              model: Model.models.bassinsJobs,
+              required: false,
+              where: {
+                rome_id: codeRome,
+              },
+              order: [['number', 'desc']],
+            },
           ],
         },
         {
           model: Model.models.regions,
-          require: true,
+          required: true,
           ...whereRegion,
         },
       ],
@@ -222,7 +231,7 @@ export default (sequelizeInstance, Model) => {
       include: [
         {
           model: Model.models.regions,
-          require: true,
+          required: true,
         },
       ],
       raw: true,
