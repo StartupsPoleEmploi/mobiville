@@ -86,26 +86,40 @@ export default class RouteProfessions extends Route {
 
     if (!bassinId || !pcs) return this.sendOk(ctx, null)
 
-    const [infosResult, statsResult] = await Promise.all([
-      infosTravail({
-        codeProfession: pcs.pcs,
-        codeRegion: city.code_dept,
-        codeRome,
-      }),
-      infosTensionTravail({
-        bassinId,
-        codeRome,
-      }),
-    ])
+    const [infosResult, { bassin: bassinStatsResult, dept: deptStatsResult }] =
+      await Promise.all([
+        infosTravail({
+          codeProfession: pcs.pcs,
+          codeDept: city.code_dept,
+          codeRome,
+        }),
+        infosTensionTravail({
+          bassinId,
+          codeRome,
+          codeDept: city.code_dept,
+        }),
+      ]).catch((err) => {
+        // A better handling of errors should be included, but for now we’ll do with just not screwing the whole app
+        // as this previously did
+        console.error(err)
+        return [null, { bassin: null, dept: null }]
+      })
 
-    let tension = null
+    const bassinTension =
+      (bassinStatsResult &&
+        bassinStatsResult.result &&
+        bassinStatsResult.result.records &&
+        bassinStatsResult.result.records[0] &&
+        bassinStatsResult.result.records[0].TENSION_RATIO) ||
+      null
 
-    if (statsResult && statsResult.result && statsResult.result.records) {
-      const found = statsResult.result.records[0]
-      if (found) {
-        tension = found.TENSION_RATIO || null
-      }
-    }
+    const deptTension =
+      (deptStatsResult &&
+        deptStatsResult.result &&
+        deptStatsResult.result.records &&
+        deptStatsResult.result.records[0] &&
+        deptStatsResult.result.records[0].TENSION_RATIO) ||
+      null
 
     let min = null
     let max = null
@@ -123,7 +137,8 @@ export default class RouteProfessions extends Route {
     this.sendOk(ctx, {
       min,
       max,
-      tension,
+      bassinTension,
+      deptTension,
     })
   }
 }
