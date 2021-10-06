@@ -211,6 +211,9 @@ const PanelCityJobs = ({ city, rome, searchValue, setSearchValue }) => {
     }
   }, [city])
 
+  const bassinTension = infosTravail?.bassinTension
+  const deptTension = infosTravail?.deptTension
+
   const contractCountObject = {}
   const durationCountObject = {}
   let romeLabel = ''
@@ -325,11 +328,16 @@ const PanelCityJobs = ({ city, rome, searchValue, setSearchValue }) => {
               Statistique pour {romeLabel} à {ucFirstOnly(city.nom_comm)}
             </StatistiqueTitleLayout>
             <StatsContainer>
-              {infosTravail?.tension && (
+              {(bassinTension || deptTension) && (
                 <StatsItem>
                   <div>
                     <img src="/icons/trending-up.svg" alt="" />
-                    <p>{infosTravail.tension} offres pour 10 demandeurs</p>
+                    <p>
+                      {bassinTension || deptTension} offres pour 10 demandeurs{' '}
+                      {bassinTension
+                        ? 'dans ce bassin d’emploi'
+                        : 'dans ce département'}
+                    </p>
                   </div>
                 </StatsItem>
               )}
