@@ -5,7 +5,13 @@ const citiesCron = async (env) => {
   console.log('START CRONS : bassinsJobs')
 
   const loadAndSync = async () =>
-    getBassinJobsCount().then((data) => env.models.bassinsJobs.sync(data))
+    getBassinJobsCount()
+      .then((data) => {
+        console.log('Now starting sync - bassinsJobs')
+        env.models.bassinsJobs.sync(data)
+        console.log('sync finished - bassinsJobs')
+      })
+      .catch((err) => console.error('Error syncing bassinsJobs', err))
 
   // check day at midnight
   const cronJob = new CronJob('0 0 * * * *', loadAndSync)
