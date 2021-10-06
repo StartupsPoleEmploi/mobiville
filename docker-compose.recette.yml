@@ -15,6 +15,8 @@ services:
     image: registry.beta.pole-emploi.fr/mobiville/mobiville:api
     environment:
       - NODE_ENV=recette
+    volumes:
+      - './api/src/assets/datas/depuis_datalake_mockdata/:/mnt/datalakepe/depuis_datalake'
     deploy:
       resources:
         limits:

@@ -19,6 +19,8 @@ services:
     image: registry.beta.pole-emploi.fr/mobiville/mobiville:api
     environment:
       - NODE_ENV=production
+    volumes:
+      - '/mnt/datalakepe/:/mnt/datalakepe/'
     deploy:
       resources:
         limits:

@@ -3,7 +3,7 @@ import axios from 'axios'
 import { ungzip } from 'node-gzip'
 import { decompress as decompressBZ2 } from 'bz2'
 import { csvToArrayJson } from './csv'
-import { readFile, readFileSync } from 'fs'
+import { readFile, readFileSync, statSync, readdirSync } from 'fs'
 import parser from 'xml2json'
 import parse from 'csv-parse'
 
@@ -179,10 +179,22 @@ export function getEquipmentsDatas() {
 }
 
 export function getBassinJobsCount() {
+  const fromDatalakeDir = '/mnt/datalakepe/depuis_datalake'
+  const files = readdirSync(fromDatalakeDir)
+
+  if (files.length === 0) return Promise.reject()
+
+  const filesSortedByDate = files
+    .map((fileName) => ({
+      name: fileName,
+      time: statSync(`${fromDatalakeDir}/${fileName}`).mtime.getTime(),
+    }))
+    .sort((a, b) => b.time - a.time)
+    .map((file) => file.name)
+
   return new Promise((resolve, reject) => {
     readFile(
-      __dirname +
-        '/../assets/datas/mobiville_bassin_offre_full_202109290200.bz2',
+      `${fromDatalakeDir}/${filesSortedByDate[0]}`,
       (err, bufferData) => {
         if (err) return reject(err)
 
@@ -193,6 +205,7 @@ export function getBassinJobsCount() {
         } catch (err) {
           return reject(err)
         }
+
         parse(
           csvData,
           {
