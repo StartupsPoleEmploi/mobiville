@@ -14,6 +14,7 @@ const Search = lazy(() => import('./search/search'))
 const Account = lazy(() => import('./account/account'))
 const HelpDetailsPage = lazy(() => import('./help-details/help-details'))
 const FAQ = lazy(() => import('./faq/faq'))
+const Accessibility = lazy(() => import('./accessibility/Accessibility'))
 const Legal = lazy(() => import('./legal/legal'))
 const MobilityGuide = lazy(() => import('./mobility-guide/MobilityGuide'))
 const RomeList = lazy(() => import('./rome-list/RomeList'))
@@ -37,6 +38,7 @@ export const Routes = () => (
         <Route exact path="/compte" component={Account} />
         <Route exact path="/faq" component={FAQ} />
         <Route exact path="/legal" component={Legal} />
+        <Route exact path="/accessibility" component={Accessibility} />
       </Switch>
     </Router>
   </Suspense>
