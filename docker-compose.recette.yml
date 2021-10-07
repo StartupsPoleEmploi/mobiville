@@ -16,7 +16,7 @@ services:
     environment:
       - NODE_ENV=recette
     volumes:
-      - './api/src/assets/datas/depuis_datalake_mockdata/:/mnt/datalakepe/depuis_datalake'
+      - '/mnt/datalakepe/:/mnt/datalakepe/'
     deploy:
       resources:
         limits:
