@@ -81,6 +81,9 @@ export const Footer = () => {
               <CustomLink to="/faq">FAQ</CustomLink>
             </Item>
             <Item>
+              <CustomLink to="/accessibility">Accessibilité</CustomLink>
+            </Item>
+            <Item>
               <a href="/stats" target="_blank" rel="noreferrer">
                 Statistiques
               </a>
