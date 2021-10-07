@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { Typography } from '@material-ui/core'
+import { Helmet } from 'react-helmet'
+
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { MainLayout } from '../../components/main-layout'
@@ -125,6 +127,13 @@ const HelpDetailsPage = () => {
     <MainLayout>
       {help && (
         <>
+          <Helmet>
+            <title>{help.title} - Mobiville</title>
+            <meta
+              name="description"
+              content="Cette aide va vous permettre d'aborder votre projet de mobilité plus sereinement"
+            />
+          </Helmet>
           <Header isMobile={isMobile}>
             <H1 isMobile={isMobile}>{help.title}</H1>
           </Header>

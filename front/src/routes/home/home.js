@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
+
 import { MainLayout } from '../../components/main-layout'
 import {
   COLOR_TEXT_PRIMARY,
@@ -198,6 +200,13 @@ const HomePage = () => {
 
   return (
     <MainLayout footer topMobileMenu>
+      <Helmet>
+        <title>Mobiville - La Mobilité Facile en France</title>
+        <meta
+          name="description"
+          content="Mobiville est un service vous permettant de trouver la ville qui correspond à votre besoin ainsi que les aides financières à la mobilité."
+        />
+      </Helmet>
       <Block isMobile={isMobileView(size)}>
         <div className="wrapper">
           {isMobileView(size) && (

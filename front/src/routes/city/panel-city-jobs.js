@@ -12,9 +12,9 @@ import {
   TextField,
   InputAdornment,
 } from '@material-ui/core'
-
 import SearchIcon from '@material-ui/icons/Search'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+import { Helmet } from 'react-helmet'
 
 import { useProfessions } from '../../common/contexts/professionsContext'
 import {
@@ -323,6 +323,20 @@ const PanelCityJobs = ({ city, rome, searchValue, setSearchValue }) => {
     <MainLayout isMobileView={isMobileView(size)}>
       {rome && (
         <>
+          <Helmet>
+            <title>
+              Travailer dans {romeLabel} à {ucFirstOnly(city.nom_comm)} -
+              Mobiville
+            </title>
+            <meta
+              name="description"
+              content={`Explorez le marché de l'emploi de ${ucFirstOnly(
+                city.nom_comm
+              )} pour le métier de ${{
+                romeLabel,
+              }}. Offres disponibles, salaires, …`}
+            />
+          </Helmet>
           <StatistiqueLayout>
             <StatistiqueTitleLayout>
               Statistique pour {romeLabel} à {ucFirstOnly(city.nom_comm)}
