@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import queryString from 'query-string'
 import { Link, useHistory, useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
+
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
 import { CityHeader } from './city-header'
@@ -11,6 +13,7 @@ import PanelCityLife from './panel-city-life'
 import PanelCityLogement from './panel-city-logement'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
+import { ucFirstOnly } from '../../utils/utils'
 
 const ContentBlock = styled.div`
   margin: ${(props) => (props.isMobile ? '0' : '32px 0')};
@@ -79,6 +82,17 @@ const CityPage = ({ location: { pathname, search } }) => {
       {!isLoadingCity && !city && <p>Non trouvée</p>}
       {!isLoadingCity && city && (
         <>
+          <Helmet>
+            <title>
+              Pourquoi vivre à {ucFirstOnly(city.nom_comm)} - Mobiville
+            </title>
+            <meta
+              name="description"
+              content={`Toutes les informations clés sur la ville de ${ucFirstOnly(
+                city.nom_comm
+              )} : Cadre de vie, emploi, logement et bien plus.`}
+            />
+          </Helmet>
           <CityHeader
             tabList={tabList}
             tabSelected={tabKey}

@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import { orderBy } from 'lodash'
 import { Link } from 'react-router-dom'
 import queryString from 'query-string'
+import { Helmet } from 'react-helmet'
+
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { MainLayout } from '../../components/main-layout'
@@ -294,6 +296,14 @@ const HelpsPage = ({ location: { search } }) => {
 
   return (
     <MainLayout>
+      <Helmet>
+        <title>Liste des aides à la mobilité - Mobiville</title>
+        <meta
+          name="description"
+          content="Trouvez facilement les aides dont vous pouvez bénéficier pour votre projet de mobilité en France"
+        />
+      </Helmet>
+
       {!isMobile && (
         <Header>
           <HeaderImg src="/Generique_Aides.png" alt="help" />
