@@ -280,7 +280,7 @@ const PanelCityLogement = ({ city }) => {
                 </p>
                 <p className="details">
                   {city && city['region.average_delay_obtain_social_housing']
-                    ? `${city['region.average_delay_obtain_social_housing']} jours`
+                    ? `${city['region.average_delay_obtain_social_housing']} mois`
                     : 'A venir'}
                 </p>
               </ElementObject>
