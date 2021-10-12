@@ -13,6 +13,9 @@
     "sync:cities": "babel-node ./src/scripts/syncCities.js",
     "sync:regions": "babel-node ./src/scripts/syncRegions.js",
     "sync:professionsInTension": "babel-node ./src/scripts/syncProfessionsInTension.js",
+    "sync:romeOgrs": "babel-node ./src/scripts/syncRomeOgrs.js",
+    "sync:romeSkills": "babel-node ./src/scripts/syncRomeSkills.js",
+    "sync:tensionsPCS": "babel-node ./src/scripts/syncTensionsPCS.js",
     "sync:equipments": "babel-node ./src/scripts/syncEquipments.js",
     "sync:equipmentsSpecial": "babel-node ./src/scripts/syncSpecialEquipments.js"
   },

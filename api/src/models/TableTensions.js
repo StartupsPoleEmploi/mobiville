@@ -68,7 +68,7 @@ export default (sequelizeInstance, Model) => {
     return Model.jobList
   }
 
-  Model.syncDatas = async () => {
+  Model.syncPCS = async () => {
     console.log('sync datas')
 
     const result = await Model.findAll({

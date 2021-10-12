@@ -37,12 +37,6 @@ export default class App extends AppBase {
     db.migrations().then(() => {
       db.seeders().then(async () => {
         startCrons(this) // start crons
-
-        // Code that was previously started after a 5 seconds timer.
-        // TODO: Study if this is necessary on every launch (probably not)
-        await this.models.romeogrs.syncRomeOgrs()
-        await this.models.romeskills.syncRomeSkills()
-        await this.models.tensions.syncDatas()
       })
     })
 
