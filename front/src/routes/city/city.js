@@ -40,7 +40,7 @@ const CityPage = ({ location: { pathname, search } }) => {
     { key: 'life', label: 'Cadre de vie' },
     { key: 'tenement', label: 'Logement' },
   ]
-  const { onLoadCity, isLoadingCity, city } = useCities()
+  const { onLoadCity, isLoadingCity, city, criterions } = useCities()
   const { insee, place } = useParams()
   const params = queryString.parse(search)
   const size = useWindowSize()
@@ -76,6 +76,15 @@ const CityPage = ({ location: { pathname, search } }) => {
 
   const tabKey = place || 'job'
 
+  const codeRome = params?.codeRome || ''
+  let romeLabel = ''
+
+  if (criterions?.codeRomes && codeRome) {
+    const foundLabel =
+      criterions.codeRomes.find((c) => c.key === codeRome)?.label || ''
+    romeLabel = foundLabel.toLowerCase()
+  }
+
   return (
     <MainLayout menu={{ visible: !isMobileView(size) }}>
       {isLoadingCity && <p>Loading...</p>}
@@ -84,13 +93,25 @@ const CityPage = ({ location: { pathname, search } }) => {
         <>
           <Helmet>
             <title>
-              Pourquoi vivre à {ucFirstOnly(city.nom_comm)} - Mobiville
+              {tabKey === 'job'
+                ? `
+                  Travailler dans ${romeLabel} à ${ucFirstOnly(city.nom_comm)} -
+                  Mobiville`
+                : `Pourquoi vivre à ${ucFirstOnly(city.nom_comm)} - Mobiville`}
             </title>
             <meta
               name="description"
-              content={`Toutes les informations clés sur la ville de ${ucFirstOnly(
-                city.nom_comm
-              )} : Cadre de vie, emploi, logement et bien plus.`}
+              content={
+                tabKey === 'job'
+                  ? `Explorez le marché de l'emploi de ${ucFirstOnly(
+                      city.nom_comm
+                    )} pour le métier de ${{
+                      romeLabel,
+                    }}. Offres disponibles, salaires, …`
+                  : `Toutes les informations clés sur la ville de ${ucFirstOnly(
+                      city.nom_comm
+                    )} : Cadre de vie, emploi, logement et bien plus.`
+              }
             />
           </Helmet>
           <CityHeader
@@ -99,10 +120,11 @@ const CityPage = ({ location: { pathname, search } }) => {
             onSelectTab={setTagSelected}
           />
           <ContentBlock isMobile={isMobileView(size)}>
-            {tabKey === 'job' && (
+            {tabKey === 'job' && codeRome && (
               <PanelCityJobs
                 city={city}
-                rome={params && params.codeRome ? params.codeRome : null}
+                codeRome={codeRome}
+                romeLabel={romeLabel}
                 searchValue={jobSearchValue}
                 setSearchValue={setJobSearchValue}
               />

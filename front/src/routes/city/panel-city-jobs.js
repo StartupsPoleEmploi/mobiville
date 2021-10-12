@@ -14,7 +14,6 @@ import {
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
-import { Helmet } from 'react-helmet'
 
 import { useProfessions } from '../../common/contexts/professionsContext'
 import {
@@ -23,7 +22,6 @@ import {
   COLOR_TEXT_PRIMARY,
   COLOR_TEXT_SECONDARY,
 } from '../../constants/colors'
-import { useCities } from '../../common/contexts/citiesContext'
 import { thereAre, ucFirstOnly } from '../../utils/utils'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
@@ -188,14 +186,19 @@ const CONTRACT_TYPES = ['CDI', 'CDD', 'MIS', OTHER_CONTRACTS]
 const OTHER_DURATIONS = 'Non renseigné'
 const DURATION_TYPES = ['Temps plein', 'Temps partiel', OTHER_DURATIONS]
 
-const PanelCityJobs = ({ city, rome, searchValue, setSearchValue }) => {
+const PanelCityJobs = ({
+  city,
+  codeRome,
+  romeLabel,
+  searchValue,
+  setSearchValue,
+}) => {
   const {
     isLoading: isLoadingProfessions,
     onSearch: onSearchProfessions,
     onSearchInfosTravail,
     professions,
   } = useProfessions()
-  const { criterions } = useCities()
   const size = useWindowSize()
   const [infosTravail, setInfosTravail] = useState(null)
   const [dateFilter, setDateFilter] = useState('')
@@ -203,31 +206,19 @@ const PanelCityJobs = ({ city, rome, searchValue, setSearchValue }) => {
   const [durationFilters, setDurationFilters] = useState([])
 
   useEffect(() => {
-    if (city && rome && rome.length) {
-      onSearchProfessions({ codeRome: [rome], insee: [city.insee_com] })
-      onSearchInfosTravail({ codeRome: rome, insee: city.insee_com }).then(
+    if (city && codeRome) {
+      onSearchProfessions({ codeRome: [codeRome], insee: [city.insee_com] })
+      onSearchInfosTravail({ codeRome: codeRome, insee: city.insee_com }).then(
         setInfosTravail
       )
     }
-  }, [city])
+  }, [city, codeRome])
 
   const bassinTension = infosTravail?.bassinTension
   const deptTension = infosTravail?.deptTension
 
   const contractCountObject = {}
   const durationCountObject = {}
-  let romeLabel = ''
-
-  if (criterions && criterions.codeRomes && rome && rome.length) {
-    const finded = criterions.codeRomes.find((c) => c.key === rome)
-    if (finded) {
-      romeLabel = finded.label.toLowerCase()
-
-      if (professions.length) {
-        romeLabel = romeLabel.replace(/e\)/g, 'es)')
-      }
-    }
-  }
 
   const displayedProfessions = professions.filter((profession) => {
     if (!profession.id) return false
@@ -321,244 +312,222 @@ const PanelCityJobs = ({ city, rome, searchValue, setSearchValue }) => {
 
   return (
     <MainLayout isMobileView={isMobileView(size)}>
-      {rome && (
-        <>
-          <Helmet>
-            <title>
-              Travailer dans {romeLabel} à {ucFirstOnly(city.nom_comm)} -
-              Mobiville
-            </title>
-            <meta
-              name="description"
-              content={`Explorez le marché de l'emploi de ${ucFirstOnly(
-                city.nom_comm
-              )} pour le métier de ${{
-                romeLabel,
-              }}. Offres disponibles, salaires, …`}
-            />
-          </Helmet>
-          <StatistiqueLayout>
-            <StatistiqueTitleLayout>
-              Statistique pour {romeLabel} à {ucFirstOnly(city.nom_comm)}
-            </StatistiqueTitleLayout>
-            <StatsContainer>
-              {(bassinTension || deptTension) && (
-                <StatsItem>
-                  <div>
-                    <img src="/icons/trending-up.svg" alt="" />
-                    <p>
-                      {bassinTension || deptTension} offres pour 10 demandeurs{' '}
-                      {bassinTension
-                        ? 'dans ce bassin d’emploi'
-                        : 'dans ce département'}
+      <StatistiqueLayout>
+        <StatistiqueTitleLayout>
+          Statistique pour {romeLabel} à {ucFirstOnly(city.nom_comm)}
+        </StatistiqueTitleLayout>
+        <StatsContainer>
+          {(bassinTension || deptTension) && (
+            <StatsItem>
+              <div>
+                <img src="/icons/trending-up.svg" alt="" />
+                <p>
+                  {bassinTension || deptTension} offres pour 10 demandeurs{' '}
+                  {bassinTension
+                    ? 'dans ce bassin d’emploi'
+                    : 'dans ce département'}
+                </p>
+              </div>
+            </StatsItem>
+          )}
+
+          <StatsItem>
+            <img src="/icons/euro.svg" alt="" />
+            <p>Salaire brut</p>
+            {infosTravail?.min > 0 ? (
+              <p>
+                {infosTravail.min}€ à {infosTravail.max}€
+              </p>
+            ) : (
+              <p>A venir</p>
+            )}
+          </StatsItem>
+        </StatsContainer>
+      </StatistiqueLayout>
+      <JobLayout>
+        <FormControl fullWidth style={{ paddingBottom: '16px' }}>
+          <TextField
+            label="Rechercher dans les offres"
+            value={searchValue}
+            onChange={(event) => setSearchValue(event.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </FormControl>
+        <JobTitleLayout>
+          <div style={{ flex: '0 1 35%' }}>
+            {displayedProfessions.length} offre
+            {displayedProfessions.length > 1 ? 's' : ''}
+            {' pour '}
+            {romeLabel}
+            <br />
+            <span style={{ fontSize: 12 }}>Dans un rayon de 30 km</span>
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              flex: '0 0 65%',
+              flexWrap: 'wrap',
+            }}
+          >
+            <StyledFormControl>
+              <InputLabel htmlFor="filter-date-creation">Date</InputLabel>
+              <Select
+                inputProps={{
+                  id: 'filter-date-creation',
+                }}
+                label="Date de création"
+                value={dateFilter}
+                onChange={(event) => setDateFilter(event.target.value)}
+              >
+                <MenuItem value={ONE_DAY}>Un jour</MenuItem>
+                <MenuItem value={THREE_DAY}>Trois jours</MenuItem>
+                <MenuItem value={ONE_WEEK}>Une semaine</MenuItem>
+                <MenuItem value={TWO_WEEKS}>Deux semaines</MenuItem>
+                <MenuItem value={ONE_MONTH}>Un mois</MenuItem>
+                <MenuItem value={ALL_TIME}>Toutes les offres</MenuItem>
+              </Select>
+            </StyledFormControl>
+
+            <StyledFormControl>
+              <InputLabel htmlFor="filter-contract">Contrat</InputLabel>
+              <Select
+                inputProps={{
+                  id: 'filter-contract',
+                }}
+                label="Contrat"
+                multiple
+                value={contractFilters}
+                onChange={(event) => {
+                  setContractFilters(event.target.value)
+                }}
+                // quick & dirty replace of the only label that needs it
+                renderValue={(selected) =>
+                  selected.join(', ').replace('MIS', 'Intérim')
+                }
+              >
+                {CONTRACT_TYPES.map((filter) => {
+                  const isChecked = contractFilters.includes(filter)
+                  const label = filter.concat(
+                    contractFilters.length === 0 || isChecked
+                      ? ` (${contractCountObject[filter] || 0})`
+                      : ''
+                  )
+                  return (
+                    <MenuItem value={filter}>
+                      <Checkbox checked={isChecked} />
+                      <ListItemText
+                        // quick & dirty replace of the only label that needs it
+                        primary={label.replace('MIS', 'Intérim')}
+                      />
+                    </MenuItem>
+                  )
+                })}
+              </Select>
+            </StyledFormControl>
+
+            <StyledFormControl>
+              <InputLabel htmlFor="filter-duration">Durée</InputLabel>
+              <Select
+                inputProps={{
+                  id: 'filter-duration',
+                }}
+                label="Durée"
+                multiple
+                value={durationFilters}
+                onChange={(event) => {
+                  setDurationFilters(event.target.value)
+                }}
+                renderValue={(selected) => selected.join(', ')}
+              >
+                {DURATION_TYPES.map((filter) => {
+                  const isChecked = durationFilters.includes(filter)
+                  const label = filter.concat(
+                    durationFilters.length === 0 || isChecked
+                      ? ` (${durationCountObject[filter] || 0})`
+                      : ''
+                  )
+
+                  return (
+                    <MenuItem value={filter}>
+                      <Checkbox checked={durationFilters.includes(filter)} />
+                      <ListItemText primary={label} />
+                    </MenuItem>
+                  )
+                })}
+              </Select>
+            </StyledFormControl>
+          </div>
+        </JobTitleLayout>
+
+        <JobContentLayout>
+          {isLoadingProfessions && <p>Chargement des métiers</p>}
+          {displayedProfessions.map((p) => {
+            // We truncate too long descriptions. "?", as it seems they can be absent.
+            const description =
+              p.description?.length > MAX_DESCRIPTION_LENGTH
+                ? p.description
+                    .slice(0, MAX_DESCRIPTION_LENGTH)
+                    .concat(
+                      p.description.slice(MAX_DESCRIPTION_LENGTH).split(' ')[0]
+                    )
+                    .concat('…')
+                : p.description
+
+            const contractLabel =
+              p.typeContrat === 'CDI' || p.typeContrat === 'CDD'
+                ? p.typeContrat
+                : p.typeContratLibelle
+
+            return (
+              <JobItem key={p.id}>
+                <a
+                  href={p.origineOffre.urlOrigine}
+                  target="_blank"
+                  tag-exit="offres-d-emplois"
+                >
+                  <p className="title">{p.appellationlibelle}</p>
+                  {p.entreprise && p.entreprise.nom && (
+                    <p className="enterprise">{p.entreprise.nom}</p>
+                  )}
+                  <p className="description">{description}</p>
+
+                  <ViewMore>
+                    En savoir plus
+                    <ArrowForwardIcon
+                      fontSize="small"
+                      style={{ marginLeft: 8 }}
+                    />
+                  </ViewMore>
+
+                  <div className="actions">
+                    <p className="date">{thereAre(p.dateCreation)}</p>
+                    <p className="type">
+                      {contractLabel}
+                      {p.dureeTravailLibelleConverti &&
+                        ` - ${p.dureeTravailLibelleConverti}`}
                     </p>
                   </div>
-                </StatsItem>
-              )}
-
-              <StatsItem>
-                <img src="/icons/euro.svg" alt="" />
-                <p>Salaire brut</p>
-                {infosTravail?.min > 0 ? (
-                  <p>
-                    {infosTravail.min}€ à {infosTravail.max}€
-                  </p>
-                ) : (
-                  <p>A venir</p>
-                )}
-              </StatsItem>
-            </StatsContainer>
-          </StatistiqueLayout>
-          <JobLayout>
-            <FormControl fullWidth style={{ paddingBottom: '16px' }}>
-              <TextField
-                label="Rechercher dans les offres"
-                value={searchValue}
-                onChange={(event) => setSearchValue(event.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </FormControl>
-            <JobTitleLayout>
-              <div style={{ flex: '0 1 35%' }}>
-                {displayedProfessions.length} offre
-                {displayedProfessions.length > 1 ? 's' : ''}
-                {' pour '}
-                {romeLabel}
-                <br />
-                <span style={{ fontSize: 12 }}>Dans un rayon de 30 km</span>
-              </div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                  flex: '0 0 65%',
-                  flexWrap: 'wrap',
-                }}
-              >
-                <StyledFormControl>
-                  <InputLabel htmlFor="filter-date-creation">Date</InputLabel>
-                  <Select
-                    inputProps={{
-                      id: 'filter-date-creation',
-                    }}
-                    label="Date de création"
-                    value={dateFilter}
-                    onChange={(event) => setDateFilter(event.target.value)}
-                  >
-                    <MenuItem value={ONE_DAY}>Un jour</MenuItem>
-                    <MenuItem value={THREE_DAY}>Trois jours</MenuItem>
-                    <MenuItem value={ONE_WEEK}>Une semaine</MenuItem>
-                    <MenuItem value={TWO_WEEKS}>Deux semaines</MenuItem>
-                    <MenuItem value={ONE_MONTH}>Un mois</MenuItem>
-                    <MenuItem value={ALL_TIME}>Toutes les offres</MenuItem>
-                  </Select>
-                </StyledFormControl>
-
-                <StyledFormControl>
-                  <InputLabel htmlFor="filter-contract">Contrat</InputLabel>
-                  <Select
-                    inputProps={{
-                      id: 'filter-contract',
-                    }}
-                    label="Contrat"
-                    multiple
-                    value={contractFilters}
-                    onChange={(event) => {
-                      setContractFilters(event.target.value)
-                    }}
-                    // quick & dirty replace of the only label that needs it
-                    renderValue={(selected) =>
-                      selected.join(', ').replace('MIS', 'Intérim')
-                    }
-                  >
-                    {CONTRACT_TYPES.map((filter) => {
-                      const isChecked = contractFilters.includes(filter)
-                      const label = filter.concat(
-                        contractFilters.length === 0 || isChecked
-                          ? ` (${contractCountObject[filter] || 0})`
-                          : ''
-                      )
-                      return (
-                        <MenuItem value={filter}>
-                          <Checkbox checked={isChecked} />
-                          <ListItemText
-                            // quick & dirty replace of the only label that needs it
-                            primary={label.replace('MIS', 'Intérim')}
-                          />
-                        </MenuItem>
-                      )
-                    })}
-                  </Select>
-                </StyledFormControl>
-
-                <StyledFormControl>
-                  <InputLabel htmlFor="filter-duration">Durée</InputLabel>
-                  <Select
-                    inputProps={{
-                      id: 'filter-duration',
-                    }}
-                    label="Durée"
-                    multiple
-                    value={durationFilters}
-                    onChange={(event) => {
-                      setDurationFilters(event.target.value)
-                    }}
-                    renderValue={(selected) => selected.join(', ')}
-                  >
-                    {DURATION_TYPES.map((filter) => {
-                      const isChecked = durationFilters.includes(filter)
-                      const label = filter.concat(
-                        durationFilters.length === 0 || isChecked
-                          ? ` (${durationCountObject[filter] || 0})`
-                          : ''
-                      )
-
-                      return (
-                        <MenuItem value={filter}>
-                          <Checkbox
-                            checked={durationFilters.includes(filter)}
-                          />
-                          <ListItemText primary={label} />
-                        </MenuItem>
-                      )
-                    })}
-                  </Select>
-                </StyledFormControl>
-              </div>
-            </JobTitleLayout>
-
-            <JobContentLayout>
-              {isLoadingProfessions && <p>Chargement des métiers</p>}
-              {displayedProfessions.map((p) => {
-                // We truncate too long descriptions. "?", as it seems they can be absent.
-                const description =
-                  p.description?.length > MAX_DESCRIPTION_LENGTH
-                    ? p.description
-                        .slice(0, MAX_DESCRIPTION_LENGTH)
-                        .concat(
-                          p.description
-                            .slice(MAX_DESCRIPTION_LENGTH)
-                            .split(' ')[0]
-                        )
-                        .concat('…')
-                    : p.description
-
-                const contractLabel =
-                  p.typeContrat === 'CDI' || p.typeContrat === 'CDD'
-                    ? p.typeContrat
-                    : p.typeContratLibelle
-
-                return (
-                  <JobItem key={p.id}>
-                    <a
-                      href={p.origineOffre.urlOrigine}
-                      target="_blank"
-                      tag-exit="offres-d-emplois"
-                    >
-                      <p className="title">{p.appellationlibelle}</p>
-                      {p.entreprise && p.entreprise.nom && (
-                        <p className="enterprise">{p.entreprise.nom}</p>
-                      )}
-                      <p className="description">{description}</p>
-
-                      <ViewMore>
-                        En savoir plus
-                        <ArrowForwardIcon
-                          fontSize="small"
-                          style={{ marginLeft: 8 }}
-                        />
-                      </ViewMore>
-
-                      <div className="actions">
-                        <p className="date">{thereAre(p.dateCreation)}</p>
-                        <p className="type">
-                          {contractLabel}
-                          {p.dureeTravailLibelleConverti &&
-                            ` - ${p.dureeTravailLibelleConverti}`}
-                        </p>
-                      </div>
-                    </a>
-                  </JobItem>
-                )
-              })}
-            </JobContentLayout>
-          </JobLayout>
-        </>
-      )}
+                </a>
+              </JobItem>
+            )
+          })}
+        </JobContentLayout>
+      </JobLayout>
     </MainLayout>
   )
 }
 
 PanelCityJobs.propTypes = {
   city: PropTypes.object.isRequired,
-  rome: PropTypes.array.isRequired,
+  codeRome: PropTypes.string.isRequired,
 }
 
 PanelCityJobs.defaultProps = {}
