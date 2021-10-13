@@ -68,11 +68,16 @@ export default class RouteCities extends Route {
 
   @Route.Get()
   async criterions(ctx) {
-    const jobList = await this.model.models.tensions.fetchJobList()
+    const [jobList, regionsTensionsCriterions] = await Promise.all([
+      this.model.models.tensions.fetchJobList(),
+      this.model.models.regionsTensionsCriterions
+        .findOne()
+        .then((row) => row.json || []),
+    ])
 
     this.sendOk(ctx, {
       criterions: CRITERIONS,
-      regions: await this.model.models.regionsTensions.fetch(),
+      regions: regionsTensionsCriterions,
       codeRomes: jobList.map((job) => ({
         key: job.rome,
         label: job.label,

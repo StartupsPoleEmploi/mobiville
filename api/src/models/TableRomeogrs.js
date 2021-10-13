@@ -63,7 +63,7 @@ export default (sequelizeInstance, Model) => {
 
   Model.fetchAllAvailable = async () => {
     const availableRomeCodes = (
-      await Model.models.regionsTensions.findAll({
+      await Model.models.tensions.findAll({
         attributes: ['rome'],
         group: ['rome'],
       })

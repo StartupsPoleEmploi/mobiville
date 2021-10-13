@@ -11,7 +11,7 @@ export default (sequelizeInstance, Model) => {
   }
 
   Model.getSearchs = async () => {
-    const regions = await Model.models.regionsTensions.fetch()
+    const regions = await Model.models.regionsTensionsCriterions.fetch()
     const jobList = await Model.models.tensions.fetchJobList()
 
     const regionsObjects = {}

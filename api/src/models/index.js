@@ -13,6 +13,7 @@ if (!config.database.url) {
 }
 const dbInstance = new Sequelize(config.database.url, {
   ...config.database,
+  dialectOptions: { autoJsonMap: false }, // https://github.com/sequelize/sequelize/issues/12583
   logging: process.env.ENABLE_DB_LOGGING ? console.log : false,
 })
 
