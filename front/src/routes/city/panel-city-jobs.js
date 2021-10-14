@@ -13,13 +13,16 @@ import {
   InputAdornment,
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
+import EuroIcon from '@material-ui/icons/Euro'
+import DescriptionIcon from '@material-ui/icons/Description'
+import ScheduleIcon from '@material-ui/icons/Schedule'
 
 import { useProfessions } from '../../common/contexts/professionsContext'
 import {
   COLOR_GRAY,
   COLOR_PRIMARY,
-  COLOR_TEXT_PRIMARY,
   COLOR_TEXT_SECONDARY,
 } from '../../constants/colors'
 import { thereAre, ucFirstOnly } from '../../utils/utils'
@@ -56,10 +59,11 @@ const StatistiqueLayout = styled.div`
   width: 400px;
   padding: 16px;
   margin-right: 16px;
+  text-align: center;
 `
 
-const StatistiqueTitleLayout = styled.p`
-  font-weight: bold;
+const StatistiqueTitleLayout = styled.h3`
+  font-size: 12px;
   margin-bottom: 32px;
   margin-top: 0;
 `
@@ -75,12 +79,6 @@ const StatsItem = styled.div`
   img {
     display: block;
     margin: auto;
-  }
-
-  p {
-    margin: 2px 0 4px 0;
-    text-align: center;
-    font-weight: bold;
   }
 `
 
@@ -110,40 +108,31 @@ const JobTitleLayout = styled.div`
 const JobItem = styled.div`
   padding: 16px 0;
   border-bottom: 2px solid ${COLOR_GRAY};
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`
 
-  a {
-    text-decoration: none;
-    color: ${COLOR_TEXT_PRIMARY};
+const JobItemHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
 
-    .title {
-      font-weight: bold;
-      font-size: 14px;
-      margin-bottom: 0;
-    }
+const JobItemTitle = styled.h4`
+  margin: 0;
+  font-size: 14px;
+`
 
-    .enterprise {
-      text-transform: uppercase;
-      color: ${COLOR_TEXT_SECONDARY};
-      font-size: 12px;
-      margin-bottom: 0;
-    }
+const JobItemAdditionalInfos = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin-top: 0;
+  color: ${COLOR_TEXT_SECONDARY};
+`
 
-    .description {
-      margin: 8px 0;
-      font-size: 12px;
-      color: black;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .actions {
-      font-size: 12px;
-      color: ${COLOR_TEXT_SECONDARY};
-      font-weight: 500;
-      display: flex;
-      justify-content: space-between;
-    }
-  }
+const JobItemAdditionalInfo = styled.li`
+  display: flex;
+  align-items: center;
 `
 
 const StyledFormControl = styled(FormControl).attrs({
@@ -163,13 +152,30 @@ const StyledFormControl = styled(FormControl).attrs({
   }
 `
 
-const ViewMore = styled.p`
+const ViewMoreButton = styled.button.attrs({
+  role: 'button',
+})`
   font-weight: 500;
   color: ${COLOR_PRIMARY};
   margin: 0;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+`
+
+const ApplyToJobLink = styled.a`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${COLOR_PRIMARY};
+  border-radius: 16px;
+  border: 0;
+  color: #fff;
+  height: 32px;
+  padding: 8px 24px;
+  font-size: 18px;
 `
 
 const MAX_DESCRIPTION_LENGTH = 480
@@ -204,6 +210,10 @@ const PanelCityJobs = ({
   const [dateFilter, setDateFilter] = useState('')
   const [contractFilters, setContractFilters] = useState([])
   const [durationFilters, setDurationFilters] = useState([])
+  const [fullJobsOnDisplay, setFullJobsOnDisplay] = useState({})
+
+  const toggleFullJobDisplay = (id) =>
+    setFullJobsOnDisplay({ ...fullJobsOnDisplay, [id]: !fullJobsOnDisplay[id] })
 
   useEffect(() => {
     if (city && codeRome) {
@@ -310,36 +320,39 @@ const PanelCityJobs = ({
     }
   )
 
+  const isMobile = isMobileView(size)
+
   return (
-    <MainLayout isMobileView={isMobileView(size)}>
+    <MainLayout isMobileView={isMobile}>
       <StatistiqueLayout>
         <StatistiqueTitleLayout>
-          Statistique pour {romeLabel} à {ucFirstOnly(city.nom_comm)}
+          Statistiques pour {romeLabel} à {ucFirstOnly(city.nom_comm)}
         </StatistiqueTitleLayout>
         <StatsContainer>
           {(bassinTension || deptTension) && (
             <StatsItem>
               <div>
                 <img src="/icons/trending-up.svg" alt="" />
-                <p>
+                <b>
                   {bassinTension || deptTension} offres pour 10 demandeurs{' '}
                   {bassinTension
                     ? 'dans ce bassin d’emploi'
                     : 'dans ce département'}
-                </p>
+                </b>
               </div>
             </StatsItem>
           )}
 
           <StatsItem>
             <img src="/icons/euro.svg" alt="" />
-            <p>Salaire brut</p>
+            <b>Salaire brut</b>
+            <br />
             {infosTravail?.min > 0 ? (
-              <p>
+              <b>
                 {infosTravail.min}€ à {infosTravail.max}€
-              </p>
+              </b>
             ) : (
-              <p>A venir</p>
+              <b>A venir</b>
             )}
           </StatsItem>
         </StatsContainer>
@@ -360,14 +373,14 @@ const PanelCityJobs = ({
           />
         </FormControl>
         <JobTitleLayout>
-          <div style={{ flex: '0 1 35%' }}>
+          <h3 style={{ flex: '0 1 35%' }}>
             {displayedProfessions.length} offre
             {displayedProfessions.length > 1 ? 's' : ''}
             {' pour '}
             {romeLabel}
             <br />
             <span style={{ fontSize: 12 }}>Dans un rayon de 30 km</span>
-          </div>
+          </h3>
 
           <div
             style={{
@@ -471,7 +484,7 @@ const PanelCityJobs = ({
           {isLoadingProfessions && <p>Chargement des métiers</p>}
           {displayedProfessions.map((p) => {
             // We truncate too long descriptions. "?", as it seems they can be absent.
-            const description =
+            const shortDescription =
               p.description?.length > MAX_DESCRIPTION_LENGTH
                 ? p.description
                     .slice(0, MAX_DESCRIPTION_LENGTH)
@@ -488,34 +501,109 @@ const PanelCityJobs = ({
 
             return (
               <JobItem key={p.id}>
-                <a
-                  href={p.origineOffre.urlOrigine}
-                  target="_blank"
-                  tag-exit="offres-d-emplois"
-                >
-                  <p className="title">{p.appellationlibelle}</p>
-                  {p.entreprise && p.entreprise.nom && (
-                    <p className="enterprise">{p.entreprise.nom}</p>
-                  )}
-                  <p className="description">{description}</p>
-
-                  <ViewMore>
-                    En savoir plus
-                    <ArrowForwardIcon
-                      fontSize="small"
-                      style={{ marginLeft: 8 }}
-                    />
-                  </ViewMore>
-
-                  <div className="actions">
-                    <p className="date">{thereAre(p.dateCreation)}</p>
-                    <p className="type">
-                      {contractLabel}
-                      {p.dureeTravailLibelleConverti &&
-                        ` - ${p.dureeTravailLibelleConverti}`}
-                    </p>
+                <JobItemHeader>
+                  <div>
+                    <JobItemTitle>{p.appellationlibelle}</JobItemTitle>
+                    {p.entreprise?.nom && (
+                      <div style={{ color: COLOR_TEXT_SECONDARY }}>
+                        {p.entreprise.nom}
+                      </div>
+                    )}
+                    {p.lieuTravail?.libelle && (
+                      <div style={{ color: COLOR_TEXT_SECONDARY }}>
+                        {p.lieuTravail.libelle} -{' '}
+                        <a
+                          href={`https://fr.mappy.com/plan#/${p.lieuTravail.libelle}`}
+                          target="_blank"
+                          referer="noreferrer noopener"
+                        >
+                          Localiser avec Mappy
+                        </a>
+                      </div>
+                    )}
                   </div>
-                </a>
+                  {fullJobsOnDisplay[p.id] && !isMobile && (
+                    <ApplyToJobLink
+                      href={p.origineOffre.urlOrigine}
+                      target="_blank"
+                      tag-exit="offres-d-emplois"
+                    >
+                      Postuler
+                    </ApplyToJobLink>
+                  )}
+                </JobItemHeader>
+                <p className="description">
+                  {fullJobsOnDisplay[p.id] ? (
+                    <>
+                      {p.description.split('\n').map((text) => (
+                        <>
+                          <span>{text}</span>
+                          <br />
+                        </>
+                      ))}
+                    </>
+                  ) : (
+                    shortDescription
+                  )}
+                </p>
+
+                <JobItemAdditionalInfos>
+                  {p.salaire?.libelle && (
+                    <JobItemAdditionalInfo>
+                      <EuroIcon style={{ fontSize: 13, marginRight: 8 }} />
+                      Salaire : {p.salaire?.libelle}
+                    </JobItemAdditionalInfo>
+                  )}
+                  <JobItemAdditionalInfo>
+                    <DescriptionIcon style={{ fontSize: 13, marginRight: 8 }} />
+                    {contractLabel}{' '}
+                    {p.dureeTravailLibelleConverti &&
+                      ` - ${p.dureeTravailLibelleConverti}`}
+                  </JobItemAdditionalInfo>
+                  <JobItemAdditionalInfo>
+                    <ScheduleIcon style={{ fontSize: 13, marginRight: 8 }} />
+                    {thereAre(p.dateCreation)}
+                  </JobItemAdditionalInfo>
+                </JobItemAdditionalInfos>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: isMobile ? 'space-between' : 'flex-end',
+                  }}
+                >
+                  {fullJobsOnDisplay[p.id] && isMobile ? (
+                    <ApplyToJobLink
+                      href={p.origineOffre.urlOrigine}
+                      target="_blank"
+                      tag-exit="offres-d-emplois"
+                    >
+                      Postuler
+                    </ApplyToJobLink>
+                  ) : (
+                    <div />
+                  )}
+
+                  <ViewMoreButton onClick={() => toggleFullJobDisplay(p.id)}>
+                    {fullJobsOnDisplay[p.id] ? (
+                      <>
+                        Voir moins
+                        <ArrowUpwardIcon
+                          fontSize="small"
+                          style={{ marginLeft: 8 }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        En savoir plus
+                        <ArrowDownwardIcon
+                          fontSize="small"
+                          style={{ marginLeft: 8 }}
+                        />
+                      </>
+                    )}
+                  </ViewMoreButton>
+                </div>
               </JobItem>
             )
           })}
