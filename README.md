@@ -45,6 +45,7 @@ yarn run sync:equipmentsSpecial # This will take about 2 minutes, needs to be ru
 yarn run sync:romeOgrs # almost instant
 yarn run sync:romeSkills # almost instant
 yarn run sync:tensionsPCS # almost instant
+yarn run sync:regionsTensionsCriterions # Takes about 5 minutes
 
 ```
 

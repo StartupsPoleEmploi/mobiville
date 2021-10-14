@@ -37,10 +37,11 @@ function initModelsByPath(sequelizeInstance, folderPath, globalName) {
   })
 
   for (const modelName in models) {
+    models[modelName].models = models
     if (models[modelName].associate) {
-      models[modelName].models = models
       models[modelName].associate(models)
     }
+
     addUtilsFunctionInTable(models[modelName], sequelizeInstance)
   }
   global[globalName] = models
