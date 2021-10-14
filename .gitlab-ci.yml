@@ -116,7 +116,7 @@ publish api image:
     - PUB_BRANCH=${CI_COMMIT_BRANCH//\//_}
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/dockerfile_api --destination $CI_REGISTRY_IMAGE:api-${PUB_BRANCH}-${VERSION} --destination $CI_REGISTRY_IMAGE:api-${PUB_BRANCH}-latest
   rules:
-    - if: '$CI_COMMIT_BRANCH == $DEV_BRANCH'
+    - if: '($CI_COMMIT_BRANCH == $DEV_BRANCH || $CI_COMMIT_BRANCH == $PROD_BRANCH) && $FORCE_DEPLOY == ""'
       changes:
         - api/**/*
     - if: '$FORCE_DEPLOY == "api" && $FORCE_VERSION == ""'
