@@ -35,8 +35,7 @@ const SubTitle = styled.p`
 
 const Header = styled.div`
   height: 246px;
-  background: white;
-  margin: auto;
+  margin: 0 auto;
   font-weight: bold;
   display: flex;
   align-items: center;
