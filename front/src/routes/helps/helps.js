@@ -127,7 +127,7 @@ const CategoryTag = styled(Link)`
 `
 
 const Tag = styled(Link)`
-  background: ${({ isMobile }) => (isMobile ? COLOR_PRIMARY : COLOR_GRAY)};
+  background: ${({ selected }) => (selected ? COLOR_PRIMARY : COLOR_GRAY)};
   border-radius: 44px;
   padding: 8px;
   margin-right: 8px;
@@ -136,7 +136,7 @@ const Tag = styled(Link)`
   cursor: pointer;
 
   p {
-    color: ${({ isMobile }) => (isMobile ? '#fff' : COLOR_TEXT_PRIMARY)};
+    color: ${({ selected }) => (selected ? '#fff' : COLOR_TEXT_PRIMARY)};
     font-weight: 500;
     font-size: 12px;
     margin: 0;
