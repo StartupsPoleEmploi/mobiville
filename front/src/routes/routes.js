@@ -8,7 +8,7 @@ import {
 
 const Home = lazy(() => import('./home/home'))
 const Cities = lazy(() => import('./cities/cities'))
-const City = lazy(() => import('./city/city'))
+const City = lazy(() => import('./city/City'))
 const Helps = lazy(() => import('./helps/helps'))
 const Search = lazy(() => import('./search/search'))
 const Account = lazy(() => import('./account/account'))

@@ -102,7 +102,7 @@ const Tag = styled.div`
   font-weight: 500;
 `
 
-const PanelCityLogement = ({ city }) => {
+const PanelCityHousing = ({ city }) => {
   const { onGetCityTenement, cityTenement } = useCities()
   const size = useWindowSize()
 
@@ -292,10 +292,10 @@ const PanelCityLogement = ({ city }) => {
   )
 }
 
-PanelCityLogement.propTypes = {
+PanelCityHousing.propTypes = {
   city: PropTypes.object.isRequired,
 }
 
-PanelCityLogement.defaultProps = {}
+PanelCityHousing.defaultProps = {}
 
-export default PanelCityLogement
+export default PanelCityHousing
