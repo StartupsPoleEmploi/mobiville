@@ -295,7 +295,7 @@ const HeaderLink = styled(Link)`
   }
 `
 
-export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
+const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
   const { city } = useCities()
   const { scrollY } = useScroll()
   const size = useWindowSize()
@@ -433,6 +433,8 @@ export const CityHeader = ({ tabList, tabSelected, onSelectTab }) => {
     </>
   )
 }
+
+export default CityHeader
 
 CityHeader.propTypes = {
   tabList: PropTypes.array,

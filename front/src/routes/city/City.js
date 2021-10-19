@@ -7,10 +7,10 @@ import { Helmet } from 'react-helmet'
 
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
-import { CityHeader } from './city-header'
-import PanelCityJobs from './panel-city-jobs'
-import PanelCityLife from './panel-city-life'
-import PanelCityLogement from './panel-city-logement'
+import CityHeader from './CityHeader'
+import PanelCityJobs from './PanelCityJobs'
+import PanelCityLife from './PanelCityLife'
+import PanelCityHousing from './PanelCityHousing'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 import { ucFirstOnly } from '../../utils/utils'
@@ -130,7 +130,7 @@ const CityPage = ({ location: { pathname, search } }) => {
               />
             )}
             {tabKey === 'life' && <PanelCityLife city={city} />}
-            {tabKey === 'tenement' && <PanelCityLogement city={city} />}
+            {tabKey === 'tenement' && <PanelCityHousing city={city} />}
             <Link to="/mobility-guide" style={{ cursor: 'pointer' }}>
               <HelpButton
                 className="btn primary"
