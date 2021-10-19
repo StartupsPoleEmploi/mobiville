@@ -154,6 +154,20 @@ const StyledFormControl = styled(FormControl).attrs({
   .MuiFilledInput-underline::before {
     border-bottom: none;
   }
+
+  // The two styles below are to allow ellipsis, because the labels
+  // of the filter fields are too long.
+  // These can be removed once the fields are reworked to be bigger
+  .MuiInputLabel-root {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 75%;
+    height: 100%;
+  }
+  .MuiInputLabel-shrink {
+    max-width: 109%;
+  }
 `
 
 const ViewMoreButton = styled.button.attrs({
@@ -395,12 +409,14 @@ const PanelCityJobs = ({
             }}
           >
             <StyledFormControl>
-              <InputLabel htmlFor="filter-date-creation">Date</InputLabel>
+              <InputLabel htmlFor="filter-date-creation">
+                Date de publication
+              </InputLabel>
               <Select
                 inputProps={{
                   id: 'filter-date-creation',
                 }}
-                label="Date de création"
+                label="Date de publication"
                 value={dateFilter}
                 onChange={(event) => setDateFilter(event.target.value)}
               >
@@ -451,12 +467,12 @@ const PanelCityJobs = ({
             </StyledFormControl>
 
             <StyledFormControl>
-              <InputLabel htmlFor="filter-duration">Durée</InputLabel>
+              <InputLabel htmlFor="filter-duration">Durée hebdo</InputLabel>
               <Select
                 inputProps={{
                   id: 'filter-duration',
                 }}
-                label="Durée"
+                label="Durée hebdo"
                 multiple
                 value={durationFilters}
                 onChange={(event) => {
