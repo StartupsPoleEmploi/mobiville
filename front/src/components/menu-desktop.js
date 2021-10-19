@@ -13,7 +13,7 @@ const Header = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  z-index: 10;
+  z-index: 100;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12),
     0px 1px 5px rgba(0, 0, 0, 0.2);
   background: #ffffff;
@@ -33,7 +33,7 @@ const Item = styled(Link)`
     text-decoration: none;
     position: relative;
     display: flex;
-    align-item: center;
+    align-items: center;
     color: ${(props) =>
       props.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY};
   }

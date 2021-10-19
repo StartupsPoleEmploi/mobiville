@@ -213,7 +213,7 @@ const FixedLayout = styled.div`
   left: 0;
   right: 0;
   height: 124px;
-  z-index: 1;
+  z-index: 10;
 `
 
 const FixedLayoutMobile = styled.div`
@@ -225,7 +225,7 @@ const FixedLayoutMobile = styled.div`
   left: 0;
   right: 0;
   height: 92px;
-  z-index: 1;
+  z-index: 10;
 `
 
 const ArrowBackOutlinedIconDesktopFull = styled(ArrowBackOutlinedIcon)`
