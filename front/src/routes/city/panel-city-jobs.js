@@ -34,21 +34,7 @@ const MainLayout = styled.div`
   align-items: flex-start;
   margin: auto;
   max-width: 1024px;
-
-  ${(props) =>
-    props.isMobileView
-      ? `
-    flex-direction: column;
-
-    > div {
-      margin-right: 0;
-      margin-bottom: 2px;
-      box-shadow: none;
-      border-radius: 0;
-      width: 100%;
-    }
-  `
-      : ''}
+  flex-direction: ${({ isMobile }) => (isMobile ? 'column' : 'row')};
 `
 
 const StatistiqueLayout = styled.div`
@@ -60,6 +46,16 @@ const StatistiqueLayout = styled.div`
   padding: 16px;
   margin-right: 16px;
   text-align: center;
+
+  ${({ isMobile }) =>
+    isMobile
+      ? `
+      margin-right: 0;
+      box-shadow: none;
+      border-radius: 0;
+      width: 100%;
+  `
+      : ''}
 `
 
 const StatistiqueTitleLayout = styled.h3`
@@ -89,6 +85,14 @@ const JobLayout = styled.div`
   border-radius: 8px;
   flex: 1;
   padding: 16px;
+
+  ${({ isMobile }) =>
+    isMobile
+      ? `
+      box-shadow: none;
+      border-radius: 0;
+  `
+      : ''}
 `
 
 const JobContentLayout = styled.div`
@@ -323,8 +327,8 @@ const PanelCityJobs = ({
   const isMobile = isMobileView(size)
 
   return (
-    <MainLayout isMobileView={isMobile}>
-      <StatistiqueLayout>
+    <MainLayout isMobile={isMobile}>
+      <StatistiqueLayout isMobile={isMobile}>
         <StatistiqueTitleLayout>
           Statistiques pour {romeLabel} à {ucFirstOnly(city.nom_comm)}
         </StatistiqueTitleLayout>
@@ -357,7 +361,7 @@ const PanelCityJobs = ({
           </StatsItem>
         </StatsContainer>
       </StatistiqueLayout>
-      <JobLayout>
+      <JobLayout isMobile={isMobile}>
         <FormControl fullWidth style={{ paddingBottom: '16px' }}>
           <TextField
             label="Rechercher dans les offres"
