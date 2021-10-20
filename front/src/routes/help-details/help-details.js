@@ -1,30 +1,81 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
-import { Typography } from '@material-ui/core'
 import { Helmet } from 'react-helmet'
+import { Link } from 'react-router-dom'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { MainLayout } from '../../components/main-layout'
 import {
+  COLOR_GRAY,
+  COLOR_PRIMARY,
   COLOR_TEXT_PRIMARY,
-  COLOR_TEXT_SECONDARY,
 } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { ucFirstOnly } from '../../utils/utils'
 
-const Header = styled.div`
+const DesktopHeaderLink = styled(Link)`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+  max-width: 1100px;
+  width: 100%;
+  margin: auto;
+  padding: 16px;
+  color: ${COLOR_TEXT_PRIMARY};
+`
+
+const DesktopHeaderContainer = styled.div`
   position: fixed;
   left: 0;
   right: 0;
   background-color: white;
+  top: 76;
+  height: 112px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  width: 100%;
+`
+
+const DesktopHeaderArrowContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: ${COLOR_GRAY};
+`
+
+const DesktopHeaderTextContainer = styled.div`
+  margin-left: 40px;
+`
+
+const MobileHeaderLink = styled(Link)`
+  left: 16px;
+  top: 16px;
+  background-color: white;
   display: flex;
   justify-content: center;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12),
-    0px 1px 5px rgba(0, 0, 0, 0.2);
-  top: ${({ isMobile }) => (isMobile ? '0' : '76px')};
-  height: ${({ isMobile }) => (isMobile ? '76px' : '92px')};
+  align-items: center;
+  position: fixed;
+  height: 76;
+  color: ${COLOR_PRIMARY};
+  padding: 8px 16px 8px 8px;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
+    0px 1px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 100px;
+`
+
+const MobileHeaderText = styled.div`
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 500;
 `
 
 const H1 = styled.h1`
@@ -37,77 +88,79 @@ const H1 = styled.h1`
 `
 
 const Container = styled.div`
-  overflow: auto;
-  height: 100%;
-  margin-top: ${({ isMobile }) => (isMobile ? '76px' : '108px')};
-  padding-bottom: 92px;
+  display: ${({ isMobile }) => (isMobile ? 'block' : 'flex')};
+  max-width: ${({ isMobile }) => (isMobile ? 'inherit' : '1100px')};
+  margin: auto;
+  margin-top: ${({ isMobile }) => (isMobile ? '0' : '108px')};
+  align-items: flex-start;
+  padding: ${({ isMobile }) => (isMobile ? '0' : '0 16px')};
 `
 
-const Tag = styled.div`
-  background: #ffffff;
-  border: 1px solid ${COLOR_TEXT_SECONDARY};
-  color: ${COLOR_TEXT_PRIMARY};
-  box-sizing: border-box;
-  border-radius: 1000px;
-  display: inline-block;
-  margin-right: 8px;
-  margin-bottom: 8px;
-  padding: 4px 6px;
-  font-size: 12px;
+const TitleContainer = styled.div`
+  margin-right: ${({ isMobile }) => (isMobile ? '0' : '16px')};
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  border: ${({ isMobile }) => (isMobile ? 'none' : `1px solid ${COLOR_GRAY}`)};
+`
+
+const TitleImgContainer = styled.div`
+  background-color: ${COLOR_GRAY};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+`
+
+const TitleTextContainer = styled.div`
+  padding: 16px;
 `
 
 const Panel = styled.div`
   background: #ffffff;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
-    0px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  padding: 16px;
+  padding: 16px 16px 8px;
   width: 100%;
-  max-width: 512px;
-  margin-bottom: 16px;
-  margin-left: auto;
-  margin-right: auto;
-
-  ${(props) =>
-    props.isMobile
-      ? `
-    max-width: auto;
-    margin-bottom: 2px;
-    margin-left: 0;
-    margin-right: 0;
-    box-shadow: none;
-    border-radius: 0;
-  `
-      : ''}
+  margin-bottom: ${({ isMobile }) => (isMobile ? '8px' : `16px`)};
+  border: ${({ isMobile }) => (isMobile ? 'none' : `1px solid ${COLOR_GRAY}`)};
 `
 
-const Title = styled(Typography)`
-  && {
-    font-weight: bold;
-    font-size: 14px;
-    margin-bottom: 16px;
+const PanelTitle = styled.h2`
+  font-weight: bold;
+  font-size: 16px;
+  margin: 0 0 16px;
+`
+
+const DoublePanelsContainer = styled.div`
+  display: flex;
+  flex-direction: ${({ isMobile }) => (isMobile ? 'column' : 'row')};
+
+  & > *:first-child {
+    margin-right: 16px;
   }
 `
-
-const Description = styled(Typography)`
-  && {
-    font-size: 14px;
-    margin-bottom: 16px;
-  }
+const PanelsContainer = styled.div`
+  max-width: ${({ isMobile }) => (isMobile ? 'inherit' : '688px')};
+  width: 100%;
 `
-const HelpButton = styled.button`
-  position: fixed;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  height: 48px !important;
+
+const Description = styled.p`
+  font-size: 14px;
+`
+const HelpLink = styled.a`
+  display: flex;
+  height: 48px;
   align-items: center;
   justify-content: center;
-  font-size: 16px !important;
+  font-weight: 500;
+  font-size: 16px;
   cursor: pointer;
-  width: ${(props) => (props.isMobile ? 'calc(100% - 32px)' : '')};
-  padding: ${(props) => (props.isMobile ? '0 12px' : '0 48px')} !important;
-  bottom: ${({ isMobile }) => (isMobile ? '70px' : '')};
+  background: ${COLOR_PRIMARY};
+  color: #fff;
+  border-radius: 37px;
+  padding: 8 32px;
+  width: 214px;
+  margin: auto;
 `
 
 const HelpDetailsPage = () => {
@@ -123,54 +176,102 @@ const HelpDetailsPage = () => {
 
   const isMobile = isMobileView(size)
 
+  if (!help) {
+    return <MainLayout>Chargement…</MainLayout>
+  }
+
   return (
     <MainLayout>
-      {help && (
-        <>
-          <Helmet>
-            <title>{help.title} - Mobiville</title>
-            <meta
-              name="description"
-              content="Cette aide va vous permettre d'aborder votre projet de mobilité plus sereinement"
+      <Helmet>
+        <title>{help.title} - Mobiville</title>
+        <meta
+          name="description"
+          content="Cette aide va vous permettre d'aborder votre projet de mobilité plus sereinement"
+        />
+      </Helmet>
+      {isMobile ? (
+        <MobileHeaderLink to="/aides">
+          <ArrowBackIcon color="primary" />
+          <MobileHeaderText>Retour</MobileHeaderText>
+        </MobileHeaderLink>
+      ) : (
+        <DesktopHeaderContainer>
+          <DesktopHeaderLink to="/aides">
+            <DesktopHeaderArrowContainer>
+              <ArrowBackIcon color="primary" />
+            </DesktopHeaderArrowContainer>
+            <DesktopHeaderTextContainer>
+              Retour à la liste d’aides
+            </DesktopHeaderTextContainer>
+          </DesktopHeaderLink>
+        </DesktopHeaderContainer>
+      )}
+      <Container isMobile={isMobile}>
+        <TitleContainer isMobile={isMobile}>
+          <TitleImgContainer>
+            <img
+              src="https://pbs.twimg.com/profile_images/1442109272251305988/K-TftkD7_400x400.jpg"
+              alt=""
+              style={{
+                width: 96,
+                height: 96,
+              }}
             />
-          </Helmet>
-          <Header isMobile={isMobile}>
+          </TitleImgContainer>
+          <TitleTextContainer>
             <H1 isMobile={isMobile}>{help.title}</H1>
-          </Header>
-          <Container isMobile={isMobile}>
+
+            <Description style={{ textAlign: isMobile ? 'center' : 'start' }}>
+              {help.goal}
+            </Description>
+
+            {!isMobile && (
+              <div style={{ margin: 'auto' }}>
+                <HelpLink
+                  target="_blank"
+                  href={help.link}
+                  tag-exit={`faire-ma-demande/${help.title}`}
+                  isMobile={isMobile}
+                >
+                  Faire ma demande
+                </HelpLink>
+              </div>
+            )}
+          </TitleTextContainer>
+        </TitleContainer>
+
+        <PanelsContainer isMobile={isMobile}>
+          <Panel isMobile={isMobile}>
+            <PanelTitle>
+              Descriptif de l{"'"}
+              aide
+            </PanelTitle>
+            <Description
+              dangerouslySetInnerHTML={{
+                __html: help.description,
+              }}
+            />
+          </Panel>
+          <Panel isMobile={isMobile}>
+            <PanelTitle>Quand faire la demande ?</PanelTitle>
+            <Description
+              dangerouslySetInnerHTML={{
+                __html: help.when,
+              }}
+            />
+          </Panel>
+          <Panel isMobile={isMobile}>
+            <PanelTitle>Quelles conditions ?</PanelTitle>
+            <Description
+              dangerouslySetInnerHTML={{
+                __html: help.conditions,
+              }}
+            />
+          </Panel>
+
+          <DoublePanelsContainer isMobile={isMobile}>
             <Panel isMobile={isMobile}>
-              <Title>Objectif de l’aide</Title>
-              <Description>{help.goal}</Description>
-            </Panel>
-            <Panel isMobile={isMobile}>
-              <Title>
-                Descriptif de l{"'"}
-                aide
-              </Title>
-              <Description
-                dangerouslySetInnerHTML={{
-                  __html: help.description,
-                }}
-              />
-            </Panel>
-            <Panel isMobile={isMobile}>
-              <Title>Quand faire la demande ?</Title>
-              <Description
-                dangerouslySetInnerHTML={{
-                  __html: help.when,
-                }}
-              />
-            </Panel>
-            <Panel isMobile={isMobile}>
-              <Title>Quelles conditions ?</Title>
-              <Description
-                dangerouslySetInnerHTML={{
-                  __html: help.conditions,
-                }}
-              />
-            </Panel>
-            <Panel isMobile={isMobile}>
-              <Title>Est-elle cumulable ?</Title>
+              <PanelTitle>Est-elle cumulable ?</PanelTitle>
               <Description
                 dangerouslySetInnerHTML={{
                   __html: help.cumulable,
@@ -178,31 +279,34 @@ const HelpDetailsPage = () => {
               />
             </Panel>
             <Panel isMobile={isMobile}>
-              <Title>Public concerné</Title>
-              {help.who.split(',').map((t) => (
-                <Tag key={t}>{ucFirstOnly(t)}</Tag>
-              ))}
+              <PanelTitle>Public concerné</PanelTitle>
+              {help.who
+                .split(',')
+                .map((t) => ucFirstOnly(t))
+                .join(' · ')}
             </Panel>
+          </DoublePanelsContainer>
+        </PanelsContainer>
 
-            {/* eslint-disable-next-line */}
-            <a
+        {isMobile && (
+          <a
+            target="_blank"
+            href={help.link}
+            style={{ cursor: 'pointer' }}
+            tag-exit={`faire-ma-demande/${help.title}`}
+          >
+            <HelpLink
               target="_blank"
               href={help.link}
-              style={{ cursor: 'pointer' }}
               tag-exit={`faire-ma-demande/${help.title}`}
+              isMobile={isMobile}
             >
-              <HelpButton
-                className="btn primary"
-                type="button"
-                isMobile={isMobile}
-              >
-                Faire ma demande
-              </HelpButton>
-            </a>
-          </Container>
-        </>
-      )}
-      {!help && <p>Chargement...</p>}
+              Faire ma demande
+            </HelpLink>
+          </a>
+        )}
+        <div />
+      </Container>
     </MainLayout>
   )
 }
