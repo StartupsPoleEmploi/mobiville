@@ -5,12 +5,12 @@ import { orderBy } from 'lodash'
 import { Link } from 'react-router-dom'
 import queryString from 'query-string'
 import { Helmet } from 'react-helmet'
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { MainLayout } from '../../components/main-layout'
 import {
-  COLOR_BACKGROUND,
   COLOR_GRAY,
   COLOR_PRIMARY,
   COLOR_TEXT_PRIMARY,
@@ -64,147 +64,109 @@ const Container = styled.div`
   `}
 `
 
-const CategoryPanel = styled.div`
-  width: 424px;
-  min-width: 424px;
-  margin-right: 16px;
+const TagsSelectionPanel = styled.div`
+  width: ${({ isMobile }) => (isMobile ? '100%' : '424px')};
   background: #ffffff;
   box-shadow: ${({ isMobile }) =>
     !isMobile
       ? `0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2)`
       : ''};
   border-radius: 8px;
-  padding: 16px 0 32px 16px;
+  padding: 16px;
+`
+
+const CategoryTagsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 `
 
 const HelpsPanel = styled.div`
   flex: 1;
-  background: #ffffff;
-  box-shadow: ${({ isMobile }) =>
-    !isMobile
-      ? `0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2)`
-      : ''};
-  border-radius: 8px;
-  padding: ${({ isMobile }) => (isMobile ? '0' : '24px 16px 32px 16px')};
+  padding: ${({ isMobile }) => (isMobile ? '0 16px' : '0 16px 32px 16px')};
 `
 
 const CategoryTag = styled(Link)`
   background: ${COLOR_GRAY};
   border-radius: 8px;
-  width: 108px;
-  padding: 8px 12px;
-  margin-right: 18px;
-  display: inline-block;
-  margin-bottom: 16px;
-  box-sizing: border-box;
+  max-width: 118px;
+  width: 100%;
+  padding: 4px;
+  margin: 0 2px;
+  display: block;
   cursor: pointer;
-  border: 2px solid ${COLOR_GRAY};
-
-  img {
-    display: block;
-    margin: 8px auto;
-  }
-
-  p {
-    color: ${COLOR_TEXT_PRIMARY};
-    text-align: center;
-    font-weight: 500;
-    font-size: 12px;
-    margin: 0;
-    padding: 0;
-  }
-
-  ${(props) =>
-    props.selected
-      ? `
-    border: 2px solid ${COLOR_PRIMARY};
-
-    p {
-      color: ${COLOR_PRIMARY};
-    }
-  `
-      : ''}
+  text-align: center;
+  font-weight: 500;
+  border: ${({ selected }) =>
+    selected ? `2px solid ${COLOR_PRIMARY}` : `2px solid ${COLOR_GRAY}`};
+  color: ${({ selected }) => (selected ? COLOR_PRIMARY : COLOR_TEXT_PRIMARY)};
 `
 
-const Tag = styled(Link)`
+const SituationTag = styled(Link)`
   background: ${({ selected }) => (selected ? COLOR_PRIMARY : COLOR_GRAY)};
+  color: ${({ selected }) => (selected ? '#fff' : COLOR_TEXT_PRIMARY)};
   border-radius: 44px;
   padding: 8px;
   margin-right: 8px;
   margin-bottom: 8px;
   display: inline-block;
   cursor: pointer;
-
-  p {
-    color: ${({ selected }) => (selected ? '#fff' : COLOR_TEXT_PRIMARY)};
-    font-weight: 500;
-    font-size: 12px;
-    margin: 0;
-    padding: 0;
-  }
+  font-weight: 500;
+  font-size: 12px;
 `
 
-const TitleHelps = styled.div`
+const TitleHelps = styled.h3`
   margin-top: 0;
   margin-bottom: 16px;
-
-  ${(props) =>
-    props.isMobile
-      ? `
-    background-color: ${COLOR_BACKGROUND};
-    height: 48px;
-    line-height: 48px;
-    font-weight: 500;
-    padding-left: 16px;
-    padding-right: 16px;
-    margin-bottom: 0;
-  `
-      : ''}
+  color: #657078;
+  font-weight: 500;
 `
 
-const Item = styled(Link)`
-  padding: 20px 0 16px 0;
-  border-top: 1px solid ${COLOR_GRAY};
-  display: block;
+const HelpItem = styled(Link)`
+  margin: 16px 0;
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
 
-  p {
-    margin: 0;
-    padding: 0;
-  }
-
-  .first-title {
+  &,
+  &:hover {
     color: ${COLOR_TEXT_PRIMARY};
-    font-weight: 500;
-    font-size: 14px;
-    margin-bottom: 4px;
   }
+`
 
-  .second-title {
-    color: ${COLOR_TEXT_PRIMARY};
-    margin-bottom: 8px;
-  }
+const HelpItemImgContainer = styled.div`
+  background: ${COLOR_GRAY};
+  padding: 8px;
+  width: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+const HelpItemTextContainer = styled.div`
+  padding: 16px;
+  background: #ffffff;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`
 
-  .tag {
-    background: #ffffff;
-    border: 1px solid ${COLOR_TEXT_SECONDARY};
-    color: ${COLOR_TEXT_PRIMARY};
-    box-sizing: border-box;
-    border-radius: 1000px;
-    display: inline-block;
-    margin-right: 8px;
-    margin-bottom: 8px;
-    padding: 4px 6px;
-    font-size: 12px;
-  }
+const HelpItemTextTitle = styled.h4`
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 14px;
+`
 
-  ${(props) =>
-    props.ismobile === 'true'
-      ? `
-    padding: 20px 16px 16px 16px;
-    border-top: none;
-    border-bottom: 2px solid ${COLOR_BACKGROUND};
-  `
-      : ''}
+const HelpItemTags = styled.div`
+  margin-top: 8px;
+`
+
+const ViewMore = styled.div`
+  display: flex;
+  align-items: center;
+  color: ${COLOR_PRIMARY};
+  font-weight: bold;
+  justify-content: flex-end;
+  padding-top: 8px;
 `
 
 const CATEGORIES = [
@@ -306,35 +268,37 @@ const HelpsPage = ({ location: { search } }) => {
       {!isMobile && (
         <Header>
           <HeaderImg src="/Generique_Aides.png" alt="help" />
-          <div className="text">
+          <div>
             <h1>
               Vous avez besoin d{"'"}
               aide pour votre projet de mobilité ?
             </h1>
-            <p>Découvrez les solutions pour accélérer votre projet</p>
+            <h2>Découvrez les solutions pour accélérer votre projet</h2>
           </div>
         </Header>
       )}
       <Container isMobile={isMobile}>
-        <CategoryPanel isMobile={isMobile}>
-          <Title>Découvrez les aides</Title>
+        <TagsSelectionPanel isMobile={isMobile}>
+          <Title>Découvrez les aides pour vous</Title>
           <SubTitle>Quel est votre projet ?</SubTitle>
-          {CATEGORIES.map((c) => {
-            const selected = project && c.key === project.key
-            return (
-              <CategoryTag
-                key={c.text}
-                selected={project && c.key === project.key}
-                to={`/aides?${queryString.stringify({
-                  project: selected ? '' : c.key,
-                  situation: situations.map(({ key }) => key),
-                })}`}
-              >
-                <img src={c.icon} alt={c.text} />
-                <p>{c.text}</p>
-              </CategoryTag>
-            )
-          })}
+          <CategoryTagsContainer>
+            {CATEGORIES.map((c) => {
+              const selected = project && c.key === project.key
+              return (
+                <CategoryTag
+                  key={c.text}
+                  selected={project && c.key === project.key}
+                  to={`/aides?${queryString.stringify({
+                    project: selected ? '' : c.key,
+                    situation: situations.map(({ key }) => key),
+                  })}`}
+                >
+                  <img src={c.icon} alt={c.text} />
+                  <div>{c.text}</div>
+                </CategoryTag>
+              )
+            })}
+          </CategoryTagsContainer>
           <SubTitle>Ma situation</SubTitle>
           {SITUATIONS.map((c) => {
             const selected = situations.some(({ key }) => key === c.key)
@@ -342,7 +306,7 @@ const HelpsPage = ({ location: { search } }) => {
               ? situations.filter(({ key }) => key !== c.key)
               : situations.concat({ key: c.key })
             return (
-              <Tag
+              <SituationTag
                 key={c.text}
                 selected={selected}
                 to={`/aides?${queryString.stringify({
@@ -350,31 +314,45 @@ const HelpsPage = ({ location: { search } }) => {
                   situation: situationsForLink.map(({ key }) => key),
                 })}`}
               >
-                <p>{c.text}</p>
-              </Tag>
+                {c.text}
+              </SituationTag>
             )
           })}
-        </CategoryPanel>
+        </TagsSelectionPanel>
         <HelpsPanel isMobile={isMobile}>
-          <TitleHelps isMobile={isMobile}>
-            {project || situations.length
-              ? 'Mes aides disponibles'
-              : 'Les aides les plus consultées'}
-          </TitleHelps>
+          {!isMobile && (
+            <TitleHelps>
+              {project || situations.length
+                ? 'Mes aides disponibles'
+                : 'Les aides les plus consultées'}
+            </TitleHelps>
+          )}
           {list.map((item) => (
-            <Item
+            <HelpItem
               key={item.id}
               to={`/aides/${item.slug}`}
               ismobile={isMobile ? 'true' : 'false'}
             >
-              <p className="first-title">{item.title}</p>
-              <p className="second-title">{item.goal}</p>
-              {item.who.split(',').map((t) => (
-                <p className="tag" key={t}>
-                  {ucFirstOnly(t)}
-                </p>
-              ))}
-            </Item>
+              <HelpItemImgContainer>
+                <img src="FIXME.jpg" alt="" />
+              </HelpItemImgContainer>
+              <HelpItemTextContainer>
+                <div>
+                  <HelpItemTextTitle>{item.title}</HelpItemTextTitle>
+                  <div>{item.goal}</div>
+                </div>
+                <HelpItemTags style={{ color: COLOR_TEXT_SECONDARY }}>
+                  Public concerné :{' '}
+                  {item.who
+                    .split(',')
+                    .map((t) => ucFirstOnly(t))
+                    .join(' · ')}
+                </HelpItemTags>
+                <ViewMore>
+                  En savoir plus <ArrowForwardIcon fontSize="small" />
+                </ViewMore>
+              </HelpItemTextContainer>
+            </HelpItem>
           ))}
         </HelpsPanel>
       </Container>
