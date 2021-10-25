@@ -334,7 +334,11 @@ const HelpsPage = ({ location: { search } }) => {
               ismobile={isMobile ? 'true' : 'false'}
             >
               <HelpItemImgContainer>
-                <img src="FIXME.jpg" alt="" />
+                <img
+                  src={`/help-logos/${item.logo}`}
+                  alt=""
+                  style={{ width: '100%', height: 'auto' }}
+                />
               </HelpItemImgContainer>
               <HelpItemTextContainer>
                 <div>

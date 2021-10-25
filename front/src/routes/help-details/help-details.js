@@ -210,11 +210,11 @@ const HelpDetailsPage = () => {
         <TitleContainer isMobile={isMobile}>
           <TitleImgContainer>
             <img
-              src="https://pbs.twimg.com/profile_images/1442109272251305988/K-TftkD7_400x400.jpg"
+              src={`/help-logos/${help.logo}`}
               alt=""
               style={{
                 width: 96,
-                height: 96,
+                height: 'auto',
               }}
             />
           </TitleImgContainer>
