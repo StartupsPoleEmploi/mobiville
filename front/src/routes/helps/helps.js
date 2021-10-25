@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import queryString from 'query-string'
 import { Helmet } from 'react-helmet'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+import EuroIcon from '@material-ui/icons/Euro'
 
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
@@ -158,6 +159,18 @@ const HelpItemTextTitle = styled.h4`
 
 const HelpItemTags = styled.div`
   margin-top: 8px;
+`
+
+const HelpItemType = styled.div`
+  display: flex;
+  align-items: center;
+  padding-top: 16px;
+  color: #37b4b4;
+`
+const HelpItemText = styled.div`
+  margin-left: 8px;
+  font-weight: 500;
+  color: ${COLOR_TEXT_SECONDARY};
 `
 
 const ViewMore = styled.div`
@@ -352,6 +365,10 @@ const HelpsPage = ({ location: { search } }) => {
                     .map((t) => ucFirstOnly(t))
                     .join(' · ')}
                 </HelpItemTags>
+                <HelpItemType>
+                  <EuroIcon />
+                  <HelpItemText>{item.type}</HelpItemText>
+                </HelpItemType>
                 <ViewMore>
                   En savoir plus <ArrowForwardIcon fontSize="small" />
                 </ViewMore>
