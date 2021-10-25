@@ -12,6 +12,7 @@ import {
   COLOR_GRAY,
   COLOR_PRIMARY,
   COLOR_TEXT_PRIMARY,
+  COLOR_TEXT_SECONDARY,
 } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { ucFirstOnly } from '../../utils/utils'
@@ -221,8 +222,14 @@ const HelpDetailsPage = () => {
           <TitleTextContainer>
             <H1 isMobile={isMobile}>{help.title}</H1>
 
-            <Description style={{ textAlign: isMobile ? 'center' : 'start' }}>
+            <Description style={{ textAlign: 'center' }}>
               {help.goal}
+            </Description>
+
+            <Description
+              style={{ textAlign: 'center', color: COLOR_TEXT_SECONDARY }}
+            >
+              Aide proposée par {help.partner}
             </Description>
 
             {!isMobile && (
