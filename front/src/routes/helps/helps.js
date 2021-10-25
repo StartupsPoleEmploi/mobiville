@@ -240,7 +240,7 @@ const HelpsPage = ({ location: { search } }) => {
 
     if (project) {
       if (
-        !preview.situtation.toLowerCase().includes(project.key.toLowerCase())
+        !preview.situation.toLowerCase().includes(project.key.toLowerCase())
       ) {
         return false
       }

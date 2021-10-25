@@ -47,7 +47,7 @@ export default (sequelizeInstance) => {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      situtation: {
+      situation: {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
@@ -59,6 +59,18 @@ export default (sequelizeInstance) => {
       slug: {
         type: Sequelize.STRING(255),
         unique: true,
+      },
+      logo: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      type: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      partner: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
       },
     },
     {
