@@ -16,6 +16,8 @@ module.exports = {
       description: helpData.description.replace(/\n/g, '<br />'),
     }))
 
+    console.log(data)
+
     await models.helps.destroy({
       where: {},
       truncate: true,

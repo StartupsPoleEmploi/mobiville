@@ -18,7 +18,8 @@
     "sync:tensionsPCS": "babel-node ./src/scripts/syncTensionsPCS.js",
     "sync:regionsTensionsCriterions": "babel-node ./src/scripts/syncRegionsTensionsCriterions.js",
     "sync:equipments": "babel-node ./src/scripts/syncEquipments.js",
-    "sync:equipmentsSpecial": "babel-node ./src/scripts/syncSpecialEquipments.js"
+    "sync:equipmentsSpecial": "babel-node ./src/scripts/syncSpecialEquipments.js",
+    "sync:helps": "babel-node ./src/scripts/syncHelps.js"
   },
   "dependencies": {
     "async": "^3.2.0",

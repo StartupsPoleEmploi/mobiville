@@ -14,9 +14,12 @@ export default class RouteHelps extends Route {
         'goal',
         'who',
         'section',
-        'situtation',
+        'situation',
         'count_vue',
         'slug',
+        'logo',
+        'type',
+        'partner',
       ],
       raw: true,
     })
