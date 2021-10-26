@@ -3,6 +3,8 @@ services:
   nginx:
     image: nginx:1.17.10
     restart: unless-stopped
+    depends_on:
+      - 'api'
     ports:
       - '80:80'
     volumes:
