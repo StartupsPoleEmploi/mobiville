@@ -39,13 +39,14 @@ const MainLayout = styled.div`
 
 const StatistiqueLayout = styled.div`
   background: #ffffff;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
-    0px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   width: 400px;
   padding: 16px;
   margin-right: 16px;
   text-align: center;
+  background: #ffffff;
+  border: 1px solid ${COLOR_GRAY};
+  border-radius: 8px;
 
   ${({ isMobile }) =>
     isMobile
@@ -78,26 +79,27 @@ const StatsItem = styled.div`
   }
 `
 
-const JobLayout = styled.div`
-  background: #ffffff;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
-    0px 1px 3px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  flex: 1;
-  padding: 16px;
+const JobLoading = styled.div`
+  margin: auto;
+  padding-top: 8px;
+`
 
-  ${({ isMobile }) =>
-    isMobile
-      ? `
-      box-shadow: none;
-      border-radius: 0;
-  `
-      : ''}
+const JobLayout = styled.div`
+  flex: 1;
+  margin-top: ${({ isMobile }) => (isMobile ? '8px' : '0')};
 `
 
 const JobContentLayout = styled.div`
   display: flex;
   flex-wrap: wrap;
+`
+
+const JobSearchFormControl = styled(FormControl)`
+  padding: 16px;
+  margin-bottom: 8px;
+  background: #ffffff;
+  border: 1px solid ${COLOR_GRAY};
+  border-radius: 8px;
 `
 
 const JobTitleLayout = styled.div`
@@ -106,12 +108,29 @@ const JobTitleLayout = styled.div`
   font-weight: bold;
   font-size: 14px;
   padding-bottom: 16px;
-  border-bottom: 2px solid ${COLOR_GRAY};
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid ${COLOR_GRAY};
+  border-radius: 8px;
+`
+
+const JobTitleText = styled.h3`
+  flex: 0 1 30%;
+`
+
+const JobTitleFilters = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  flex: 1 0 60%;
 `
 
 const JobItem = styled.div`
-  padding: 16px 0;
-  border-bottom: 2px solid ${COLOR_GRAY};
+  background: #ffffff;
+  border: 1px solid ${COLOR_GRAY};
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 8px;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -375,260 +394,262 @@ const PanelCityJobs = ({
           </StatsItem>
         </StatsContainer>
       </StatistiqueLayout>
-      <JobLayout isMobile={isMobile}>
-        <FormControl fullWidth style={{ paddingBottom: '16px' }}>
-          <TextField
-            label="Rechercher dans les offres"
-            value={searchValue}
-            onChange={(event) => setSearchValue(event.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </FormControl>
-        <JobTitleLayout>
-          <h3 style={{ flex: '0 1 35%' }}>
-            {displayedProfessions.length} offre
-            {displayedProfessions.length > 1 ? 's' : ''}
-            {' pour '}
-            {romeLabel}
-            <br />
-            <span style={{ fontSize: 12 }}>Dans un rayon de 30 km</span>
-          </h3>
 
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              flex: '0 0 65%',
-              flexWrap: 'wrap',
-            }}
-          >
-            <StyledFormControl>
-              <InputLabel htmlFor="filter-date-creation">
-                Date de publication
-              </InputLabel>
-              <Select
-                inputProps={{
-                  id: 'filter-date-creation',
-                }}
-                label="Date de publication"
-                value={dateFilter}
-                onChange={(event) => setDateFilter(event.target.value)}
-              >
-                <MenuItem value={ONE_DAY}>Un jour</MenuItem>
-                <MenuItem value={THREE_DAY}>Trois jours</MenuItem>
-                <MenuItem value={ONE_WEEK}>Une semaine</MenuItem>
-                <MenuItem value={TWO_WEEKS}>Deux semaines</MenuItem>
-                <MenuItem value={ONE_MONTH}>Un mois</MenuItem>
-                <MenuItem value={ALL_TIME}>Toutes les offres</MenuItem>
-              </Select>
-            </StyledFormControl>
+      {isLoadingProfessions ? (
+        <JobLoading>Chargement des offres...</JobLoading>
+      ) : (
+        <JobLayout isMobile={isMobile}>
+          <JobSearchFormControl fullWidth>
+            <TextField
+              label="Rechercher dans les offres"
+              value={searchValue}
+              onChange={(event) => setSearchValue(event.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </JobSearchFormControl>
 
-            <StyledFormControl>
-              <InputLabel htmlFor="filter-contract">Contrat</InputLabel>
-              <Select
-                inputProps={{
-                  id: 'filter-contract',
-                }}
-                label="Contrat"
-                multiple
-                value={contractFilters}
-                onChange={(event) => {
-                  setContractFilters(event.target.value)
-                }}
-                // quick & dirty replace of the only label that needs it
-                renderValue={(selected) =>
-                  selected.join(', ').replace('MIS', 'Intérim')
-                }
-              >
-                {CONTRACT_TYPES.map((filter) => {
-                  const isChecked = contractFilters.includes(filter)
-                  const label = filter.concat(
-                    contractFilters.length === 0 || isChecked
-                      ? ` (${contractCountObject[filter] || 0})`
-                      : ''
-                  )
-                  return (
-                    <MenuItem value={filter}>
-                      <Checkbox checked={isChecked} />
-                      <ListItemText
-                        // quick & dirty replace of the only label that needs it
-                        primary={label.replace('MIS', 'Intérim')}
-                      />
-                    </MenuItem>
-                  )
-                })}
-              </Select>
-            </StyledFormControl>
+          <JobTitleLayout>
+            <JobTitleText>
+              {displayedProfessions.length} offre
+              {displayedProfessions.length > 1 ? 's' : ''}
+              {' pour '}
+              {romeLabel}
+              <br />
+              <span style={{ fontSize: 12 }}>Dans un rayon de 30 km</span>
+            </JobTitleText>
 
-            <StyledFormControl>
-              <InputLabel htmlFor="filter-duration">Durée hebdo</InputLabel>
-              <Select
-                inputProps={{
-                  id: 'filter-duration',
-                }}
-                label="Durée hebdo"
-                multiple
-                value={durationFilters}
-                onChange={(event) => {
-                  setDurationFilters(event.target.value)
-                }}
-                renderValue={(selected) => selected.join(', ')}
-              >
-                {DURATION_TYPES.map((filter) => {
-                  const isChecked = durationFilters.includes(filter)
-                  const label = filter.concat(
-                    durationFilters.length === 0 || isChecked
-                      ? ` (${durationCountObject[filter] || 0})`
-                      : ''
-                  )
-
-                  return (
-                    <MenuItem value={filter}>
-                      <Checkbox checked={durationFilters.includes(filter)} />
-                      <ListItemText primary={label} />
-                    </MenuItem>
-                  )
-                })}
-              </Select>
-            </StyledFormControl>
-          </div>
-        </JobTitleLayout>
-
-        <JobContentLayout>
-          {isLoadingProfessions && <p>Chargement des métiers</p>}
-          {displayedProfessions.map((p) => {
-            // We truncate too long descriptions. "?", as it seems they can be absent.
-            const shortDescription =
-              p.description?.length > MAX_DESCRIPTION_LENGTH
-                ? p.description
-                    .slice(0, MAX_DESCRIPTION_LENGTH)
-                    .concat(
-                      p.description.slice(MAX_DESCRIPTION_LENGTH).split(' ')[0]
-                    )
-                    .concat('…')
-                : p.description
-
-            const contractLabel =
-              p.typeContrat === 'CDI' || p.typeContrat === 'CDD'
-                ? p.typeContrat
-                : p.typeContratLibelle
-
-            return (
-              <JobItem key={p.id}>
-                <JobItemHeader>
-                  <div>
-                    <JobItemTitle>{p.appellationlibelle}</JobItemTitle>
-                    {p.entreprise?.nom && (
-                      <div style={{ color: COLOR_TEXT_SECONDARY }}>
-                        {p.entreprise.nom}
-                      </div>
-                    )}
-                    {p.lieuTravail?.libelle && (
-                      <div style={{ color: COLOR_TEXT_SECONDARY }}>
-                        {p.lieuTravail.libelle} -{' '}
-                        <a
-                          href={`https://fr.mappy.com/plan#/${p.lieuTravail.libelle}`}
-                          target="_blank"
-                          referer="noreferrer noopener"
-                        >
-                          Localiser avec Mappy
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                  {fullJobsOnDisplay[p.id] && !isMobile && (
-                    <ApplyToJobLink
-                      href={p.origineOffre.urlOrigine}
-                      target="_blank"
-                      tag-exit="offres-d-emplois"
-                    >
-                      Postuler
-                    </ApplyToJobLink>
-                  )}
-                </JobItemHeader>
-                <p className="description">
-                  {fullJobsOnDisplay[p.id] ? (
-                    <>
-                      {p.description.split('\n').map((text) => (
-                        <>
-                          <span>{text}</span>
-                          <br />
-                        </>
-                      ))}
-                    </>
-                  ) : (
-                    shortDescription
-                  )}
-                </p>
-
-                <JobItemAdditionalInfos>
-                  {p.salaire?.libelle && (
-                    <JobItemAdditionalInfo>
-                      <EuroIcon style={{ fontSize: 13, marginRight: 8 }} />
-                      Salaire : {p.salaire?.libelle}
-                    </JobItemAdditionalInfo>
-                  )}
-                  <JobItemAdditionalInfo>
-                    <DescriptionIcon style={{ fontSize: 13, marginRight: 8 }} />
-                    {contractLabel}{' '}
-                    {p.dureeTravailLibelleConverti &&
-                      ` - ${p.dureeTravailLibelleConverti}`}
-                  </JobItemAdditionalInfo>
-                  <JobItemAdditionalInfo>
-                    <ScheduleIcon style={{ fontSize: 13, marginRight: 8 }} />
-                    {thereAre(p.dateCreation)}
-                  </JobItemAdditionalInfo>
-                </JobItemAdditionalInfos>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: isMobile ? 'space-between' : 'flex-end',
+            <JobTitleFilters>
+              <StyledFormControl>
+                <InputLabel htmlFor="filter-date-creation">
+                  Date de publication
+                </InputLabel>
+                <Select
+                  inputProps={{
+                    id: 'filter-date-creation',
                   }}
+                  label="Date de publication"
+                  value={dateFilter}
+                  onChange={(event) => setDateFilter(event.target.value)}
                 >
-                  {fullJobsOnDisplay[p.id] && isMobile ? (
-                    <ApplyToJobLink
-                      href={p.origineOffre.urlOrigine}
-                      target="_blank"
-                      tag-exit="offres-d-emplois"
-                    >
-                      Postuler
-                    </ApplyToJobLink>
-                  ) : (
-                    <div />
-                  )}
+                  <MenuItem value={ONE_DAY}>Un jour</MenuItem>
+                  <MenuItem value={THREE_DAY}>Trois jours</MenuItem>
+                  <MenuItem value={ONE_WEEK}>Une semaine</MenuItem>
+                  <MenuItem value={TWO_WEEKS}>Deux semaines</MenuItem>
+                  <MenuItem value={ONE_MONTH}>Un mois</MenuItem>
+                  <MenuItem value={ALL_TIME}>Toutes les offres</MenuItem>
+                </Select>
+              </StyledFormControl>
 
-                  <ViewMoreButton onClick={() => toggleFullJobDisplay(p.id)}>
+              <StyledFormControl>
+                <InputLabel htmlFor="filter-contract">Contrat</InputLabel>
+                <Select
+                  inputProps={{
+                    id: 'filter-contract',
+                  }}
+                  label="Contrat"
+                  multiple
+                  value={contractFilters}
+                  onChange={(event) => {
+                    setContractFilters(event.target.value)
+                  }}
+                  // quick & dirty replace of the only label that needs it
+                  renderValue={(selected) =>
+                    selected.join(', ').replace('MIS', 'Intérim')
+                  }
+                >
+                  {CONTRACT_TYPES.map((filter) => {
+                    const isChecked = contractFilters.includes(filter)
+                    const label = filter.concat(
+                      contractFilters.length === 0 || isChecked
+                        ? ` (${contractCountObject[filter] || 0})`
+                        : ''
+                    )
+                    return (
+                      <MenuItem value={filter}>
+                        <Checkbox checked={isChecked} />
+                        <ListItemText
+                          // quick & dirty replace of the only label that needs it
+                          primary={label.replace('MIS', 'Intérim')}
+                        />
+                      </MenuItem>
+                    )
+                  })}
+                </Select>
+              </StyledFormControl>
+
+              <StyledFormControl>
+                <InputLabel htmlFor="filter-duration">Durée hebdo</InputLabel>
+                <Select
+                  inputProps={{
+                    id: 'filter-duration',
+                  }}
+                  label="Durée hebdo"
+                  multiple
+                  value={durationFilters}
+                  onChange={(event) => {
+                    setDurationFilters(event.target.value)
+                  }}
+                  renderValue={(selected) => selected.join(', ')}
+                >
+                  {DURATION_TYPES.map((filter) => {
+                    const isChecked = durationFilters.includes(filter)
+                    const label = filter.concat(
+                      durationFilters.length === 0 || isChecked
+                        ? ` (${durationCountObject[filter] || 0})`
+                        : ''
+                    )
+
+                    return (
+                      <MenuItem value={filter}>
+                        <Checkbox checked={durationFilters.includes(filter)} />
+                        <ListItemText primary={label} />
+                      </MenuItem>
+                    )
+                  })}
+                </Select>
+              </StyledFormControl>
+            </JobTitleFilters>
+          </JobTitleLayout>
+
+          <JobContentLayout>
+            {displayedProfessions.map((p) => {
+              // We truncate too long descriptions. "?", as it seems they can be absent.
+              const shortDescription =
+                p.description?.length > MAX_DESCRIPTION_LENGTH
+                  ? p.description
+                      .slice(0, MAX_DESCRIPTION_LENGTH)
+                      .concat(
+                        p.description
+                          .slice(MAX_DESCRIPTION_LENGTH)
+                          .split(' ')[0]
+                      )
+                      .concat('…')
+                  : p.description
+
+              const contractLabel =
+                p.typeContrat === 'CDI' || p.typeContrat === 'CDD'
+                  ? p.typeContrat
+                  : p.typeContratLibelle
+
+              return (
+                <JobItem key={p.id}>
+                  <JobItemHeader>
+                    <div>
+                      <JobItemTitle>{p.appellationlibelle}</JobItemTitle>
+                      {p.entreprise?.nom && (
+                        <div style={{ color: COLOR_TEXT_SECONDARY }}>
+                          {p.entreprise.nom}
+                        </div>
+                      )}
+                      {p.lieuTravail?.libelle && (
+                        <div style={{ color: COLOR_TEXT_SECONDARY }}>
+                          {p.lieuTravail.libelle} -{' '}
+                          <a
+                            href={`https://fr.mappy.com/plan#/${p.lieuTravail.libelle}`}
+                            target="_blank"
+                            referer="noreferrer noopener"
+                          >
+                            Localiser avec Mappy
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                    {fullJobsOnDisplay[p.id] && !isMobile && (
+                      <ApplyToJobLink
+                        href={p.origineOffre.urlOrigine}
+                        target="_blank"
+                        tag-exit="offres-d-emplois"
+                      >
+                        Postuler
+                      </ApplyToJobLink>
+                    )}
+                  </JobItemHeader>
+                  <p className="description">
                     {fullJobsOnDisplay[p.id] ? (
                       <>
-                        Voir moins
-                        <ArrowUpwardIcon
-                          fontSize="small"
-                          style={{ marginLeft: 8 }}
-                        />
+                        {p.description.split('\n').map((text) => (
+                          <>
+                            <span>{text}</span>
+                            <br />
+                          </>
+                        ))}
                       </>
                     ) : (
-                      <>
-                        En savoir plus
-                        <ArrowDownwardIcon
-                          fontSize="small"
-                          style={{ marginLeft: 8 }}
-                        />
-                      </>
+                      shortDescription
                     )}
-                  </ViewMoreButton>
-                </div>
-              </JobItem>
-            )
-          })}
-        </JobContentLayout>
-      </JobLayout>
+                  </p>
+
+                  <JobItemAdditionalInfos>
+                    {p.salaire?.libelle && (
+                      <JobItemAdditionalInfo>
+                        <EuroIcon style={{ fontSize: 13, marginRight: 8 }} />
+                        Salaire : {p.salaire?.libelle}
+                      </JobItemAdditionalInfo>
+                    )}
+                    <JobItemAdditionalInfo>
+                      <DescriptionIcon
+                        style={{ fontSize: 13, marginRight: 8 }}
+                      />
+                      {contractLabel}{' '}
+                      {p.dureeTravailLibelleConverti &&
+                        ` - ${p.dureeTravailLibelleConverti}`}
+                    </JobItemAdditionalInfo>
+                    <JobItemAdditionalInfo>
+                      <ScheduleIcon style={{ fontSize: 13, marginRight: 8 }} />
+                      {thereAre(p.dateCreation)}
+                    </JobItemAdditionalInfo>
+                  </JobItemAdditionalInfos>
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: isMobile ? 'space-between' : 'flex-end',
+                    }}
+                  >
+                    {fullJobsOnDisplay[p.id] && isMobile ? (
+                      <ApplyToJobLink
+                        href={p.origineOffre.urlOrigine}
+                        target="_blank"
+                        tag-exit="offres-d-emplois"
+                      >
+                        Postuler
+                      </ApplyToJobLink>
+                    ) : (
+                      <div />
+                    )}
+
+                    <ViewMoreButton onClick={() => toggleFullJobDisplay(p.id)}>
+                      {fullJobsOnDisplay[p.id] ? (
+                        <>
+                          Voir moins
+                          <ArrowUpwardIcon
+                            fontSize="small"
+                            style={{ marginLeft: 8 }}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          En savoir plus
+                          <ArrowDownwardIcon
+                            fontSize="small"
+                            style={{ marginLeft: 8 }}
+                          />
+                        </>
+                      )}
+                    </ViewMoreButton>
+                  </div>
+                </JobItem>
+              )
+            })}
+          </JobContentLayout>
+        </JobLayout>
+      )}
     </MainLayout>
   )
 }
