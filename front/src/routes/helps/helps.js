@@ -7,6 +7,10 @@ import queryString from 'query-string'
 import { Helmet } from 'react-helmet'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import EuroIcon from '@mui/icons-material/Euro'
+import HomeWorkIcon from '@mui/icons-material/HomeWork'
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar'
+import PeopleIcon from '@mui/icons-material/People'
 
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
@@ -340,41 +344,56 @@ const HelpsPage = ({ location: { search } }) => {
                 : 'Les aides les plus consultées'}
             </TitleHelps>
           )}
-          {list.map((item) => (
-            <HelpItem
-              key={item.id}
-              to={`/aides/${item.slug}`}
-              ismobile={isMobile ? 'true' : 'false'}
-            >
-              <HelpItemImgContainer>
-                <img
-                  src={`/help-logos/${item.logo}`}
-                  alt=""
-                  style={{ width: '100%', height: 'auto' }}
-                />
-              </HelpItemImgContainer>
-              <HelpItemTextContainer>
-                <div>
-                  <HelpItemTextTitle>{item.title}</HelpItemTextTitle>
-                  <div>{item.goal}</div>
-                </div>
-                <HelpItemTags style={{ color: COLOR_TEXT_SECONDARY }}>
-                  Public concerné :{' '}
-                  {item.who
-                    .split(',')
-                    .map((t) => ucFirstOnly(t))
-                    .join(' · ')}
-                </HelpItemTags>
-                <HelpItemType>
-                  <EuroIcon />
-                  <HelpItemText>{item.type}</HelpItemText>
-                </HelpItemType>
-                <ViewMore>
-                  En savoir plus <ArrowForwardIcon fontSize="small" />
-                </ViewMore>
-              </HelpItemTextContainer>
-            </HelpItem>
-          ))}
+          {list.map((item) => {
+            // kinda clunky, using labels to determine icon.
+            const helpIcon = item.type.includes('admin') ? (
+              <ReceiptLongIcon />
+            ) : item.type.includes('logement') ? (
+              <HomeWorkIcon />
+            ) : item.type.includes('financière') ? (
+              <EuroIcon />
+            ) : item.type.includes('transport') ? (
+              <DirectionsCarIcon />
+            ) : (
+              <PeopleIcon />
+            )
+
+            return (
+              <HelpItem
+                key={item.id}
+                to={`/aides/${item.slug}`}
+                ismobile={isMobile ? 'true' : 'false'}
+              >
+                <HelpItemImgContainer>
+                  <img
+                    src={`/help-logos/${item.logo}`}
+                    alt=""
+                    style={{ width: '100%', height: 'auto' }}
+                  />
+                </HelpItemImgContainer>
+                <HelpItemTextContainer>
+                  <div>
+                    <HelpItemTextTitle>{item.title}</HelpItemTextTitle>
+                    <div>{item.goal}</div>
+                  </div>
+                  <HelpItemTags style={{ color: COLOR_TEXT_SECONDARY }}>
+                    Public concerné :{' '}
+                    {item.who
+                      .split(',')
+                      .map((t) => ucFirstOnly(t))
+                      .join(' · ')}
+                  </HelpItemTags>
+                  <HelpItemType>
+                    {helpIcon}
+                    <HelpItemText>{item.type}</HelpItemText>
+                  </HelpItemType>
+                  <ViewMore>
+                    En savoir plus <ArrowForwardIcon fontSize="small" />
+                  </ViewMore>
+                </HelpItemTextContainer>
+              </HelpItem>
+            )
+          })}
         </HelpsPanel>
       </Container>
     </MainLayout>
