@@ -12,7 +12,7 @@
       "situation": "je déménage",
       "slug": "mobili-jeune",
       "logo": "mobili-jeune.png",
-      "type": "Aide financiere",
+      "type": "Aide financière",
       "partner": "Action logement"
     },
     {
@@ -70,13 +70,13 @@
       "when": "Votre demande doit être effectuée avant votre entretien d’embauche, votre prestation, votre immersion professionnelle (PMSMP) ou votre participation à un concours public ou à un examen certifiant, au plus tard dans un délai de 7 jours après l’entretien d’embauche, le premier jour de la prestation, de l’immersion, du concours public ou de l'examen certifiant.",
       "conditions": "Le lieu de l’entretien d’embauche, du concours public, de l'examen certifiant ou de l’immersion professionnelle doit être situé sur le territoire français et à plus de 60 km aller-retour (ou à 2 heures de trajet aller-retour) du lieu de votre domicile. \\nPour l’Outre-mer, la condition est de 20 km aller-retour.\\nL’entretien d’embauche doit concerner : soit un contrat à durée indéterminée (CDI), soit un contrat à durée déterminée (CDD) ou un contrat de travail temporaire de 3 mois consécutifs minimum, que ce soit à temps plein ou à temps partiel. \\nVous devez être inscrit à Pôle emploi\\nVous ne devez pas être indemnisé au titre d’une allocation chômage, ou être indemnisé au titre d'une autre allocation dont le montant est inférieur ou égal à celui de l'allocation de retour à l’emploi (ARE) minimale.\\nDans certaines situations particulières définies localement, une aide à la mobilité peut être attribuée, même si certaines conditions ne sont pas remplies. Cette décision exceptionnelle relève de l’appréciation de votre conseiller et de la validation du directeur d’agence",
       "cumulable": "non",
-      "link": "https://www.pole-emploi.fr/candidat/vos-recherches/les-aides-financieres/recherche-demploi---laide-au-dep.html",
+      "link": "https://candidat.pole-emploi.fr/candidat/aides/mobilite/tableaudebord",
       "who": "demandeur d'emploi, plus de 26 ans, moins de 26 ans",
       "section": "transport,, logement",
       "situation": "je recherche un emploi",
       "slug": "aide-pour-la-recherche-demploi",
       "logo": "pole-emploi.png",
-      "type": "Aide financiere",
+      "type": "Aide financière",
       "partner": "Pôle emploi"
     },
     {
@@ -86,13 +86,13 @@
       "when": "Votre demande doit être effectuée dès la connaissance de votre embauche et au plus tard dans les 30 jours.",
       "conditions": "Le lieu de votre reprise d’emploi doit être situé sur le territoire français et à plus de 60 km aller-retour, ou à 2 heures de trajet aller-retour du lieu de votre domicile (pour l’Outre-mer, la condition est de 20 km aller-retour).\\nL’emploi repris doit concerner soit un contrat à durée indéterminée (CDI), soit un contrat à durée déterminée (CDD) ou un contrat de travail temporaire de 3 mois consécutifs minimum à temps plein ou à temps partiel.",
       "cumulable": "non",
-      "link": "https://www.pole-emploi.fr/candidat/vos-recherches/les-aides-financieres/reprise-demploi---laide-au-depla.html",
+      "link": "https://candidat.pole-emploi.fr/candidat/aides/mobilite/tableaudebord",
       "who": "demandeur d'emploi avec promesse d'embauche, plus de 26 ans, moins de 26 ans",
       "section": "logement, transport",
       "situation": "j'emménage, je recherche un logement",
       "slug": "aide-pour-la-reprise-demploi",
       "logo": "pole-emploi.png",
-      "type": "Aide financiere",
+      "type": "Aide financière",
       "partner": "Pôle emploi"
     },
     {
