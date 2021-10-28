@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core'
-import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined'
 
 import { Button } from '../../components/button'
 

@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
@@ -53,6 +53,8 @@ const Step4Component = ({ onNext, values }) => {
       marginRight: (index + 1) % 2 !== 0 ? 15 : 0,
       marginBottom: 15,
       border: 'none',
+      display: 'flex',
+      flexDirection: 'column',
     }
 
     if (

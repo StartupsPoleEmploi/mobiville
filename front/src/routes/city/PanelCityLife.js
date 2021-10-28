@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
-import { IconButton, Tooltip } from '@material-ui/core'
-import InfoIcon from '@material-ui/icons/Info'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import { IconButton, Tooltip } from '@mui/material'
+import InfoIcon from '@mui/icons-material/Info'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 import {
@@ -239,7 +239,7 @@ const PanelCityLife = ({ city }) => {
             <p className="title">
               <span>Jardins remarquables</span>
               <Tooltip title="Ce label désigne les parcs et jardins d'exceptions">
-                <IconButton>
+                <IconButton size="large">
                   <InfoIcon />
                 </IconButton>
               </Tooltip>

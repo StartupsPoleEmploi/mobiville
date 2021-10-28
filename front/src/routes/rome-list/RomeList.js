@@ -3,7 +3,7 @@ import { Link as _Link } from 'react-router-dom'
 import styled from 'styled-components'
 import axios from 'axios'
 import { deburr, sortBy } from 'lodash'
-import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined'
 
 import { MainLayout } from '../../components/main-layout'
 import { isMobileView } from '../../constants/mobile'

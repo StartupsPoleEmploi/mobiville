@@ -5,7 +5,7 @@ import './assets/styles/main.scss'
 import {
   MuiThemeProvider,
   unstable_createMuiStrictModeTheme as createMuiTheme,
-} from '@material-ui/core/styles'
+} from '@mui/material/styles'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import Providers from './common/contexts'

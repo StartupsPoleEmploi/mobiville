@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { Button as ButtonUI } from '@material-ui/core'
+import { Button as ButtonUI } from '@mui/material'
 import {
   COLOR_GRAY,
   COLOR_PRIMARY,

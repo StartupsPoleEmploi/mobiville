@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
 import LOGO from '../assets/images/LogoMobiville_gros.svg'
 import LOGO_AL from '../assets/images/logo-action-logement.png'
 import LOGO_PE from '../assets/images/logo-pole-emploi.png'

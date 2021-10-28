@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Typography } from '@material-ui/core'
-import TuneIcon from '@material-ui/icons/Tune'
+import { Typography } from '@mui/material'
+import TuneIcon from '@mui/icons-material/Tune'
 
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'

@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import PersonIcon from '@material-ui/icons/Person'
+import PersonIcon from '@mui/icons-material/Person'
 import { Link, useHistory } from 'react-router-dom'
-import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined'
 import { useCities } from '../../common/contexts/citiesContext'
 import {
   COLOR_PRIMARY,

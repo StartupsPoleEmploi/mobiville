@@ -1,5 +1,5 @@
-import { TextField } from '@material-ui/core'
-import Autocomplete from '@material-ui/lab/Autocomplete'
+import { TextField } from '@mui/material'
+import Autocomplete from '@mui/material/Autocomplete'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
@@ -31,9 +31,6 @@ const JobTextField = styled(TextField)`
     }
   }
 `
-
-// impossible separator to find in a job name, used to detect a user has selected on autocomplete
-const SEPARATOR = '||=|=||'
 
 const Step2Component = ({ onNext }) => {
   const size = useWindowSize()
@@ -74,21 +71,20 @@ const Step2Component = ({ onNext }) => {
           onInputChange={(event, newValue) => {
             if (!event) return
 
-            if (newValue.includes(SEPARATOR)) {
-              const [key] = newValue.split(SEPARATOR)
-              const job = jobsMatchingCriterions.find((c) => c.key === key)
-
-              if (!job) return
-
-              onNext({ rome: key })
-            }
-
             setSearchedLabel(newValue)
+          }}
+          onChange={(event, value, reason) => {
+            if (reason !== 'selectOption') return
+
+            const job = jobsMatchingCriterions.find(
+              (job) => job.key === value.key
+            )
+            if (!job) return
+
+            onNext({ rome: job.key })
           }}
           inputValue={searchedLabel}
           options={jobsMatchingCriterions}
-          getOptionLabel={({ key, label }) => `${key}${SEPARATOR}${label}`}
-          renderOption={({ label }) => label}
           renderInput={(inputParams) => (
             <JobTextField
               {...inputParams}

@@ -1,10 +1,10 @@
 import React, { lazy, memo } from 'react'
 import styled from 'styled-components'
-import { Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
 import { isEmpty } from 'lodash'
 import queryString from 'query-string'
 
-import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined'
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
