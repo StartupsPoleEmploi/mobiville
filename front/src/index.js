@@ -2,25 +2,22 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { ToastContainer } from 'react-toastify'
 import './assets/styles/main.scss'
-import {
-  MuiThemeProvider,
-  unstable_createMuiStrictModeTheme as createMuiTheme,
-} from '@mui/material/styles'
+import { ThemeProvider, createTheme } from '@mui/material'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import Providers from './common/contexts'
 import 'react-toastify/dist/ReactToastify.css'
 
-const theme = createMuiTheme({})
+const theme = createTheme({})
 
 ReactDOM.render(
   <React.StrictMode>
-    <MuiThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <Providers>
         <App />
         <ToastContainer />
       </Providers>
-    </MuiThemeProvider>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 )
