@@ -23,7 +23,7 @@ const EmptySpace = styled.div`
 
 const Wrapper = styled.div`
   position: fixed;
-  top: 76px;
+  top: 102px;
   left: 0;
   right: 0;
   background-color: ${COLOR_BACKGROUND};
