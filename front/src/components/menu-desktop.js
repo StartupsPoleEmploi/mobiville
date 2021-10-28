@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import { Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
 import { COLOR_PRIMARY, COLOR_TEXT_SECONDARY } from '../constants/colors'
 import LOGO from '../assets/images/LogoMobiville_gros.svg'
 import LOGO_AL from '../assets/images/logo-action-logement.png'

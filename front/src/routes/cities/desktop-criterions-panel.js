@@ -7,7 +7,7 @@ import {
   InputLabel,
   Select,
   Typography,
-} from '@material-ui/core'
+} from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
 import { useCities } from '../../common/contexts/citiesContext'
 import {

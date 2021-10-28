@@ -3,12 +3,12 @@ import {
   FormControl,
   TextField,
   Typography,
-} from '@material-ui/core'
+} from '@mui/material'
 import { toast } from 'react-toastify'
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import Autocomplete from '@material-ui/lab/Autocomplete'
+import Autocomplete from '@mui/material/Autocomplete'
 import { Button } from '../../components/button'
 import { getPosition } from '../../utils/navigator'
 import { useCities } from '../../common/contexts/citiesContext'
@@ -127,7 +127,7 @@ const Step1Component = ({ onNext, values }) => {
           onInputChange={(event, newInputValue) => {
             setInputValue(newInputValue)
           }}
-          getOptionSelected={(option, value) => option.id === value.id}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
           getOptionLabel={formatedCity}
           options={searchCities.filter((s) => s.id !== null)}
           loading={isLoadingLocation}

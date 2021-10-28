@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { MenuItem, Select } from '@material-ui/core'
-import FilterListIcon from '@material-ui/icons/FilterList'
+import { MenuItem, Select } from '@mui/material'
+import FilterListIcon from '@mui/icons-material/FilterList'
 import { useCities } from '../../common/contexts/citiesContext'
 
 const Wrapper = styled.div`
@@ -9,16 +9,15 @@ const Wrapper = styled.div`
   align-items: center;
 `
 
-const SelectBlock = styled(Select)`
+const SelectBlock = styled(Select).attrs({ variant: 'standard' })`
   && {
-    margin-right: 11px;
-
     &.MuiInput-underline:before {
       border-bottom: none !important;
     }
 
     .MuiSelect-select {
       background-color: transparent !important;
+      padding-right: 0 !important;
     }
 
     .MuiSelect-icon {

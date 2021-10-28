@@ -4,7 +4,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Link as _Link } from 'react-router-dom'
-import _ArrowForward from '@material-ui/icons/ArrowForward'
+import _ArrowForward from '@mui/icons-material/ArrowForward'
 
 import { MainLayout } from '../../components/main-layout'
 import { useWindowSize } from '../../common/hooks/window-size'

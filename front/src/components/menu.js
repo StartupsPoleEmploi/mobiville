@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
 import LOGO from '../assets/images/LogoMobiville_gros.svg'
 
 const MainSpace = styled.div``

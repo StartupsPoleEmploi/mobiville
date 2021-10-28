@@ -11,13 +11,13 @@ import {
   ListItemText,
   TextField,
   InputAdornment,
-} from '@material-ui/core'
-import SearchIcon from '@material-ui/icons/Search'
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
-import EuroIcon from '@material-ui/icons/Euro'
-import DescriptionIcon from '@material-ui/icons/Description'
-import ScheduleIcon from '@material-ui/icons/Schedule'
+} from '@mui/material'
+import SearchIcon from '@mui/icons-material/Search'
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
+import EuroIcon from '@mui/icons-material/Euro'
+import DescriptionIcon from '@mui/icons-material/Description'
+import ScheduleIcon from '@mui/icons-material/Schedule'
 
 import { useProfessions } from '../../common/contexts/professionsContext'
 import {
@@ -95,11 +95,13 @@ const JobContentLayout = styled.div`
 `
 
 const JobSearchFormControl = styled(FormControl)`
-  padding: 16px;
-  margin-bottom: 8px;
-  background: #ffffff;
-  border: 1px solid ${COLOR_GRAY};
-  border-radius: 8px;
+  && {
+    padding: 16px;
+    margin-bottom: 8px;
+    background: #ffffff;
+    border: 1px solid ${COLOR_GRAY};
+    border-radius: 8px;
+  }
 `
 
 const JobTitleLayout = styled.div`
@@ -161,31 +163,33 @@ const JobItemAdditionalInfo = styled.li`
 const StyledFormControl = styled(FormControl).attrs({
   variant: 'filled',
 })`
-  width: 100px;
-  margin-left: 16px;
-  margin-bottom: 8px;
+  && {
+    width: 100px;
+    margin-left: 16px;
+    margin-bottom: 8px;
 
-  .MuiInputBase-root {
-    border-radius: 8px;
-    overflow: hidden;
-  }
+    .MuiInputBase-root {
+      border-radius: 8px;
+      overflow: hidden;
+    }
 
-  .MuiFilledInput-underline::before {
-    border-bottom: none;
-  }
+    .MuiFilledInput-underline::before {
+      border-bottom: none;
+    }
 
-  // The two styles below are to allow ellipsis, because the labels
-  // of the filter fields are too long.
-  // These can be removed once the fields are reworked to be bigger
-  .MuiInputLabel-root {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 75%;
-    height: 100%;
-  }
-  .MuiInputLabel-shrink {
-    max-width: 109%;
+    // The two styles below are to allow ellipsis, because the labels
+    // of the filter fields are too long.
+    // These can be removed once the fields are reworked to be bigger
+    .MuiInputLabel-root {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 75%;
+      height: 100%;
+    }
+    .MuiInputLabel-shrink {
+      max-width: 109%;
+    }
   }
 `
 
@@ -402,6 +406,7 @@ const PanelCityJobs = ({
           <JobSearchFormControl fullWidth>
             <TextField
               label="Rechercher dans les offres"
+              variant="standard"
               value={searchValue}
               onChange={(event) => setSearchValue(event.target.value)}
               InputProps={{

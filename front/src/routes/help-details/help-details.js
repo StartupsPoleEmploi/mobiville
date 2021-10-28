@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'

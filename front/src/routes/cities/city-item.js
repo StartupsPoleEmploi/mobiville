@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Typography } from '@material-ui/core'
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+import { Typography } from '@mui/material'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
 import { ucFirst } from '../../utils/utils'
 import {

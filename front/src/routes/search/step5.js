@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
@@ -48,6 +48,8 @@ const Step5Component = ({ onNext, values }) => {
       marginRight: 15,
       marginBottom: 15,
       border: 'none',
+      display: 'flex',
+      flexDirection: 'column',
     }
 
     if (
