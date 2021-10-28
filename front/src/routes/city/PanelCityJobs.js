@@ -213,10 +213,14 @@ const ApplyToJobLink = styled.a`
   background-color: ${COLOR_PRIMARY};
   border-radius: 16px;
   border: 0;
-  color: #fff;
   height: 32px;
   padding: 8px 24px;
   font-size: 18px;
+
+  &,
+  &:hover {
+    color: #fff;
+  }
 `
 
 const MAX_DESCRIPTION_LENGTH = 480
