@@ -3,6 +3,9 @@ import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { Typography } from '@mui/material'
 import { COLOR_PRIMARY, COLOR_TEXT_SECONDARY } from '../constants/colors'
+import { ReactComponent as HomeIcon } from '../assets/images/home.svg'
+import { ReactComponent as MagnifyingGlassIcon } from '../assets/images/superhero-outlined.svg'
+import { ReactComponent as SuperHeroIcon } from '../assets/images/magnifying-glass-outlined.svg'
 
 const Nav = styled.nav`
   position: fixed;
@@ -32,7 +35,7 @@ const Item = styled(Link)`
     position: relative;
     display: flex;
     flex-direction: column;
-    align-item: center;
+    align-items: center;
     justify-content: center;
     color: ${(props) =>
       props.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY};
@@ -44,7 +47,6 @@ const Item = styled(Link)`
       top: 0;
       transform: translateX(-50%);
       left: 50%;
-      translate
       right: 0;
       height: 4px;
       border-radius: 0px 0px 2px 2px;
@@ -53,14 +55,6 @@ const Item = styled(Link)`
       display: ${(props) => (props.selected ? 'block' : 'none')};
     }
   }
-`
-
-const Icon = styled.i`
-  width: 20px;
-  height: 20px;
-  display: block;
-  margin: 0 auto 6px auto;
-  color: inherit;
 `
 
 const Text = styled(Typography)`
@@ -75,18 +69,18 @@ const Text = styled(Typography)`
 const MENU_LINK = [
   {
     path: '/',
-    icon: 'house',
+    icon: HomeIcon,
     label: 'Accueil',
   },
   {
     path: '/rechercher',
-    icon: 'explore',
+    icon: MagnifyingGlassIcon,
     label: 'Recherche',
     activePaths: ['rechercher', 'cities'],
   },
   {
     path: '/aides',
-    icon: 'map',
+    icon: SuperHeroIcon,
     label: 'Les aides',
     activePaths: ['/aides'],
   },
@@ -113,7 +107,11 @@ export const MenuMobile = () => {
       <MainWrapper>
         {menuLink.map((m) => (
           <Item key={m.path} to={m.path} selected={m.selected}>
-            <Icon className="material-icons">{m.icon}</Icon>
+            <m.icon
+              style={{
+                fill: m.selected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY,
+              }}
+            />
             <Text>{m.label}</Text>
           </Item>
         ))}

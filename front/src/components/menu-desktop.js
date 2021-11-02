@@ -2,14 +2,16 @@ import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { Typography } from '@mui/material'
-import HomeIcon from '@mui/icons-material/Home'
-import ExploreIcon from '@mui/icons-material/Explore'
-import MapIcon from '@mui/icons-material/Map'
+
 import { COLOR_PRIMARY, COLOR_TEXT_SECONDARY } from '../constants/colors'
 import LOGO from '../assets/images/LogoMobiville_gros.svg'
 import LOGO_FR from '../assets/images/marianne-logo.png'
 import LOGO_AL from '../assets/images/logo-action-logement.png'
 import LOGO_PE from '../assets/images/logo-pole-emploi.png'
+
+import { ReactComponent as HomeIcon } from '../assets/images/home.svg'
+import { ReactComponent as MagnifyingGlassIcon } from '../assets/images/superhero-outlined.svg'
+import { ReactComponent as SuperHeroIcon } from '../assets/images/magnifying-glass-outlined.svg'
 
 const Header = styled.header`
   position: fixed;
@@ -60,6 +62,10 @@ const LogoImagePartner = styled.img`
 export const MenuDesktop = () => {
   const location = useLocation()
 
+  const homeSelected = location.pathname === '/'
+  const searchSelected = location.pathname.includes('rechercher')
+  const helpSelected = location.pathname.includes('aides')
+
   return (
     <Header>
       <Link to="/" style={{ flexShrink: 0 }}>
@@ -67,19 +73,28 @@ export const MenuDesktop = () => {
         <img src={LOGO} alt="" style={{ height: 48 }} />
       </Link>
       <IconsContainer style={{ flexGrow: 1 }}>
-        <Item to="/" selected={location.pathname === '/'}>
-          <HomeIcon />
+        <Item to="/" selected={homeSelected}>
+          <HomeIcon
+            style={{
+              fill: homeSelected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY,
+            }}
+          />
           <Text>Accueil</Text>
         </Item>
-        <Item
-          to="/rechercher"
-          selected={location.pathname.includes('rechercher')}
-        >
-          <ExploreIcon />
+        <Item to="/rechercher" selected={searchSelected}>
+          <MagnifyingGlassIcon
+            style={{
+              fill: searchSelected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY,
+            }}
+          />
           <Text>Recherche</Text>
         </Item>
-        <Item to="/aides" selected={location.pathname.includes('aides')}>
-          <MapIcon />
+        <Item to="/aides" selected={helpSelected}>
+          <SuperHeroIcon
+            style={{
+              fill: helpSelected ? COLOR_PRIMARY : COLOR_TEXT_SECONDARY,
+            }}
+          />
           <Text>Aides</Text>
         </Item>
       </IconsContainer>
