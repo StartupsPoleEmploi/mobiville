@@ -23,6 +23,7 @@ import {
 } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { ucFirstOnly } from '../../utils/utils'
+import helpsPic from '../../assets/images/Generique_Aides.png'
 
 const Title = styled.h1`
   color: ${COLOR_TEXT_PRIMARY};
@@ -284,7 +285,7 @@ const HelpsPage = ({ location: { search } }) => {
 
       {!isMobile && (
         <Header>
-          <HeaderImg src="/Generique_Aides.png" alt="help" />
+          <HeaderImg src={helpsPic} alt="" />
           <div>
             <h1>
               Vous avez besoin d{"'"}
