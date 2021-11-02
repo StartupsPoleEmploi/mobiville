@@ -157,11 +157,15 @@ const HelpLink = styled.a`
   font-size: 16px;
   cursor: pointer;
   background: ${COLOR_PRIMARY};
-  color: #fff;
   border-radius: 37px;
   padding: 8 32px;
   width: 214px;
   margin: auto;
+
+  &,
+  &:hover {
+    color: #fff;
+  }
 `
 
 const HelpDetailsPage = () => {
