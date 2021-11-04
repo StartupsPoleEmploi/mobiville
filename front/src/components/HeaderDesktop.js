@@ -59,7 +59,7 @@ const LogoImagePartner = styled.img`
   margin-left: 16px;
 `
 
-export const MenuDesktop = () => {
+const HeaderDesktop = () => {
   const location = useLocation()
 
   const homeSelected = location.pathname === '/'
@@ -117,6 +117,8 @@ export const MenuDesktop = () => {
   )
 }
 
-MenuDesktop.propTypes = {}
+HeaderDesktop.propTypes = {}
 
-MenuDesktop.defaultProps = {}
+HeaderDesktop.defaultProps = {}
+
+export default HeaderDesktop

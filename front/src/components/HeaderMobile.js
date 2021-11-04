@@ -16,7 +16,7 @@ const Header = styled.header`
   align-items: center;
 `
 
-export const TopMobileMenu = () => (
+const HeaderMobile = () => (
   <Header>
     <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
       <img src={LOGO_FR} alt="" style={{ height: 70, marginRight: 16 }} />
@@ -24,3 +24,5 @@ export const TopMobileMenu = () => (
     </Link>
   </Header>
 )
+
+export default HeaderMobile

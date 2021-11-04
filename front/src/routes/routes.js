@@ -6,7 +6,7 @@ import {
   Switch,
 } from 'react-router-dom'
 
-const Home = lazy(() => import('./home/home'))
+const Home = lazy(() => import('./home/Home'))
 const Cities = lazy(() => import('./cities/cities'))
 const City = lazy(() => import('./city/City'))
 const Helps = lazy(() => import('./helps/Helps'))

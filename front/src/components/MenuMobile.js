@@ -86,7 +86,7 @@ const MENU_LINK = [
   },
 ]
 
-export const MenuMobile = () => {
+const MenuMobile = () => {
   const [menuLink, setMenuLink] = useState(MENU_LINK)
   const location = useLocation()
 
@@ -123,3 +123,5 @@ export const MenuMobile = () => {
 MenuMobile.propTypes = {}
 
 MenuMobile.defaultProps = {}
+
+export default MenuMobile
