@@ -2,12 +2,12 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
-import { MenuMobile } from './menu-mobile'
-import { MenuDesktop } from './menu-desktop'
+import MenuMobile from './MenuMobile'
+import HeaderMobile from './HeaderMobile'
+import HeaderDesktop from './HeaderDesktop'
 import { isMobileView } from '../constants/mobile'
 import { useWindowSize } from '../common/hooks/window-size'
 import { Footer } from './footer'
-import { TopMobileMenu } from './top-mobile-menu'
 
 const Container = styled.div`
   height: 100%;
@@ -62,9 +62,9 @@ export const MainLayout = ({ children, menu, footer, topMobileMenu }) => {
   return (
     <Container>
       <GoToMainContent href="#main">Aller au contenu</GoToMainContent>
-      {isMobileView(size) && topMobileMenu && <TopMobileMenu />}
+      {isMobileView(size) && topMobileMenu && <HeaderMobile />}
       {isMobileView(size) && menu.visible && <MenuMobile {...menu} />}
-      {!isMobileView(size) && menu.visible && <MenuDesktop {...menu} />}
+      {!isMobileView(size) && menu.visible && <HeaderDesktop {...menu} />}
       <Main
         id="main"
         tabIndex="-1"
