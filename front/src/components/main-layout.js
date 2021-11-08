@@ -51,7 +51,13 @@ const GoToMainContent = styled.a`
   }
 `
 
-export const MainLayout = ({ children, menu, footer, topMobileMenu }) => {
+export const MainLayout = ({
+  children,
+  menu,
+  footer,
+  topMobileMenu,
+  style = {},
+}) => {
   const size = useWindowSize()
   const location = useLocation()
 
@@ -71,6 +77,7 @@ export const MainLayout = ({ children, menu, footer, topMobileMenu }) => {
         style={{
           paddingBottom: isMobileView(size) ? 60 : 0,
           paddingTop: isMobileView(size) ? 0 : 102,
+          ...style,
         }}
       >
         {children}
@@ -88,6 +95,7 @@ MainLayout.propTypes = {
   menu: PropTypes.oneOfType([PropTypes.object]),
   footer: PropTypes.bool,
   topMobileMenu: PropTypes.bool,
+  style: PropTypes.object,
 }
 
 MainLayout.defaultProps = {
@@ -96,4 +104,5 @@ MainLayout.defaultProps = {
   },
   footer: false,
   topMobileMenu: false,
+  style: {},
 }

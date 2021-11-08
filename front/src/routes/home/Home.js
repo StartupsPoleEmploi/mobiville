@@ -79,7 +79,6 @@ const TaglineP = styled.p`
 `
 
 const BlocksContainer = styled.div`
-  background-color: #fff;
   padding-top: 64px;
   padding: ${({ isMobile }) => (isMobile ? '16px' : '64 0 0')};
 `
@@ -198,7 +197,7 @@ const HomePage = () => {
   const isMobile = isMobileView(windowsSize)
 
   return (
-    <MainLayout footer topMobileMenu>
+    <MainLayout footer topMobileMenu style={{ background: '#fff' }}>
       <Helmet>
         <title>Mobiville - La Mobilité Facile en France</title>
         <meta
