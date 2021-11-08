@@ -14,6 +14,7 @@ const Header = styled.header`
   padding: 0 16px;
   display: flex;
   align-items: center;
+  z-index: 10;
 `
 
 const HeaderMobile = () => (
