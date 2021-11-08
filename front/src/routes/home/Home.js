@@ -160,7 +160,7 @@ const SurveyBlockH3 = MobilityGuideBlockH3
 
 const ActionButtonContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: ${({ isMobile }) => (isMobile ? 'center' : 'flex-start')};
 `
 
 const actionButtonStyle = `
@@ -285,7 +285,7 @@ const HomePage = () => {
             <MobilityGuideBlockH3 isMobile={isMobile}>
               Les réponses se trouvent dans notre guide à la mobilité
             </MobilityGuideBlockH3>
-            <ActionButtonContainer>
+            <ActionButtonContainer isMobile={isMobile}>
               <ActionButton to="/mobility-guide">Accéder au guide</ActionButton>
             </ActionButtonContainer>
           </div>
