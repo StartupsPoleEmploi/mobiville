@@ -217,7 +217,7 @@ const HomePage = () => {
               <MagnifyingGlassIcon />
               <span>Rechercher ou découvrir une ville</span>
             </MainNavButton>
-            <MainNavButton to="/helps" isMobile={isMobile}>
+            <MainNavButton to="/aides" isMobile={isMobile}>
               <SuperheroIcon />
               <span>Les aides pour mon projet</span>
             </MainNavButton>
