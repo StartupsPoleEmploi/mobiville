@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import _Accordion from '@mui/material/Accordion'
+import _AccordionSummary from '@mui/material/AccordionSummary'
+import _AccordionDetails from '@mui/material/AccordionDetails'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+
 import { MainLayout } from '../../components/main-layout'
 import { COLOR_TEXT_PRIMARY } from '../../constants/colors'
 
-const QUESTION_ANSWERS = [
+const BASE_ACCORDION_DATA = [
   {
     question: 'Faut-il être inscrit à Pôle emploi pour utiliser Mobiville ?',
     answer: (
@@ -113,59 +118,118 @@ const QUESTION_ANSWERS = [
   },
 ]
 
-const Container = styled.div`
-  margin: 64px 16px;
+const ELECTED_OFFICIALS_ACCORDION_DATA = [
+  {
+    question: 'D’où viennent les données sur ma commune ?',
+    answer: (
+      <>
+        <p>Les données sur les villes, proviennent de </p>
+        <ul>
+          <li>Wikipédia pour la photo et le descriptif, </li>
+          <li>de l’Insee pour les éléments liés au cadre de vie, </li>
+          <li>d’Action Logement pour les données liées au logement. </li>
+          <li>
+            Les données liées au marché du travail ainsi que les offres d’emploi
+            proviennent de Pôle emploi.
+          </li>
+        </ul>
+      </>
+    ),
+    isOpen: false,
+  },
+  {
+    question: 'Puis-je les modifier, les contester ?',
+    answer: (
+      <>
+        <p>
+          Pour modifier les données, vous pouvez contacter le fournisseur des
+          données concernées.
+        </p>
+        <p>
+          Par exemple, pour modifier la photo de la ville, il suffit de modifier
+          la photo sur Wikipédia. La nouvelle photo sera automatiquement
+          intégrée sur Mobiville.
+        </p>
+      </>
+    ),
+    isOpen: false,
+  },
+  {
+    question:
+      'Puis-je les enrichir, rajouter l’adresse de redirection de mon site municipal ?',
+    answer: (
+      <>
+        Cette fonctionnalité n’est pas encore disponible mais il est prévu
+        effectivement qu’un élu ou un membre de son équipe puisse rajouter des
+        informations comme: l’url du site municipal ou d’une plateforme
+        d’attractivité, des témoignages d’habitants, les coordonnées d’une
+        personne en charge de l’accueil et l’installation de nouveaux habitants,
+        les aides locales ou régionales pour faciliter l’installation sur le
+        territoire…
+      </>
+    ),
+    isOpen: false,
+  },
+  {
+    question:
+      'Puis-je accéder aux données de consultation de la fiche de ma commune ?',
+    answer: (
+      <>
+        Cette fonctionnalité n’est pas encore disponible: nous étudions le sujet
+        afin d’identifier quelles données peuvent vous être utiles. Si vous
+        souhaitez participer à la réflexion, écrivez-nous à l’adresse{' '}
+        <a href="mailto:contact@mobiville.pole-emploi.fr">
+          contact@mobiville.pole-emploi.fr
+        </a>
+      </>
+    ),
+    isOpen: false,
+  },
+  {
+    question:
+      'Je transmets mes offres d’emploi à Pôle emploi mais je ne les vois pas affichées sur Mobiville, y a t-il un problème ?',
+    answer: (
+      <>
+        Les offres d’emploi affichées sont synchronisées avec les offres
+        d’emploi diffusées sur www.pole-emploi.fr <br />
+        Si votre offre est bien disponible sur le site Pôle emploi.fr, elle sera
+        également visible sur Mobiville.
+      </>
+    ),
+    isOpen: false,
+  },
+]
 
-  > .wrapper {
-    max-width: 600px;
-  }
+const Container = styled.div`
+  margin: 64px auto;
+  max-width: 600px;
 `
 
-const Title = styled.h2`
+const H1 = styled.h1`
   font-size: 24px;
   margin-bottom: 32px;
 `
 
-const Question = styled.div`
-  margin-bottom: 16px;
-  display: inline-block;
-  width: 100%;
-  background: #ffffff;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
-    0px 1px 3px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  cursor: pointer;
+const H2 = styled.h2`
+  font-size: 14px;
 `
 
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
+const Accordion = styled(_Accordion)`
+  margin-bottom: 16px;
 
-  p {
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 16px;
-    margin: 0;
-    color: ${COLOR_TEXT_PRIMARY};
+  & {
+    border: 1px solid #e4e9ed !important;
+    box-shadow: none !important;
+
+    &:before {
+      background: transparent !important;
+    }
   }
 `
-
-const Answer = styled.p`
-  padding: 0;
-  margin: 0;
-  height: 0;
-  overflow: hidden;
-
-  ${(props) =>
-    props.isOpen
-      ? `
-    height: auto;
-    padding: 4px 16px 16px 16px;
-  `
-      : ''}
+const AccordionSummary = styled(_AccordionSummary)`
+  font-weight: 500;
 `
+const AccordionDetails = styled(_AccordionDetails)``
 
 const HelpMore = styled.p`
   margin-top: 16px;
@@ -182,39 +246,53 @@ const HelpMore = styled.p`
 `
 
 const FAQPage = () => {
-  const [list, setList] = useState([...QUESTION_ANSWERS])
-
-  const onToggleOpen = (index) => {
-    list[index].isOpen = !list[index].isOpen
-    setList([...list])
-  }
-
   return (
     <MainLayout footer topMobileMenu>
       <Container>
-        <div className="wrapper">
-          <Title>FAQ Mobiville</Title>
-          {list.map(({ question, answer, isOpen }, index) => (
-            <Question key={question} onClick={() => onToggleOpen(index)}>
-              <Header>
-                <p>{question}</p>
-                <i className="material-icons">expand_more</i>
-              </Header>
-              <Answer isOpen={isOpen}>{answer}</Answer>
-            </Question>
-          ))}
+        <H1>FAQ : Foire Aux Questions</H1>
+        <H2>Questions générales :</H2>
+        {BASE_ACCORDION_DATA.map(({ question, answer, isOpen }, index) => (
+          <Accordion key={index}>
+            <AccordionSummary
+              key={question}
+              expandIcon={<ExpandMoreIcon />}
+              id={`${index}-header`}
+              aria-controls={`${index}-content`}
+            >
+              {question}
+            </AccordionSummary>
+            <AccordionDetails>{answer}</AccordionDetails>
+          </Accordion>
+        ))}
 
-          <HelpMore>
-            Vous n’avez trouvé votre réponse ?
-            <br />
-            Contactez nous :
-            <br />
-            <br />
-            <a href="mailto:contact@mobiville.pole-emploi.fr">
-              contact@mobiville.pole-emploi.fr
-            </a>
-          </HelpMore>
-        </div>
+        <H2>Pour les élus :</H2>
+
+        {ELECTED_OFFICIALS_ACCORDION_DATA.map(
+          ({ question, answer, isOpen }, index) => (
+            <Accordion key={index}>
+              <AccordionSummary
+                key={question}
+                expandIcon={<ExpandMoreIcon />}
+                id={`${index}-header`}
+                aria-controls={`${index}-content`}
+              >
+                {question}
+              </AccordionSummary>
+              <AccordionDetails>{answer}</AccordionDetails>
+            </Accordion>
+          )
+        )}
+
+        <HelpMore>
+          Vous n’avez trouvé votre réponse ?
+          <br />
+          Contactez nous :
+          <br />
+          <br />
+          <a href="mailto:contact@mobiville.pole-emploi.fr">
+            contact@mobiville.pole-emploi.fr
+          </a>
+        </HelpMore>
       </Container>
     </MainLayout>
   )
