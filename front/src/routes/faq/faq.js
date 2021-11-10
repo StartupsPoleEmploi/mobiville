@@ -6,8 +6,11 @@ import _AccordionSummary from '@mui/material/AccordionSummary'
 import _AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
+import { useWindowSize } from '../../common/hooks/window-size'
+import { isMobileView } from '../../constants/mobile'
 import { MainLayout } from '../../components/main-layout'
 import { COLOR_TEXT_PRIMARY } from '../../constants/colors'
+import SubHeader from '../../components/SubHeader'
 
 const BASE_ACCORDION_DATA = [
   {
@@ -200,14 +203,11 @@ const ELECTED_OFFICIALS_ACCORDION_DATA = [
   },
 ]
 
-const Container = styled.div`
-  margin: 64px auto;
-  max-width: 600px;
-`
+const WIDTH = 600
 
-const H1 = styled.h1`
-  font-size: 24px;
-  margin-bottom: 32px;
+const Container = styled.div`
+  margin: auto;
+  max-width: ${WIDTH}px;
 `
 
 const H2 = styled.h2`
@@ -246,10 +246,18 @@ const HelpMore = styled.p`
 `
 
 const FAQPage = () => {
+  const size = useWindowSize()
+  const isMobile = isMobileView(size)
+
   return (
     <MainLayout footer topMobileMenu>
       <Container>
-        <H1>FAQ : Foire Aux Questions</H1>
+        <SubHeader
+          backLink="/"
+          title="FAQ : Foire Aux Questions"
+          desktopTitleWidth={WIDTH}
+          isMobile={isMobile}
+        />
         <H2>Questions générales :</H2>
         {BASE_ACCORDION_DATA.map(({ question, answer, isOpen }, index) => (
           <Accordion key={index}>
