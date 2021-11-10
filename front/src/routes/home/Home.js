@@ -209,7 +209,7 @@ const HomePage = () => {
       <TopBlockContainer isMobile={isMobile}>
         <TopBlock>
           <H1 isMobile={isMobile}>
-            Trouver l’emploi, et la ville qui va avec !
+            Trouver l’emploi et la ville qui va avec !
           </H1>
           <MainNavButtonsContainer isMobile={isMobile}>
             <MainNavButton to="/rechercher" isMobile={isMobile}>
