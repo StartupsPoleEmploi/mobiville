@@ -16,46 +16,7 @@ import {
 } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { ucFirstOnly } from '../../utils/utils'
-
-const DesktopHeaderLink = styled(Link)`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-weight: bold;
-  font-size: 18px;
-  max-width: 1100px;
-  width: 100%;
-  margin: auto;
-  padding: 16px;
-  color: ${COLOR_TEXT_PRIMARY};
-`
-
-const DesktopHeaderContainer = styled.div`
-  position: fixed;
-  left: 0;
-  right: 0;
-  background-color: white;
-  top: 76;
-  height: 112px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  width: 100%;
-`
-
-const DesktopHeaderArrowContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: ${COLOR_GRAY};
-`
-
-const DesktopHeaderTextContainer = styled.div`
-  margin-left: 40px;
-`
+import SubHeader from '../../components/SubHeader'
 
 const MobileHeaderLink = styled(Link)`
   left: 16px;
@@ -200,16 +161,11 @@ const HelpDetailsPage = () => {
           <MobileHeaderText>Retour</MobileHeaderText>
         </MobileHeaderLink>
       ) : (
-        <DesktopHeaderContainer>
-          <DesktopHeaderLink to="/aides">
-            <DesktopHeaderArrowContainer>
-              <ArrowBackIcon color="primary" />
-            </DesktopHeaderArrowContainer>
-            <DesktopHeaderTextContainer>
-              Retour à la liste d’aides
-            </DesktopHeaderTextContainer>
-          </DesktopHeaderLink>
-        </DesktopHeaderContainer>
+        <SubHeader
+          backLink="/aides"
+          title="Retour à la liste d’aides"
+          isMobile={isMobile}
+        />
       )}
       <Container isMobile={isMobile}>
         <TitleContainer isMobile={isMobile}>
