@@ -9,7 +9,7 @@ const HEIGHT = 112
 const PADDING = 16
 
 const HeaderContainer = styled.div`
-  position: fixed;
+  position: ${({ isMobile }) => (isMobile ? 'static' : 'fixed')};
   left: 0;
   right: 0;
   background-color: white;
@@ -33,7 +33,11 @@ const HeaderLink = styled(Link)`
   width: 100%;
   margin: auto;
   padding: ${PADDING}px;
-  color: ${COLOR_TEXT_PRIMARY};
+
+  &,
+  &:hover {
+    color: ${COLOR_TEXT_PRIMARY};
+  }
 `
 
 const HeaderArrowContainer = styled.div`
@@ -54,7 +58,7 @@ const H1 = styled.h1`
 
 const SubHeader = ({ backLink, desktopTitleWidth, isMobile, title }) => (
   <>
-    <HeaderContainer>
+    <HeaderContainer isMobile={isMobile}>
       <HeaderLink
         isMobile={isMobile}
         to={backLink}
@@ -70,7 +74,7 @@ const SubHeader = ({ backLink, desktopTitleWidth, isMobile, title }) => (
         <H1>{title}</H1>
       </HeaderLink>
     </HeaderContainer>
-    <div style={{ height: HEIGHT, marginBottom: PADDING }} />
+    {!isMobile && <div style={{ height: HEIGHT, marginBottom: PADDING }} />}
   </>
 )
 

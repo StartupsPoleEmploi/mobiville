@@ -206,8 +206,9 @@ const ELECTED_OFFICIALS_ACCORDION_DATA = [
 const WIDTH = 600
 
 const Container = styled.div`
-  margin: auto;
+  margin: 0 auto;
   max-width: ${WIDTH}px;
+  padding: 16px;
 `
 
 const H2 = styled.h2`
@@ -231,18 +232,18 @@ const AccordionSummary = styled(_AccordionSummary)`
 `
 const AccordionDetails = styled(_AccordionDetails)``
 
-const HelpMore = styled.p`
+const HelpMore = styled.div`
   margin-top: 16px;
   text-align: center;
   font-size: 12px;
   line-height: 14px;
   color: ${COLOR_TEXT_PRIMARY};
+`
 
-  a {
-    color: ${COLOR_TEXT_PRIMARY};
-    text-decoration: underline;
-    font-weight: 500;
-  }
+const HelpMoreLink = styled.a`
+  color: ${COLOR_TEXT_PRIMARY};
+  text-decoration: underline;
+  font-weight: 500;
 `
 
 const FAQPage = () => {
@@ -250,14 +251,14 @@ const FAQPage = () => {
   const isMobile = isMobileView(size)
 
   return (
-    <MainLayout footer topMobileMenu>
+    <MainLayout footer>
+      <SubHeader
+        backLink="/"
+        title="FAQ : Foire Aux Questions"
+        desktopTitleWidth={WIDTH}
+        isMobile={isMobile}
+      />
       <Container>
-        <SubHeader
-          backLink="/"
-          title="FAQ : Foire Aux Questions"
-          desktopTitleWidth={WIDTH}
-          isMobile={isMobile}
-        />
         <H2>Questions générales :</H2>
         {BASE_ACCORDION_DATA.map(({ question, answer, isOpen }, index) => (
           <Accordion key={index}>
@@ -297,9 +298,9 @@ const FAQPage = () => {
           Contactez nous :
           <br />
           <br />
-          <a href="mailto:contact@mobiville.pole-emploi.fr">
+          <HelpMoreLink href="mailto:contact@mobiville.pole-emploi.fr">
             contact@mobiville.pole-emploi.fr
-          </a>
+          </HelpMoreLink>
         </HelpMore>
       </Container>
     </MainLayout>
