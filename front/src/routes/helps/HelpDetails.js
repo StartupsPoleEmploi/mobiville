@@ -2,8 +2,6 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-import { Link } from 'react-router-dom'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 import { useHelps } from '../../common/contexts/helpsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
@@ -11,49 +9,16 @@ import { MainLayout } from '../../components/main-layout'
 import {
   COLOR_GRAY,
   COLOR_PRIMARY,
-  COLOR_TEXT_PRIMARY,
   COLOR_TEXT_SECONDARY,
 } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { ucFirstOnly } from '../../utils/utils'
 import SubHeader from '../../components/SubHeader'
 
-const MobileHeaderLink = styled(Link)`
-  left: 16px;
-  top: 16px;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  height: 76;
-  color: ${COLOR_PRIMARY};
-  padding: 8px 16px 8px 8px;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
-    0px 1px 3px rgba(0, 0, 0, 0.2);
-  border-radius: 100px;
-`
-
-const MobileHeaderText = styled.div`
-  margin-left: 8px;
-  font-size: 12px;
-  font-weight: 500;
-`
-
-const H1 = styled.h1`
-  text-align: center;
-  font-weight: 500;
-  font-size: ${({ isMobile }) => (isMobile ? '18px' : '24px')};
-  margin: auto;
-  color: ${COLOR_TEXT_PRIMARY};
-  width: 80%;
-`
-
 const Container = styled.div`
   display: ${({ isMobile }) => (isMobile ? 'block' : 'flex')};
   max-width: ${({ isMobile }) => (isMobile ? 'inherit' : '1100px')};
-  margin: auto;
-  margin-top: ${({ isMobile }) => (isMobile ? '0' : '108px')};
+  margin: 0 auto;
   align-items: flex-start;
   padding: ${({ isMobile }) => (isMobile ? '0' : '0 16px')};
 `
@@ -155,18 +120,7 @@ const HelpDetailsPage = () => {
           content="Cette aide va vous permettre d'aborder votre projet de mobilité plus sereinement"
         />
       </Helmet>
-      {isMobile ? (
-        <MobileHeaderLink to="/aides">
-          <ArrowBackIcon color="primary" />
-          <MobileHeaderText>Retour</MobileHeaderText>
-        </MobileHeaderLink>
-      ) : (
-        <SubHeader
-          backLink="/aides"
-          title="Retour à la liste d’aides"
-          isMobile={isMobile}
-        />
-      )}
+      <SubHeader backLink="/aides" title={help.title} isMobile={isMobile} />
       <Container isMobile={isMobile}>
         <TitleContainer isMobile={isMobile}>
           <TitleImgContainer>
@@ -180,8 +134,6 @@ const HelpDetailsPage = () => {
             />
           </TitleImgContainer>
           <TitleTextContainer>
-            <H1 isMobile={isMobile}>{help.title}</H1>
-
             <Description style={{ textAlign: 'center' }}>
               {help.goal}
             </Description>
