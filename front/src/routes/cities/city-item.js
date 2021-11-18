@@ -65,6 +65,7 @@ const Tag = styled.div`
   border-radius: 1000px;
   padding: 3px 6px;
   font-size: 12px;
+  font-weight: 500;
   margin-right: 8px;
   margin-bottom: 8px;
   color: ${COLOR_TEXT_PRIMARY};
