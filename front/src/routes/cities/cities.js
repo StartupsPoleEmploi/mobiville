@@ -199,12 +199,21 @@ const CitiesPage = () => {
           <CityItem city={city} />
         </Items>
       ))}
+      {!isLoading && cities.length === 0 && (
+        <NotFoundContainer>
+          <img alt="" src={noResultsPic} style={{ marginBottom: '2rem' }} />
+          Aucune ville correspondante
+          <br />
+          Modifiez vos critères
+        </NotFoundContainer>
+      )}
+      {isLoading && <p style={{ margin: '2rem auto' }}>Chargement...</p>}
     </CitiesList>
   )
 
   let firstCityCoordinates
   let mapBounds
-  if (!isLoading && cities.length > 0) {
+  if (cities.length > 0) {
     firstCityCoordinates = [cities[0].geo_point_2d_x, cities[0].geo_point_2d_y]
     mapBounds = cities.reduce(
       (prev, city) => ({
@@ -238,52 +247,46 @@ const CitiesPage = () => {
         />
       )}
 
-      {isLoading ? (
-        <p style={{ margin: '2rem auto' }}>Chargement...</p>
-      ) : cities.length === 0 ? (
-        <NotFoundContainer>
-          <img alt="" src={noResultsPic} style={{ marginBottom: '2rem' }} />
-          Aucune ville correspondante
-          <br />
-          Modifiez vos critères
-        </NotFoundContainer>
-      ) : isMobile ? (
+      {isMobile ? (
         citiesList
       ) : (
         <DesktopContainer>
           {citiesList}
-
-          <StyledMapContainer
-            center={cities.length > 1 ? null : firstCityCoordinates}
-            zoom={cities.length > 1 ? null : 6}
-            bounds={
-              cities.length > 1
-                ? [
-                    [mapBounds.minX, mapBounds.minY],
-                    [mapBounds.maxX, mapBounds.maxY],
-                  ]
-                : null
-            }
-            scrollWheelZoom={false}
-          >
-            <TileLayer
-              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {cities.map((city) => (
-              <Marker
-                key={city.id}
-                position={[city.geo_point_2d_x, city.geo_point_2d_y]}
-              >
-                <Popup>
-                  <Link to={getCityUrl(city)}>
-                    <b>{city.nom_comm}</b> ({Math.floor(city.population * 1000)}{' '}
-                    habitants)
-                  </Link>
-                </Popup>
-              </Marker>
-            ))}
-          </StyledMapContainer>
+          {!isLoading ? (
+            <StyledMapContainer
+              center={cities.length > 1 ? null : firstCityCoordinates}
+              zoom={cities.length > 1 ? null : 6}
+              bounds={
+                cities.length > 1
+                  ? [
+                      [mapBounds.minX, mapBounds.minY],
+                      [mapBounds.maxX, mapBounds.maxY],
+                    ]
+                  : null
+              }
+              scrollWheelZoom={false}
+            >
+              <TileLayer
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              {cities.map((city) => (
+                <Marker
+                  key={city.id}
+                  position={[city.geo_point_2d_x, city.geo_point_2d_y]}
+                >
+                  <Popup>
+                    <Link to={getCityUrl(city)}>
+                      <b>{city.nom_comm}</b> (
+                      {Math.floor(city.population * 1000)} habitants)
+                    </Link>
+                  </Popup>
+                </Marker>
+              ))}
+            </StyledMapContainer>
+          ) : (
+            <div style={{ width: 424 }} />
+          )}
         </DesktopContainer>
       )}
     </MainLayout>
