@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import queryString from 'query-string'
-import { Typography } from '@mui/material'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 import { useCities } from '../../common/contexts/citiesContext'
@@ -11,7 +10,7 @@ import MobileCriterionsPanel from './mobile-criterions-panel'
 import CityItem from './city-item'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
-import { COLOR_GRAY } from '../../constants/colors'
+import { COLOR_OTHER_GREEN } from '../../constants/colors'
 import DesktopCriterionsPanel from './desktop-criterions-panel'
 import MobileCriterionsSelection from './mobile-criterions-selection'
 import CitiesFilterList from './cities-filter-list'
@@ -38,7 +37,7 @@ const NotFoundContainer = styled.div`
 
 const Infopanel = styled.div`
   display: flex;
-  background: ${COLOR_GRAY};
+  background: ${COLOR_OTHER_GREEN};
   align-items: space-between;
   justify-content: space-between;
   width: 100%;
@@ -49,20 +48,17 @@ const Infopanel = styled.div`
   font-size: 12px;
 `
 
-const SubInfo = styled.div`
+const CitiesFilterContainer = styled.div`
   display: flex;
   max-width: 700px;
   align-items: center;
   margin: auto;
+  padding-bottom: 16px;
+`
 
-  p {
-    font-weight: 500;
-    flex: 1;
-  }
-
-  span {
-    font-weight: 700;
-  }
+const CitiesFilterText = styled.div`
+  flex: 1;
+  font-weight: 500;
 `
 
 const DesktopContainer = styled.div`
@@ -182,6 +178,13 @@ const CitiesPage = () => {
 
   const citiesList = (
     <CitiesList isMobile={isMobile}>
+      <CitiesFilterContainer>
+        <CitiesFilterText>
+          <span>{totalCities}</span>{' '}
+          {totalCities > 1 ? 'villes correspondantes' : 'ville correspondante'}
+        </CitiesFilterText>
+        <CitiesFilterList />
+      </CitiesFilterContainer>
       {!isMobile && (
         <Infopanel>
           <p>
@@ -191,13 +194,6 @@ const CitiesPage = () => {
           </p>
         </Infopanel>
       )}
-      <SubInfo>
-        <Typography>
-          <span>{totalCities}</span>{' '}
-          {totalCities > 1 ? 'villes correspondantes' : 'ville correspondante'}
-        </Typography>
-        <CitiesFilterList />
-      </SubInfo>
       {cities.map((city) => (
         <Items key={city.id} to={getCityUrl(city)}>
           <CityItem city={city} />
