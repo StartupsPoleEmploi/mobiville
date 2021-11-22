@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import queryString from 'query-string'
@@ -65,12 +65,14 @@ const DesktopContainer = styled.div`
   display: flex;
   margin: 0 auto;
   max-width: 1040px;
+  overflow: hidden;
 `
 
 const CitiesList = styled.div`
-  max-width: ${(props) => (props.isMobile ? 'auto' : '600px')};
-  margin-left: ${(props) => (props.isMobile ? '16px' : 'auto')};
-  margin-right: ${(props) => (props.isMobile ? '16px' : 'auto')};
+  max-width: ${({ isMobile }) => (isMobile ? 'auto' : '600px')};
+  margin-left: ${({ isMobile }) => (isMobile ? '16px' : 'auto')};
+  margin-right: ${({ isMobile }) => (isMobile ? '16px' : 'auto')};
+  overflow: ${({ isMobile }) => (isMobile ? 'inherit' : 'auto')};
 `
 
 const StyledMapContainer = styled(MapContainer)`
@@ -89,8 +91,10 @@ const CitiesPage = () => {
   const location = useLocation()
   const history = useHistory()
   const [params, setParams] = useState(queryString.parse(location.search))
-  const [offset, setOffset] = useState(0)
+  const [windowScroll, setWindowScroll] = useState(0) // mobile version
+  const [citiesListScroll, setCitiesListScroll] = useState(0) // desktop version
   const [showMobilePanel, setShowMobileCriterionsSelection] = useState(false)
+  const citiesListRef = useRef(null)
 
   useEffect(() => {
     if (location.search) {
@@ -107,33 +111,36 @@ const CitiesPage = () => {
 
   useEffect(() => {
     window.onscroll = () => {
-      setOffset(window.pageYOffset)
+      setWindowScroll(window.pageYOffset)
+    }
+    citiesListRef.current.onscroll = () => {
+      setCitiesListScroll(citiesListRef.current.scrollTop)
     }
   }, [])
 
   useEffect(() => {
-    const heightCheck = window.innerHeight * 1.5
-    const { body } = document
-    const html = document.documentElement
-    const contentHeight = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-    )
+    if (isLoading) return
+    if (totalCities <= cities.length) return
 
-    if (
-      contentHeight - window.scrollY < heightCheck &&
-      !isLoading &&
-      cities.length
-    ) {
-      // can load next page
-      if (totalCities > cities.length) {
-        onSearch({ ...params, sortBy: sortCriterions }, cities.length, cities)
-      }
-    }
-  }, [offset])
+    const bottomPixelsThreshold = 500 // 500 pixels to the bottom, we want to load more data if available
+    const { body } = document
+    const contentHeight = isMobile
+      ? body.scrollHeight
+      : citiesListRef.current.scrollHeight
+
+    const containerHeight = isMobile
+      ? window.innerHeight
+      : citiesListRef.current.offsetHeight
+
+    const scrollY = isMobile ? window.scrollY : citiesListRef.current.scrollTop
+
+    const isCloseToBottom =
+      scrollY + containerHeight > contentHeight - bottomPixelsThreshold
+
+    if (!isCloseToBottom) return
+
+    onSearch({ ...params, sortBy: sortCriterions }, cities.length, cities)
+  }, [windowScroll, citiesListScroll])
 
   const getCityUrl = (city) => {
     let url = `/city/${city.insee_com}-${city.nom_comm}`
@@ -177,7 +184,7 @@ const CitiesPage = () => {
   }
 
   const citiesList = (
-    <CitiesList isMobile={isMobile}>
+    <CitiesList isMobile={isMobile} ref={citiesListRef}>
       <CitiesFilterContainer>
         <CitiesFilterText>
           <span>{totalCities}</span>{' '}
@@ -232,7 +239,7 @@ const CitiesPage = () => {
   }
 
   return (
-    <MainLayout>
+    <MainLayout style={{ overflow: isMobile ? 'inherit' : 'hidden' }}>
       {isMobile ? (
         <MobileCriterionsPanel
           criterions={params}
@@ -264,7 +271,7 @@ const CitiesPage = () => {
                     ]
                   : null
               }
-              scrollWheelZoom={false}
+              scrollWheelZoom
             >
               <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
