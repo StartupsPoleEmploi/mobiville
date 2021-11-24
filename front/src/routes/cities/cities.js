@@ -20,6 +20,7 @@ import getLeafletIcon from '../../components/getLeafletIcon'
 import blueMarker from '../../assets/images/marker-blue.png'
 import yellowMarker from '../../assets/images/marker-yellow.png'
 import redMarker from '../../assets/images/marker-red.png'
+import { formatNumber } from '../../utils/utils'
 
 const CityLink = styled(Link)`
   && {
@@ -321,7 +322,7 @@ const CitiesPage = () => {
                   <Popup>
                     <Link to={getCityUrl(city)}>
                       <b>{city.nom_comm}</b> (
-                      {Math.floor(city.population * 1000)} habitants)
+                      {formatNumber(city.population * 1000)} habitants)
                     </Link>
                   </Popup>
                 </Marker>

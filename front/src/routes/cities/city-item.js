@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Typography } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
-import { ucFirst } from '../../utils/utils'
+import { formatNumber, ucFirst } from '../../utils/utils'
 import {
   COLOR_GRAY,
   COLOR_PRIMARY,
@@ -157,7 +157,7 @@ const CityItem = ({ city, selected }) => {
             )}
           {city.city_size_label && <Tag>{city.city_size_label}</Tag>}
           {city.population && (
-            <Tag>{parseInt(city.population * 1000, 10)} habitants</Tag>
+            <Tag>{formatNumber(city.population * 1000)} habitants</Tag>
           )}
           {city.z_moyen && <Tag>Altitude moyenne {city.z_moyen}m</Tag>}
           {city['region.new_name'] && (
