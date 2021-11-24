@@ -12,6 +12,7 @@ import {
 } from '../../constants/colors'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
+import redMarker from '../../assets/images/marker-red.png'
 
 const Wrapper = styled.div`
   margin-top: 16px;
@@ -30,7 +31,15 @@ const Title = styled(Typography)`
     font-weight: bold;
     margin-bottom: 9px;
     font-size: 18px;
+    display: flex;
+    align-items: center;
   }
+`
+
+const SelectedMarkerImg = styled.img`
+  width: 12px;
+  height: auto;
+  margin-left: 8px;
 `
 
 const Image = styled.div`
@@ -88,7 +97,7 @@ const ViewMore = styled.p`
   justify-content: flex-end;
 `
 
-const CityItem = ({ city }) => {
+const CityItem = ({ city, selected }) => {
   const size = useWindowSize()
 
   if (!city) {
@@ -113,7 +122,10 @@ const CityItem = ({ city }) => {
         isMobile={isMobileView(size)}
       />
       <InformationsBlock>
-        <Title>{ucFirst(city.nom_comm.toLowerCase())}</Title>
+        <Title>
+          {ucFirst(city.nom_comm.toLowerCase())}
+          {selected && <SelectedMarkerImg src={redMarker} alt="" />}
+        </Title>
         <Description>
           {(city.description || '').replace('Écouter', '')}
         </Description>
@@ -163,6 +175,7 @@ const CityItem = ({ city }) => {
 
 CityItem.propTypes = {
   city: PropTypes.object.isRequired,
+  selected: PropTypes.bool.isRequired,
 }
 
 CityItem.defaultProps = {}
