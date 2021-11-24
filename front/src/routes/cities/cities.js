@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import queryString from 'query-string'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components/main-layout'
@@ -9,12 +10,19 @@ import MobileCriterionsPanel from './mobile-criterions-panel'
 import CityItem from './city-item'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
+import { COLOR_OTHER_GREEN } from '../../constants/colors'
 import DesktopCriterionsPanel from './desktop-criterions-panel'
 import MobileCriterionsSelection from './mobile-criterions-selection'
-
+import CitiesFilterList from './cities-filter-list'
 import noResultsPic from '../../assets/images/no_results.svg'
+import getLeafletIcon from '../../components/getLeafletIcon'
 
-const Items = styled(Link)`
+import blueMarker from '../../assets/images/marker-blue.png'
+import yellowMarker from '../../assets/images/marker-yellow.png'
+import redMarker from '../../assets/images/marker-red.png'
+import { formatNumber } from '../../utils/utils'
+
+const CityLink = styled(Link)`
   && {
     color: inherit;
     text-decoration: none;
@@ -33,10 +41,53 @@ const NotFoundContainer = styled.div`
   color: #657078;
 `
 
-const CitiesArea = styled.div`
-  max-width: ${(props) => (props.isMobile ? 'auto' : '700px')};
-  margin-left: ${(props) => (props.isMobile ? '16px' : 'auto')};
-  margin-right: ${(props) => (props.isMobile ? '16px' : 'auto')};
+const Infopanel = styled.div`
+  display: flex;
+  background: ${COLOR_OTHER_GREEN};
+  align-items: space-between;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 700px;
+  margin: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 12px;
+`
+
+const CitiesFilterContainer = styled.div`
+  display: flex;
+  max-width: 700px;
+  align-items: center;
+  margin: auto;
+  padding-bottom: 16px;
+`
+
+const CitiesFilterText = styled.div`
+  flex: 1;
+  font-weight: 500;
+`
+
+const DesktopContainer = styled.div`
+  display: flex;
+  margin: 0 auto;
+  max-width: 1040px;
+  overflow: hidden;
+`
+
+const CitiesList = styled.div`
+  max-width: ${({ isMobile }) => (isMobile ? 'auto' : '600px')};
+  margin-left: ${({ isMobile }) => (isMobile ? '16px' : 'auto')};
+  margin-right: ${({ isMobile }) => (isMobile ? '16px' : 'auto')};
+  overflow: ${({ isMobile }) => (isMobile ? 'inherit' : 'auto')};
+`
+
+const StyledMapContainer = styled(MapContainer)`
+  height: 424px;
+  width: 424px;
+  max-width: 100%;
+  margin-left: 16px;
+  margin-right: 16px;
+  border-radius: 16px;
 `
 
 const CitiesPage = () => {
@@ -46,8 +97,18 @@ const CitiesPage = () => {
   const location = useLocation()
   const history = useHistory()
   const [params, setParams] = useState(queryString.parse(location.search))
-  const [offset, setOffset] = useState(0)
+  const [windowScroll, setWindowScroll] = useState(0) // mobile version
+  const [citiesListScroll, setCitiesListScroll] = useState(0) // desktop version
   const [showMobilePanel, setShowMobileCriterionsSelection] = useState(false)
+  const [hoveredCityId, setHoveredCityId] = useState(null)
+  const [selectedCityId, setSelectedCityId] = useState(null)
+  const citiesListRef = useRef(null)
+
+  const citiesItemsRef = useRef([])
+
+  useEffect(() => {
+    citiesItemsRef.current = citiesItemsRef.current.slice(0, cities.length)
+  }, [cities])
 
   useEffect(() => {
     if (location.search) {
@@ -64,33 +125,36 @@ const CitiesPage = () => {
 
   useEffect(() => {
     window.onscroll = () => {
-      setOffset(window.pageYOffset)
+      setWindowScroll(window.pageYOffset)
+    }
+    citiesListRef.current.onscroll = () => {
+      setCitiesListScroll(citiesListRef.current.scrollTop)
     }
   }, [])
 
   useEffect(() => {
-    const heightCheck = window.innerHeight * 1.5
-    const { body } = document
-    const html = document.documentElement
-    const contentHeight = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-    )
+    if (isLoading) return
+    if (totalCities <= cities.length) return
 
-    if (
-      contentHeight - window.scrollY < heightCheck &&
-      !isLoading &&
-      cities.length
-    ) {
-      // can load next page
-      if (totalCities > cities.length) {
-        onSearch({ ...params, sortBy: sortCriterions }, cities.length, cities)
-      }
-    }
-  }, [offset])
+    const bottomPixelsThreshold = 500 // 500 pixels to the bottom, we want to load more data if available
+    const { body } = document
+    const contentHeight = isMobile
+      ? body.scrollHeight
+      : citiesListRef.current.scrollHeight
+
+    const containerHeight = isMobile
+      ? window.innerHeight
+      : citiesListRef.current.offsetHeight
+
+    const scrollY = isMobile ? window.scrollY : citiesListRef.current.scrollTop
+
+    const isCloseToBottom =
+      scrollY + containerHeight > contentHeight - bottomPixelsThreshold
+
+    if (!isCloseToBottom) return
+
+    onSearch({ ...params, sortBy: sortCriterions }, cities.length, cities)
+  }, [windowScroll, citiesListScroll])
 
   const getCityUrl = (city) => {
     let url = `/city/${city.insee_com}-${city.nom_comm}`
@@ -120,6 +184,11 @@ const CitiesPage = () => {
     setShowMobileCriterionsSelection(bool)
   const isMobile = isMobileView(size)
 
+  const isUsingRegionFilter = !!params.codeRegion
+  const isUsingCitySizeFilter = !!params.codeCity
+  const isUsingSeaFilter = params.codeEnvironment === 'side-sea'
+  const isUsingMountainFilter = params.codeEnvironment === 'mountain'
+
   if (showMobilePanel) {
     return (
       <MainLayout menu={{ visible: !showMobileCriterionsSelection }}>
@@ -133,8 +202,77 @@ const CitiesPage = () => {
     )
   }
 
+  const citiesList = (
+    <CitiesList isMobile={isMobile} ref={citiesListRef}>
+      <CitiesFilterContainer>
+        <CitiesFilterText>
+          <span>{totalCities}</span>{' '}
+          {totalCities > 1 ? 'villes correspondantes' : 'ville correspondante'}
+        </CitiesFilterText>
+        <CitiesFilterList />
+      </CitiesFilterContainer>
+      {!isMobile && (
+        <Infopanel>
+          <p>
+            Les villes qui vous sont proposées sont les villes où il y a des
+            offres et peu de concurrence, afin d’accélérer votre recherche
+            d’emploi.
+          </p>
+        </Infopanel>
+      )}
+      {cities.map((city, key) => (
+        <CityLink
+          key={city.id}
+          to={getCityUrl(city)}
+          onMouseOver={() => setHoveredCityId(city.id)}
+          onMouseLeave={() => setHoveredCityId(null)}
+          ref={(el) => (citiesItemsRef.current[key] = el)}
+        >
+          <CityItem
+            city={city}
+            selected={selectedCityId === city.id}
+            sortCriterions={sortCriterions}
+            isUsingRegionFilter={isUsingRegionFilter}
+            isUsingCitySizeFilter={isUsingCitySizeFilter}
+            isUsingSeaFilter={isUsingSeaFilter}
+            isUsingMountainFilter={isUsingMountainFilter}
+          />
+        </CityLink>
+      ))}
+      {!isLoading && cities.length === 0 && (
+        <NotFoundContainer>
+          <img alt="" src={noResultsPic} style={{ marginBottom: '2rem' }} />
+          Aucune ville correspondante
+          <br />
+          Modifiez vos critères
+        </NotFoundContainer>
+      )}
+      {isLoading && <p style={{ margin: '2rem auto' }}>Chargement...</p>}
+    </CitiesList>
+  )
+
+  let firstCityCoordinates
+  let mapBounds
+  if (cities.length > 0) {
+    firstCityCoordinates = [cities[0].geo_point_2d_x, cities[0].geo_point_2d_y]
+    mapBounds = cities.reduce(
+      (prev, city) => ({
+        minX: prev.minX > city.geo_point_2d_x ? city.geo_point_2d_x : prev.minX,
+        maxX: prev.maxX < city.geo_point_2d_x ? city.geo_point_2d_x : prev.maxX,
+        minY: prev.minY > city.geo_point_2d_y ? city.geo_point_2d_y : prev.minY,
+        maxY: prev.maxY < city.geo_point_2d_y ? city.geo_point_2d_y : prev.maxY,
+      }),
+      {
+        minX: Number.POSITIVE_INFINITY,
+        maxX: Number.NEGATIVE_INFINITY,
+        minY: Number.POSITIVE_INFINITY,
+        maxY: Number.NEGATIVE_INFINITY,
+      }
+    )
+  }
+
   return (
-    <MainLayout>
+    <MainLayout style={{ overflow: isMobile ? 'inherit' : 'hidden' }}>
       {isMobile ? (
         <MobileCriterionsPanel
           criterions={params}
@@ -149,26 +287,65 @@ const CitiesPage = () => {
         />
       )}
 
-      {cities.length === 0 ? (
-        !isLoading && (
-          <NotFoundContainer>
-            <img alt="" src={noResultsPic} style={{ marginBottom: '2rem' }} />
-            Aucune ville correspondante
-            <br />
-            Modifiez vos critères
-          </NotFoundContainer>
-        )
+      {isMobile ? (
+        citiesList
       ) : (
-        <CitiesArea isMobile={isMobile}>
-          {cities.map((city) => (
-            <Items key={city.id} to={getCityUrl(city)}>
-              <CityItem city={city} />
-            </Items>
-          ))}
-        </CitiesArea>
-      )}
+        <DesktopContainer>
+          {citiesList}
 
-      {isLoading && <p style={{ margin: '2rem auto' }}>Chargement...</p>}
+          {cities.length ? (
+            <StyledMapContainer
+              center={cities.length > 1 ? null : firstCityCoordinates}
+              zoom={cities.length > 1 ? null : 6}
+              bounds={
+                cities.length > 1
+                  ? [
+                      [mapBounds.minX, mapBounds.minY],
+                      [mapBounds.maxX, mapBounds.maxY],
+                    ]
+                  : null
+              }
+              scrollWheelZoom
+            >
+              <TileLayer
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              {cities.map((city, key) => (
+                <Marker
+                  key={city.id}
+                  position={[city.geo_point_2d_x, city.geo_point_2d_y]}
+                  icon={getLeafletIcon(
+                    city.id === selectedCityId
+                      ? redMarker
+                      : city.id === hoveredCityId
+                      ? yellowMarker
+                      : blueMarker
+                  )}
+                  eventHandlers={{
+                    popupopen: () => {
+                      setSelectedCityId(city.id)
+                      citiesItemsRef.current[key].scrollIntoView({
+                        behavior: 'smooth',
+                      })
+                    },
+                    popupclose: () => setSelectedCityId(null),
+                  }}
+                >
+                  <Popup>
+                    <Link to={getCityUrl(city)}>
+                      <b>{city.nom_comm}</b> (
+                      {formatNumber(city.population * 1000)} habitants)
+                    </Link>
+                  </Popup>
+                </Marker>
+              ))}
+            </StyledMapContainer>
+          ) : (
+            <div style={{ width: 424 }} />
+          )}
+        </DesktopContainer>
+      )}
     </MainLayout>
   )
 }
