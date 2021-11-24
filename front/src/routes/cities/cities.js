@@ -15,8 +15,13 @@ import DesktopCriterionsPanel from './desktop-criterions-panel'
 import MobileCriterionsSelection from './mobile-criterions-selection'
 import CitiesFilterList from './cities-filter-list'
 import noResultsPic from '../../assets/images/no_results.svg'
+import getLeafletIcon from '../../components/getLeafletIcon'
 
-const Items = styled(Link)`
+import blueMarker from '../../assets/images/marker-blue.png'
+import yellowMarker from '../../assets/images/marker-yellow.png'
+import redMarker from '../../assets/images/marker-red.png'
+
+const CityLink = styled(Link)`
   && {
     color: inherit;
     text-decoration: none;
@@ -94,7 +99,15 @@ const CitiesPage = () => {
   const [windowScroll, setWindowScroll] = useState(0) // mobile version
   const [citiesListScroll, setCitiesListScroll] = useState(0) // desktop version
   const [showMobilePanel, setShowMobileCriterionsSelection] = useState(false)
+  const [hoveredCityId, setHoveredCityId] = useState(null)
+  const [selectedCityId, setSelectedCityId] = useState(null)
   const citiesListRef = useRef(null)
+
+  const citiesItemsRef = useRef([])
+
+  useEffect(() => {
+    citiesItemsRef.current = citiesItemsRef.current.slice(0, cities.length)
+  }, [cities])
 
   useEffect(() => {
     if (location.search) {
@@ -201,10 +214,16 @@ const CitiesPage = () => {
           </p>
         </Infopanel>
       )}
-      {cities.map((city) => (
-        <Items key={city.id} to={getCityUrl(city)}>
-          <CityItem city={city} />
-        </Items>
+      {cities.map((city, key) => (
+        <CityLink
+          key={city.id}
+          to={getCityUrl(city)}
+          onMouseOver={() => setHoveredCityId(city.id)}
+          onMouseLeave={() => setHoveredCityId(null)}
+          ref={(el) => (citiesItemsRef.current[key] = el)}
+        >
+          <CityItem city={city} selected={selectedCityId === city.id} />
+        </CityLink>
       ))}
       {!isLoading && cities.length === 0 && (
         <NotFoundContainer>
@@ -259,7 +278,8 @@ const CitiesPage = () => {
       ) : (
         <DesktopContainer>
           {citiesList}
-          {!isLoading ? (
+
+          {cities.length ? (
             <StyledMapContainer
               center={cities.length > 1 ? null : firstCityCoordinates}
               zoom={cities.length > 1 ? null : 6}
@@ -277,10 +297,26 @@ const CitiesPage = () => {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              {cities.map((city) => (
+              {cities.map((city, key) => (
                 <Marker
                   key={city.id}
                   position={[city.geo_point_2d_x, city.geo_point_2d_y]}
+                  icon={getLeafletIcon(
+                    city.id === selectedCityId
+                      ? redMarker
+                      : city.id === hoveredCityId
+                      ? yellowMarker
+                      : blueMarker
+                  )}
+                  eventHandlers={{
+                    popupopen: () => {
+                      setSelectedCityId(city.id)
+                      citiesItemsRef.current[key].scrollIntoView({
+                        behavior: 'smooth',
+                      })
+                    },
+                    popupclose: () => setSelectedCityId(null),
+                  }}
                 >
                   <Popup>
                     <Link to={getCityUrl(city)}>
