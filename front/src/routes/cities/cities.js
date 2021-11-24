@@ -184,6 +184,11 @@ const CitiesPage = () => {
     setShowMobileCriterionsSelection(bool)
   const isMobile = isMobileView(size)
 
+  const isUsingRegionFilter = !!params.codeRegion
+  const isUsingCitySizeFilter = !!params.codeCity
+  const isUsingSeaFilter = params.codeEnvironment === 'side-sea'
+  const isUsingMountainFilter = params.codeEnvironment === 'mountain'
+
   if (showMobilePanel) {
     return (
       <MainLayout menu={{ visible: !showMobileCriterionsSelection }}>
@@ -223,7 +228,15 @@ const CitiesPage = () => {
           onMouseLeave={() => setHoveredCityId(null)}
           ref={(el) => (citiesItemsRef.current[key] = el)}
         >
-          <CityItem city={city} selected={selectedCityId === city.id} />
+          <CityItem
+            city={city}
+            selected={selectedCityId === city.id}
+            sortCriterions={sortCriterions}
+            isUsingRegionFilter={isUsingRegionFilter}
+            isUsingCitySizeFilter={isUsingCitySizeFilter}
+            isUsingSeaFilter={isUsingSeaFilter}
+            isUsingMountainFilter={isUsingMountainFilter}
+          />
         </CityLink>
       ))}
       {!isLoading && cities.length === 0 && (

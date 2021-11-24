@@ -77,7 +77,8 @@ const Tag = styled.div`
   font-weight: 500;
   margin-right: 8px;
   margin-bottom: 8px;
-  color: ${COLOR_TEXT_PRIMARY};
+  color: ${({ isUsingFilter }) =>
+    isUsingFilter ? COLOR_PRIMARY : COLOR_TEXT_PRIMARY};
   background: ${COLOR_GRAY};
 `
 
@@ -97,7 +98,14 @@ const ViewMore = styled.p`
   justify-content: flex-end;
 `
 
-const CityItem = ({ city, selected }) => {
+const CityItem = ({
+  city,
+  selected,
+  isUsingSeaFilter,
+  isUsingCitySizeFilter,
+  isUsingMountainFilter,
+  isUsingRegionFilter,
+}) => {
   const size = useWindowSize()
 
   if (!city) {
@@ -115,6 +123,41 @@ const CityItem = ({ city, selected }) => {
     photo = `/regions/region-${city['region.new_code']}.jpg`
   }
 
+  const tags = [
+    {
+      isPrioritary: isUsingSeaFilter,
+      node: city.distance_from_sea < 30 && (
+        <Tag isUsingFilter={isUsingSeaFilter} key="sea">
+          Mer &lt; {Math.ceil(city.distance_from_sea / 10) * 10}km
+        </Tag>
+      ),
+    },
+    {
+      isPrioritary: isUsingMountainFilter,
+      node: city.z_moyen && (
+        <Tag isUsingFilter={isUsingMountainFilter} key="mountain">
+          Altitude moyenne {city.z_moyen}m
+        </Tag>
+      ),
+    },
+    {
+      isPrioritary: isUsingRegionFilter,
+      node: city['region.new_name'] && (
+        <Tag isUsingFilter={isUsingRegionFilter} key="region">
+          {ucFirst(city['region.new_name'].toLowerCase())}
+        </Tag>
+      ),
+    },
+    {
+      isPrioritary: isUsingCitySizeFilter,
+      node: city.population && (
+        <Tag isUsingFilter={isUsingCitySizeFilter} key="citysize">
+          {formatNumber(city.population * 1000)} habitants
+        </Tag>
+      ),
+    },
+  ].sort((a) => (a.isPrioritary ? -1 : 1))
+
   return (
     <Wrapper isMobile={isMobileView(size)}>
       <Image
@@ -129,41 +172,7 @@ const CityItem = ({ city, selected }) => {
         <Description>
           {(city.description || '').replace('Écouter', '')}
         </Description>
-        <TagsBlock>
-          {city.distance_from_sea !== null && city.distance_from_sea <= 10 && (
-            <Tag>
-              Mer
-              {' < '}
-              10km
-            </Tag>
-          )}
-          {city.distance_from_sea !== null &&
-            city.distance_from_sea > 10 &&
-            city.distance_from_sea <= 20 && (
-              <Tag>
-                Mer
-                {' < '}
-                20km
-              </Tag>
-            )}
-          {city.distance_from_sea !== null &&
-            city.distance_from_sea > 20 &&
-            city.distance_from_sea <= 30 && (
-              <Tag>
-                Mer
-                {' < '}
-                30km
-              </Tag>
-            )}
-          {city.city_size_label && <Tag>{city.city_size_label}</Tag>}
-          {city.population && (
-            <Tag>{formatNumber(city.population * 1000)} habitants</Tag>
-          )}
-          {city.z_moyen && <Tag>Altitude moyenne {city.z_moyen}m</Tag>}
-          {city['region.new_name'] && (
-            <Tag>{ucFirst(city['region.new_name'].toLowerCase())}</Tag>
-          )}
-        </TagsBlock>
+        <TagsBlock>{tags.map(({ node }) => node)}</TagsBlock>
         <ViewMore>
           En savoir plus
           <ArrowForwardIcon fontSize="small" style={{ marginLeft: 8 }} />
@@ -176,6 +185,9 @@ const CityItem = ({ city, selected }) => {
 CityItem.propTypes = {
   city: PropTypes.object.isRequired,
   selected: PropTypes.bool.isRequired,
+  isUsingRegionFilter: PropTypes.bool.isRequired,
+  isUsingCitySizeFilter: PropTypes.bool.isRequired,
+  isUsingEnvironmentFilter: PropTypes.bool.isRequired,
 }
 
 CityItem.defaultProps = {}
