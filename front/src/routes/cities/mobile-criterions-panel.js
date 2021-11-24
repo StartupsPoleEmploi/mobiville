@@ -7,10 +7,9 @@ import TuneIcon from '@mui/icons-material/Tune'
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'
 import { COLOR_GRAY, COLOR_PRIMARY } from '../../constants/colors'
-import CitiesFilterList from './cities-filter-list'
 
 const EmptySpace = styled.div`
-  height: 216px;
+  height: 120px;
 `
 
 const Wrapper = styled.div`
@@ -32,7 +31,7 @@ const Title = styled(Typography)`
 const TagsBlock = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin: 8px 0 20px 0;
+  padding-top: 16px;
 `
 
 const Tag = styled.div`
@@ -44,20 +43,6 @@ const Tag = styled.div`
   margin-bottom: 8px;
   font-weight: 500;
   color: ${COLOR_PRIMARY};
-`
-
-const SubInfo = styled.div`
-  display: flex;
-  align-items: center;
-
-  p {
-    font-weight: 500;
-    flex: 1;
-  }
-
-  span {
-    font-weight: 700;
-  }
 `
 
 const MobileCriterionsSelection = ({
@@ -113,13 +98,6 @@ const MobileCriterionsSelection = ({
             <Tag key={t}>{t}</Tag>
           ))}
         </TagsBlock>
-        <SubInfo>
-          <Typography>
-            <span>{total}</span>{' '}
-            {total > 1 ? 'villes correspondantes' : 'ville correspondant'}
-          </Typography>
-          <CitiesFilterList />
-        </SubInfo>
       </Wrapper>
     </EmptySpace>
   )

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Typography } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
-import { ucFirst } from '../../utils/utils'
+import { formatNumber, ucFirst } from '../../utils/utils'
 import {
   COLOR_GRAY,
   COLOR_PRIMARY,
@@ -12,6 +12,7 @@ import {
 } from '../../constants/colors'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
+import redMarker from '../../assets/images/marker-red.png'
 
 const Wrapper = styled.div`
   margin-top: 16px;
@@ -30,7 +31,15 @@ const Title = styled(Typography)`
     font-weight: bold;
     margin-bottom: 9px;
     font-size: 18px;
+    display: flex;
+    align-items: center;
   }
+`
+
+const SelectedMarkerImg = styled.img`
+  width: 12px;
+  height: auto;
+  margin-left: 8px;
 `
 
 const Image = styled.div`
@@ -65,9 +74,11 @@ const Tag = styled.div`
   border-radius: 1000px;
   padding: 3px 6px;
   font-size: 12px;
+  font-weight: 500;
   margin-right: 8px;
   margin-bottom: 8px;
-  color: ${COLOR_TEXT_PRIMARY};
+  color: ${({ isUsingFilter }) =>
+    isUsingFilter ? COLOR_PRIMARY : COLOR_TEXT_PRIMARY};
   background: ${COLOR_GRAY};
 `
 
@@ -87,7 +98,14 @@ const ViewMore = styled.p`
   justify-content: flex-end;
 `
 
-const CityItem = ({ city }) => {
+const CityItem = ({
+  city,
+  selected,
+  isUsingSeaFilter,
+  isUsingCitySizeFilter,
+  isUsingMountainFilter,
+  isUsingRegionFilter,
+}) => {
   const size = useWindowSize()
 
   if (!city) {
@@ -105,6 +123,41 @@ const CityItem = ({ city }) => {
     photo = `/regions/region-${city['region.new_code']}.jpg`
   }
 
+  const tags = [
+    {
+      isPrioritary: isUsingSeaFilter,
+      node: city.distance_from_sea < 30 && (
+        <Tag isUsingFilter={isUsingSeaFilter} key="sea">
+          Mer &lt; {Math.ceil(city.distance_from_sea / 10) * 10}km
+        </Tag>
+      ),
+    },
+    {
+      isPrioritary: isUsingMountainFilter,
+      node: city.z_moyen && (
+        <Tag isUsingFilter={isUsingMountainFilter} key="mountain">
+          Altitude moyenne {city.z_moyen}m
+        </Tag>
+      ),
+    },
+    {
+      isPrioritary: isUsingRegionFilter,
+      node: city['region.new_name'] && (
+        <Tag isUsingFilter={isUsingRegionFilter} key="region">
+          {ucFirst(city['region.new_name'].toLowerCase())}
+        </Tag>
+      ),
+    },
+    {
+      isPrioritary: isUsingCitySizeFilter,
+      node: city.population && (
+        <Tag isUsingFilter={isUsingCitySizeFilter} key="citysize">
+          {formatNumber(city.population * 1000)} habitants
+        </Tag>
+      ),
+    },
+  ].sort((a) => (a.isPrioritary ? -1 : 1))
+
   return (
     <Wrapper isMobile={isMobileView(size)}>
       <Image
@@ -112,45 +165,14 @@ const CityItem = ({ city }) => {
         isMobile={isMobileView(size)}
       />
       <InformationsBlock>
-        <Title>{ucFirst(city.nom_comm.toLowerCase())}</Title>
+        <Title>
+          {ucFirst(city.nom_comm.toLowerCase())}
+          {selected && <SelectedMarkerImg src={redMarker} alt="" />}
+        </Title>
         <Description>
           {(city.description || '').replace('Écouter', '')}
         </Description>
-        <TagsBlock>
-          {city.distance_from_sea !== null && city.distance_from_sea <= 10 && (
-            <Tag>
-              Mer
-              {' < '}
-              10km
-            </Tag>
-          )}
-          {city.distance_from_sea !== null &&
-            city.distance_from_sea > 10 &&
-            city.distance_from_sea <= 20 && (
-              <Tag>
-                Mer
-                {' < '}
-                20km
-              </Tag>
-            )}
-          {city.distance_from_sea !== null &&
-            city.distance_from_sea > 20 &&
-            city.distance_from_sea <= 30 && (
-              <Tag>
-                Mer
-                {' < '}
-                30km
-              </Tag>
-            )}
-          {city.city_size_label && <Tag>{city.city_size_label}</Tag>}
-          {city.population && (
-            <Tag>{parseInt(city.population * 1000, 10)} habitants</Tag>
-          )}
-          {city.z_moyen && <Tag>Altitude moyenne {city.z_moyen}m</Tag>}
-          {city['region.new_name'] && (
-            <Tag>{ucFirst(city['region.new_name'].toLowerCase())}</Tag>
-          )}
-        </TagsBlock>
+        <TagsBlock>{tags.map(({ node }) => node)}</TagsBlock>
         <ViewMore>
           En savoir plus
           <ArrowForwardIcon fontSize="small" style={{ marginLeft: 8 }} />
@@ -162,6 +184,10 @@ const CityItem = ({ city }) => {
 
 CityItem.propTypes = {
   city: PropTypes.object.isRequired,
+  selected: PropTypes.bool.isRequired,
+  isUsingRegionFilter: PropTypes.bool.isRequired,
+  isUsingCitySizeFilter: PropTypes.bool.isRequired,
+  isUsingEnvironmentFilter: PropTypes.bool.isRequired,
 }
 
 CityItem.defaultProps = {}
