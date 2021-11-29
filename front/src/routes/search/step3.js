@@ -1,104 +1,128 @@
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography,
-} from '@mui/material'
+import { Autocomplete, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Button } from '../../components/button'
-import { useCities } from '../../common/contexts/citiesContext'
-import { ucFirst } from '../../utils/utils'
-import { NB_MAX_REGION } from '../../constants/search'
 
-const Wrapper = styled.div`
+import { useWindowSize } from '../../common/hooks/window-size'
+import { isMobileView } from '../../constants/mobile'
+import { useCities } from '../../common/contexts/citiesContext'
+import { ucFirstOnly } from '../../utils/utils'
+import { useHistory } from 'react-router'
+
+const Container = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
 `
 
-const Title = styled.h1`
-  && {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0 0 8px 0;
-  }
+const H1 = styled.h1`
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
 `
 
 const InfoText = styled(Typography)`
-  && {
-    padding: 8px 0 16px 0;
-  }
+  padding: 8px 0 16px 0;
 `
 
-const Step3Component = ({ onNext, values }) => {
-  const { criterions } = useCities()
-  const [regions, setRegions] = useState([])
-  const [list, setList] = useState([])
+const ALL_REGIONS_LABEL = 'Toutes les régions'
+const REGION_TYPE = 'Régions'
+const CITY_TYPE = 'Villes'
 
-  const toggleRegion = (event) => {
-    const region = event.target.value
-    setRegions([region])
-  }
+const Step3Component = ({ onNext, values }) => {
+  const {
+    criterions,
+    autocompletedCities,
+    isLoadingAutocomplete,
+    onAutocomplete,
+  } = useCities()
+  const [isAutocompleteFocused, setIsAutocompleteFocused] = useState(false)
+  const [searchedValue, setSearchedValue] = useState('')
+  const history = useHistory()
+  const size = useWindowSize()
 
   useEffect(() => {
-    if (values && values.codeRegion && values.codeRegion.length) {
-      setRegions([values.codeRegion])
-    }
+    const trimmedValue = searchedValue.trim()
+    if (trimmedValue) onAutocomplete(trimmedValue)
+  }, [searchedValue])
 
-    if (values.codeRome) {
-      setList(
-        criterions.regions.filter(
-          (r) => r.criterions && r.criterions[values.codeRome]
-        )
-      )
-    } else {
-      setList([...criterions.regions])
-    }
-  }, [values])
+  const isMobile = isMobileView(size)
+  if (!values.codeRome) return <div />
+
+  const regionsList = criterions.regions.filter(
+    (region) =>
+      region?.criterions?.[values.codeRome] &&
+      region.label.toLowerCase().match(searchedValue.trim().toLowerCase())
+  )
+
+  const autocompleteList = [{ label: ALL_REGIONS_LABEL, type: REGION_TYPE }]
+    .concat(regionsList.map((region) => ({ ...region, type: REGION_TYPE })))
+    .concat(
+      autocompletedCities.map((city) => ({
+        id: city.insee_com,
+        label: `${ucFirstOnly(city.nom_comm)} (${city.postal_code})`,
+        cityName: city.nom_comm,
+        type: CITY_TYPE,
+      }))
+    )
 
   return (
-    <Wrapper>
-      <Title>Quelle région vous intéresse ?</Title>
+    <Container>
+      <H1>Quel endroit vous fait envie ?</H1>
 
       <InfoText>
-        Seules les régions avec des fortes probabilités d’embauche s’affichent.
+        Choisissez une région pour découvrir une liste de villes favorables, ou
+        entrez le nom d’une ville
       </InfoText>
 
-      <FormControl variant="filled">
-        <InputLabel shrink htmlFor="step-region-select-label">
-          Région
-        </InputLabel>
-        <Select
-          value={regions?.[0] || ''}
-          displayEmpty
-          onChange={toggleRegion}
-          inputProps={{
-            id: 'step-region-select-label',
-          }}
-        >
-          <MenuItem value="">Toutes les regions</MenuItem>
-          {list.map((r) => (
-            <MenuItem key={r.id} value={r.id}>
-              {ucFirst(r.label.toLowerCase())}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <Autocomplete
+        onInputChange={(event, newValue) => {
+          if (!event) return
 
-      <Button
-        style={{
-          fontWeight: 'normal',
-          margin: '32px 0',
-          boxShadow: '0 4px 5px 0 rgba(0,0,0,0.2)',
+          setSearchedValue(newValue)
         }}
-        onClick={() => onNext({ regions })}
-      >
-        Suivant {regions.length > NB_MAX_REGION ? `(max ${NB_MAX_REGION})` : ''}
-      </Button>
-    </Wrapper>
+        onChange={(event, value, reason) => {
+          if (reason !== 'selectOption') return
+
+          const { type, id } = value
+
+          if (type === REGION_TYPE) {
+            return onNext({ regions: id })
+          }
+          if (type === CITY_TYPE) {
+            return history.push(
+              `/city/${id}-${value.cityName}?codeRome=${values.codeRome}`
+            )
+          }
+        }}
+        inputValue={searchedValue}
+        options={autocompleteList}
+        renderInput={(inputParams) => (
+          <TextField
+            {...inputParams}
+            label="Rechercher une région ou une ville"
+            variant="filled"
+            openOnFocus
+          />
+        )}
+        groupBy={(option) => option.type}
+        getOptionLabel={(region) => region.label}
+        noOptionsText="Pas de résultat"
+        loading={isLoadingAutocomplete}
+        loadingText="Chargement…"
+        filterOptions={(x) => x}
+        style={{
+          position: isMobile && isAutocompleteFocused ? 'fixed' : 'static',
+          top: 0,
+          left: 0,
+          width: '100%',
+          zIndex: 10,
+          backgroundColor: '#f9f9f9',
+        }}
+        onFocus={() => setIsAutocompleteFocused(true)}
+        onBlur={() => setIsAutocompleteFocused(false)}
+      />
+    </Container>
   )
 }
 
