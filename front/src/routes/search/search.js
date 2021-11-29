@@ -48,14 +48,6 @@ const ALL_STEPS = [
     key: 'region',
     components: lazy(() => import('./step3')),
   },
-  {
-    key: 'cadre',
-    components: lazy(() => import('./step4')),
-  },
-  {
-    key: 'environement',
-    components: lazy(() => import('./step5')),
-  },
 ]
 
 const SearchPage = () => {
