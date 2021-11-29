@@ -29,7 +29,7 @@ const ALL_REGIONS_LABEL = 'Toutes les régions'
 const REGION_TYPE = 'Régions'
 const CITY_TYPE = 'Villes'
 
-const Step3Component = ({ onNext, values }) => {
+const SearchRegionOrCity = ({ onNext, values }) => {
   const {
     criterions,
     autocompletedCities,
@@ -126,14 +126,14 @@ const Step3Component = ({ onNext, values }) => {
   )
 }
 
-Step3Component.propTypes = {
+SearchRegionOrCity.propTypes = {
   onNext: PropTypes.func,
   values: PropTypes.object,
 }
 
-Step3Component.defaultProps = {
+SearchRegionOrCity.defaultProps = {
   onNext: () => {},
   values: {},
 }
 
-export default Step3Component
+export default SearchRegionOrCity
