@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Typography } from '@mui/material'
@@ -14,16 +15,24 @@ import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 import redMarker from '../../assets/images/marker-red.png'
 
-const Wrapper = styled.div`
+const CityLink = styled(Link)`
+  display: flex;
   margin-top: 16px;
   margin-bottom: ${(props) => (props.isMobile ? '16px' : '32px')};
-  display: flex;
   flex-direction: ${(props) => (props.isMobile ? 'column' : 'row')};
   align-items: ${(props) => (props.isMobile ? 'stretch' : 'center')};
   background: #ffffff;
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
-    0px 1px 3px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
+  border: 1px solid #e4e9ed;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12),
+      0px 1px 3px rgba(0, 0, 0, 0.2);
+    color: inherit;
+  }
 `
 
 const Title = styled(Typography)`
@@ -105,6 +114,10 @@ const CityItem = ({
   isUsingCitySizeFilter,
   isUsingMountainFilter,
   isUsingRegionFilter,
+  onMouseOver,
+  onMouseLeave,
+  itemRef,
+  to,
 }) => {
   const size = useWindowSize()
 
@@ -159,7 +172,13 @@ const CityItem = ({
   ].sort((a) => (a.isPrioritary ? -1 : 1))
 
   return (
-    <Wrapper isMobile={isMobileView(size)}>
+    <CityLink
+      onMouseOver={onMouseOver}
+      onMouseLeave={onMouseLeave}
+      ref={itemRef}
+      to={to}
+      isMobile={isMobileView(size)}
+    >
       <Image
         style={{ backgroundImage: `url(${photo})` }}
         isMobile={isMobileView(size)}
@@ -178,7 +197,7 @@ const CityItem = ({
           <ArrowForwardIcon fontSize="small" style={{ marginLeft: 8 }} />
         </ViewMore>
       </InformationsBlock>
-    </Wrapper>
+    </CityLink>
   )
 }
 
@@ -187,7 +206,12 @@ CityItem.propTypes = {
   selected: PropTypes.bool.isRequired,
   isUsingRegionFilter: PropTypes.bool.isRequired,
   isUsingCitySizeFilter: PropTypes.bool.isRequired,
-  isUsingEnvironmentFilter: PropTypes.bool.isRequired,
+  isUsingSeaFilter: PropTypes.bool.isRequired,
+  isUsingMountainFilter: PropTypes.bool.isRequired,
+  onMouseOver: PropTypes.func.isRequired,
+  onMouseLeave: PropTypes.func.isRequired,
+  ref: PropTypes.func.isRequired,
+  to: PropTypes.string.isRequired,
 }
 
 CityItem.defaultProps = {}
