@@ -32,7 +32,7 @@ const JobTextField = styled(TextField)`
   }
 `
 
-const Step2Component = ({ onNext }) => {
+const SearchRome = ({ onNext }) => {
   const size = useWindowSize()
   const {
     isLoadingJobsMatchingCriterion,
@@ -113,14 +113,14 @@ const Step2Component = ({ onNext }) => {
   )
 }
 
-Step2Component.propTypes = {
+SearchRome.propTypes = {
   onNext: PropTypes.func,
   values: PropTypes.object,
 }
 
-Step2Component.defaultProps = {
+SearchRome.defaultProps = {
   onNext: () => {},
   values: {},
 }
 
-export default Step2Component
+export default SearchRome

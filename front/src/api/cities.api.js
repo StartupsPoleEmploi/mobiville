@@ -5,6 +5,11 @@ export const searchCities = (body) =>
     .post('/api/cities/search', body)
     .then((response) => (response.data ? response.data.data : null))
 
+export const fetchAutocompleteCities = (body) =>
+  axios
+    .post('/api/cities/autocomplete', body)
+    .then((response) => (response.data ? response.data.data : null))
+
 export const getCriterions = () =>
   axios
     .get('/api/cities/criterions')

@@ -246,6 +246,16 @@ export default (sequelizeInstance, Model) => {
     return city
   }
 
+  Model.getCitiesForAutoComplete = async (query) =>
+    await Model.findAll({
+      attributes: ['nom_comm', 'insee_com', 'postal_code'],
+      where: {
+        nom_comm: { [Op.like]: `${query}%` },
+      },
+      order: ['nom_comm'],
+      limit: 10,
+    })
+
   Model.checkAndStartSyncCity = () => {
     if (!Model.cityOnSync) {
       Model.syncOneCity()

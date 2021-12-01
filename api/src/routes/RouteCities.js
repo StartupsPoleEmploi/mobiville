@@ -66,6 +66,19 @@ export default class RouteCities extends Route {
     })
   }
 
+  @Route.Post({
+    bodyType: Types.object().keys({
+      query: Types.string(),
+    }),
+  })
+  async autocomplete(ctx) {
+    const { query } = this.body(ctx)
+
+    const result = await this.model.getCitiesForAutoComplete(query)
+
+    this.sendOk(ctx, result)
+  }
+
   @Route.Get()
   async criterions(ctx) {
     const [jobList, regionsTensionsCriterions] = await Promise.all([
