@@ -42,23 +42,15 @@ const BackWrapper = styled.div`
 const ALL_STEPS = [
   {
     key: 'rome',
-    components: lazy(() => import('./step2')),
+    components: lazy(() => import('./SearchRome')),
   },
   {
     key: 'region',
-    components: lazy(() => import('./step3')),
-  },
-  {
-    key: 'cadre',
-    components: lazy(() => import('./step4')),
-  },
-  {
-    key: 'environement',
-    components: lazy(() => import('./step5')),
+    components: lazy(() => import('./SearchRegionOrCity')),
   },
 ]
 
-const SearchPage = () => {
+const Search = () => {
   const { criterions, criterionsError } = useCities()
   const size = useWindowSize()
   const { stepName } = useParams()
@@ -141,4 +133,4 @@ const SearchPage = () => {
   )
 }
 
-export default memo(SearchPage)
+export default memo(Search)

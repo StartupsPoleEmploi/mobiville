@@ -9,6 +9,7 @@ import {
   getCityTenement,
   getCityEquipments,
   searchJobLabels,
+  fetchAutocompleteCities,
 } from '../../api/cities.api'
 
 const EMPTY_CITY = { id: null, nom_comm: 'Non trouvée', description: '' }
@@ -36,6 +37,8 @@ export function CitiesProvider(props) {
   const [environmentCriterions, _setEnvironmentCriterions] = useState([])
   const [cityCriterions, _setCityCriterions] = useState([])
   const [regionCriterions, _setRegionCriterions] = useState([])
+  const [autocompletedCities, setAutocompletedCities] = useState([])
+  const [isLoadingAutocomplete, setIsLoadingAutocomplete] = useState(false)
 
   const onSearch = useCallback((params, index = 0, oldCities = []) => {
     _setIsLoading(true)
@@ -141,6 +144,16 @@ export function CitiesProvider(props) {
     [criterions]
   )
 
+  const onAutocomplete = useCallback((query) => {
+    setIsLoadingAutocomplete(true)
+    return fetchAutocompleteCities({ query })
+      .then((result) => {
+        setAutocompletedCities(result)
+        setIsLoadingAutocomplete(false)
+      })
+      .catch((err) => setIsLoadingAutocomplete(false))
+  })
+
   useEffect(() => {
     getCriterions()
       .then((results) => {
@@ -194,6 +207,8 @@ export function CitiesProvider(props) {
         environmentCriterions,
         cityCriterions,
         regionCriterions,
+        autocompletedCities,
+        isLoadingAutocomplete,
         // function
         setCity,
         onSearch,
@@ -205,6 +220,7 @@ export function CitiesProvider(props) {
         onGetCityTenement,
         onGetCityEquipments,
         onSearchJobLabels,
+        onAutocomplete,
       }}
     />
   )
