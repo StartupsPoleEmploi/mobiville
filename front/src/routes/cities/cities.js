@@ -22,13 +22,6 @@ import yellowMarker from '../../assets/images/marker-yellow.png'
 import redMarker from '../../assets/images/marker-red.png'
 import { formatNumber } from '../../utils/utils'
 
-const CityLink = styled(Link)`
-  && {
-    color: inherit;
-    text-decoration: none;
-  }
-`
-
 const NotFoundContainer = styled.div`
   display: flex;
   align-items: center;
@@ -76,8 +69,7 @@ const DesktopContainer = styled.div`
 
 const CitiesList = styled.div`
   max-width: ${({ isMobile }) => (isMobile ? 'auto' : '600px')};
-  margin-left: ${({ isMobile }) => (isMobile ? '16px' : 'auto')};
-  margin-right: ${({ isMobile }) => (isMobile ? '16px' : 'auto')};
+  padding: 0 16px;
   overflow: ${({ isMobile }) => (isMobile ? 'inherit' : 'auto')};
 `
 
@@ -221,23 +213,20 @@ const CitiesPage = () => {
         </Infopanel>
       )}
       {cities.map((city, key) => (
-        <CityLink
+        <CityItem
+          city={city}
+          selected={selectedCityId === city.id}
+          sortCriterions={sortCriterions}
+          isUsingRegionFilter={isUsingRegionFilter}
+          isUsingCitySizeFilter={isUsingCitySizeFilter}
+          isUsingSeaFilter={isUsingSeaFilter}
+          isUsingMountainFilter={isUsingMountainFilter}
           key={city.id}
           to={getCityUrl(city)}
           onMouseOver={() => setHoveredCityId(city.id)}
           onMouseLeave={() => setHoveredCityId(null)}
-          ref={(el) => (citiesItemsRef.current[key] = el)}
-        >
-          <CityItem
-            city={city}
-            selected={selectedCityId === city.id}
-            sortCriterions={sortCriterions}
-            isUsingRegionFilter={isUsingRegionFilter}
-            isUsingCitySizeFilter={isUsingCitySizeFilter}
-            isUsingSeaFilter={isUsingSeaFilter}
-            isUsingMountainFilter={isUsingMountainFilter}
-          />
-        </CityLink>
+          itemRef={(el) => (citiesItemsRef.current[key] = el)}
+        />
       ))}
       {!isLoading && cities.length === 0 && (
         <NotFoundContainer>
@@ -328,6 +317,7 @@ const CitiesPage = () => {
                       citiesItemsRef.current[key].scrollIntoView({
                         behavior: 'smooth',
                       })
+                      citiesItemsRef.current[key].focus()
                     },
                     popupclose: () => setSelectedCityId(null),
                   }}
