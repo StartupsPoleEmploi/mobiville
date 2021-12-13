@@ -110,7 +110,7 @@ const CitiesPage = () => {
   }, [location])
 
   useEffect(() => {
-    if (params && params.codeRome) {
+    if (params?.codeRome) {
       onSearch({ ...params, sortBy: sortCriterions })
     }
   }, [params, sortCriterions])
