@@ -43,7 +43,6 @@ export function CitiesProvider(props) {
   const [isLoadingAutocomplete, setIsLoadingAutocomplete] = useState(false)
 
   const onSearch = useCallback((params, index = 0, oldCities = []) => {
-    console.log(isLoading, params, isEqual(lastSearchParams, params))
     if (isLoading && isEqual(lastSearchParams, params)) return
 
     _setIsLoading(true)
