@@ -67,6 +67,8 @@ export function CitiesProvider(props) {
       .then(() => _setIsLoadingCity(false))
   })
 
+  const unloadCity = () => setCity(null)
+
   const onSearchByLocation = useCallback(({ latitude, longitude }) => {
     _setIsLoadingLocation(true)
     searchCityByLocation({ latitude, longitude })
@@ -215,6 +217,7 @@ export function CitiesProvider(props) {
         setCity,
         onSearch,
         onLoadCity,
+        unloadCity,
         onSearchByLocation,
         onSearchByName,
         onSearchById,
