@@ -144,6 +144,8 @@ export function CitiesProvider(props) {
     [criterions]
   )
 
+  const initializeJobsAutocomplete = () => setAutocompletedCities([])
+
   const onAutocomplete = useCallback((query) => {
     setIsLoadingAutocomplete(true)
     return fetchAutocompleteCities({ query })
@@ -221,6 +223,7 @@ export function CitiesProvider(props) {
         onGetCityEquipments,
         onSearchJobLabels,
         onAutocomplete,
+        initializeJobsAutocomplete,
       }}
     />
   )
