@@ -67,6 +67,8 @@ export function CitiesProvider(props) {
       .then(() => _setIsLoadingCity(false))
   })
 
+  const unloadCity = () => setCity(null)
+
   const onSearchByLocation = useCallback(({ latitude, longitude }) => {
     _setIsLoadingLocation(true)
     searchCityByLocation({ latitude, longitude })
@@ -144,6 +146,8 @@ export function CitiesProvider(props) {
     [criterions]
   )
 
+  const initializeJobsAutocomplete = () => setAutocompletedCities([])
+
   const onAutocomplete = useCallback((query) => {
     setIsLoadingAutocomplete(true)
     return fetchAutocompleteCities({ query })
@@ -213,6 +217,7 @@ export function CitiesProvider(props) {
         setCity,
         onSearch,
         onLoadCity,
+        unloadCity,
         onSearchByLocation,
         onSearchByName,
         onSearchById,
@@ -221,6 +226,7 @@ export function CitiesProvider(props) {
         onGetCityEquipments,
         onSearchJobLabels,
         onAutocomplete,
+        initializeJobsAutocomplete,
       }}
     />
   )
