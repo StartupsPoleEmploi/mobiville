@@ -36,6 +36,7 @@ const SearchRome = ({ onNext }) => {
   const size = useWindowSize()
   const {
     isLoadingJobsMatchingCriterion,
+    initializeJobsAutocomplete,
     jobsMatchingCriterions,
     onSearchJobLabels,
   } = useCities()
@@ -47,6 +48,10 @@ const SearchRome = ({ onNext }) => {
     () => throttle((search) => onSearchJobLabels(search), 200),
     []
   )
+
+  useEffect(() => {
+    initializeJobsAutocomplete()
+  }, [])
 
   useEffect(() => {
     throttledOnSearchJobLabels(searchedLabel)

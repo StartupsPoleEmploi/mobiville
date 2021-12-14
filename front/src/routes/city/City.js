@@ -40,7 +40,8 @@ const CityPage = ({ location: { pathname, search } }) => {
     { key: 'life', label: 'Cadre de vie' },
     { key: 'tenement', label: 'Logement' },
   ]
-  const { onLoadCity, isLoadingCity, city, criterions } = useCities()
+  const { onLoadCity, isLoadingCity, city, criterions, unloadCity } =
+    useCities()
   const { insee, place } = useParams()
   const params = queryString.parse(search)
   const size = useWindowSize()
@@ -51,9 +52,11 @@ const CityPage = ({ location: { pathname, search } }) => {
   )
 
   useEffect(() => {
-    const extract = insee.split('-')
-    if (extract && extract.length) {
-      onLoadCity(extract[0])
+    const [inseeCode] = insee.split('-')
+    onLoadCity(inseeCode)
+
+    return () => {
+      unloadCity()
     }
   }, [])
 
