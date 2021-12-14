@@ -1,5 +1,5 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useCallback, useEffect } from 'react'
+import { isEqual } from 'lodash'
 import {
   getCriterions,
   loadCity,
@@ -15,6 +15,8 @@ import {
 const EMPTY_CITY = { id: null, nom_comm: 'Non trouvée', description: '' }
 
 const CitiesContext = React.createContext()
+
+let lastSearchParams = {}
 
 export function CitiesProvider(props) {
   const [cities, _setCities] = useState([])
@@ -41,13 +43,19 @@ export function CitiesProvider(props) {
   const [isLoadingAutocomplete, setIsLoadingAutocomplete] = useState(false)
 
   const onSearch = useCallback((params, index = 0, oldCities = []) => {
+    if (isLoading && isEqual(lastSearchParams, params)) return
+
     _setIsLoading(true)
+    lastSearchParams = { ...params }
+
     if (index === 0) {
       _setCities([])
     }
 
     apiSearchCities({ ...params, index })
       .then((c) => {
+        if (!isEqual(params, lastSearchParams)) return
+
         if (index === 0) {
           _setCities(c.list)
         } else {
