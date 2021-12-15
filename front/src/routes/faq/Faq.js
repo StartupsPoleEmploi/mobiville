@@ -246,7 +246,7 @@ const HelpMoreLink = styled.a`
   font-weight: 500;
 `
 
-const FAQPage = () => {
+const Faq = () => {
   const size = useWindowSize()
   const isMobile = isMobileView(size)
 
@@ -307,4 +307,4 @@ const FAQPage = () => {
   )
 }
 
-export default FAQPage
+export default Faq
