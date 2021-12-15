@@ -7,7 +7,7 @@ import HeaderMobile from './HeaderMobile'
 import HeaderDesktop from './HeaderDesktop'
 import { isMobileView } from '../constants/mobile'
 import { useWindowSize } from '../common/hooks/window-size'
-import { Footer } from './footer'
+import Footer from './Footer'
 
 const Container = styled.div`
   height: 100%;
@@ -51,13 +51,7 @@ const GoToMainContent = styled.a`
   }
 `
 
-export const MainLayout = ({
-  children,
-  menu,
-  footer,
-  topMobileMenu,
-  style = {},
-}) => {
+const MainLayout = ({ children, menu, footer, topMobileMenu, style = {} }) => {
   const size = useWindowSize()
   const location = useLocation()
 
@@ -106,3 +100,5 @@ MainLayout.defaultProps = {
   topMobileMenu: false,
   style: {},
 }
+
+export default MainLayout
