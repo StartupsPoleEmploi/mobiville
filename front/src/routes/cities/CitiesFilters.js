@@ -37,7 +37,7 @@ const SpaceItem = styled.div`
   }
 `
 
-const CitiesFilterList = () => {
+const CitiesFilters = () => {
   const { setSortCriterions, sortCriterions } = useCities()
 
   useEffect(() => {
@@ -75,8 +75,8 @@ const CitiesFilterList = () => {
   )
 }
 
-CitiesFilterList.propTypes = {}
+CitiesFilters.propTypes = {}
 
-CitiesFilterList.defaultProps = {}
+CitiesFilters.defaultProps = {}
 
-export default CitiesFilterList
+export default CitiesFilters
