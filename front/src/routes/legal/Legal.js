@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { MainLayout } from '../../components/main-layout'
+import MainLayout from '../../components/MainLayout'
 
 const Container = styled.div`
   margin: 124px 16px;
@@ -10,7 +10,7 @@ const Container = styled.div`
   }
 `
 
-const LegalPage = () => {
+const Legal = () => {
   const onOpenTC = () => {
     window.tC.privacyCenter.showPrivacyCenter()
     return false
@@ -373,4 +373,4 @@ const LegalPage = () => {
     </MainLayout>
   )
 }
-export default LegalPage
+export default Legal

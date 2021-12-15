@@ -6,7 +6,7 @@ import { Link, useHistory, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
 import { useCities } from '../../common/contexts/citiesContext'
-import { MainLayout } from '../../components/main-layout'
+import MainLayout from '../../components/MainLayout'
 import CityHeader from './CityHeader'
 import PanelCityJobs from './PanelCityJobs'
 import PanelCityLife from './PanelCityLife'

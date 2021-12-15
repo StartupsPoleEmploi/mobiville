@@ -5,15 +5,16 @@ import queryString from 'query-string'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 import { useCities } from '../../common/contexts/citiesContext'
-import { MainLayout } from '../../components/main-layout'
-import MobileCriterionsPanel from './mobile-criterions-panel'
-import CityItem from './city-item'
+import MainLayout from '../../components/MainLayout'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 import { COLOR_OTHER_GREEN } from '../../constants/colors'
-import DesktopCriterionsPanel from './desktop-criterions-panel'
-import MobileCriterionsSelection from './mobile-criterions-selection'
-import CitiesFilterList from './cities-filter-list'
+
+import CityItem from './CityItem'
+import MobileCriterionsPanel from './MobileCriterionsPanel'
+import DesktopCriterionsPanel from './DesktopCriterionsPanel'
+import MobileCriterionsSelection from './MobileCriterionsSelection'
+import CitiesFilters from './CitiesFilters'
 import noResultsPic from '../../assets/images/no_results.svg'
 import getLeafletIcon from '../../components/getLeafletIcon'
 
@@ -82,7 +83,7 @@ const StyledMapContainer = styled(MapContainer)`
   border-radius: 16px;
 `
 
-const CitiesPage = () => {
+const Cities = () => {
   const { cities, isLoading, onSearch, totalCities, sortCriterions } =
     useCities()
   const size = useWindowSize()
@@ -201,7 +202,7 @@ const CitiesPage = () => {
           <span>{totalCities}</span>{' '}
           {totalCities > 1 ? 'villes correspondantes' : 'ville correspondante'}
         </CitiesFilterText>
-        <CitiesFilterList />
+        <CitiesFilters />
       </CitiesFilterContainer>
       {!isMobile && (
         <Infopanel>
@@ -340,8 +341,8 @@ const CitiesPage = () => {
   )
 }
 
-CitiesPage.propTypes = {}
+Cities.propTypes = {}
 
-CitiesPage.defaultProps = {}
+Cities.defaultProps = {}
 
-export default React.memo(CitiesPage)
+export default React.memo(Cities)

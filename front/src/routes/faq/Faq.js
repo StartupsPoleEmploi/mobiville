@@ -8,7 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
-import { MainLayout } from '../../components/main-layout'
+import MainLayout from '../../components/MainLayout'
 import { COLOR_TEXT_PRIMARY } from '../../constants/colors'
 import SubHeader from '../../components/SubHeader'
 
@@ -246,7 +246,7 @@ const HelpMoreLink = styled.a`
   font-weight: 500;
 `
 
-const FAQPage = () => {
+const Faq = () => {
   const size = useWindowSize()
   const isMobile = isMobileView(size)
 
@@ -307,4 +307,4 @@ const FAQPage = () => {
   )
 }
 
-export default FAQPage
+export default Faq
