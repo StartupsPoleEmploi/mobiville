@@ -10,7 +10,7 @@ const Container = styled.div`
   }
 `
 
-const LegalPage = () => {
+const Legal = () => {
   const onOpenTC = () => {
     window.tC.privacyCenter.showPrivacyCenter()
     return false
@@ -373,4 +373,4 @@ const LegalPage = () => {
     </MainLayout>
   )
 }
-export default LegalPage
+export default Legal
