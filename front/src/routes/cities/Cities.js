@@ -5,7 +5,7 @@ import queryString from 'query-string'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 import { useCities } from '../../common/contexts/citiesContext'
-import { MainLayout } from '../../components/main-layout'
+import MainLayout from '../../components/MainLayout'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'
 import { COLOR_OTHER_GREEN } from '../../constants/colors'

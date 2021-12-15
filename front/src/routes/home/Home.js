@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
-import { MainLayout } from '../../components/main-layout'
+import MainLayout from '../../components/MainLayout'
 import { COLOR_PRIMARY, COLOR_BACKGROUND } from '../../constants/colors'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { isMobileView } from '../../constants/mobile'

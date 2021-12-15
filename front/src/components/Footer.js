@@ -66,7 +66,7 @@ const CopyRight = styled.p`
   margin-top: 32px;
 `
 
-export const Footer = () => {
+const Footer = () => {
   const size = useWindowSize()
 
   return (
@@ -123,3 +123,5 @@ export const Footer = () => {
     </MainSpace>
   )
 }
+
+export default Footer
