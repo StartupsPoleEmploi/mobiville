@@ -4,8 +4,6 @@ import styled from 'styled-components'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined'
 
-import { Button } from '../../components/button'
-
 import { COLOR_PRIMARY, COLOR_TEXT_SECONDARY } from '../../constants/colors'
 import { useCities } from '../../common/contexts/citiesContext'
 import { ucFirst } from '../../utils/utils'
@@ -30,8 +28,36 @@ const ButtonContentWrapper = styled.div`
   align-items: center;
 `
 
+const ResultsButton = styled.button`
+  border-radius: 44px;
+  background-color: ${COLOR_PRIMARY};
+  color: white;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-weight: bold;
+  font-size: 18px;
+  border: 0;
+  cursor: pointer;
+`
+
 const H1 = styled.h1`
   font-size: 18px;
+`
+
+const CriterionButton = styled.button.attrs({ type: 'button' })`
+  width: auto;
+  min-height: 40px;
+  display: inline;
+  border: ${({ isSelected }) =>
+    !isSelected ? 'none' : `1px solid ${COLOR_PRIMARY}`};
+  border-radius: 44px;
+  margin-left: 8px;
+  margin-bottom: 8px;
+  padding: 0 8px;
+  cursor: pointer;
 `
 
 const CUSTOM_SUB_LABELS = {
@@ -40,17 +66,6 @@ const CUSTOM_SUB_LABELS = {
   'big-city': '- 200 000 habitants',
   'extra-big-city': '+ 200 000 habitants',
 }
-
-const getButtonStyle = (isSelected) => ({
-  width: 'auto',
-  height: 40,
-  display: 'inline',
-  border: !isSelected ? 'none' : `1px solid ${COLOR_PRIMARY}`,
-  borderRadius: '44px',
-  marginLeft: 8,
-  marginBottom: 8,
-  lineHeight: 1,
-})
 
 // These icons need to be refactored to correctly use Material UI icon component
 const Icon = (props) => (
@@ -104,11 +119,11 @@ const MobileCriterionsSelection = ({
           {environmentCriterions.map((criterion) => {
             const isSelected = criterion.key === selectedEnvironment
             return (
-              <Button
+              <CriterionButton
                 onClick={() => setSelectedEnvironment(criterion.key)}
                 light
                 column
-                style={getButtonStyle(isSelected)}
+                isSelected={isSelected}
                 role="radio"
                 aria-checked={isSelected}
               >
@@ -116,19 +131,19 @@ const MobileCriterionsSelection = ({
                   <Icon>{criterion.icon}</Icon>
                   {criterion.label}
                 </ButtonContentWrapper>
-              </Button>
+              </CriterionButton>
             )
           })}
-          <Button
+          <CriterionButton
             onClick={() => setSelectedEnvironment('')}
             light
             column
-            style={getButtonStyle(selectedEnvironment === '')}
+            isSelected={selectedEnvironment === ''}
             role="radio"
             aria-checked={selectedEnvironment === ''}
           >
             Tous les environnements
-          </Button>
+          </CriterionButton>
         </div>
       </div>
 
@@ -143,14 +158,14 @@ const MobileCriterionsSelection = ({
           {cityCriterions.map((criterion) => {
             const isSelected = criterion.key === selectedCitySize
             return (
-              <Button
+              <CriterionButton
                 onClick={() => setSelectedCitySize(criterion.key)}
                 light
                 column
                 style={{
-                  ...getButtonStyle(isSelected),
                   height: 46,
                 }}
+                isSelected={isSelected}
                 role="radio"
                 aria-checked={isSelected}
               >
@@ -164,22 +179,22 @@ const MobileCriterionsSelection = ({
                     </span>
                   </div>
                 </ButtonContentWrapper>
-              </Button>
+              </CriterionButton>
             )
           })}
-          <Button
+          <CriterionButton
             onClick={() => setSelectedCitySize('')}
             light
             column
             style={{
-              ...getButtonStyle(selectedCitySize === ''),
               height: 46,
             }}
+            isSelected={selectedCitySize === ''}
             role="radio"
             aria-checked={selectedCitySize === ''}
           >
             Toutes les tailles
-          </Button>
+          </CriterionButton>
         </div>
       </div>
 
@@ -217,7 +232,9 @@ const MobileCriterionsSelection = ({
           width: 'calc(100% - 32px)',
         }}
       >
-        <Button onClick={onValidate}>Afficher les résultats</Button>
+        <ResultsButton onClick={onValidate}>
+          Afficher les résultats
+        </ResultsButton>
       </div>
     </div>
   )
