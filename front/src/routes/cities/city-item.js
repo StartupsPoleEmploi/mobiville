@@ -61,8 +61,8 @@ const Image = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  width: ${(props) => (props.isMobile ? '100%' : '248px')};
-  min-width: ${(props) => (props.isMobile ? 'auto' : '248px')};0
+  width: ${(props) => (props.isMobile ? '100%' : '160px')};
+  min-width: ${(props) => (props.isMobile ? 'auto' : '160px')};
 `
 
 const Description = styled(Typography)`
