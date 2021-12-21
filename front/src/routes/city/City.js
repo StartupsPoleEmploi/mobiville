@@ -25,13 +25,20 @@ const HelpButton = styled.button`
   bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
-  height: 48px !important;
+  height: 48px;
+  display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px !important;
   cursor: pointer;
   width: ${(props) => (props.isMobile ? 'calc(100% - 32px)' : '')};
-  padding: ${(props) => (props.isMobile ? '0 12px' : '0 48px')} !important;
+  padding: ${(props) => (props.isMobile ? '0 12px' : '0 48px')};
+  border: none;
+  font-size: 14px;
+  margin: 0;
+  border-radius: 32px;
+  background-color: #191970;
+  color: white;
 `
 
 const CityPage = ({ location: { pathname, search } }) => {
@@ -136,7 +143,6 @@ const CityPage = ({ location: { pathname, search } }) => {
             {tabKey === 'tenement' && <PanelCityHousing city={city} />}
             <Link to="/mobility-guide" style={{ cursor: 'pointer' }}>
               <HelpButton
-                className="btn primary"
                 type="button"
                 isMobile={isMobileView(size)}
               >
