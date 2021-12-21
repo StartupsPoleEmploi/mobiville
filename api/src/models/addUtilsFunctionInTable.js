@@ -1,5 +1,3 @@
-import { ErrorApp } from 'koa-smart'
-
 import sequelizeTransforms from 'sequelize-transforms'
 
 export const customSequelizeTransforms = {
@@ -15,7 +13,7 @@ export function addUtilsFunctionInTable(Table, sequelizeInstance) {
   sequelizeTransforms(Table, customSequelizeTransforms)
 
   Table.throw = (status, message) => {
-    throw new ErrorApp(status, message, true)
+    throw new Error(status, message, true)
   }
   Table.throwBadRequest = (error) => {
     Table.throw(400, error || 'Bad request')
