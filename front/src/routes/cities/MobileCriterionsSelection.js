@@ -60,6 +60,11 @@ const CriterionButton = styled.button.attrs({ type: 'button' })`
   cursor: pointer;
 `
 
+const RadioGroupDiv = styled.div.attrs({ role: 'button' })`
+  display: flex;
+  flex-wrap: wrap;
+`
+
 const CUSTOM_SUB_LABELS = {
   'small-city': '- 20 000 habitants',
   'medium-city': '- 50 000 habitants',
@@ -115,7 +120,7 @@ const MobileCriterionsSelection = ({
         <p id="mobile-citerions-selection-env">
           <b>Quel environnement recherchez-vous ?</b>
         </p>
-        <div role="radiogroup" aria-labelledby="mobile-citerions-selection-env">
+        <RadioGroupDiv aria-labelledby="mobile-citerions-selection-env">
           {environmentCriterions.map((criterion) => {
             const isSelected = criterion.key === selectedEnvironment
             return (
@@ -144,17 +149,14 @@ const MobileCriterionsSelection = ({
           >
             Tous les environnements
           </CriterionButton>
-        </div>
+        </RadioGroupDiv>
       </div>
 
       <div>
         <p id="mobile-citerions-selection-city">
           <b>Lieu de travail ?</b>
         </p>
-        <div
-          role="radiogroup"
-          aria-labelledby="mobile-citerions-selection-city"
-        >
+        <RadioGroupDiv aria-labelledby="mobile-citerions-selection-city">
           {cityCriterions.map((criterion) => {
             const isSelected = criterion.key === selectedCitySize
             return (
@@ -195,7 +197,7 @@ const MobileCriterionsSelection = ({
           >
             Toutes les tailles
           </CriterionButton>
-        </div>
+        </RadioGroupDiv>
       </div>
 
       <div>
