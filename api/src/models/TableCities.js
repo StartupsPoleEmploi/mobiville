@@ -40,7 +40,7 @@ export default (sequelizeInstance, Model) => {
   Model.cacheLoadAverageHouseRent = null
 
   Model.syncCities = async ({ cities }) => {
-    await Model.deleteAll()
+    await Model.destroy({ truncate: true })
 
     for (let i = 0; i < cities.length; i++) {
       const city = cities[i]
