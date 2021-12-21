@@ -35,6 +35,13 @@ function initModelsByPath(sequelizeInstance, folderPath, globalName) {
     }
   })
 
+  for (const modelName in models) {
+    models[modelName].models = models
+    if (models[modelName].associate) {
+      models[modelName].associate(models)
+    }
+  }
+
   global[globalName] = models
   return global[globalName]
 }
