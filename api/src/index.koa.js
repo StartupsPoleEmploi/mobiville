@@ -10,10 +10,10 @@ import { RateLimit } from 'koa2-ratelimit'
 
 import db from './models'
 
-import citiesRoutes from './koa-routes/cities'
-import helpsRoutes from './koa-routes/helps'
-import ogrsRoutes from './koa-routes/ogrs'
-import professionsRoutes from './koa-routes/professions'
+import citiesRoutes from './routes/cities'
+import helpsRoutes from './routes/helps'
+import ogrsRoutes from './routes/ogrs'
+import professionsRoutes from './routes/professions'
 
 const app = new Koa()
 
