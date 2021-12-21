@@ -1,5 +1,7 @@
-import Route from './Route'
-import { Types } from '../utils/types'
+import Router from '@koa/router'
+
+const router = new Router({ prefix: '/professions' })
+
 import { searchJob, infosTravail, infosTensionTravail } from '../utils/pe-api'
 import { meanBy } from 'lodash'
 
@@ -23,58 +25,44 @@ const getInseeCodesForSearch = (inseeCodes) =>
     return inseeCode
   })
 
-export default class RouteProfessions extends Route {
-  constructor(params) {
-    super({ ...params, model: 'cities' })
-  }
-
-  /**
-   * @body {[string]} [codeRome]
-   * @body {[string]} [insee]
-   */
-  @Route.Post({
-    bodyType: Types.object().keys({
-      codeRome: Types.array().type(Types.string()).required(),
-      insee: Types.array().type(Types.string()).required(),
-    }),
-  })
-  async search(ctx) {
-    const { codeRome, insee } = this.body(ctx)
-
+router.post(
+  '/search',
+  async ({
+    request: {
+      body: { codeRome, insee },
+    },
+    response,
+  }) => {
     const result = await searchJob({
       codeRome,
       insee: getInseeCodesForSearch(insee),
       distance: 30,
     })
     if (result) {
-      this.sendOk(ctx, result.resultats)
+      response.body = result.resultats
     } else {
-      this.sendOk(ctx, [])
+      response.body = []
     }
   }
-
-  /**
-   * @body {string} codeRome
-   * @body {string} insee
-   */
-  @Route.Post({
-    bodyType: Types.object().keys({
-      codeRome: Types.string().required(),
-      insee: Types.string().required(),
-    }),
-  })
-  async infosTravail(ctx) {
-    const { codeRome, insee } = this.body(ctx)
-
+)
+router.post(
+  '/infos-travail',
+  async ({
+    request: {
+      body: { codeRome, insee },
+    },
+    models,
+    response,
+  }) => {
     //https://dares.travail-emploi.gouv.fr/donnees/la-nomenclature-des-familles-professionnelles-fap-2009
 
     const [city, pcs] = await Promise.all([
-      this.model.findOne({
+      models.cities.findOne({
         where: { insee_com: insee },
         raw: true,
-        include: this.model.models.bassins,
+        include: models.cities.models.bassins,
       }),
-      this.model.models.tensions.findOne({
+      models.cities.models.tensions.findOne({
         where: {
           rome: codeRome,
         },
@@ -84,7 +72,10 @@ export default class RouteProfessions extends Route {
 
     const bassinId = city && city['bassin.bassin_id']
 
-    if (!bassinId || !pcs) return this.sendOk(ctx, null)
+    if (!bassinId || !pcs) {
+      response.body = null
+      return
+    }
 
     const [infosResult, { bassin: bassinStatsResult, dept: deptStatsResult }] =
       await Promise.all([
@@ -134,11 +125,13 @@ export default class RouteProfessions extends Route {
       max = meanBy(records, 'MAXIMUM_SALARY')
     }
 
-    this.sendOk(ctx, {
+    response.body = {
       min,
       max,
       bassinTension,
       deptTension,
-    })
+    }
   }
-}
+)
+
+export default router

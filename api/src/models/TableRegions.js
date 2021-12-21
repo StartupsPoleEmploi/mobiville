@@ -1,6 +1,6 @@
 export default (sequelizeInstance, Model) => {
   Model.syncRegions = async ({ regions, socialHousingData }) => {
-    await Model.deleteAll()
+    await Model.destroy({ truncate: true })
 
     for (let i = 0; i < regions.length; i++) {
       const region = regions[i]
