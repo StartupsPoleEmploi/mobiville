@@ -9,7 +9,15 @@ router.post(
   '/search',
   async ({
     request: {
-      body: { codeCity, codeRegion, codeEnvironment, codeRome, index, sortBy },
+      body: {
+        codeCity,
+        codeRegion,
+        codeEnvironment,
+        codeRome,
+        index,
+        onlySearchInTension,
+        sortBy,
+      },
     },
     response,
     models,
@@ -18,6 +26,7 @@ router.post(
       codeRegion,
       codeCriterion: compact([codeCity, codeEnvironment]),
       codeRome,
+      onlySearchInTension,
     })
 
     switch (sortBy) {
