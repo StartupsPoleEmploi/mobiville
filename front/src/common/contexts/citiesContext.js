@@ -42,13 +42,16 @@ export function CitiesProvider(props) {
   const [autocompletedCities, setAutocompletedCities] = useState([])
   const [isLoadingAutocomplete, setIsLoadingAutocomplete] = useState(false)
 
-  const onSearch = useCallback((params, index = 0, oldCities = []) => {
+  const onSearch = (params, index = 0, oldCities = []) => {
     if (isLoading && isEqual(lastSearchParams, params)) return
 
     _setIsLoading(true)
     lastSearchParams = { ...params }
 
-    if (index === 0) {
+    if (
+      index === 0 ||
+      lastSearchParams.onlySearchInTension !== params.onlySearchInTension
+    ) {
       _setCities([])
     }
 
@@ -66,7 +69,10 @@ export function CitiesProvider(props) {
       .then(() => {
         _setIsLoading(false)
       })
-  }, [])
+      .catch(() => {
+        _setIsLoading(false)
+      })
+  }
 
   const onLoadCity = useCallback((id) => {
     _setIsLoadingCity(true)

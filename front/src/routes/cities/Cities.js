@@ -3,6 +3,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import queryString from 'query-string'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { Switch } from '@mui/material'
 
 import { useCities } from '../../common/contexts/citiesContext'
 import MainLayout from '../../components/MainLayout'
@@ -38,7 +39,7 @@ const NotFoundContainer = styled.div`
 const Infopanel = styled.div`
   display: flex;
   background: ${COLOR_OTHER_GREEN};
-  align-items: space-between;
+  align-items: center;
   justify-content: space-between;
   width: 100%;
   max-width: 700px;
@@ -46,6 +47,12 @@ const Infopanel = styled.div`
   padding-left: 1rem;
   padding-right: 1rem;
   font-size: 12px;
+`
+
+const CitiesTensionChoice = styled.div`
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
 `
 
 const CitiesFilterContainer = styled.div`
@@ -70,7 +77,7 @@ const DesktopContainer = styled.div`
 
 const CitiesList = styled.div`
   max-width: ${({ isMobile }) => (isMobile ? 'auto' : '600px')};
-  padding: 0 16px;
+  padding: ${({ isMobile }) => (isMobile ? '0 16px' : '0 8px 0 8px')};
   overflow: ${({ isMobile }) => (isMobile ? 'inherit' : 'auto')};
 `
 
@@ -78,8 +85,8 @@ const StyledMapContainer = styled(MapContainer)`
   height: 424px;
   width: 424px;
   max-width: 100%;
-  margin-left: 16px;
-  margin-right: 16px;
+  margin-left: 8px;
+  margin-right: 8px;
   border-radius: 16px;
 `
 
@@ -95,6 +102,7 @@ const Cities = () => {
   const [showMobilePanel, setShowMobileCriterionsSelection] = useState(false)
   const [hoveredCityId, setHoveredCityId] = useState(null)
   const [selectedCityId, setSelectedCityId] = useState(null)
+  const [useAllCities, setUseAllCities] = useState(false)
   const citiesListRef = useRef(null)
 
   const citiesItemsRef = useRef([])
@@ -112,9 +120,13 @@ const Cities = () => {
 
   useEffect(() => {
     if (params?.codeRome) {
-      onSearch({ ...params, sortBy: sortCriterions })
+      onSearch({
+        ...params,
+        sortBy: sortCriterions,
+        onlySearchInTension: !useAllCities,
+      })
     }
-  }, [params, sortCriterions])
+  }, [params, sortCriterions, useAllCities])
 
   useEffect(() => {
     window.onscroll = () => {
@@ -146,8 +158,12 @@ const Cities = () => {
 
     if (!isCloseToBottom) return
 
-    onSearch({ ...params, sortBy: sortCriterions }, cities.length, cities)
-  }, [windowScroll, citiesListScroll])
+    onSearch(
+      { ...params, sortBy: sortCriterions, onlySearchInTension: !useAllCities },
+      cities.length,
+      cities
+    )
+  }, [windowScroll, citiesListScroll, useAllCities])
 
   const getCityUrl = (city) => {
     let url = `/city/${city.insee_com}-${city.nom_comm}`
@@ -204,15 +220,26 @@ const Cities = () => {
         </CitiesFilterText>
         <CitiesFilters />
       </CitiesFilterContainer>
-      {!isMobile && (
-        <Infopanel>
-          <p>
-            Les villes qui vous sont proposées sont les villes où il y a des
-            offres et peu de concurrence, afin d’accélérer votre recherche
-            d’emploi.
-          </p>
-        </Infopanel>
-      )}
+      <Infopanel>
+        <p>
+          Les villes qui vous sont proposées sont les villes où il y a des
+          offres et peu de concurrence, afin d’accélérer votre recherche
+          d’emploi.
+        </p>
+        <CitiesTensionChoice>
+          <div style={{ fontWeight: !useAllCities ? '500' : 'normal' }}>
+            Villes favorables
+          </div>
+          <Switch
+            inputProps={{ 'aria-label': 'Villes favorables' }}
+            checked={useAllCities}
+            onChange={() => setUseAllCities(!useAllCities)}
+          />
+          <div style={{ fontWeight: useAllCities ? '500' : 'normal' }}>
+            Toutes les villes
+          </div>
+        </CitiesTensionChoice>
+      </Infopanel>
       {cities.map((city, key) => (
         <CityItem
           city={city}
