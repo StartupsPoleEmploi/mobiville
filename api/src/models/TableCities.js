@@ -77,78 +77,11 @@ export default (sequelizeInstance, Model) => {
     }
   }
 
-  Model.regionHasTension = async (regionId, codeRome) => {
-    const l = await Model.allTensionsCities({
-      codeRegion: [regionId],
-      codeRome: [codeRome],
-    })
-
-    return l.length !== 0
-  }
-
-  Model.allTensionsCities = async ({
-    where,
-    codeRome,
-    codeRegion = [],
-    methodName = 'findAll',
-    logging = true,
-  }) => {
-    let whereRegion = {}
-    if (codeRegion.length) {
-      whereRegion = {
-        where: {
-          new_code: codeRegion,
-        },
-      }
-    }
-
-    return await Model[methodName]({
-      where: {
-        ...where,
-      },
-      group: ['id'],
-      include: [
-        {
-          attributes: [],
-          model: Model.models.bassins,
-          required: true,
-          include: [
-            {
-              attributes: [],
-              model: Model.models.tensions,
-              required: true,
-              where: {
-                rome: codeRome,
-              },
-              order: [['ind_t', 'desc']],
-            },
-            {
-              attributes: ['number'],
-              model: Model.models.bassinsJobs,
-              required: false,
-              where: {
-                rome_id: codeRome,
-              },
-              order: [['number', 'desc']],
-            },
-          ],
-        },
-        {
-          model: Model.models.regions,
-          required: true,
-          ...whereRegion,
-        },
-      ],
-      raw: true,
-      logging,
-    })
-  }
-
   Model.search = async ({
     codeRegion = [],
     codeCriterion = [],
     codeRome = [],
-    logging = true,
+    onlySearchInTension = true,
   }) => {
     const usedCriterions = codeCriterion.map((key) =>
       CRITERIONS.find((criterion) => criterion.key === key)
@@ -216,13 +149,57 @@ export default (sequelizeInstance, Model) => {
       }
     }, [])
 
-    const result = await Model.allTensionsCities({
+    let whereRegion = {}
+    if (codeRegion.length) {
+      whereRegion = {
+        where: {
+          new_code: codeRegion,
+        },
+      }
+    }
+
+    let bassinsToInclude = [
+      {
+        attributes: ['number'],
+        model: Model.models.bassinsJobs,
+        required: false,
+        where: {
+          rome_id: codeRome,
+        },
+        order: [['number', 'desc']],
+      },
+    ]
+
+    if (onlySearchInTension) {
+      bassinsToInclude.push({
+        attributes: [],
+        model: Model.models.tensions,
+        required: true,
+        where: {
+          rome: codeRome,
+        },
+        order: [['ind_t', 'desc']],
+      })
+    }
+
+    return await Model.findAll({
       where: { [Op.and]: whereAnd },
-      codeRegion,
-      codeRome,
-      logging,
+      group: ['id'],
+      include: [
+        {
+          attributes: [],
+          model: Model.models.bassins,
+          required: true,
+          include: bassinsToInclude,
+        },
+        {
+          model: Model.models.regions,
+          required: true,
+          ...whereRegion,
+        },
+      ],
+      raw: true,
     })
-    return result
   }
 
   Model.getCity = async ({ insee }) => {

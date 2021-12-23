@@ -20,6 +20,7 @@ const Wrapper = styled.div`
   top: 0;
   left: 0;
   right: 0;
+  z-index: 10;
 `
 
 const Title = styled(Typography)`
@@ -45,7 +46,7 @@ const Tag = styled.div`
   color: ${COLOR_PRIMARY};
 `
 
-const MobileCriterionsSelection = ({
+const MobileCriterionsPanel = ({
   criterions,
   showMobileCriterionsSelection,
   total,
@@ -103,15 +104,15 @@ const MobileCriterionsSelection = ({
   )
 }
 
-MobileCriterionsSelection.propTypes = {
+MobileCriterionsPanel.propTypes = {
   criterions: PropTypes.object,
   showMobileCriterionsSelection: PropTypes.func.isRequired,
   total: PropTypes.number,
 }
 
-MobileCriterionsSelection.defaultProps = {
+MobileCriterionsPanel.defaultProps = {
   criterions: [],
   total: 0,
 }
 
-export default MobileCriterionsSelection
+export default MobileCriterionsPanel
