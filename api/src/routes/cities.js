@@ -88,9 +88,18 @@ router.post(
   }
 )
 
-router.post('/autocomplete', async ({ body: { query }, models, response }) => {
-  response.body = await models.cities.getCitiesForAutoComplete(query)
-})
+router.post(
+  '/autocomplete',
+  async ({
+    request: {
+      body: { query },
+    },
+    models,
+    response,
+  }) => {
+    response.body = await models.cities.getCitiesForAutoComplete(query)
+  }
+)
 
 router.get('/criterions', async ({ models, response }) => {
   const [jobList, regionsTensionsCriterions] = await Promise.all([
