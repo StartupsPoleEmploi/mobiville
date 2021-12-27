@@ -37,9 +37,9 @@ Entrer dans le container api
 Et exécuter les commandes de synchronisation :
 
 ```
+yarn run sync:regions # almost instant. Do this before cities.
 yarn run sync:cities # 2 minutes long
 yarn run sync:professionsInTension # 2 minutes long
-yarn run sync:regions # almost instant
 yarn run sync:equipments # This will take about 10 minutes
 yarn run sync:equipmentsSpecial # This will take about 2 minutes, needs to be run after the previous script
 yarn run sync:romeOgrs # almost instant
@@ -170,7 +170,6 @@ Une image versionnée est produite pour l'API si un commit de code de l'API est 
   test --> deploy :action manuelle
 ```
 
-
 ### rollback
 
 Pour faire un rollback de l'api et/ou du front suivre la procédure suivante:
@@ -186,7 +185,6 @@ Pour faire un rollback de l'api et/ou du front suivre la procédure suivante:
 5. valider les étapes manuellement pour ce rollback
 
 Si besoin de déployer depuis une autre branche que celle de recette ou de production dans ce cas, se positionner sur la branche et renseigner `FORCE_DEPLOY: true` si aucun paquet ou image n'existe encore pour cette branche alors ne pas renseigner de version de commit, l'image ou le paquet sera créé en fonction du dernier commit de cette même branche cible.
-
 
 ### typologie des fichiers de livraisons
 

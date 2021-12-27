@@ -9,7 +9,7 @@ export default (sequelizeInstance, Model) => {
     console.log('START SYNC REGIONS TENSIONS CRITERIONS')
 
     const jobList = await Model.models.tensions.fetchJobList()
-    const regionsList = await Model.models.regions.findAll()
+    const regionsList = await Model.models.oldRegions.findAll()
 
     const regionsTensionsTemp = []
 

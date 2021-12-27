@@ -1,4 +1,7 @@
 export default (sequelizeInstance, Model) => {
+  // This table is preserved because the social housing data
+  // is more precise with old regions than with new regions
+
   Model.syncRegions = async ({ regions, socialHousingData }) => {
     await Model.destroy({ truncate: true })
 
