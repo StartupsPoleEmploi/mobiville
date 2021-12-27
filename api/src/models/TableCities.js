@@ -153,38 +153,36 @@ export default (sequelizeInstance, Model) => {
     if (codeRegion.length) {
       whereRegion = {
         where: {
-          new_code: codeRegion,
+          code: codeRegion,
         },
       }
     }
 
-    let bassinsToInclude = [
-      {
-        attributes: ['number'],
-        model: Model.models.bassinsJobs,
-        required: false,
-        where: {
-          rome_id: codeRome,
-        },
-        order: [['number', 'desc']],
-      },
-    ]
+    let bassinsToInclude = []
 
     if (onlySearchInTension) {
-      bassinsToInclude.push({
-        attributes: [],
-        model: Model.models.tensions,
-        required: true,
-        where: {
-          rome: codeRome,
+      bassinsToInclude.push(
+        {
+          attributes: ['number'],
+          model: Model.models.bassinsJobs,
+          required: false,
+          where: {
+            rome_id: codeRome,
+          },
         },
-        order: [['ind_t', 'desc']],
-      })
+        {
+          attributes: [],
+          model: Model.models.tensions,
+          required: true,
+          where: {
+            rome: codeRome,
+          },
+        }
+      )
     }
 
     return await Model.findAll({
       where: { [Op.and]: whereAnd },
-      group: ['id'],
       include: [
         {
           attributes: [],
@@ -193,7 +191,8 @@ export default (sequelizeInstance, Model) => {
           include: bassinsToInclude,
         },
         {
-          model: Model.models.regions,
+          attributes: [],
+          model: Model.models.newRegions,
           required: true,
           ...whereRegion,
         },
@@ -207,7 +206,7 @@ export default (sequelizeInstance, Model) => {
       where: { insee_com: insee },
       include: [
         {
-          model: Model.models.regions,
+          model: Model.models.oldRegions,
           required: true,
         },
       ],
