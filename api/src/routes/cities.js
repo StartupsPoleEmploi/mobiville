@@ -1,6 +1,6 @@
 import { CRITERIONS } from '../constants/criterion'
 import { ALL_LIFE_CRITERIONS_LIST } from '../constants/lifeCriterions'
-import { compact, orderBy } from 'lodash'
+import { compact } from 'lodash'
 import Router from '@koa/router'
 
 const router = new Router({ prefix: '/cities' })
@@ -22,28 +22,31 @@ router.post(
     response,
     models,
   }) => {
-    let result = await models.cities.search({
+    let order
+    switch (sortBy) {
+      case 'mer':
+        order = [['distance_from_sea', 'asc']]
+        break
+      case 'montagne':
+        order = [['z_moyen', 'desc']]
+        break
+      default:
+        order = [['population', 'desc']]
+        break
+    }
+
+    const [queryResult, totalResults] = await models.cities.search({
       codeRegion,
       codeCriterion: compact([codeCity, codeEnvironment]),
       codeRome,
       onlySearchInTension,
+      order,
+      offset: index,
     })
 
-    switch (sortBy) {
-      case 'mer':
-        result = orderBy(result, ['distance_from_sea'], ['asc'])
-        break
-      case 'montagne':
-        result = orderBy(result, ['z_moyen'], ['desc'])
-        break
-      default:
-        result = orderBy(result, ['population'], ['desc'])
-        break
-    }
-
     response.body = {
-      list: result.slice(index, index + 10),
-      total: result.length,
+      list: queryResult,
+      total: totalResults,
       index,
     }
   }
