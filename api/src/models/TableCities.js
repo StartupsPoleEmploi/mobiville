@@ -82,7 +82,15 @@ export default (sequelizeInstance, Model) => {
     codeCriterion = [],
     codeRome = [],
     onlySearchInTension = true,
+    order = [['population', 'desc']],
+    offset = 0,
   }) => {
+    /*
+      https://github.com/sequelize/sequelize/issues/9869
+      prevents us from using limit / offset correctly in this query, so we truncate manually in the js
+      once the issue is fixed, adding the parameters to the query will improve performance
+    */
+
     const usedCriterions = codeCriterion.map((key) =>
       CRITERIONS.find((criterion) => criterion.key === key)
     )
@@ -153,22 +161,12 @@ export default (sequelizeInstance, Model) => {
     if (codeRegion.length) {
       whereRegion = {
         where: {
-          new_code: codeRegion,
+          code: codeRegion,
         },
       }
     }
 
-    let bassinsToInclude = [
-      {
-        attributes: ['number'],
-        model: Model.models.bassinsJobs,
-        required: false,
-        where: {
-          rome_id: codeRome,
-        },
-        order: [['number', 'desc']],
-      },
-    ]
+    let bassinsToInclude = []
 
     if (onlySearchInTension) {
       bassinsToInclude.push({
@@ -178,13 +176,12 @@ export default (sequelizeInstance, Model) => {
         where: {
           rome: codeRome,
         },
-        order: [['ind_t', 'desc']],
       })
     }
 
-    return await Model.findAll({
+    const result = await Model.findAll({
       where: { [Op.and]: whereAnd },
-      group: ['id'],
+      order,
       include: [
         {
           attributes: [],
@@ -193,13 +190,18 @@ export default (sequelizeInstance, Model) => {
           include: bassinsToInclude,
         },
         {
-          model: Model.models.regions,
+          attributes: [],
+          model: Model.models.newRegions,
           required: true,
           ...whereRegion,
         },
       ],
       raw: true,
     })
+
+    // Once the github Sequelize issue is resolved
+    // return both the result of a findAll() and a count()
+    return Promise.all([result.slice(offset, offset + 10), result.length])
   }
 
   Model.getCity = async ({ insee }) => {
@@ -207,7 +209,7 @@ export default (sequelizeInstance, Model) => {
       where: { insee_com: insee },
       include: [
         {
-          model: Model.models.regions,
+          model: Model.models.oldRegions,
           required: true,
         },
       ],

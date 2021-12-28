@@ -122,15 +122,17 @@ export default (sequelizeInstance) => {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },
-      deleted_at: {
-        type: Sequelize.DATE,
-      },
     },
     {
       timestamps: true,
-      paranoid: true,
+      paranoid: false,
       underscored: true,
-      indexes: [{ fields: ['insee_com'] }],
+      indexes: [
+        { fields: ['insee_com'] },
+        { fields: ['distance_from_sea'] },
+        { fields: ['z_moyen'] },
+        { fields: ['population'] },
+      ],
     }
   )
 
@@ -139,8 +141,12 @@ export default (sequelizeInstance) => {
       foreignKey: 'code_commune_insee',
       sourceKey: 'insee_com',
     })
-    Model.hasOne(models.regions, {
+    Model.hasOne(models.oldRegions, {
       foreignKey: 'former_code',
+      sourceKey: 'code_reg',
+    })
+    Model.hasOne(models.newRegions, {
+      foreignKey: 'code',
       sourceKey: 'code_reg',
     })
 

@@ -2,7 +2,7 @@ import Sequelize from 'sequelize'
 
 export default (sequelizeInstance) => {
   const Model = sequelizeInstance.define(
-    'regions',
+    'oldRegions',
     {
       id: {
         type: Sequelize.INTEGER,
@@ -12,7 +12,7 @@ export default (sequelizeInstance) => {
         unique: true,
       },
       former_code: {
-        type: Sequelize.STRING(255),
+        type: Sequelize.INTEGER,
         allowNull: true,
       },
       former_name: {
@@ -24,7 +24,7 @@ export default (sequelizeInstance) => {
         allowNull: true,
       },
       new_code: {
-        type: Sequelize.STRING(255),
+        type: Sequelize.INTEGER,
         allowNull: true,
       },
       new_name: {
@@ -53,13 +53,10 @@ export default (sequelizeInstance) => {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },
-      deleted_at: {
-        type: Sequelize.DATE,
-      },
     },
     {
       timestamps: true,
-      paranoid: true,
+      paranoid: false,
       underscored: true,
       indexes: [{ fields: ['former_code'] }, { fields: ['new_code'] }],
     }
