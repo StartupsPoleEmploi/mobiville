@@ -51,7 +51,13 @@ router.post(
 
 router.post(
   '/search-by-location',
-  async ({ body: { latitude, longitude }, models, response }) => {
+  async ({
+    request: {
+      body: { latitude, longitude },
+    },
+    models,
+    response,
+  }) => {
     response.body = await models.cities.searchByLocation({
       latitude,
       longitude,
@@ -61,7 +67,13 @@ router.post(
 
 router.post(
   '/search-by-name',
-  async ({ body: { id, name }, models, response }) => {
+  async ({
+    request: {
+      body: { id, name },
+    },
+    models,
+    response,
+  }) => {
     let result
 
     if (id) {
@@ -76,7 +88,13 @@ router.post(
 
 router.post(
   '/search-by-skill',
-  async ({ body: { label }, models, response }) => {
+  async ({
+    request: {
+      body: { label },
+    },
+    models,
+    response,
+  }) => {
     // Temporarily disable the search by skill to only
     // use the search by job title (OGR)
     const resultFromSkill = []
@@ -88,9 +106,18 @@ router.post(
   }
 )
 
-router.post('/autocomplete', async ({ body: { query }, models, response }) => {
-  response.body = await models.cities.getCitiesForAutoComplete(query)
-})
+router.post(
+  '/autocomplete',
+  async ({
+    request: {
+      body: { query },
+    },
+    models,
+    response,
+  }) => {
+    response.body = await models.cities.getCitiesForAutoComplete(query)
+  }
+)
 
 router.get('/criterions', async ({ models, response }) => {
   const [jobList, regionsTensionsCriterions] = await Promise.all([
