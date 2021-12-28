@@ -127,7 +127,12 @@ export default (sequelizeInstance) => {
       timestamps: true,
       paranoid: false,
       underscored: true,
-      indexes: [{ fields: ['insee_com'] }],
+      indexes: [
+        { fields: ['insee_com'] },
+        { fields: ['distance_from_sea'] },
+        { fields: ['z_moyen'] },
+        { fields: ['population'] },
+      ],
     }
   )
 
