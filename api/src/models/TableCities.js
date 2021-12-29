@@ -40,7 +40,15 @@ export default (sequelizeInstance, Model) => {
   Model.cacheLoadAverageHouseRent = null
 
   Model.syncCities = async ({ cities }) => {
-    await Model.destroy({ truncate: true })
+    const oldRegions = await Model.models.oldRegions.findAll()
+
+    const oldRegionsToNewRegionsMap = oldRegions.reduce(
+      (prev, oldRegion) => ({
+        ...prev,
+        [oldRegion.former_code]: oldRegion.new_code,
+      }),
+      {}
+    )
 
     for (let i = 0; i < cities.length; i++) {
       const city = cities[i]
@@ -52,6 +60,8 @@ export default (sequelizeInstance, Model) => {
         z_moyen: city.altitude_moyenne,
         nom_region: city.region,
         code_reg: city.code_region,
+        new_code_region:
+          oldRegionsToNewRegionsMap[parseInt(city.code_region, 10)],
         insee_com: city.code_insee,
         code_dept: city.code_departement,
         geo_point_2d_x: city.geo_point_2d
@@ -69,7 +79,7 @@ export default (sequelizeInstance, Model) => {
         population: city.population,
       }
 
-      await Model.create(jsonToUpdate)
+      await Model.upsert(jsonToUpdate)
     }
 
     return {
