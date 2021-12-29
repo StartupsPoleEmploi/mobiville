@@ -32,7 +32,11 @@ export default (sequelizeInstance) => {
         allowNull: true,
       },
       code_reg: {
-        type: Sequelize.STRING(255),
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      new_code_region: {
+        type: Sequelize.INTEGER,
         allowNull: true,
       },
       insee_com: {
@@ -147,7 +151,7 @@ export default (sequelizeInstance) => {
     })
     Model.hasOne(models.newRegions, {
       foreignKey: 'code',
-      sourceKey: 'code_reg',
+      sourceKey: 'new_code_region',
     })
 
     return models
