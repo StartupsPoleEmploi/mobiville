@@ -55,19 +55,9 @@ const H1 = styled.h1`
   font-weight: 700;
 `
 
-const SubHeader = ({
-  backLink,
-  customHeight,
-  desktopTitleWidth,
-  isMobile,
-  node,
-  title,
-}) => (
+const SubHeader = ({ backLink, desktopTitleWidth, isMobile, node, title }) => (
   <>
-    <HeaderContainer
-      isMobile={isMobile}
-      style={{ height: customHeight || HEIGHT }}
-    >
+    <HeaderContainer isMobile={isMobile} style={{ height: HEIGHT }}>
       <HeaderSubContainer
         isMobile={isMobile}
         style={{
@@ -82,9 +72,7 @@ const SubHeader = ({
         {node ? node : <H1>{title}</H1>}
       </HeaderSubContainer>
     </HeaderContainer>
-    {!isMobile && (
-      <div style={{ height: customHeight || HEIGHT, marginBottom: PADDING }} />
-    )}
+    {!isMobile && <div style={{ height: HEIGHT, marginBottom: PADDING }} />}
   </>
 )
 

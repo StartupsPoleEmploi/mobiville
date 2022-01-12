@@ -34,6 +34,7 @@ import medalSilver from '../../assets/images/icons/medal_silver.svg'
 import redEllipse from '../../assets/images/icons/red_ellipse.svg'
 import greenEllipse from '../../assets/images/icons/green_ellipse.svg'
 import restaurantsIcon from '../../assets/images/icons/restaurants.svg'
+import SubHeader from '../../components/SubHeader'
 
 const BlockContainer = styled.div`
   display: flex;
@@ -93,6 +94,30 @@ const BlockContentLiDesc = styled.div`
 const BlockContentLiValue = styled.div`
   font-weight: 500;
   justify-self: flex-end;
+`
+
+const TitlesContainer = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+`
+
+const CityName = styled.h1`
+  height: ${(props) => (props.fixedView ? '78px' : '46px')};
+  line-height: ${(props) => (props.fixedView ? '100px' : '46px')};
+  font-weight: 500;
+  font-size: 24px;
+  margin-top: 0;
+  margin-bottom: 0;
+`
+
+const RegionName = styled.h2`
+  height: 17px;
+  font-size: 12px;
+  position: relative;
+  top: 10px;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
 `
 
 const SERVICES_KEY = 'services'
@@ -196,7 +221,10 @@ const CityPage = ({ location: { pathname, search } }) => {
   // FIXME add loader and error page
   if (!city || isLoadingCity) return null
 
-  const backLink = `/city/${insee}?codeRome=${codeRome}`
+  const lastSearch = localStorage.getItem('lastSearch')
+
+  const childrenComponentsBacklink = `/city/${insee}?codeRome=${codeRome}`
+  const backLink = `/cities${lastSearch || `?codeRome=${codeRome}`}`
 
   if (section === JOB)
     return (
@@ -207,7 +235,7 @@ const CityPage = ({ location: { pathname, search } }) => {
         city={city}
         searchValue={jobSearchValue}
         setSearchValue={setJobSearchValue}
-        backLink={backLink}
+        backLink={childrenComponentsBacklink}
       />
     )
 
@@ -216,7 +244,7 @@ const CityPage = ({ location: { pathname, search } }) => {
       <CityHousing
         nbSocialHousing={cityTenement?.nbSocialHousing}
         city={city}
-        backLink={backLink}
+        backLink={childrenComponentsBacklink}
       />
     )
 
@@ -224,7 +252,7 @@ const CityPage = ({ location: { pathname, search } }) => {
     return (
       <CityLife
         city={city}
-        backLink={backLink}
+        backLink={childrenComponentsBacklink}
         cityEquipments={cityEquipments}
       />
     )
@@ -242,6 +270,17 @@ const CityPage = ({ location: { pathname, search } }) => {
           )} : Cadre de vie, emploi, logement et bien plus.`}
         />
       </Helmet>
+
+      <SubHeader
+        backLink={backLink}
+        node={
+          <TitlesContainer>
+            <CityName>{ucFirstOnly(city.nom_comm)}</CityName>
+            <RegionName>{ucFirstOnly(city['oldRegion.new_name'])}</RegionName>
+          </TitlesContainer>
+        }
+        isMobile={isMobile}
+      />
       <CityHeader isMobile={isMobile} />
 
       <BlockContainer isMobile={isMobile}>

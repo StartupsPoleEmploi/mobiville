@@ -440,12 +440,7 @@ const CityJobs = ({
           }}. Offres disponibles, salaires, …`}
         />
       </Helmet>
-      <SubHeader
-        backLink={backLink}
-        customHeight={isMobile ? 'auto' : 150}
-        node={subHeaderNode}
-        isMobile={isMobile}
-      />
+      <SubHeader backLink={backLink} node={subHeaderNode} isMobile={isMobile} />
       {isLoading ? (
         <JobLoading>Chargement des offres...</JobLoading>
       ) : (
