@@ -46,15 +46,18 @@ const BlockContainer = styled.div`
 `
 const Block = styled.div`
   width: 100%;
-  max-width: ${({ isMobile }) => (isMobile ? 'inherit' : '336px')};
   padding: 16px;
   background-color: #fff;
-  margin-top: ${({ isMobile }) => (isMobile ? 0 : '32px')};
   border: 1px ${COLOR_GRAY} solid;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-top: ${({ isMobile }) => (isMobile ? 0 : '32px')};
+
+  &:not(:first-of-type) {
+    margin-left: ${({ isMobile }) => (isMobile ? 0 : '16px')};
+  }
 `
 
 const BlockHeader = styled.div``
@@ -138,7 +141,12 @@ const CityPage = ({ location: { pathname, search } }) => {
     city,
     criterions,
     unloadCity,
+    closeCities,
+    similarCities,
+    similarCitiesCriterionsQueryString,
     onGetCityEquipments,
+    onSearchCloseCities,
+    onSearchSimilarCities,
     cityEquipments,
     onGetCityTenement,
     cityTenement,
@@ -191,6 +199,16 @@ const CityPage = ({ location: { pathname, search } }) => {
       )
       onGetCityTenement(city.insee_com)
       onGetCityEquipments(city.insee_com)
+      onSearchSimilarCities({
+        codeRome,
+        city,
+      })
+      onSearchCloseCities({
+        latitude: city.geo_point_2d_x,
+        longitude: city.geo_point_2d_y,
+        codeRome,
+        inseeCode: city.insee_com,
+      })
     }
   }, [city, codeRome])
 
@@ -421,23 +439,50 @@ const CityPage = ({ location: { pathname, search } }) => {
         </Block>
       </BlockContainer>
 
-      {/*
-Base structure for later
+      <BlockContainer isMobile={isMobile}>
+        {!!similarCities.length && (
           <Block isMobile={isMobile}>
             <BlockHeader>
               <BlockHeaderText>
-                <BlockHeaderH2>Villes similaires pour </BlockHeaderH2>
+                <BlockHeaderH2>
+                  Villes similaires pour {romeLabel}
+                </BlockHeaderH2>
               </BlockHeaderText>
               <BlockHeaderRating></BlockHeaderRating>
             </BlockHeader>
             <BlockContent>
               <BlockContentUl>
-                <BlockContentLi>Offres</BlockContentLi>
+                {similarCities.map((similarCity, index) => (
+                  <BlockContentLi key={similarCity.insee_com}>
+                    <BlockContentLiImg
+                      src={
+                        index === 0
+                          ? medalGold
+                          : index === 1
+                          ? medalSilver
+                          : medalBronze
+                      }
+                    />
+                    <BlockContentLiDesc>
+                      <Link
+                        to={`/city/${similarCity.insee_com}-${similarCity.nom_comm}?codeRome=${codeRome}`}
+                        style={{ color: 'inherit' }}
+                      >
+                        <b>{ucFirstOnly(similarCity.nom_comm)}</b> (
+                        {similarCity['newRegion.name']})
+                      </Link>
+                    </BlockContentLiDesc>
+                  </BlockContentLi>
+                ))}
               </BlockContentUl>
             </BlockContent>
-              <BlockLink to="/">Voir toutes les villes</BlockLink>
+            <BlockLink to={`/cities?${similarCitiesCriterionsQueryString}`}>
+              Voir toutes les villes
+            </BlockLink>
           </Block>
+        )}
 
+        {!!closeCities.length && (
           <Block isMobile={isMobile}>
             <BlockHeader>
               <BlockHeaderText>
@@ -447,12 +492,38 @@ Base structure for later
             </BlockHeader>
             <BlockContent>
               <BlockContentUl>
-                <BlockContentLi>Offres</BlockContentLi>
+                {closeCities.map((closeCity, index) => (
+                  <BlockContentLi key={closeCity.insee_com}>
+                    <BlockContentLiImg
+                      src={
+                        index === 0
+                          ? medalGold
+                          : index === 1
+                          ? medalSilver
+                          : medalBronze
+                      }
+                    />
+                    <BlockContentLiDesc>
+                      <Link
+                        to={`/city/${closeCity.insee_com}-${closeCity.nom_comm}?codeRome=${codeRome}`}
+                        style={{ color: 'inherit' }}
+                      >
+                        <b>{ucFirstOnly(closeCity.nom_comm)}</b> (
+                        {closeCity['newRegion.name']})
+                      </Link>
+                    </BlockContentLiDesc>
+                  </BlockContentLi>
+                ))}
               </BlockContentUl>
             </BlockContent>
-              <BlockLink to="/">Voir toutes les villes</BlockLink>
+            <BlockLink
+              to={`/cities?codeRegion=${city['oldRegion.new_code']}&codeRome=${codeRome}`}
+            >
+              Voir toutes les villes
+            </BlockLink>
           </Block>
-*/}
+        )}
+      </BlockContainer>
     </MainLayout>
   )
 }
