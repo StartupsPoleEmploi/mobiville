@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { Helmet } from 'react-helmet'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import { IconButton, Tooltip } from '@mui/material'
 import InfoIcon from '@mui/icons-material/Info'
@@ -12,47 +13,38 @@ import {
   COLOR_BACKGROUND,
   COLOR_GRAY,
 } from '../../constants/colors'
-import { useCities } from '../../common/contexts/citiesContext'
+
 import { ucFirstOnly } from '../../utils/utils'
+import SubHeader from '../../components/SubHeader'
+import MainLayout from '../../components/MainLayout'
 
 const MAX_DESCRIPTION_LENGTH = 700
 
-const MainLayout = styled.div`
-  display: flex;
-  margin: auto;
-  width: fit-content;
+const Container = styled.div`
+  width: 100%;
+  max-width: 688px;
+  margin: 0 auto;
+`
 
-  > div {
-    width: 50%;
-  }
+const DesktopElementsLayout = styled.div`
+  display: flex;
+`
+
+const CityPic = styled.img`
+  object-fit: cover;
+  height: 229px;
+  width: 100%;
+  border-radius: 8px 8px 0 0;
+  margin: 0 8px -8px;
 `
 
 const ItemLayout = styled.div`
-  ${({ isMobile }) =>
-    isMobile
-      ? `
-    background: #FFFFFF;
-    width: 100%;
-    padding: 16px;
-    margin-bottom: 1px;
-  `
-      : `
-    background: #FFFFFF;
-    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.14), 0px 2px 2px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    margin: auto;
-    width: 100%;
-    width: 336px;
-    max-width: 336px;
-    padding: 16px;
-    margin-bottom: 16px;
-    margin-left: 8px;
-    margin-right: 8px;
-  `}
-`
-
-const MainLayoutMobile = styled.div`
-  padding-bottom: 130px;
+  background: #ffffff;
+  border: 1px solid #e4e9ed;
+  width: 100%;
+  padding: 16px;
+  max-width: ${({ isMobile }) => (isMobile ? '100%' : '336px')};
+  margin: ${({ isMobile }) => (isMobile ? '0 0 8px' : '0 8px 16px')};
 `
 
 const ItemContentLayout = styled.div``
@@ -150,18 +142,11 @@ const ViewMore = styled.button.attrs({
   cursor: pointer;
 `
 
-const PanelCityLife = ({ city }) => {
-  const { onGetCityEquipments, cityEquipments } = useCities()
+const CityLife = ({ backLink, city, cityEquipments }) => {
   const size = useWindowSize()
   const isMobile = isMobileView(size)
 
   const [showFullDescription, setShowFullDescription] = useState(false)
-
-  useEffect(() => {
-    if (city && city.insee_com) {
-      onGetCityEquipments(city.insee_com)
-    }
-  }, [city])
 
   let transports = []
   let culture = []
@@ -191,20 +176,26 @@ const PanelCityLife = ({ city }) => {
       : description
 
   const mainCityElement = (
-    <ItemLayout isMobile={isMobile}>
-      <ItemTitleLayout>Description de la ville</ItemTitleLayout>
-      <ItemContentLayout>
-        {displayedDescription}
-        {description.length > MAX_DESCRIPTION_LENGTH && !showFullDescription && (
-          <div>
-            <ViewMore onClick={() => setShowFullDescription(true)}>
-              En savoir plus
-              <ArrowForwardIcon fontSize="small" style={{ marginLeft: 8 }} />
-            </ViewMore>
-          </div>
-        )}
-      </ItemContentLayout>
-    </ItemLayout>
+    <>
+      <CityPic
+        src={city.photo || `/regions/region-${city['region.new_code']}.jpg`}
+        alt=""
+      />
+      <ItemLayout isMobile={isMobile} style={{ maxWidth: '100%' }}>
+        <ItemTitleLayout>Description de la ville</ItemTitleLayout>
+        <ItemContentLayout>
+          {displayedDescription}
+          {description.length > MAX_DESCRIPTION_LENGTH && !showFullDescription && (
+            <div>
+              <ViewMore onClick={() => setShowFullDescription(true)}>
+                En savoir plus
+                <ArrowForwardIcon fontSize="small" style={{ marginLeft: 8 }} />
+              </ViewMore>
+            </div>
+          )}
+        </ItemContentLayout>
+      </ItemLayout>
+    </>
   )
 
   const cultureElement = culture.length > 0 && (
@@ -315,7 +306,21 @@ const PanelCityLife = ({ city }) => {
   )
 
   return isMobile ? (
-    <MainLayoutMobile>
+    <MainLayout isMobile={isMobile}>
+      <Helmet>
+        <title>La vie à {ucFirstOnly(city.nom_comm)} - Mobiville</title>
+        <meta
+          name="description"
+          content={`Toutes les informations clés de cadre de vie sur la ville de ${ucFirstOnly(
+            city.nom_comm
+          )}`}
+        />
+      </Helmet>
+      <SubHeader
+        backLink={backLink}
+        isMobile={isMobile}
+        title={`Information sur le logement à ${ucFirstOnly(city.nom_comm)}`}
+      />
       {mainCityElement}
       {cultureElement}
       {transportElement}
@@ -323,29 +328,38 @@ const PanelCityLife = ({ city }) => {
       {healthElement}
       {servicesElement}
       {educationElement}
-    </MainLayoutMobile>
+    </MainLayout>
   ) : (
-    <MainLayout>
-      <div>
+    <MainLayout isMobile={isMobile}>
+      <SubHeader
+        backLink={backLink}
+        isMobile={isMobile}
+        title={`Information sur le logement à ${ucFirstOnly(city.nom_comm)}`}
+      />
+      <Container>
         {mainCityElement}
-        {transportElement}
-        {healthElement}
-        {educationElement}
-      </div>
+        <DesktopElementsLayout>
+          <div>
+            {transportElement}
+            {healthElement}
+            {educationElement}
+          </div>
 
-      <div>
-        {cultureElement}
-        {environmentElement}
-        {servicesElement}
-      </div>
+          <div>
+            {cultureElement}
+            {environmentElement}
+            {servicesElement}
+          </div>
+        </DesktopElementsLayout>
+      </Container>
     </MainLayout>
   )
 }
 
-PanelCityLife.propTypes = {
+CityLife.propTypes = {
   city: PropTypes.object.isRequired,
 }
 
-PanelCityLife.defaultProps = {}
+CityLife.defaultProps = {}
 
-export default PanelCityLife
+export default CityLife
