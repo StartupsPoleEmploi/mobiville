@@ -3,8 +3,10 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+
 import { useCities } from '../../common/contexts/citiesContext'
-import { COLOR_GRAY } from '../../constants/colors'
+import { COLOR_GRAY, COLOR_TEXT_PRIMARY } from '../../constants/colors'
 import { formatNumber } from '../../utils/utils'
 
 import compass from '../../assets/images/icons/compass.svg'
@@ -15,10 +17,30 @@ const Container = styled.div`
   background-color: #fff;
   z-index: 1;
   border-bottom: 1px ${COLOR_GRAY} solid;
-  padding: 16px;
+  padding: ${({ isMobile }) => (isMobile ? 0 : 16)}px;
   display: flex;
   flex-direction: column;
   align-items: center;
+`
+
+const HeaderArrowLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: ${COLOR_GRAY};
+  margin-right: 40px;
+
+  &,
+  &:hover {
+    color: ${COLOR_TEXT_PRIMARY};
+  }
+
+  position: absolute;
+  left: 16px;
+  top: 16px;
 `
 
 const PicAndMapContainer = styled.div`
@@ -30,8 +52,8 @@ const PicAndMapContainer = styled.div`
 const CityPic = styled.img.attrs({ alt: '' })`
   max-width: ${({ isMobile }) => (isMobile ? 'auto' : '336px')};
   width: 100%;
-  height: ${({ isMobile }) => (isMobile ? '100' : '224')}px;
-  border-radius: 8px;
+  height: 224px;
+  border-radius: ${({ isMobile }) => (isMobile ? '0' : '8')}px;
   object-fit: cover;
 `
 
@@ -48,6 +70,7 @@ const StatsContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   padding-top: 8px;
+  padding-bottom: ${({ isMobile }) => (isMobile ? '8px' : 0)};
   max-width: 1040px;
   width: 100%;
 `
@@ -65,11 +88,16 @@ const Stats = styled.div`
   }
 `
 
-const CityHeader = ({ isMobile }) => {
+const CityHeader = ({ backLink, isMobile, titlesNode }) => {
   const { city } = useCities()
 
   return (
     <Container isMobile={isMobile}>
+      {isMobile && (
+        <HeaderArrowLink to={backLink} title="Retour">
+          <ArrowBackIcon color="primary" fontSize="large" />
+        </HeaderArrowLink>
+      )}
       <PicAndMapContainer>
         <CityPic
           isMobile={isMobile}
@@ -90,6 +118,8 @@ const CityHeader = ({ isMobile }) => {
           </StyledMapContainer>
         )}
       </PicAndMapContainer>
+
+      {isMobile && titlesNode}
 
       <StatsContainer isMobile={isMobile}>
         <Stats>
