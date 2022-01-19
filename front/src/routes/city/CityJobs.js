@@ -428,8 +428,7 @@ const CityJobs = ({
     <MainLayout isMobile={isMobile}>
       <Helmet>
         <title>
-          Travailler dans ${romeLabel} à {ucFirstOnly(city.nom_comm)} -
-          Mobiville
+          Travailler dans {romeLabel} à {ucFirstOnly(city.nom_comm)} - Mobiville
         </title>
         <meta
           name="description"
