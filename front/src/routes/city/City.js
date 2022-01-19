@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import queryString from 'query-string'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
+import { CircularProgress } from '@mui/material'
 
 import { useCities } from '../../common/contexts/citiesContext'
 import MainLayout from '../../components/MainLayout'
@@ -233,8 +234,23 @@ const CityPage = ({ location: { pathname, search } }) => {
     romeLabel = foundLabel.toLowerCase()
   }
 
-  // FIXME add loader and error page
-  if (!city || isLoadingCity) return null
+  if (isLoadingCity) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <CircularProgress />
+      </div>
+    )
+  }
+
+  if (!city) return null
 
   const lastSearch = localStorage.getItem('lastSearch')
 
