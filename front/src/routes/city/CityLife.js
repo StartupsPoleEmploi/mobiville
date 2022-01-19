@@ -142,6 +142,12 @@ const ViewMore = styled.button.attrs({
   cursor: pointer;
 `
 
+const ElectedOfficialsBlock = styled.p`
+  text-align: center;
+  padding-left: 16px;
+  padding-right: 16px;
+`
+
 const CityLife = ({ backLink, city, cityEquipments }) => {
   const size = useWindowSize()
   const isMobile = isMobileView(size)
@@ -305,7 +311,38 @@ const CityLife = ({ backLink, city, cityEquipments }) => {
     </ItemLayout>
   )
 
-  return isMobile ? (
+  const mobileElements = (
+    <>
+      {mainCityElement}
+      {cultureElement}
+      {transportElement}
+      {environmentElement}
+      {healthElement}
+      {servicesElement}
+      {educationElement}
+    </>
+  )
+
+  const desktopElement = (
+    <Container>
+      {mainCityElement}
+      <DesktopElementsLayout>
+        <div>
+          {transportElement}
+          {healthElement}
+          {educationElement}
+        </div>
+
+        <div>
+          {cultureElement}
+          {environmentElement}
+          {servicesElement}
+        </div>
+      </DesktopElementsLayout>
+    </Container>
+  )
+
+  return (
     <MainLayout isMobile={isMobile}>
       <Helmet>
         <title>La vie à {ucFirstOnly(city.nom_comm)} - Mobiville</title>
@@ -321,37 +358,15 @@ const CityLife = ({ backLink, city, cityEquipments }) => {
         isMobile={isMobile}
         title={`Information sur le logement à ${ucFirstOnly(city.nom_comm)}`}
       />
-      {mainCityElement}
-      {cultureElement}
-      {transportElement}
-      {environmentElement}
-      {healthElement}
-      {servicesElement}
-      {educationElement}
-    </MainLayout>
-  ) : (
-    <MainLayout isMobile={isMobile}>
-      <SubHeader
-        backLink={backLink}
-        isMobile={isMobile}
-        title={`Information sur le logement à ${ucFirstOnly(city.nom_comm)}`}
-      />
-      <Container>
-        {mainCityElement}
-        <DesktopElementsLayout>
-          <div>
-            {transportElement}
-            {healthElement}
-            {educationElement}
-          </div>
-
-          <div>
-            {cultureElement}
-            {environmentElement}
-            {servicesElement}
-          </div>
-        </DesktopElementsLayout>
-      </Container>
+      {isMobile ? mobileElements : desktopElement}
+      <ElectedOfficialsBlock>
+        Elus, élues locaux : vous souhaitez nous signaler une information
+        erronée, enrichir les données de votre ville ? <br />
+        Merci de nous écrire à{' '}
+        <a href="mailto:contact@mobiville.pole-emploi.fr">
+          contact@mobiville.pole-emploi.fr
+        </a>
+      </ElectedOfficialsBlock>
     </MainLayout>
   )
 }
