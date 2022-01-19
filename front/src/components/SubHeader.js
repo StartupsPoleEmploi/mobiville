@@ -66,7 +66,7 @@ const SubHeader = ({ backLink, desktopTitleWidth, isMobile, node, title }) => (
             : null,
         }}
       >
-        <HeaderArrowLink to={backLink}>
+        <HeaderArrowLink to={backLink} title="Retour">
           <ArrowBackIcon color="primary" fontSize="large" />
         </HeaderArrowLink>
         {node ? node : <H1>{title}</H1>}
