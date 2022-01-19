@@ -102,22 +102,19 @@ const BlockContentLiValue = styled.div`
 const TitlesContainer = styled.div`
   display: flex;
   flex-direction: column-reverse;
+  text-align: ${({ isMobile }) => (isMobile ? 'center' : 'start')};
+  padding: ${({ isMobile }) => (isMobile ? '8px 0' : '0')};
 `
 
 const CityName = styled.h1`
-  height: ${(props) => (props.fixedView ? '78px' : '46px')};
-  line-height: ${(props) => (props.fixedView ? '100px' : '46px')};
   font-weight: 500;
-  font-size: 24px;
+  font-size: ${({ isMobile }) => (isMobile ? '18px' : '24px')};
   margin-top: 0;
   margin-bottom: 0;
 `
 
 const RegionName = styled.h2`
-  height: 17px;
-  font-size: 12px;
-  position: relative;
-  top: 10px;
+  font-size: ${({ isMobile }) => (isMobile ? '14px' : '12px')};
   font-weight: normal;
   margin: 0;
   padding: 0;
@@ -277,6 +274,15 @@ const CityPage = ({ location: { pathname, search } }) => {
 
   const isMobile = isMobileView(size)
 
+  const titlesNode = (
+    <TitlesContainer isMobile={isMobile}>
+      <CityName isMobile={isMobile}>{ucFirstOnly(city.nom_comm)}</CityName>
+      <RegionName isMobile={isMobile}>
+        {ucFirstOnly(city['oldRegion.new_name'])}
+      </RegionName>
+    </TitlesContainer>
+  )
+
   return (
     <MainLayout isMobile={isMobile}>
       <Helmet>
@@ -289,17 +295,12 @@ const CityPage = ({ location: { pathname, search } }) => {
         />
       </Helmet>
 
-      <SubHeader
-        backLink={backLink}
-        node={
-          <TitlesContainer>
-            <CityName>{ucFirstOnly(city.nom_comm)}</CityName>
-            <RegionName>{ucFirstOnly(city['oldRegion.new_name'])}</RegionName>
-          </TitlesContainer>
-        }
-        isMobile={isMobile}
-      />
-      <CityHeader isMobile={isMobile} />
+      {!isMobile && (
+        // A custom header is used for the mobile version in the CityHeader component
+        <SubHeader backLink={backLink} node={titlesNode} isMobile={isMobile} />
+      )}
+
+      <CityHeader isMobile={isMobile} titlesNode={titlesNode} />
 
       <BlockContainer isMobile={isMobile}>
         <Block isMobile={isMobile}>
@@ -438,7 +439,6 @@ const CityPage = ({ location: { pathname, search } }) => {
           </BlockContent>
         </Block>
       </BlockContainer>
-
       <BlockContainer isMobile={isMobile}>
         {!!similarCities.length && (
           <Block isMobile={isMobile}>
