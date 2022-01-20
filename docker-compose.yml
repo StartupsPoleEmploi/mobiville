@@ -50,6 +50,20 @@ services:
     volumes:
       - './db/var/lib/mysql:/var/lib/mysql'
 
+  backup:
+    restart: unless-stopped
+    build:
+      context: ./backups
+      dockerfile: Dockerfile
+      args:
+      - ENV_TYPE=${ENV_TYPE:-developpement}
+      - TIMEZONE=${TIMEZONE:-Europe/Paris}
+    container_name: mobiville-backup
+    hostname: backups
+    volumes:
+      - .:/home/docker
+      - /mnt/backups:/mnt/backups
+
 networks:
   mobiville_network:
     driver: bridge
