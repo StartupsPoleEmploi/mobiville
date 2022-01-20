@@ -158,6 +158,7 @@ const CityPage = ({ location: { pathname, search } }) => {
   } = useProfessions()
 
   const { insee, section } = useParams()
+  const [inseeCode] = insee.split('-')
   const params = queryString.parse(search)
   const size = useWindowSize()
   const history = useHistory()
@@ -171,13 +172,12 @@ const CityPage = ({ location: { pathname, search } }) => {
   const deptTension = infosTravail?.deptTension
 
   useEffect(() => {
-    const [inseeCode] = insee.split('-')
     onLoadCity(inseeCode)
 
     return () => {
       unloadCity()
     }
-  }, [])
+  }, [inseeCode])
 
   useEffect(() => {
     if (!jobSearchValue) return
