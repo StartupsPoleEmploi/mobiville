@@ -299,7 +299,7 @@ deploy conf production:
                 cd $WORKDIR_SERVER &&
                 chmod 640 nginx/.htpasswd &&
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
-                VERSION=${FORCE_VERSION:-$VERSION} &&
+                VERSION=${FORCE_VERSION:-latest} &&
                 PUB_BRANCH=${CI_COMMIT_BRANCH//\//_} &&
                 echo \"API_VERSION=\${PUB_BRANCH}-\${VERSION}\" > .api_env &&
                 API_VERSION=\"\${PUB_BRANCH}-\${VERSION}\" docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml up -d &&
