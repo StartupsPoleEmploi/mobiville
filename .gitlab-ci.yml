@@ -400,14 +400,13 @@ install production:
                 PUB_BRANCH_INSTALL=$PUB_BRANCH_INSTALL &&
                 echo \"API_VERSION=\${PUB_BRANCH_INSTALL}-\${VERSION}\" > .api_env &&
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
-                API_VERSION=\"\${PUB_BRANCH_INSTALL}-\${VERSION}\" docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml pull &&
-                API_VERSION=\"\${PUB_BRANCH_INSTALL}-\${VERSION}\" docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml up -d &&
+                API_VERSION=\"\${PUB_BRANCH_INSTALL}-\${VERSION}\" docker-compose -f docker-compose.yml -f docker-compose.${ENV_TARGET:-production}.yml pull &&
+                API_VERSION=\"\${PUB_BRANCH_INSTALL}-\${VERSION}\" docker-compose -f docker-compose.yml -f docker-compose.${ENV_TARGET:-production}.yml up -d &&
                 docker logout $CI_REGISTRY"
   rules:
     - if: '$FORCE_INSTALL != "NO" && $FORCE_DEPLOY == "install"'
       variables:
         PUB_BRANCH_INSTALL: "${FORCE_INSTALL}"
-        ENV_TARGET: "${ENV_TARGET:-production}"
       when: manual
   environment:
     name: production
