@@ -32,11 +32,11 @@ $NICE mysqldump -R --opt --single-transaction -h$DB_HOST -u$DB_USER -p$DB_PASSWO
 
 #backup docker
 $NICE tar --exclude=db/* --exclude=*.bz2 --exclude=*.gz -jcPf - /home/docker/ | \
-    tee /home/backups/$DOCKERNAME /mnt/backups/$DIR$DOCKERNAME >/dev/null;
+    tee /backups/$DOCKERNAME /mnt/backups/$DIR$DOCKERNAME >/dev/null;
 
 # sauvegarde tous les trimestres pour la partie recette
 if [ "$QUARTER" != "" ];
 then
-	$NICE cat /home/backups/$DATABASENAME | tee /home/backups/$DATABASENAME_QUARTER /mnt/backups/$DIR$DATABASENAME_QUARTER >/dev/null;
-	$NICE cat /home/backups/$DOCKERNAME | tee /home/backups/$DOCKERNAME_QUARTER /mnt/backups/$DIR$DOCKERNAME_QUARTER >/dev/null;
+	$NICE cat /backups/$DATABASENAME | tee /backups/$DATABASENAME_QUARTER /mnt/backups/$DIR$DATABASENAME_QUARTER >/dev/null;
+	$NICE cat /backups/$DOCKERNAME | tee /backups/$DOCKERNAME_QUARTER /mnt/backups/$DIR$DOCKERNAME_QUARTER >/dev/null;
 fi
