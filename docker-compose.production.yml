@@ -45,6 +45,8 @@ services:
     - /mnt:/mnt
     - /etc/timezone:/etc/timezone:ro
     - /etc/localtime:/etc/localtime:ro
+    environment:
+      - ENV_TYPE=production
     deploy:
       resources:
         limits:

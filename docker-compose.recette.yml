@@ -34,6 +34,8 @@ services:
     build : backups/.
     restart: always
     hostname: backups
+    environment:
+      - ENV_TYPE=recette
     volumes:
     - ./:/home/docker
     - ./backups:/backups

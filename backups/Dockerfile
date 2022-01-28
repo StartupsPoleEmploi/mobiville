@@ -4,7 +4,7 @@ RUN echo "LANG=\"fr_FR.UTF-8\"\nLANGUAGE=\"fr_FR:fr\"\nLC_NUMERIC=\"fr_FR.UTF-8\
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
-    #apt-get -y install cron mariadb-client && \ TODO: install database client to do the dump
+    apt-get -y install cron mariadb-client && \
     apt-get -y install cron && \
     apt-get -y install bzip2 tar language-pack-fr vim tzdata rsyslog
 
