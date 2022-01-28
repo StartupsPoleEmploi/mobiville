@@ -407,7 +407,7 @@ install production:
     - if: '$FORCE_INSTALL != "NO" && $FORCE_DEPLOY == "install"'
       variables:
         PUB_BRANCH_INSTALL: "${FORCE_INSTALL}"
-        ENV_TARGET: "${ENV_TARGET}:-production"
+        ENV_TARGET: "${ENV_TARGET:-production}"
       when: manual
   environment:
     name: production
