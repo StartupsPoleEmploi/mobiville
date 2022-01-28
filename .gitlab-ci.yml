@@ -34,7 +34,7 @@ variables:
     description: version of the FORCE_DEPLOY target api or front to deploy
   FORCE_INSTALL:
     value: "NO"
-    description: production install from scratch mobiville with "YES"
+    description: production install from scratch mobiville with {name of the branch} to deploy (use for target image)
   RENEW_TLS:
     value: "NO"
     description: replace TLS certificate with "YES"
@@ -390,21 +390,23 @@ install production:
     - scp -o StrictHostKeyChecking=no nginx/.htpasswd gitlab@$PRODUCTION:$WORKDIR_SERVER/nginx/
     - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"deploy-token: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/database/${DATABASEDUMP_VERSION}/database.${DATABASEDUMP_VERSION}.tar.gz\""'
     - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && tar -xzvf database.${DATABASEDUMP_VERSION}.tar.gz"
-    - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && PUB_BRANCH=${CI_COMMIT_BRANCH//\//_} && curl -O --header \"deploy-token: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/front/${PUB_BRANCH}/${PACKAGE_NAME}.${PUB_BRANCH}-latest.tar.gz\""'
-    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${BUILD_ENV}-latest.tar.gz"
+    - 'ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER && curl -O --header \"deploy-token: $PACKAGE_REGISTRY_TOKEN\" \"https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/front/${PUB_BRANCH_INSTALL}/${PACKAGE_NAME}.${PUB_BRANCH_INSTALL}-latest.tar.gz\""'
+    - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "cd $WORKDIR_SERVER/nginx/front && tar -xzvf ../../${PACKAGE_NAME}.${PUB_BRANCH_INSTALL}-latest.tar.gz"
     - ssh -o StrictHostKeyChecking=no gitlab@$PRODUCTION "
                 cd $WORKDIR_SERVER &&
                 chmod 640 nginx/ssl/* &&
                 chmod 640 nginx/.htpasswd &&
                 VERSION=${FORCE_VERSION:-$VERSION} &&
-                PUB_BRANCH=${CI_COMMIT_BRANCH//\//_} &&
-                echo \"API_VERSION=\${PUB_BRANCH}-\${VERSION}\" > .api_env &&
+                PUB_BRANCH_INSTALL=$PUB_BRANCH_INSTALL &&
+                echo \"API_VERSION=\${PUB_BRANCH_INSTALL}-\${VERSION}\" > .api_env &&
                 docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD &&
-                API_VERSION=\"\${PUB_BRANCH}-\${VERSION}\" docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml pull &&
-                API_VERSION=\"\${PUB_BRANCH}-\${VERSION}\" docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml up -d &&
+                API_VERSION=\"\${PUB_BRANCH_INSTALL}-\${VERSION}\" docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml pull &&
+                API_VERSION=\"\${PUB_BRANCH_INSTALL}-\${VERSION}\" docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml up -d &&
                 docker logout $CI_REGISTRY"
   rules:
-    - if: '$FORCE_INSTALL == "YES"'
+    - if: '$FORCE_INSTALL != "NO"'
+      variables:
+        PUB_BRANCH_INSTALL: "${FORCE_INSTALL:-${CI_COMMIT_BRANCH//\//_}}"
       when: manual
   environment:
     name: production
