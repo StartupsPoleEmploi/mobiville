@@ -406,7 +406,7 @@ install production:
   rules:
     - if: '$FORCE_INSTALL != "NO"'
       variables:
-        PUB_BRANCH_INSTALL: "${FORCE_INSTALL:-${CI_COMMIT_BRANCH//\//_}}"
+        PUB_BRANCH_INSTALL: "${FORCE_INSTALL}"
       when: manual
   environment:
     name: production
