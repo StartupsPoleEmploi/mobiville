@@ -34,21 +34,6 @@ services:
           memory: 8G
           cpus: '4.0'
 
-
-  backups:
-    build : backups/.
-    restart: always
-    hostname: backups
-    volumes:
-    - ./:/home/docker
-    - ./backups:/backups
-    - /mnt:/mnt
-    - /etc/timezone:/etc/timezone:ro
-    - /etc/localtime:/etc/localtime:ro
+  backup:
     environment:
       - ENV_TYPE=production
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-          cpus: '2.0'

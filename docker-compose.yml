@@ -60,9 +60,18 @@ services:
       - TIMEZONE=${TIMEZONE:-Europe/Paris}
     container_name: mobiville-backup
     hostname: backups
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${MYSQL_DATABASE}
+      - DB_USER=${MYSQL_USER}
+      - DB_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - .:/home/docker
       - /mnt/backups:/mnt/backups
+      - ./backups:/backups
+    networks:
+      mobiville_network:
+        ipv4_address: 173.0.0.80
 
 networks:
   mobiville_network:

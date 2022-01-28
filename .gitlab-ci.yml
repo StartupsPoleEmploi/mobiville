@@ -364,6 +364,7 @@ renew production tls:
     url: https://mobiville.beta.pole-emploi.fr
 
 #TODO add init.sh script to initialize/sync database data
+#TOFIX mysql_upgrade need to be execute after restauration of db (needed for backup to work properly)
 install production:
   stage: install
   before_script:
