@@ -31,7 +31,7 @@ services:
           cpus: '1.0'
 
   backups:
-    context : backups/.
+    build : backups/.
     restart: always
     hostname: backups
     volumes:
