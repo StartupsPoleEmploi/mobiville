@@ -28,7 +28,7 @@ variables:
     description: name of the production deployment branch
   FORCE_DEPLOY:
     value: ""
-    description: target to do force deploy api, front or config
+    description: target to do force deploy api, front, config or install
   FORCE_VERSION:
     value: ""
     description: version of the FORCE_DEPLOY target api or front to deploy
@@ -404,9 +404,10 @@ install production:
                 API_VERSION=\"\${PUB_BRANCH_INSTALL}-\${VERSION}\" docker-compose -f docker-compose.yml -f docker-compose.$ENV_TARGET.yml up -d &&
                 docker logout $CI_REGISTRY"
   rules:
-    - if: '$FORCE_INSTALL != "NO"'
+    - if: '$FORCE_INSTALL != "NO" && $FORCE_DEPLOY == "install"'
       variables:
         PUB_BRANCH_INSTALL: "${FORCE_INSTALL}"
+        ENV_TARGET: "${ENV_TARGET}:-production"
       when: manual
   environment:
     name: production
