@@ -220,10 +220,10 @@ export default (sequelizeInstance, Model) => {
       include: [
         {
           model: Model.models.oldRegions,
-          required: true,
+          include: Model.models.socialhousings,
         },
+        Model.models.equipments,
       ],
-      raw: true,
     })
 
     if (city) {
