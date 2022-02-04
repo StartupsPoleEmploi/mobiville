@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#NOTE: dans le docker compose monter le répertoire du projet /home/docker/[nom du projet] <- doit respecter cette nomenclature
+
 if [ "$ENV_TYPE" = "developpement" ];
 then
 	exit 0;
@@ -25,13 +27,13 @@ then
 	mkdir -p /mnt/backups/${ENV_TYPE};
 fi
 
-#backup bdd
+#backup bdd (NOTE si erreur sur mysql.proc faire un mysql_upgrade -u root -p{passowrd} dans le conteneur de BDD)
 $NICE mysqldump -R --opt --single-transaction -h$DB_HOST -u$DB_USER -p$DB_PASSWORD $DB_NAME | \
         bzip2 -cq5 | \
             tee /backups/$DATABASENAME /mnt/backups/$DIR$DATABASENAME >/dev/null;
 
 #backup docker
-$NICE tar --exclude=db/* --exclude=*.bz2 --exclude=*.gz -jcPf - /home/docker/ | \
+$NICE tar --exclude=db/* --exclude=*.bz2 --exclude=*.gz -jcPf - /home/docker/$PROJECT | \
     tee /backups/$DOCKERNAME /mnt/backups/$DIR$DOCKERNAME >/dev/null;
 
 # sauvegarde tous les trimestres pour la partie recette
