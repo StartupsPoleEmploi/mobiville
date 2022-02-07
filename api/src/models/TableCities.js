@@ -28,7 +28,6 @@ import {
 } from '../utils/api'
 import { distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
-import { ALL_LIFE_CRITERIONS_LIST } from '../constants/lifeCriterions'
 
 export default (sequelizeInstance, Model) => {
   Model.franceShape = null
@@ -545,48 +544,6 @@ export default (sequelizeInstance, Model) => {
     }
   }
 
-  Model.searchById = async ({ id }) => {
-    const cities = await Model.findAll({
-      where: { id: +id },
-      limit: 1,
-      raw: true,
-    })
-
-    return cities
-  }
-
-  Model.searchByName = async ({ name }) => {
-    const cities = await Model.findAll({
-      where: {
-        [Op.and]: [
-          {
-            [Op.or]: [
-              { nom_comm: { [Op.like]: `${name}%` } },
-              { nom_comm: name },
-              { postal_code: { [Op.like]: `${name}%` } },
-            ],
-          },
-          [
-            2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-            21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-          ].map((v) => ({
-            nom_comm: { [Op.notLike]: `%-${v}%-arrondissement%` },
-          })),
-        ],
-      },
-      order: [['nom_comm', 'ASC']],
-      limit: 10,
-      raw: true,
-    })
-
-    return cities.map((c) => ({
-      ...c,
-      nom_comm: (c.nom_comm || '')
-        .replace(/--/gi, '-')
-        .replace(/-1er-arrondissement/gi, ''),
-    }))
-  }
-
   Model.getAveragePricing = async (cityInsee) => {
     let allIntoFile = Model.cacheLoadAveragePricing
     if (!allIntoFile) {
@@ -630,25 +587,6 @@ export default (sequelizeInstance, Model) => {
     }
 
     return 0
-  }
-
-  Model.getCacheLivingEnvironment = async (insee) => {
-    const list = [...ALL_LIFE_CRITERIONS_LIST]
-    const all = {}
-
-    for (let i = 0; i < list.length; i++) {
-      for (let x = 0; x < list[i].tab.length; x++) {
-        const total = await Model.models.equipments.getTotal(
-          insee,
-          list[i].tab[x].code
-        )
-        if (total) {
-          all[list[i].key + '-' + list[i].tab[x].label] = total
-        }
-      }
-    }
-
-    return all
   }
 
   return Model
