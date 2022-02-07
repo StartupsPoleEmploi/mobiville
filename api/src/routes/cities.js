@@ -86,27 +86,6 @@ router.post(
 )
 
 router.post(
-  '/search-by-name',
-  async ({
-    request: {
-      body: { id, name },
-    },
-    models,
-    response,
-  }) => {
-    let result
-
-    if (id) {
-      result = await models.cities.searchById({ id })
-    } else {
-      result = await models.cities.searchByName({ name })
-    }
-
-    response.body = result
-  }
-)
-
-router.post(
   '/search-by-skill',
   async ({
     request: {
