@@ -33,16 +33,6 @@ export const searchCityByName = (body) =>
     .post('/api/cities/search-by-name', body)
     .then((response) => response.data || [])
 
-export const getCityTenement = (insee) =>
-  axios
-    .get(`/api/cities/tenement/${insee}`)
-    .then((response) => response.data || null)
-
-export const getCityEquipments = (insee) =>
-  axios
-    .get(`/api/cities/equipments/${insee}`)
-    .then((response) => response.data || null)
-
 export const searchJobLabels = (body) =>
   axios
     .post('/api/cities/search-by-skill', body)
