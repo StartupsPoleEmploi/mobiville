@@ -6,12 +6,9 @@ import {
   searchCities as apiSearchCities,
   searchCloseCities,
   searchSimilarCities,
-  searchCityByName,
   searchJobLabels,
   fetchAutocompleteCities,
 } from '../../api/cities.api'
-
-const EMPTY_CITY = { id: null, nom_comm: 'Non trouvée', description: '' }
 
 const CitiesContext = React.createContext()
 
@@ -20,7 +17,6 @@ let lastSearchParams = {}
 export function CitiesProvider(props) {
   const [cities, _setCities] = useState([])
   const [totalCities, _setTotalCities] = useState(0)
-  const [searchCities, _setSearchCities] = useState([])
   const [jobsMatchingCriterions, setJobsMatchingCriterions] = useState([])
   const [city, setCity] = useState(null)
   const [closeCities, _setCloseCities] = useState([])
@@ -114,34 +110,6 @@ export function CitiesProvider(props) {
       .then(() => _setIsLoadingSimilarCities(false))
   }
 
-  const onSearchByName = useCallback(({ id, name }) => {
-    _setIsLoadingLocation(true)
-    searchCityByName({ id, name })
-      .then((c) => {
-        if (c.length === 0) {
-          _setSearchCities([EMPTY_CITY])
-        } else {
-          _setSearchCities(c)
-        }
-
-        return c
-      })
-      .then(() => _setIsLoadingLocation(false))
-      .catch(() => {
-        _setSearchCities([EMPTY_CITY])
-        _setIsLoadingLocation(false)
-      })
-  })
-
-  const onSearchById = useCallback((id) =>
-    searchCityByName({ id }).then((c) => {
-      if (c.length === 0) {
-        return EMPTY_CITY
-      }
-      return c[0]
-    })
-  )
-
   const onSearchJobLabels = useCallback(
     (label) => {
       if (!label.trim()) {
@@ -217,7 +185,6 @@ export function CitiesProvider(props) {
       {...props}
       value={{
         cities,
-        searchCities,
         city,
         criterions,
         criterionsError,
@@ -244,8 +211,6 @@ export function CitiesProvider(props) {
         unloadCity,
         onSearchCloseCities,
         onSearchSimilarCities,
-        onSearchByName,
-        onSearchById,
         setSortCriterions,
         onSearchJobLabels,
         onAutocomplete,

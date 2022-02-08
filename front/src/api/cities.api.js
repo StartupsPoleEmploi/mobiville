@@ -28,11 +28,6 @@ export const searchSimilarCities = (body) =>
     .post('/api/cities/search-similar-cities', body)
     .then((response) => response.data || null)
 
-export const searchCityByName = (body) =>
-  axios
-    .post('/api/cities/search-by-name', body)
-    .then((response) => response.data || [])
-
 export const searchJobLabels = (body) =>
   axios
     .post('/api/cities/search-by-skill', body)
