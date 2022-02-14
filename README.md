@@ -37,18 +37,20 @@ Entrer dans le container api
 Et exécuter les commandes de synchronisation :
 
 ```
-yarn run sync:regions # almost instant. Do this before cities.
-yarn run sync:cities # 2 minutes long
-yarn run sync:professionsInTension # 2 minutes long
-yarn run sync:equipments # This will take about 10 minutes
-yarn run sync:equipmentsSpecial # This will take about 2 minutes, needs to be run after the previous script
-yarn run sync:romeOgrs # almost instant
-yarn run sync:romeSkills # almost instant
-yarn run sync:tensionsPCS # almost instant
-yarn run sync:regionsTensionsCriterions # Takes about 5 minutes
+yarn sync:helps # almost instant
+yarn sync:regions # almost instant. Do this before cities.
+yarn sync:cities # 2 minutes long
+yarn sync:professionsInTension # 2 minutes long
+yarn sync:equipments # This will take about 10 minutes
+yarn sync:equipmentsSpecial # This will take about 2 minutes, needs to be run after the previous script
+yarn sync:romeOgrs # almost instant
+yarn sync:romeSkills # almost instant
+yarn sync:tensionsPCS # almost instant
+yarn sync:regionsTensionsCriterions # Takes about 5 minutes
 ```
 
 ## Génération de migration
+
 In the directory `~/api/src/db`, run `npx sequelize-cli migration:generate --name migration-skeleton`
 
 ## Construire les images
