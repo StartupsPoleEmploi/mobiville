@@ -31,3 +31,7 @@ services:
     stdin_open: true
     environment:
       - NODE_ENV=development
+
+  backup:
+    deploy:
+      replicas: 0
