@@ -261,6 +261,7 @@ export default (sequelizeInstance, Model) => {
 
     const result = await Model.findAll({
       where: { [Op.and]: whereAnd },
+      logging: true,
       order,
       include: [
         {
@@ -274,6 +275,14 @@ export default (sequelizeInstance, Model) => {
           model: Model.models.newRegions,
           required: true,
           ...whereRegion,
+        },
+        {
+          attributes: ['number'],
+          model: Model.models.citiesJobs,
+          required: false,
+          where: {
+            rome_id: codeRome,
+          },
         },
       ],
       raw: true,
