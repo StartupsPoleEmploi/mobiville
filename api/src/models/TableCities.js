@@ -270,7 +270,7 @@ export default (sequelizeInstance, Model) => {
           include: bassinsToInclude,
         },
         {
-          attributes: ['name'],
+          attributes: ['name', 'code'],
           model: Model.models.newRegions,
           required: true,
           ...whereRegion,
