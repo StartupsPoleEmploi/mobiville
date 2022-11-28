@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { useNavigate, useLocation, useParams } from 'react-router-dom'
-import _ from 'lodash'
+import React, { useEffect, useMemo } from 'react'
+import { useLocation, useParams } from 'react-router-dom'
 import queryString from 'query-string'
 import { Helmet } from 'react-helmet-async'
 import { CircularProgress } from '@mui/material'
 
+import CityJobs from './cityJobs/CityJobs'
 import CityHome from './cityHome/CityHome'
-import CityJobs from './CityJobs'
 import CityServices from './cityServices/CityServices'
 import CityCloseCities from './cityCloseCities/CityCloseCities'
 import CityMenuBack from './components/CityMenuBack'
@@ -17,8 +16,7 @@ import { useWindowSize } from '../../common/hooks/window-size'
 import { useProfessions } from '../../common/contexts/professionsContext'
 import { isMobileView } from '../../constants/mobile'
 import { COLOR_WHITE } from '../../constants/colors'
-
-
+import { capitalize, ucFirst } from '../../utils/utils'
 
 const JOB = 'job'
 const LIFE = 'life'
@@ -34,11 +32,9 @@ const CityPage = () => {
   } = useCities()
 
   const {
-    isLoading: isLoadingProfessions,
     onSearch: onSearchProfessions,
   } = useProfessions()
 
-  const navigate = useNavigate()
   const location = useLocation()
   const { insee, section } = useParams()
   const [inseeCode] = insee.split('-')
@@ -46,11 +42,17 @@ const CityPage = () => {
 
   const params = queryString.parse(location.search)
 
-  const [jobSearchValue, setJobSearchValue] = useState(
-    decodeURIComponent(params.jobSearch || '')
-  )
   const codeRome = params?.codeRome || ''
+  let romeLabel = ''
 
+  if (criterions?.codeRomes && codeRome) {
+    const foundLabel =
+      criterions.codeRomes.find((c) => c.key === codeRome)?.label || ''
+    romeLabel = foundLabel.toLowerCase()
+  }
+
+  const backLink = `/cities?codeRome=${ codeRome }&codeRegion=${ city?.newRegion?.code ?? '' }`
+  
   useEffect(() => {
     onLoadCity(inseeCode)
 
@@ -60,22 +62,12 @@ const CityPage = () => {
   }, [inseeCode])
 
   useEffect(() => {
-    if (!jobSearchValue) return
-    if (jobSearchValue === decodeURIComponent(params.jobSearch)) return
-
-    navigate(
-      {
-        pathname: location.pathname,
-        search: queryString.stringify({ ...params, jobSearch: jobSearchValue }),
-      },
-      { replace: true }
-    )
-  }, [navigate, jobSearchValue, params, location.pathname])
-
-  useEffect(() => {
     if (!city?.insee_com || !codeRome) return
 
-    onSearchProfessions({ codeRome: [codeRome], insee: [city.insee_com] })
+    onSearchProfessions({
+      codeRome: [codeRome],
+      insee: [city.insee_com]
+    })
     onSearchProfessions({
       codeRome: [codeRome],
       insee: [city.insee_com],
@@ -83,29 +75,13 @@ const CityPage = () => {
     })
   }, [city?.insee_com, codeRome])
 
-  let romeLabel = ''
-
-  if (criterions?.codeRomes && codeRome) {
-    const foundLabel =
-      criterions.codeRomes.find((c) => c.key === codeRome)?.label || ''
-    romeLabel = foundLabel.toLowerCase()
-  }
-  
-  const lastSearch = localStorage.getItem('lastSearch')
-
-  const childrenComponentsBacklink = `/city/${insee}?codeRome=${codeRome}`
-  const backLink = `/cities${lastSearch || `?codeRome=${codeRome}`}`
-
   const currentSection = useMemo(() => {
     if (!city) return
     if (JOB === section) {
       return (
         <CityJobs
-          isLoading={isLoadingProfessions}
+          codeRome={codeRome}
           romeLabel={romeLabel}
-          searchValue={jobSearchValue}
-          setSearchValue={setJobSearchValue}
-          backLink={childrenComponentsBacklink}
         />
       )
     } else if (CLOSE_CITIES === section) {
@@ -123,11 +99,10 @@ const CityPage = () => {
     />
   }, [
     section,
+    city,
+    codeRome,
     romeLabel,
     backLink,
-    childrenComponentsBacklink,
-    isLoadingProfessions,
-    jobSearchValue,
     insee,
   ])
 
@@ -153,11 +128,11 @@ const CityPage = () => {
     <MainLayout menu={{ visible: !isMobile }}>
       <Helmet>
         <title>
-          {_.upperFirst(romeLabel)} à {_.capitalize(city.nom_comm)} | Mobiville
+          {ucFirst(romeLabel)} à {capitalize(city.nom_comm)} | Mobiville
         </title>
         <meta
           name="description"
-          content={`Explorez le marché de l'emploi de ${_.capitalize(
+          content={`Explorez le marché de l'emploi de ${capitalize(
             city.nom_comm
           )} pour le métier de ${romeLabel} ainsi que les informations sur l’immobilier, les services et les équipements.`}
         />
@@ -166,7 +141,7 @@ const CityPage = () => {
       <CityMenuBack
         backLink={backLink}
         isMobile={isMobile}
-        background={(section === CLOSE_CITIES && !isMobile) ? 'none' : COLOR_WHITE}
+        background={([CLOSE_CITIES, JOB].includes(section) && !isMobile) ? 'none' : COLOR_WHITE}
       />
 
       {currentSection}
