@@ -107,19 +107,21 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
     'N/A': 'Non renseignée',
   }
 
+  const opportunities = {
+    OPPORTUNITIES: "Offres avec plus d'opportunités",
+    ALL_OFFERS: 'Toutes les offres',
+  }
+
   useEffect(() => {
     toggleBodyScroll(!showMobileFilters)
   }, [showMobileFilters])
 
-  const showReset = useMemo(
-    () =>
-      Object.values(filters).reduce((prev, currFilter) => {
-        if (typeof currFilter === 'string') return prev || currFilter !== ''
-        if (Array.isArray(currFilter)) return prev || currFilter?.length > 0
-        return prev || !!currFilter
-      }, false),
-    [filters]
-  )
+  const showReset = useMemo(() => Object.values(filters).reduce((prev, currFilter) => {
+    if (typeof currFilter === 'string') return prev || currFilter !== ''
+    if (Array.isArray(currFilter)) return prev || currFilter?.length > 0
+    return prev || !!currFilter
+  }, false),
+  [ filters ])
 
   const numbersOfSelectedFilters = useMemo(() => {
     return Object.values(filters).reduce((prev, currFilter) => {
@@ -297,21 +299,21 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
               />
             ))}
           </Pane>
-          {/* <Pane title={"Opportunités"}>
+          <Pane title={"Opportunités"}>
             {Object.entries(opportunities).map(([ key, value ]) => (
-              <CheckboxInput
+              <RadioInput
+                key={key}
                 name="opportunity"
                 value={value}
-                onClick={() => {
+                onChange={() =>
                   onFiltersChange({
-                    opportunity: (filters.opportunity.includes(key))
-                      ? filters.opportunity.filter(opportunity => opportunity !== key)
-                      : [ ...filters.opportunity, key ]
+                    opportunity: key,
                   })
-                }}
+                }
+                checked={filters.opportunity === key}
               />
             ))}
-          </Pane> */}
+          </Pane>
         </Accordion>
 
         <ButtonsContainer>
@@ -430,6 +432,18 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
               chapters: ['city-offres', 'filtres'],
             })
           }}
+        />
+
+        {/* Opportunités */}
+        <LittleSelect
+          label="Offres avec plus d'opportunités"
+          values={opportunities}
+          selectedValue={filters.opportunity}
+          onChange={(value) =>
+            onFiltersChange({
+              opportunity: value,
+            })
+          }
         />
       </Row>
     </Container>

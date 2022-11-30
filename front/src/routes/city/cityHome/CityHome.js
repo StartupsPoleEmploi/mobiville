@@ -136,10 +136,11 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
 
   const { companiesCount, onSearchCloseCompanies, city } = useCities()
   const {
-    professionsCandidatsManquants,
+    jobsMissingApplicant,
     totalOffres,
     bassinTensionIndT,
     onSearchInfosTravail,
+    sortByDistanceFromCity
   } = useProfessions()
 
   useEffect(() => {
@@ -200,24 +201,27 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
       />
 
       <HorizontalScrollableSection>
-        {professionsCandidatsManquants?.slice(0, 3).map((job) => (
-          <JobCardContainer
-            key={job.id}
-            to={{
-              pathname: `/city/${insee}/job`,
-              search: `?codeRome=${codeRome}`,
-            }}
-            onClick={() => {
-              window.smartTag({
-                name: 'acces_offre',
-                type: 'exit',
-                chapters: ['city', 'offre_avec_opportunite'],
-              })
-            }}
-          >
-            <JobCard job={job} style={{ height: '100%' }} />
-          </JobCardContainer>
-        ))}
+        {jobsMissingApplicant
+          ?.sort(sortByDistanceFromCity(city))
+          .slice(0, 3)
+          .map((job) => (
+            <JobCardContainer
+              key={job.id}
+              to={{
+                pathname: `/city/${insee}/job`,
+                search: `?codeRome=${codeRome}&jobSelected=${job.id}`
+              }}
+              onClick={() => {
+                window.smartTag({
+                  name: 'acces_offre',
+                  type: 'exit',
+                  chapters: ['city', 'offre_avec_opportunite'],
+                })
+              }}
+            >
+              <JobCard job={job} style={{ height: '100%' }} />
+            </JobCardContainer>
+          ))}
       </HorizontalScrollableSection>
 
       <ActionButton
