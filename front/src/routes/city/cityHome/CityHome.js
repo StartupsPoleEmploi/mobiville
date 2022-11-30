@@ -6,7 +6,12 @@ import CityHousingSimulator from './components/CityHousingSimulator'
 import CloseCompanies from './components/CloseCompanies'
 import HelpsStandOut from './components/HelpsStandOut'
 import SectionHeader from '../components/SectionHeader'
-import { ActionButton, HorizontalScrollableSection, KeyFigures, Tag } from '../../../components'
+import {
+  ActionButton,
+  HorizontalScrollableSection,
+  KeyFigures,
+  Tag,
+} from '../../../components'
 
 import { ReactComponent as MaletteIcon } from '../../../assets/images/icons/malette.svg'
 import { ReactComponent as ProfilEntrepriseIcon } from '../../../assets/images/icons/profil_entreprise.svg'
@@ -134,9 +139,9 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
     professionsCandidatsManquants,
     totalOffres,
     bassinTensionIndT,
-    onSearchInfosTravail
+    onSearchInfosTravail,
   } = useProfessions()
-  
+
   useEffect(() => {
     if (!city?.insee_com || !codeRome) return
 
@@ -147,12 +152,12 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
     })
     onSearchInfosTravail({
       codeRome: codeRome,
-      insee: city.insee_com
+      insee: city.insee_com,
     })
   }, [city?.insee_com, codeRome])
 
   return (
-    <>
+    <div tag-page="/city">
       <CityHeader isMobile={isMobile}>
         <TitlesContainer isMobile={isMobile}>
           <RegionName isMobile={isMobile}>
@@ -195,19 +200,24 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
       />
 
       <HorizontalScrollableSection>
-        {professionsCandidatsManquants
-          ?.slice(0, 3)
-          .map((job) => (
-            <JobCardContainer
-              key={job.id}
-              to={{
-                pathname: `/city/${insee}/job`,
-                search: `?codeRome=${codeRome}`
-              }}
-            >
-              <JobCard job={job} style={{ height: '100%' }} />
-            </JobCardContainer>
-          ))}
+        {professionsCandidatsManquants?.slice(0, 3).map((job) => (
+          <JobCardContainer
+            key={job.id}
+            to={{
+              pathname: `/city/${insee}/job`,
+              search: `?codeRome=${codeRome}`,
+            }}
+            onClick={() => {
+              window.smartTag({
+                name: 'acces_offre',
+                type: 'exit',
+                chapters: ['city', 'offre_avec_opportunite'],
+              })
+            }}
+          >
+            <JobCard job={job} style={{ height: '100%' }} />
+          </JobCardContainer>
+        ))}
       </HorizontalScrollableSection>
 
       <ActionButton
@@ -259,14 +269,14 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
         isWhite={true}
         centered
       />
-    </>
+    </div>
   )
 }
 
 CityHome.propTypes = {
   romeLabel: PropTypes.string,
   insee: PropTypes.string,
-  codeRome: PropTypes.string
+  codeRome: PropTypes.string,
 }
 
 export default CityHome
