@@ -212,7 +212,7 @@ router.post(
           codeDept: city.code_dept,
         }),
         getHiringRate({
-          codeRegion: bassinId,
+          codeTerritoire: bassinId,
           codeRome
         })
       ]).catch((err) => {

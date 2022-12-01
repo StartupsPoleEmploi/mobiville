@@ -225,13 +225,13 @@ export async function searchCloseCompanies({ codeRome = '', insee = '', distance
     return fetchAndRetryIfNecessary(callToSearchCloseEnterprises)
 }
 
-export async function getHiringRate({ codeRegion, codeRome }) {
+export async function getHiringRate({ codeTerritoire, codeRome }) {
     const token = await getAccessToken()
     return axios
         .post(`https://api.emploi-store.fr/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-embauches`,
             {
                 codeTypeTerritoire: "BASBMO",
-                codeTerritoire: `${codeRegion}`,
+                codeTerritoire: `${codeTerritoire}`,
                 codeTypeActivite: "ROME",
                 codeActivite: `${codeRome}`,
                 codeTypePeriode: "TRIMESTRE",
@@ -250,6 +250,8 @@ export async function getHiringRate({ codeRegion, codeRome }) {
         )
         .then((result) => result.data)
         .then(result => {
+            if (!result || !result.listeValeursParPeriode) return null
+            
             const preferedCategories = [ "ABCDE-SUP1M", "ABCDE-TOUTE", "TOUT-TOUTE" ]
             const foundCategories = result.listeValeursParPeriode.map(data => data.codeNomenclature);
 

@@ -190,9 +190,9 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
             data: companiesCount,
             icon: <ProfilEntrepriseIcon />,
           },
-          {
+          !infosTravail?.hiringRate ? null : {
             label: "Taux d'embauche",
-            data: (!infosTravail?.hiringRate ? null : (infosTravail?.hiringRate > 100 ? '100%' : `${infosTravail?.hiringRate}%`)),
+            data: (infosTravail?.hiringRate > 100 ? '100%' : `${infosTravail?.hiringRate}%`),
             icon: <HandshakeIcon />,
           },
         ]}
