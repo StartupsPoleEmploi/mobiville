@@ -101,6 +101,7 @@ const HousingActorLink = styled.a`
 
 const HousingActorImage = styled.img`
   max-height: 70px;
+  max-width: 100%;
   align-self: center;
 `
 
