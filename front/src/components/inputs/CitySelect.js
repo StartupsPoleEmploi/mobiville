@@ -87,12 +87,12 @@ const CitySelect = ({ codeRome, onSelect, defaultValue }) => {
       const bestRegion = sortedRegions.filter(
         regionFilterByOpportunityRate(0.4)
       )
-      const lesserRegions = [
-        ...(bestRegion.length < MIN_REGIONS_SHOWED &&
-          sortedRegions
-            .filter(regionFilterByOpportunityRate(0))
-            .slice(0, MIN_REGIONS_SHOWED - bestRegion.length)),
-      ]
+      const lesserRegions =
+        bestRegion.length < MIN_REGIONS_SHOWED
+          ? sortedRegions
+              .filter(regionFilterByOpportunityRate(0))
+              .slice(0, MIN_REGIONS_SHOWED - bestRegion.length)
+          : []
 
       // 2 régions minimum : toutes les regions avec > 40% de tension
       // complété avec les 2 régions avec le plus d'opportunités
