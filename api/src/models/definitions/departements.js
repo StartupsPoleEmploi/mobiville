@@ -32,6 +32,11 @@ export default (sequelizeInstance) => {
   )
 
   Model.associate = function (models) {
+    Model.hasMany(models.cities, {
+      foreignKey: 'code_dept',
+      sourceKey: 'code',
+    })
+
     return models
   }
 

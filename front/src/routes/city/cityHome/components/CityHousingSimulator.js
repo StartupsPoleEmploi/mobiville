@@ -130,14 +130,14 @@ const CityHousingSimulator = ({ city }) => {
             },
             {
               label: 'Loyer moyen en location',
-              data: `${formatNumber(city.rent_t2 ?? city?.departement?.rent_t2)}€`, //: 'A venir',
+              data: (city.rent_t2 || city?.departement?.rent_t2) ? `${formatNumber(city.rent_t2 ?? city?.departement?.rent_t2)}€` : 'A venir',
               icon: (<MetricsTitle className="metrics-title">
                 <span>2</span> pièces
               </MetricsTitle>),
             },
             {
               label: 'Loyer moyen en location',
-              data: `${formatNumber(city.rent_t4 ?? city?.departement?.rent_t4)}€`, //: 'A venir',
+              data: (city.rent_t4 || city?.departement?.rent_t4) ? `${formatNumber(city.rent_t4 ?? city?.departement?.rent_t4)}€` : 'A venir',
               icon: (<MetricsTitle className="metrics-title">
                 <span>4</span> pièces
               </MetricsTitle>),
