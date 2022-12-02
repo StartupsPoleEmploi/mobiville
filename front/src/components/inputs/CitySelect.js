@@ -10,6 +10,7 @@ import {
   CITY_TYPE,
   REGION_TYPE,
 } from '../../constants/search'
+import { alphabetOrder } from '../../utils/utils'
 import TextSearchInput from './TextSearchInput'
 
 const CitySelect = ({ codeRome, onSelect, defaultValue }) => {
@@ -95,7 +96,9 @@ const CitySelect = ({ codeRome, onSelect, defaultValue }) => {
 
       // 2 régions minimum : toutes les regions avec > 40% de tension
       // complété avec les 2 régions avec le plus d'opportunités
-      regionsForRome = [...bestRegion, ...lesserRegions]
+      regionsForRome = [...bestRegion, ...lesserRegions].sort(
+        alphabetOrder('label')
+      )
     }
 
     // format autocompleted cities list item
