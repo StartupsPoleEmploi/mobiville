@@ -70,9 +70,11 @@ const CitySelect = ({ codeRome, onSelect, defaultValue }) => {
           .replace(/[^a-z_-]/g, '')
       ))
 
-  const regionFilterByOpportunityRate = (rate) => {
-    return (r) => r.romes?.[codeRome]?.opportunite > rate
+  const isRegionWithOpportunityRate = (rate) => {
+    return (r) => r.romes?.[codeRome]?.opportunite >= rate
   }
+  const regionWithPositiveOpportunityRate = (r) =>
+    r.romes?.[codeRome]?.opportunite > 0
 
   const regionSortByOpportunity = (a, b) =>
     a.romes?.[codeRome]?.opportunite > b.romes?.[codeRome]?.opportunite ? -1 : 1
@@ -84,13 +86,12 @@ const CitySelect = ({ codeRome, onSelect, defaultValue }) => {
       const sortedRegions = criterions.regions
         .filter(regionFilterByRome)
         .sort(regionSortByOpportunity)
-      const bestRegion = sortedRegions.filter(
-        regionFilterByOpportunityRate(0.4)
-      )
+      const bestRegion = sortedRegions.filter(isRegionWithOpportunityRate(0.15))
       const lesserRegions =
         bestRegion.length < MIN_REGIONS_SHOWED
           ? sortedRegions
-              .filter(regionFilterByOpportunityRate(0))
+              .filter((v) => !bestRegion.includes(v))
+              .filter(regionWithPositiveOpportunityRate)
               .slice(0, MIN_REGIONS_SHOWED - bestRegion.length)
           : []
 
