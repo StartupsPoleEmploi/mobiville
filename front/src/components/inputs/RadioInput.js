@@ -5,7 +5,10 @@ import { COLOR_PRIMARY } from '../../constants/colors'
 
 const Container = styled.div`
   color: ${COLOR_PRIMARY};
-  padding: 10px 0;
+  padding: 1px 0;
+
+  display: flex;
+  align-items: center;
 `
 
 const Label = styled.label`
@@ -18,8 +21,9 @@ const Radio = styled.input.attrs({
   type: 'radio',
 })`
   border: 10px solid ${COLOR_PRIMARY};
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
+  margin: 9px;
 
   appearance: none;
   -webkit-appearance: none;
@@ -68,8 +72,8 @@ const RadioInput = ({ value, name, onClick, checked, ...props }) => {
 }
 
 RadioInput.propTypes = {
-  value: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
-  name: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onClick: PropTypes.func,
   checked: PropTypes.bool,
 }

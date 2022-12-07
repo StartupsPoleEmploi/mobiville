@@ -1,5 +1,9 @@
-import React, { Suspense, lazy } from 'react'
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
+import React, { lazy, useEffect } from 'react'
+import {
+  Navigate, Route,
+  Routes, useLocation
+} from 'react-router-dom'
+import { useNomPage } from '../common/contexts/NomPageContext'
 
 const Home = lazy(() => import('./home/Home'))
 

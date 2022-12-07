@@ -42,6 +42,9 @@ const Modale = styled.div`
   z-index: 1000;
   width: 100vw;
   height: 100vh;
+  height: -moz-available;
+  height: -webkit-fill-available;
+  height: fill-available;
 
   overflow-y: scroll;
 
@@ -104,19 +107,21 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
     'N/A': 'Non renseignée',
   }
 
+  const opportunities = {
+    OPPORTUNITIES: "Offres avec plus d'opportunités",
+    ALL_OFFERS: 'Toutes les offres',
+  }
+
   useEffect(() => {
     toggleBodyScroll(!showMobileFilters)
   }, [showMobileFilters])
 
-  const showReset = useMemo(
-    () =>
-      Object.values(filters).reduce((prev, currFilter) => {
-        if (typeof currFilter === 'string') return prev || currFilter !== ''
-        if (Array.isArray(currFilter)) return prev || currFilter?.length > 0
-        return prev || !!currFilter
-      }, false),
-    [filters]
-  )
+  const showReset = useMemo(() => Object.values(filters).reduce((prev, currFilter) => {
+    if (typeof currFilter === 'string') return prev || currFilter !== ''
+    if (Array.isArray(currFilter)) return prev || currFilter?.length > 0
+    return prev || !!currFilter
+  }, false),
+  [ filters ])
 
   const numbersOfSelectedFilters = useMemo(() => {
     return Object.values(filters).reduce((prev, currFilter) => {
@@ -169,6 +174,13 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
                     distance: key,
                   })
                 }
+                onClick={() => {
+                  window.smartTag({
+                    name: 'distance',
+                    type: 'action',
+                    chapters: ['city-offres', 'filtres'],
+                  })
+                }}
                 checked={filters.distance === key}
               />
             ))}
@@ -186,6 +198,13 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
                     date: key,
                   })
                 }
+                onClick={() => {
+                  window.smartTag({
+                    name: 'date_publication',
+                    type: 'action',
+                    chapters: ['city-offres', 'filtres'],
+                  })
+                }}
                 checked={filters.date === key}
               />
             ))}
@@ -205,6 +224,13 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
                     type: filters.type.includes(key)
                       ? filters.type.filter((type) => type !== key)
                       : [...filters.type, key],
+                  })
+                }}
+                onClick={() => {
+                  window.smartTag({
+                    name: 'type_contrat',
+                    type: 'action',
+                    chapters: ['city-offres', 'filtres'],
                   })
                 }}
                 checked={filters.type.includes(key)}
@@ -232,6 +258,13 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
                       : [...filters.experience, key],
                   })
                 }}
+                onClick={() => {
+                  window.smartTag({
+                    name: 'experience',
+                    type: 'action',
+                    chapters: ['city-offres', 'filtres'],
+                  })
+                }}
                 checked={filters.experience.includes(key)}
               />
             ))}
@@ -255,25 +288,32 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
                       : [...filters.duration, key],
                   })
                 }}
+                onClick={() => {
+                  window.smartTag({
+                    name: 'duree_hebdomadaire',
+                    type: 'action',
+                    chapters: ['city-offres', 'filtres'],
+                  })
+                }}
                 checked={filters.duration.includes(key)}
               />
             ))}
           </Pane>
-          {/* <Pane title={"Opportunités"}>
+          <Pane title={"Opportunités"}>
             {Object.entries(opportunities).map(([ key, value ]) => (
-              <CheckboxInput
+              <RadioInput
+                key={key}
                 name="opportunity"
                 value={value}
-                onClick={() => {
+                onChange={() =>
                   onFiltersChange({
-                    opportunity: (filters.opportunity.includes(key))
-                      ? filters.opportunity.filter(opportunity => opportunity !== key)
-                      : [ ...filters.opportunity, key ]
+                    opportunity: key,
                   })
-                }}
+                }
+                checked={filters.opportunity === key}
               />
             ))}
-          </Pane> */}
+          </Pane>
         </Accordion>
 
         <ButtonsContainer>
@@ -302,6 +342,13 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
               distance: value,
             })
           }
+          onClickTag={() => {
+            window.smartTag({
+              name: 'distance',
+              type: 'action',
+              chapters: ['city-offres', 'filtres'],
+            })
+          }}
         />
 
         {/* Date de publication */}
@@ -314,6 +361,13 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
               date: value,
             })
           }
+          onClickTag={() => {
+            window.smartTag({
+              name: 'date_publication',
+              type: 'action',
+              chapters: ['city-offres', 'filtres'],
+            })
+          }}
         />
 
         {/* Type de contrat */}
@@ -327,6 +381,13 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
               type: value,
             })
           }
+          onClickTag={() => {
+            window.smartTag({
+              name: 'type_contrat',
+              type: 'action',
+              chapters: ['city-offres', 'filtres'],
+            })
+          }}
         />
 
         {/* Expérience */}
@@ -340,6 +401,13 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
               experience: value,
             })
           }
+          onClickTag={() => {
+            window.smartTag({
+              name: 'experience',
+              type: 'action',
+              chapters: ['city-offres', 'filtres'],
+            })
+          }}
         />
 
         {showReset ? <ResetButton onClick={onReset} /> : null}
@@ -355,6 +423,25 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
           onChange={(value) =>
             onFiltersChange({
               duration: value,
+            })
+          }
+          onClickTag={() => {
+            window.smartTag({
+              name: 'duree_hebdomadaire',
+              type: 'action',
+              chapters: ['city-offres', 'filtres'],
+            })
+          }}
+        />
+
+        {/* Opportunités */}
+        <LittleSelect
+          label="Offres avec plus d'opportunités"
+          values={opportunities}
+          selectedValue={filters.opportunity}
+          onChange={(value) =>
+            onFiltersChange({
+              opportunity: value,
             })
           }
         />

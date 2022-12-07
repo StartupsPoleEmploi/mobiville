@@ -11,12 +11,14 @@ import {
   COLOR_WHITE,
 } from '../../../../constants/colors'
 import { thereAre, wordsCapitalize } from '../../../../utils/utils'
+import { Tag } from '../../../../components'
 import { useProfessions } from '../../../../common/contexts/professionsContext'
 
 const Container = styled.div`
   width: 100%;
   padding: 16px;
-  border: 1px solid ${({ $isSelected }) => $isSelected ? COLOR_PRIMARY : COLOR_GRAY};
+  border: 1px solid
+    ${({ $isSelected }) => ($isSelected ? COLOR_PRIMARY : COLOR_GRAY)};
   border-radius: 8px;
 
   background: ${COLOR_WHITE};
@@ -58,13 +60,13 @@ const Location = styled(KeyInfo)`
   font-size: 14px;
 `
 
-const JobCard = ({ job, onClick, isSelected, ...props }) => {
-  const { formatTypeContrat } = useProfessions()
+const JobCard = ({ job, onClick = () => {}, isSelected, ...props }) => {
+  const { isMissingApplicants, formatTypeContrat } = useProfessions()
 
   return (
     <Container onClick={() => onClick(job)} $isSelected={isSelected} {...props}>
       <Title>{job.appellationlibelle}</Title>
-      
+
       {!!job?.entreprise?.nom && (
         <Company>{wordsCapitalize(job.entreprise.nom)}</Company>
       )}
@@ -72,6 +74,12 @@ const JobCard = ({ job, onClick, isSelected, ...props }) => {
       {!!job?.lieuTravail?.libelle && (
         <Location>{job.lieuTravail.libelle}</Location>
       )}
+
+      {isMissingApplicants(job)
+        ? (<Tag green bold>
+            Offre avec plus d'opportunités
+          </Tag>)
+        : null}
 
       {job.salaire?.libelle && (
         <KeyInfo>
@@ -98,7 +106,7 @@ const JobCard = ({ job, onClick, isSelected, ...props }) => {
 JobCard.propTypes = {
   job: PropTypes.object.isRequired,
   onClick: PropTypes.func,
-  isSelected: PropTypes.bool
+  isSelected: PropTypes.bool,
 }
 
 export default JobCard

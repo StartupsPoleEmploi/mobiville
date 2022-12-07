@@ -11,11 +11,6 @@ import {
 
 const SelectBlock = styled(Select)`
   && {
-    &.css-nhoni8-MuiInputBase-root-MuiFilledInput-root:before,
-    &.css-nhoni8-MuiInputBase-root-MuiFilledInput-root:active::before {
-      border-bottom: none !important;
-    }
-
     &.MuiFilledInput-root {
       position: inherit;
     }
@@ -44,9 +39,9 @@ const SelectBlock = styled(Select)`
     align-items: center;
 
     background: ${({ value }) =>
-      (!value || value?.length <= 0) ? COLOR_WHITE : COLOR_PRIMARY};
+      !value || value?.length <= 0 ? COLOR_WHITE : COLOR_PRIMARY};
     color: ${({ value }) =>
-      (!value || value?.length <= 0) ? COLOR_PRIMARY : COLOR_WHITE};
+      !value || value?.length <= 0 ? COLOR_PRIMARY : COLOR_WHITE};
     font-weight: 700;
 
     &:hover {
@@ -60,14 +55,14 @@ const CustomMenuItem = styled(MenuItem)`
   height: 54px;
   min-width: 155px;
   margin: 10px 10px 0 10px !important;
-  border-radius: 8px;
+  border-radius: 8px !important;
   order: 0;
 
   display: flex;
   justify-content: center !important;
   align-items: center !important;
 
-  border: 1px solid ${COLOR_LIGHT_GREY};
+  border: 1px solid ${COLOR_LIGHT_GREY} !important;
   background-color: ${({ $isSelected }) =>
     $isSelected ? COLOR_OTHER_GREEN : 'transparent'} !important;
   color: ${({ value }) =>
@@ -91,8 +86,9 @@ const LittleSelect = ({
   values,
   selectedValue,
   onChange,
+  onClickTag,
 }) => (
-  <FormControl sx={{ m: 1 }}>
+  <FormControl onClick={onClickTag} sx={{ m: 1 }}>
     <SelectBlock
       multiple={multiple}
       displayEmpty
@@ -130,6 +126,7 @@ LittleSelect.propTypes = {
     PropTypes.string,
   ]),
   onChange: PropTypes.func,
+  onClickTag: PropTypes.func,
 }
 
 export default LittleSelect
