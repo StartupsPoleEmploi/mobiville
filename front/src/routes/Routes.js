@@ -1,9 +1,9 @@
-import React, { lazy, useEffect } from 'react'
+import React, { lazy, Suspense } from 'react'
 import {
   Navigate, Route,
-  Routes, useLocation
+  Routes, BrowserRouter
 } from 'react-router-dom'
-import { useNomPage } from '../common/contexts/NomPageContext'
+//import { useNomPage } from '../common/contexts/NomPageContext'
 
 const Home = lazy(() => import('./home/Home'))
 
@@ -13,7 +13,7 @@ const CitySearchPage = lazy(() => import('./city/CitySearchPage'))
 
 const Helps = lazy(() => import('./helps/Helps'))
 const HelpDetailsPage = lazy(() => import('./helps/HelpDetailsPage'))
-const HelpFilterMobilePage = lazy(() => import('./helps/HelpsFilterMobilePage'))
+//const HelpFilterMobilePage = lazy(() => import('./helps/HelpsFilterMobilePage'))
 const HelpsSearchPage = lazy(() => import('./helps/HelpsSearchPage'))
 
 const MobilityGuide = lazy(() => import('./mobility-guide/MobilityGuide'))
