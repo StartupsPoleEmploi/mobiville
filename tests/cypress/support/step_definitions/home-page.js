@@ -90,6 +90,11 @@ And("je choisis {string} dans la liste des métiers", function (propositionmetie
   cy.contains(listeMetiers, propositionmetier, {timeout: SHORT_WAIT_TIME}).click();
 })
 
+And("plusieurs régions s'affichent dans la liste des régions", function () {
+  cy.get(champSaisieEndroit, {timeout: SHORT_WAIT_TIME}).click();
+  cy.get(listeEndroits, {timeout: SHORT_WAIT_TIME}).children().should('have.length.lte', 3);
+})
+
 And("je saisis {string} dans la région/ville", function (endroit) {
   cy.get(champSaisieEndroit, {timeout: SHORT_WAIT_TIME}).type(endroit, { delay: 200 });
   cy.wait(1500);
