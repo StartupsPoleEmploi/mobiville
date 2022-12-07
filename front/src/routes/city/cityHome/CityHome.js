@@ -201,7 +201,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
             <JobCardContainer
               key={job.id}
               to={{
-                pathname: `/city/${insee}/job`,
+                pathname: `/ville/${insee}/job`,
                 search: `?codeRome=${codeRome}`
               }}
             >
@@ -211,7 +211,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
       </HorizontalScrollableSection>
 
       <ActionButton
-        path={`/city/${insee}/job?codeRome=${codeRome}`}
+        path={`/ville/${insee}/job?codeRome=${codeRome}`}
         libelle={`Voir toutes les offres d’emploi`}
         isMobile={isMobile}
         isBlue={true}
@@ -239,7 +239,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
           </ServicesStandOutDescription>
           <ActionButton
             style={{ marginTop: 16, width: 'fit-content' }}
-            path={`/city/${insee}/life?codeRome=${codeRome}`}
+            path={`/ville/${insee}/life?codeRome=${codeRome}`}
             libelle={`Voir tous les services`}
             isMobile={isMobile}
             isBlue={false}
@@ -252,7 +252,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
       </ServicesStandOut>
 
       <ActionButton
-        path={'/mobility-guide'}
+        path={'/guide-mobilité'}
         libelle={`Consultez nos conseils pour votre projet`}
         isMobile={isMobile}
         isBlue={false}

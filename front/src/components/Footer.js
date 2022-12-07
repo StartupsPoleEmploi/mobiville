@@ -148,7 +148,7 @@ const Footer = () => {
             <Link to="/legal">Mentions légales</Link>
           </Item>
           <Item>
-            <Link to="/accessibility">Accessibilité : non conforme</Link>
+            <Link to="/accessibilite">Accessibilité : non conforme</Link>
           </Item>
           <Item>
             <a

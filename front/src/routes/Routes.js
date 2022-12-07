@@ -23,20 +23,20 @@ export const MobivilleRoutes = () => (
       <Routes>
         <Route end path="/" element={<Home />} />
 
-        <Route end path="/cities" element={<Cities />} />
-        <Route end path="/city/:insee" element={<City />} />
-        <Route end path="/city/:insee/:section" element={<City />} />
+        <Route end path="/villes" element={<Cities />} />
+        <Route end path="/ville/:insee" element={<City />} />
+        <Route end path="/ville/:insee/:section" element={<City />} />
         <Route end path="/rechercher" element={<CitySearchPage />} />
 
         <Route end path="/aides" element={<Helps />} />
         <Route end path="/aides/:slug" element={<HelpDetailsPage />} />
-        <Route end path="/aides-filters" element={<HelpFilterMobilePage />} />
-        <Route end path="/aides-search" element={<HelpsSearchPage />} />
+        <Route end path="/aides-filtres" element={<HelpsSearchPage />} />
+        <Route end path="/aides-recherche" element={<HelpsSearchPage />} />
 
-        <Route end path="/mobility-guide" element={<MobilityGuide />} />
+        <Route end path="/conseils-et-astuces" element={<MobilityGuide />} />
         <Route end path="/faq" element={<FAQ />} />
-        <Route end path="/legal" element={<Legal />} />
-        <Route end path="/accessibility" element={<Accessibility />} />
+        <Route end path="/mentions-legales" element={<Legal />} />
+        <Route end path="/accessibilite" element={<Accessibility />} />
 
         {/* Redirection sur la home page si le path ne match aucune route */}
         <Route
