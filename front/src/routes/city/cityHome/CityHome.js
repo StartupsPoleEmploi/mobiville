@@ -252,7 +252,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
       </ServicesStandOut>
 
       <ActionButton
-        path={'/guide-mobilité'}
+        path={'/conseils-et-astuces'}
         libelle={`Consultez nos conseils pour votre projet`}
         isMobile={isMobile}
         isBlue={false}

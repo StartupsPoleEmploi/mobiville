@@ -67,7 +67,7 @@ const MobilityGuide = () => {
             <Text isMobile={isMobile}>Par où commencer ?... Où aller ?... Comment faire ?...</Text>
             <Text>Les réponses se trouvent dans notre guide à la mobilité</Text>
             <ActionButton
-              path={'/guide-mobilité'}
+              path={'/conseils-et-astuces'}
               libelle={'Consulter notre guide sur la mobilité'}
               isMobile={isMobile}
               isBlue={true}
