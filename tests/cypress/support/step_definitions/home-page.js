@@ -2,7 +2,7 @@ const { When, Then, And } = require('@badeball/cypress-cucumber-preprocessor');
 import { SHORT_WAIT_TIME, MIDDLE_WAIT_TIME, LONG_WAIT_TIME } from "./common/common";
 export { champSaisieMetier, champSaisieEndroit, boutoncritere1, boutoncritere2, boutoncritere3 };
 
-const boutonRechercherEndroit = 'a[data-automation-id=search-action][href*=cit]';
+const boutonRechercherEndroit = 'a[data-automation-id=search-action][href*=ville]';
 const boutonRechercherAide = 'a[data-automation-id=search-action][href*=aides]';
 const boutonEndroit = 'button[type=button][data-automation-id=search-ville][id=cities]';
 const boutonAide = 'button[type=button][data-automation-id=search-aide][id=helps]';
