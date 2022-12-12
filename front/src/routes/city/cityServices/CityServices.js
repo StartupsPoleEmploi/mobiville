@@ -26,10 +26,9 @@ const WelcomeContainer = styled.div`
 
 const WelcomeWrapper = styled.div`
   max-width: 1040px;
-  margin: ${({ $isMobile }) =>
-    $isMobile ? 'auto' : '0 auto 50px auto'};
-  ${({ $isMobile }) => ($isMobile ? 'padding: 0 16px 16px 16px' : '')};
+  margin: ${({ $isMobile }) => $isMobile ? 'auto' : '0 auto 50px auto'};
   color: ${COLOR_PRIMARY};
+  padding: ${({ $isMobile }) => ($isMobile ? '1px 16px 16px 16px' : '1px 0')};
 `
 
 const Title = styled.h1`
@@ -38,6 +37,7 @@ const Title = styled.h1`
 `
 
 const InfoContainer = styled.div`
+  padding: 16px 0;
   display: flex;
   flex-direction: ${({ $isMobile }) => ($isMobile ? 'column' : 'row')};
   gap: 24px;

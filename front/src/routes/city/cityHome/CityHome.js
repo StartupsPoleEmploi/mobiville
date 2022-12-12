@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 
 import CityHousingSimulator from './components/CityHousingSimulator'
 import CloseCompanies from './components/CloseCompanies'
-import HelpsStandOut from './components/HelpsStandOut'
 import SectionHeader from '../components/SectionHeader'
 import {
   ActionButton,
+  HelpsStandOut,
   HorizontalScrollableSection,
   KeyFigures,
   Tag,

@@ -352,10 +352,10 @@ const Helps = () => {
       }
 
       if (!!ref) {
+        setInitialScrollDone(true)
         setTimeout(() => {
           scrollTo(ref)
-          setInitialScrollDone(true)
-        }, 500)
+        }, 350)
       }
     }
   }, [hash, allItems, initialScrollDone])
