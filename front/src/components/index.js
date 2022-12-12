@@ -31,6 +31,7 @@ export { default as LittleSelect } from './inputs/LittleSelect.js'
 export { default as TextInput } from './inputs/TextInput.js'
 export { default as TextSearchInput } from './inputs/TextSearchInput.js'
 export { default as RadioInput } from './inputs/RadioInput.js'
+export { default as RadioGroup } from './inputs/RadioGroup.js'
 export { default as CheckboxInput } from './inputs/CheckboxInput.js'
 
 // helps inputs

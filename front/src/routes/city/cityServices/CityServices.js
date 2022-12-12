@@ -79,6 +79,7 @@ const ReadMoreText = styled.span`
 
 const MapContainer = styled.div`
   flex: 1;
+  width: 100%;
 `
 
 const CityServices = () => {
@@ -142,8 +143,11 @@ const CityServices = () => {
                     y: city.geo_point_2d_y ?? 0,
                   },
                 ]}
-                style={{ height: 255, width: '100%', margin: 0 }}
-                zoom={7}
+                style={{
+                  height: 255, 
+                  borderRadius: 8,
+                  margin: 0
+                }}
               />
             </MapContainer>
           </InfoContainer>

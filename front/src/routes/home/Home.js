@@ -24,16 +24,16 @@ const HomePage = () => (
     </Helmet>
 
     {/* WELCOME SECTION */}
-    <Welcome></Welcome>
+    <Welcome />
 
     {/* ADVANTAGES */}
-    <Advantages></Advantages>
+    <Advantages />
 
     {/* MOBILITY GUIDE */}
-    <MobilityGuideBanner></MobilityGuideBanner>
+    <MobilityGuideBanner />
 
     {/* TESTIMONIES */}
-    <Testimonies></Testimonies>
+    <Testimonies />
   </MainLayout>
 )
 
