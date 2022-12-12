@@ -8,6 +8,7 @@ import Testimonies from './components/Testimonies'
 import MobilityGuideBanner from './components/MobilityGuideBanner'
 import Advantages from './components/Advantages'
 import Welcome from './components/Welcome'
+import HomeHelpsBanner from './components/HomeHelpsBanner'
 
 const HomePage = () => (
   <MainLayout
@@ -23,16 +24,14 @@ const HomePage = () => (
       />
     </Helmet>
 
-    {/* WELCOME SECTION */}
     <Welcome />
 
-    {/* ADVANTAGES */}
-    <Advantages />
+    <HomeHelpsBanner />
 
-    {/* MOBILITY GUIDE */}
     <MobilityGuideBanner />
 
-    {/* TESTIMONIES */}
+    <Advantages />
+
     <Testimonies />
   </MainLayout>
 )
