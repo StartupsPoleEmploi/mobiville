@@ -13,7 +13,7 @@ import {
 import { alphabetOrder } from '../../utils/utils'
 import TextSearchInput from './TextSearchInput'
 
-const CitySelect = ({ codeRome, onSelect, defaultValue }) => {
+const CitySelect = ({ value, codeRome, onSelect }) => {
   const MIN_REGIONS_SHOWED = 2
   const {
     criterions,
@@ -23,11 +23,10 @@ const CitySelect = ({ codeRome, onSelect, defaultValue }) => {
   } = useCities()
 
   const { search, pathname } = useLocation()
-  const isCitiesPage = pathname === '/cities'
+  const isCitiesPage = pathname === '/villes'
 
   const [options, setOptions] = useState([])
   const [inputValue, setInputValue] = useState('')
-  const [value, setValue] = useState(null)
 
   useEffect(() => {
     if (!!criterions && !!search) {
@@ -40,9 +39,9 @@ const CitySelect = ({ codeRome, onSelect, defaultValue }) => {
               (region) => region.id === value
             )
             if (!!foundRegion) {
-              setValue({ ...foundRegion, type: REGION_TYPE })
+              onSelect({ ...foundRegion, type: REGION_TYPE })
             } else {
-              setValue({
+              onSelect({
                 label: ALL_REGIONS_LABEL,
                 type: ALL_REGION_TYPE,
                 style: 'primary',
@@ -51,7 +50,7 @@ const CitySelect = ({ codeRome, onSelect, defaultValue }) => {
           }
         }
       } else {
-        setValue({
+        onSelect({
           label: ALL_REGIONS_LABEL,
           type: ALL_REGION_TYPE,
           style: 'primary',
@@ -137,13 +136,9 @@ const CitySelect = ({ codeRome, onSelect, defaultValue }) => {
     }
   }, [inputValue])
 
-  useEffect(() => {
-    onSelect(value)
-  }, [value])
-
   // trigger when an option is selected
   const onChange = (_, value) => {
-    setValue(value)
+    onSelect(value)
   }
 
   const onClickTag = () => {
@@ -165,16 +160,15 @@ const CitySelect = ({ codeRome, onSelect, defaultValue }) => {
       disabled={!codeRome || codeRome === ''}
       onInputChange={onInputChange}
       onChange={onChange}
-      defaultValue={defaultValue}
       showEndAdornment={false}
     ></TextSearchInput>
   )
 }
 
 CitySelect.propTypes = {
+  value: PropTypes.any,
   codeRome: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
-  defaultValue: PropTypes.any,
   style: PropTypes.object,
 }
 

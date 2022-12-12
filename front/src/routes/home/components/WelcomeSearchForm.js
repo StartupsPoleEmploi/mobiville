@@ -90,11 +90,11 @@ const WelcomeSearchForm = () => {
       {!isMobile && (
         <>
           <CityForm
-            isWelcomeCitySearch={true}
+            isWelcomeCitySearch
             hidden={!isSelected(CITIES_BUTTON_ID)}
-          ></CityForm>
+          />
 
-          <HelpForm hidden={!isSelected(HELPS_BUTTON_ID)}></HelpForm>
+          <HelpForm hidden={!isSelected(HELPS_BUTTON_ID)} />
         </>
       )}
     </Container>

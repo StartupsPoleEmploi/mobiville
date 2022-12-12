@@ -177,7 +177,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
       </CityHeader>
 
       <TagsContainer>
-        <Tag green={infosTravail?.bassinTensionIndT < 4} tall>
+        <Tag green={infosTravail?.bassinTensionIndT < 4} size='tall'>
           {formatCityTension(infosTravail?.bassinTensionIndT)}
         </Tag>
       </TagsContainer>
