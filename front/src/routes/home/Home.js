@@ -9,6 +9,7 @@ import MobilityGuideBanner from './components/MobilityGuideBanner'
 import Advantages from './components/Advantages'
 import Welcome from './components/Welcome'
 import HomeHelpsBanner from './components/HomeHelpsBanner'
+import HomeRegionsBanner from './components/HomeRegionsBanner'
 
 const HomePage = () => (
   <MainLayout
@@ -27,6 +28,8 @@ const HomePage = () => (
     <Welcome />
 
     <HomeHelpsBanner />
+
+    <HomeRegionsBanner />
 
     <MobilityGuideBanner />
 
