@@ -78,6 +78,8 @@ export const ucFirst = (s) => {
 export const capitalize = (string) => ucFirst(string?.toLowerCase())
 
 export const wordsCapitalize = (s) => {
+  if (!s) return ''
+  
   const wordBreakerChar = [' ', "'", '-', '.'] // on met une majuscule à la suite de ces caractères
   s = s.toLowerCase()
   wordBreakerChar.forEach(breaker => {

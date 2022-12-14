@@ -2,7 +2,7 @@ import Sequelize from 'sequelize'
 
 export default (sequelizeInstance) => {
   const Model = sequelizeInstance.define(
-    'newRegions',
+    'regions',
     {
       id: {
         type: Sequelize.INTEGER,
@@ -19,12 +19,20 @@ export default (sequelizeInstance) => {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      name_normalized: {
+      slug: {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      average_delay_obtain_social_housing: {
+      population: {
         type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      superficie: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      description: {
+        type: Sequelize.TEXT,
         allowNull: true,
       },
     },
@@ -37,6 +45,11 @@ export default (sequelizeInstance) => {
   )
 
   Model.associate = function (models) {
+    Model.hasMany(models.departements, {
+      foreignKey: 'code_region',
+      sourceKey: 'code',
+    })
+
     return models
   }
 

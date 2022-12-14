@@ -64,12 +64,14 @@ const CityHeader = ({ isMobile, children }) => {
         </ContainerInfoStats>
       )}
 
-      <PicAndMapContainer isMobile={isMobile}>
-        <CityPic
-          isMobile={isMobile}
-          src={city.photo || `/regions/region-${city.newRegion.code}.jpg`}
-        />
-      </PicAndMapContainer>
+      {(!!city.photo || !!city.region?.code) && (
+        <PicAndMapContainer isMobile={isMobile}>
+          <CityPic
+            isMobile={isMobile}
+            src={city.photo || `/regions/region-${city.region.code}.jpg`}
+          />
+        </PicAndMapContainer>
+      )}
 
       {isMobile && children}
     </Container>
