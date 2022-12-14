@@ -5,17 +5,28 @@ import styled from 'styled-components'
 
 import { useWindowSize } from '../common/hooks/window-size'
 import { isMobileView } from '../constants/mobile'
-import { CITY_TYPE } from '../constants/search'
+import { CITY_TYPE, REGION_TYPE } from '../constants/search'
 import { isDirty } from '../utils/utils'
 
 import { CitySelect, JobSelect, ActionButton, ResetButton } from './'
 
-const Container = styled.div`
+const Legende = styled.p`
+  margin: ${({ $isMobile }) =>
+    $isMobile ? '5px 0px 0px auto' : '5px 200px 0px auto'};
+`
+
+const Row = styled.div`
   width: 100%;
   display: flex;
   flex-direction: ${({ $isMobile }) => ($isMobile ? `column` : `row`)};
   justify-items: ${({ $isMobile }) => ($isMobile ? `start` : `center`)};
   gap: 8px;
+  display: ${({ $hidden }) => ($hidden ? 'none' : 'inherit')};
+`
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
   display: ${({ $hidden }) => ($hidden ? 'none' : 'visible')};
 `
 
@@ -31,6 +42,11 @@ const CityForm = ({
   const [citySelected, setCitySelected] = useState('')
 
   const computeSearchPath = useCallback(() => {
+    if (!jobSelected && !!citySelected && citySelected.type === REGION_TYPE) {
+      // redirection vers la page région
+      return `/region/${citySelected.id}`
+    }
+
     if (!!jobSelected && !!citySelected && citySelected.type === CITY_TYPE) {
       // on va directement sur la page de la ville choisi
       return `/ville/${citySelected.id}-${citySelected.cityName}?codeRome=${jobSelected.key}`
@@ -72,36 +88,40 @@ const CityForm = ({
     onClick()
   }
 
-  const isJobSelected = !!jobSelected && !!`${jobSelected}`.trim()
   const isCitySelected = !!citySelected && !!`${citySelected}`.trim()
 
   return (
     <Container $hidden={hidden} $isMobile={isMobile}>
-      <JobSelect
-        value={jobSelected}
-        onSelect={(job) => setJobSelected(job)}
-      ></JobSelect>
+      <Row $hidden={hidden} $isMobile={isMobile}>
+        <JobSelect
+          value={jobSelected}
+          onSelect={(job) => setJobSelected(job)}
+        ></JobSelect>
 
-      <CitySelect
-        value={citySelected}
-        onSelect={(city) => setCitySelected(city)}
-        codeRome={!!jobSelected ? jobSelected.key : null}
-      />
+        <CitySelect
+          value={citySelected}
+          onSelect={(city) => setCitySelected(city)}
+          codeRome={!!jobSelected ? jobSelected.key : null}
+        />
 
-      <ActionButton
-        isWelcomeCitySearch={isWelcomeCitySearch}
-        buttonProps={{
-          onClick: handleClick,
-        }}
-        style={{
-          height: 73,
-          boxShadow: isMobile ? 'none' : '0px 5px 10px rgba(0, 0, 0, 0.3)',
-          width: isMobile ? '100%' : 184,
-        }}
-        path={computeSearchPath()}
-        isBlue
-        disabled={!isJobSelected || !isCitySelected}
-      />
+        <ActionButton
+          isWelcomeCitySearch={isWelcomeCitySearch}
+          buttonProps={{
+            onClick: handleClick,
+          }}
+          style={{
+            height: 73,
+            boxShadow: isMobile ? 'none' : '0px 5px 10px rgba(0, 0, 0, 0.3)',
+            width: isMobile ? '100%' : 184,
+          }}
+          path={computeSearchPath()}
+          isBlue
+          disabled={!isCitySelected}
+        />
+      </Row>
+      <Row $hidden={hidden} $isMobile={isMobile}>
+        {!hidden && <Legende $isMobile={isMobile}>*Champs obligatoire</Legende>}
+      </Row>
 
       {isMobile && (
         <ResetButton
