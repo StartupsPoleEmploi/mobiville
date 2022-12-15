@@ -4,6 +4,20 @@ import { getTotalOffres } from '../utils/utils'
 
 const router = new Router({ prefix: '/region' })
 
+router.get('/', async ({ models, response }) => {
+  const region = await models.regions.findAll({
+    include: [
+      models.departements,
+      {
+        model: models.cities,
+        order: [['population', 'DESC']],
+        limit: 6
+      }
+    ],
+  })
+  response.body = region
+})
+
 router.get('/:code', async ({ params: { code }, models, response }) => {
   const region = await models.regions.findOne({
     where: { code },

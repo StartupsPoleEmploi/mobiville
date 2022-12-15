@@ -3,14 +3,17 @@ import { CitiesProvider } from './citiesContext'
 import { NomPageProvider } from './NomPageContext'
 import { HelpsProvider } from './helpsContext'
 import { ProfessionsProvider } from './professionsContext'
+import { RegionsProvider } from './regionsContext'
 
 export default function Providers(props) {
   return (
     <NomPageProvider>
       <HelpsProvider>
-        <ProfessionsProvider>
-          <CitiesProvider {...props} />
-        </ProfessionsProvider>
+        <RegionsProvider>
+          <ProfessionsProvider>
+            <CitiesProvider {...props} />
+          </ProfessionsProvider>
+        </RegionsProvider>
       </HelpsProvider>
     </NomPageProvider>
   )

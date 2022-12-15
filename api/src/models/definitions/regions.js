@@ -49,6 +49,10 @@ export default (sequelizeInstance) => {
       foreignKey: 'code_region',
       sourceKey: 'code',
     })
+    Model.hasMany(models.cities, {
+      foreignKey: 'code_region',
+      sourceKey: 'code',
+    })
 
     return models
   }

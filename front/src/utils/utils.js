@@ -204,3 +204,20 @@ export function distance(
     return dist
   }
 }
+
+export const splitSort = (array, numberOfSplits = 2) => {
+  const splitLength = Math.ceil(array.length / numberOfSplits)
+
+  let result = []
+  
+  let splits = []
+  for (let i = 0 ; i < numberOfSplits ; i++) {
+    splits[i] = array.slice(i * splitLength, (i * splitLength) + splitLength)
+  }
+
+  for (let i = 0 ; i <= splitLength ; i++) {
+    splits.forEach(split => result.push(split[i]))
+  }
+
+  return result.filter(v => !!v)
+}

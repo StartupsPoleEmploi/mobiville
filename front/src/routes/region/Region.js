@@ -1,18 +1,19 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import axios from 'axios'
 
 import { ReactComponent as CrowdIcon } from '../../assets/images/icons/crowd.svg'
 import { ReactComponent as CalculatorIcon } from '../../assets/images/icons/calculator.svg'
 import { ReactComponent as MaletteIcon } from '../../assets/images/icons/malette.svg'
-
 import { ReactComponent as RightChevronIcon } from '../../assets/images/icons/right_chevron.svg'
+
+import { useRegions } from '../../common/contexts/regionsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { BackButton, KeyFigures, MainLayout, SectionTitle, Tag } from '../../components'
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
-import { alphabetOrder, formatCityUrl, formatNumber, wordsCapitalize } from '../../utils/utils'
+import { alphabetOrder, formatCityUrl, formatNumber, splitSort, wordsCapitalize } from '../../utils/utils'
 
 const WelcomeContainer = styled.div`
   max-width: 1040px;
@@ -85,7 +86,7 @@ const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, minmax(max-content, 1fr));
   grid-auto-rows: 80px;
-  gap: 8px 24px;
+  gap: 8px 16px;
 `
 
 const GridItem = styled(Link)`
@@ -116,7 +117,7 @@ const GridItemTitle = styled.div`
 const Region = () => {
   const isMobile = isMobileView(useWindowSize())
   const { codeSlug } = useParams()
-  const navigate = useNavigate()
+  const { regions } = useRegions()
 
   const [isTextExpended, setIsTextExpended] = useState(false)
   const [region, setRegion] = useState({})
@@ -128,45 +129,26 @@ const Region = () => {
     [isTextExpended, region.description]
   )
 
-  const splitSort = (array) => {
-    const halfLength = Math.ceil(array.length / 2)
-
-    let temp = []
-    const firstHalf = array.slice(0, halfLength)
-    const secondHalf = array.slice(halfLength)
-
-    for (let i = 0 ; i <= halfLength ; i++) {
-      temp.push(firstHalf[i])
-      temp.push(secondHalf[i])
-    }
-
-    return temp.filter(v => !!v)
-  }
-
   const sortedDepartements = useMemo(() =>
     (!!departements ? splitSort(departements) : []),
     [departements])
 
   const sortedCities = useMemo(() =>
-    (!!region?.biggestCities ? splitSort(region.biggestCities) : []),
-    [region?.biggestCities])
+    (!!region?.cities ? splitSort(region.cities) : []),
+    [region?.cities])
 
   useEffect(() => {
-    if (!codeSlug) return
+    if (!codeSlug || !regions?.length) return
 
     const [ code ] = codeSlug.split('-')
 
-    axios
-      .get(`/api/region/${code}`)
-      .then((response) => response.data || null)
-      .then(region => setRegion(region))
-      .catch(() => navigate('/'))
+    setRegion(regions.find(region => region.code === +code))
 
     axios
       .get(`/api/region/${code}/jobs`)
       .then(response => response.data || null)
       .then(jobOffers => setJobOffers(jobOffers))
-  }, [codeSlug])
+  }, [codeSlug, regions])
 
   useEffect(() => {
     if (!region?.departements) return
