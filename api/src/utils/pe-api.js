@@ -5,7 +5,6 @@ import HttpsProxyAgent from 'https-proxy-agent'
 import { setupCache } from 'axios-cache-adapter'
 import {sleep} from "./utils"
 
-
 // cache de 15 minutes pour le token
 const cacheToken = setupCache({
     maxAge: 15 * 60 * 1000,
@@ -13,9 +12,11 @@ const cacheToken = setupCache({
         query: false
     }
 })
+
 const apiEmploiStoreToken = axios.create({
     adapter: cacheToken.adapter
 })
+
 export function getAccessToken() {
     return apiEmploiStoreToken
         .post(
@@ -53,7 +54,7 @@ export async function searchJob({ codeRome = [], insee = [], distance = 30 }) {
     const token = await getAccessToken()
     const callToOffres = function () {
         return apiEmploiStore.get(
-            'https://api.emploi-store.fr/partenaire/offresdemploi/v2/offres/search',
+            `${config.EMPLOI_STORE_URL}/partenaire/offresdemploi/v2/offres/search`,
             {
                 params: {
                     codeROME: codeRome.join(','),
@@ -101,7 +102,7 @@ export async function searchJobCount({ codeRome, insee, region, departement, dis
 
     const callToOffres = function () {
        return apiEmploiStore.get(
-        'https://api.emploi-store.fr/partenaire/offresdemploi/v2/offres/search',
+        `${config.EMPLOI_STORE_URL}/partenaire/offresdemploi/v2/offres/search`,
         {
             params,
             headers: { Authorization: `Bearer ${token}` },
@@ -123,7 +124,7 @@ export async function infosTravail({ codeProfession, codeDept }) {
     // CONVERTIR CODE ROME EN PCS_PROFESSION_CODE
     return axios
         .get(
-            `https://api.emploi-store.fr/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "d9090eaf-65cd-41cb-816f-7249897a3e51" WHERE "AREA_CODE" = '${codeDept}' AND "AREA_TYPE_CODE" = 'D' AND "PCS_PROFESSION_CODE" = '${codeProfession}'`,
+            `${config.EMPLOI_STORE_URL}/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "d9090eaf-65cd-41cb-816f-7249897a3e51" WHERE "AREA_CODE" = '${codeDept}' AND "AREA_TYPE_CODE" = 'D' AND "PCS_PROFESSION_CODE" = '${codeProfession}'`,
             {
                 headers: { Authorization: `Bearer ${token}` },
                 ...(config.PE_ENV && {proxy: false}),
@@ -137,7 +138,7 @@ export async function infosTensionTravail({ codeRome, codeDept, bassinId }) {
     const token = await getAccessToken()
     return Promise.all([
         axios.get(
-            `https://api.emploi-store.fr/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "266f691f-bce8-4443-808e-8e5aa125cf17" WHERE "ROME_PROFESSION_CARD_CODE" LIKE '${codeRome}' AND "AREA_TYPE_CODE" = 'B' AND "AREA_CODE" = '${bassinId}'`,
+            `${config.EMPLOI_STORE_URL}/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "266f691f-bce8-4443-808e-8e5aa125cf17" WHERE "ROME_PROFESSION_CARD_CODE" LIKE '${codeRome}' AND "AREA_TYPE_CODE" = 'B' AND "AREA_CODE" = '${bassinId}'`,
             {
                 headers: { Authorization: `Bearer ${token}` },
                 ...(config.PE_ENV && {proxy: false}),
@@ -145,7 +146,7 @@ export async function infosTensionTravail({ codeRome, codeDept, bassinId }) {
             }
         ),
         axios.get(
-            `https://api.emploi-store.fr/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "266f691f-bce8-4443-808e-8e5aa125cf17" WHERE "ROME_PROFESSION_CARD_CODE" LIKE '${codeRome}' AND "AREA_TYPE_CODE" = 'D' AND "AREA_CODE" = '${codeDept}'`,
+            `${config.EMPLOI_STORE_URL}/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "266f691f-bce8-4443-808e-8e5aa125cf17" WHERE "ROME_PROFESSION_CARD_CODE" LIKE '${codeRome}' AND "AREA_TYPE_CODE" = 'D' AND "AREA_CODE" = '${codeDept}'`,
             {
                 headers: { Authorization: `Bearer ${token}` },
                 ...(config.PE_ENV && {proxy: false}),
@@ -162,7 +163,7 @@ export async function getOgrFromRome(codeRome) {
     const token = await getAccessToken()
     return axios
         .get(
-            `https://api.emploi-store.fr/partenaire/rome/v1/metier/${codeRome}/appellation`,
+            `${config.EMPLOI_STORE_URL}/partenaire/rome/v1/metier/${codeRome}/appellation`,
             {
                 headers: { Authorization: `Bearer ${token}` },
                 ...(config.PE_ENV && {proxy: false}),
@@ -177,7 +178,7 @@ export async function getSkillFromLabel(label) {
     const token = await getAccessToken()
     return axios
         .get(
-            `https://api.emploi-store.fr/partenaire/explorateurmetiers/v1/explorateurmetiers?libelle=${label}&nombre=20&type=metier`,
+            `${config.EMPLOI_STORE_URL}/partenaire/explorateurmetiers/v1/explorateurmetiers?libelle=${label}&nombre=20&type=metier`,
             {
                 headers: { Authorization: `Bearer ${token}` },
                 ...(config.PE_ENV && {proxy: false}),
@@ -192,7 +193,7 @@ export async function getSkillFromRome(codeRome) {
     const token = await getAccessToken()
     return axios
         .get(
-            `https://api.emploi-store.fr/partenaire/rome/v1/metier/${codeRome}/competence`,
+            `${config.EMPLOI_STORE_URL}/partenaire/rome/v1/metier/${codeRome}/competence`,
             {
                 headers: { Authorization: `Bearer ${token}` },
                 ...(config.PE_ENV && {proxy: false}),
@@ -206,7 +207,7 @@ export async function searchCloseCompanies({ codeRome = '', insee = '', distance
     const token = await getAccessToken()
     const callToSearchCloseEnterprises = function () {
         return apiEmploiStore.get(
-            'https://api.emploi-store.fr/partenaire/labonneboite/v1/company',
+            `${config.EMPLOI_STORE_URL}/partenaire/labonneboite/v1/company`,
             {
                 params: {
                     rome_codes: codeRome,
@@ -233,7 +234,7 @@ export async function searchCloseCompanies({ codeRome = '', insee = '', distance
 export async function getHiringRate({ codeTerritoire, codeRome }) {
     const token = await getAccessToken()
     return axios
-        .post(`https://api.emploi-store.fr/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-embauches`,
+        .post(`${config.EMPLOI_STORE_URL}/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-embauches`,
             {
                 codeTypeTerritoire: "BASBMO",
                 codeTerritoire: `${codeTerritoire}`,
