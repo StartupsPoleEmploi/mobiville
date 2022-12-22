@@ -44,8 +44,8 @@ const CityPage = () => {
     romeLabel = foundLabel.toLowerCase()
   }
 
-  const backLink = `/villes?codeRome=${ codeRome }&codeRegion=${ city?.newRegion?.code ?? '' }`
-  
+  const backLink = `/villes?codeRome=${ codeRome }${city?.region?.code ? `&codeRegion=${city?.region?.code}` : ''}`
+
   useEffect(() => {
     onLoadCity(inseeCode)
 

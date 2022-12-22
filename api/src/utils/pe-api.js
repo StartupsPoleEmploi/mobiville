@@ -87,18 +87,23 @@ async function fetchAndRetryIfNecessary (callAPIFn, tryNumber = 1) {
     return response.data
 }
 
-export async function searchJobCount({ codeRome = [], insee = [], distance = 10 }) {
+export async function searchJobCount({ codeRome, insee, region, departement, distance = 10 }) {
     const token = await getAccessToken()
+
+    let params = {
+        range: '0-0',
+    }
+    if (codeRome) params.codeROME = codeRome.join(',')
+    if (insee) params.commune = insee.join(',')
+    if (distance) params.distance = distance
+    if (region) params.region = region
+    if (departement) params.departement = departement
+
     const callToOffres = function () {
        return apiEmploiStore.get(
         'https://api.emploi-store.fr/partenaire/offresdemploi/v2/offres/search',
         {
-            params: {
-                range: '0-0',
-                codeROME: codeRome.join(','),
-                commune: insee.join(','),
-                distance,
-            },
+            params,
             headers: { Authorization: `Bearer ${token}` },
             ...(config.PE_ENV && {proxy: false}),
             ...(config.PE_ENV && {httpsAgent: new HttpsProxyAgent('http://host.docker.internal:9000')} ),

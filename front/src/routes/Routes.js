@@ -8,6 +8,8 @@ const Cities = lazy(() => import('./cities/Cities'))
 const City = lazy(() => import('./city/City'))
 const CitySearchPage = lazy(() => import('./city/CitySearchPage'))
 
+const Region = lazy(() => import('./region/Region'))
+
 const Helps = lazy(() => import('./helps/Helps'))
 const HelpDetailsPage = lazy(() => import('./helps/HelpDetailsPage'))
 const HelpFilterMobilePage = lazy(() => import('./helps/HelpsFilterMobilePage'))
@@ -33,6 +35,8 @@ export const MobivilleRoutes = () => {
       <Route end path="/ville/:insee" element={<City />} />
       <Route end path="/ville/:insee/:section" element={<City />} />
       <Route end path="/rechercher" element={<CitySearchPage />} />
+
+      <Route end path="/region/:codeSlug" element={<Region />} />
 
       <Route end path="/aides" element={<Helps />} />
       <Route end path="/aides/:slug" element={<HelpDetailsPage />} />

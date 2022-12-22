@@ -15,6 +15,10 @@ export default (sequelizeInstance) => {
             type: Sequelize.STRING(255),
             allowNull: false,
           },
+          code_region: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+          },
           rent_t2: {
             type: Sequelize.FLOAT,
             allowNull: true,
@@ -35,6 +39,10 @@ export default (sequelizeInstance) => {
     Model.hasMany(models.cities, {
       foreignKey: 'code_dept',
       sourceKey: 'code',
+    })
+    Model.hasOne(models.regions, {
+      foreignKey: 'code',
+      sourceKey: 'code_region',
     })
 
     return models

@@ -159,14 +159,7 @@ export const wikipediaDetails = (pageName) =>
 
 export const getAllRegions = () => {
   let rawdata = readFileSync(
-    __dirname + '/../assets/datas/anciennes-nouvelles-regions.json'
-  )
-  return JSON.parse(rawdata).regions.map((r) => ({ ...r.fields }))
-}
-
-export const getRegionsSocialHousing = () => {
-  let rawdata = readFileSync(
-    __dirname + '/../assets/datas/regions-social-housing.json'
+    __dirname + '/../assets/datas/regions.json'
   )
   return JSON.parse(rawdata)
 }
@@ -349,7 +342,7 @@ export const getAllDepartements = () => {
         if (err) {
           reject(err)
         } else {
-          resolve(csvToArrayJson(data, { delimiter: ';' }))
+          resolve(csvToArrayJson(data, { delimiter: ';', emptyAsNull: true }))
         }
       }
     )

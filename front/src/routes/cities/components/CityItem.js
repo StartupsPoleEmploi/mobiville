@@ -123,7 +123,7 @@ const CityItem = ({
   if (city.photo) {
     city.photo = city.photo.replace('/2000px', '/500px')
   } else {
-    city.photo = `/regions/region-${city.newRegion?.code}.jpg`
+    city.photo = `/regions/region-${city.region?.code}.jpg`
   }
 
   return (

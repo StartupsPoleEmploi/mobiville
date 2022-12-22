@@ -98,7 +98,7 @@ yarn log:front
 - Liste des villes -> Importé depuis le fichier `cities-france.csv`. Le fichier `cities-france.csv` est issue du site data.gouv.fr et est mis à jours tous les ans.
 - Liste des villes en tensions -> Importée depuis le fichier `cities-tension-utf8.csv`
 - Liste des villes <-> bassins -> Importée depuis le fichier `lexique-bassins.csv`
-- Liste des regions, nouvelle nomenclature -> Importé depuis le fichier `anciennes-nouvelles-regions.json`
+- Liste des regions -> Importé depuis le fichier `regions.json`
 
 ## API externes
 

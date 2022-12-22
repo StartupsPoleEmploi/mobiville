@@ -9,6 +9,7 @@ import {
   searchJobCount,
   getHiringRate,
 } from '../utils/pe-api'
+import { getTotalOffres } from '../utils/utils'
 import { meanBy } from 'lodash'
 
 const CODE_INSEE_LYON_FIRST_DISTRICT = '69381'
@@ -21,10 +22,7 @@ const CODE_INSEE_MARSEILLE = '13055'
 
 // we need special matchings for Marseille, Paris and Lyon, since we cannot search them directly
 // and need to input the insee code of a special district
-const getInseeCodesForSearch = (inseeCodes) =>
-  inseeCodes.map((inseeCode) => {
-    return getInseeCodeUniqueForSearch(inseeCode)
-  })
+const getInseeCodesForSearch = (inseeCodes) => inseeCodes.map((inseeCode) => getInseeCodeUniqueForSearch(inseeCode))
 
 const getInseeCodeUniqueForSearch = (inseeCode) => {
   if (inseeCode === CODE_INSEE_LYON) return CODE_INSEE_LYON_FIRST_DISTRICT
@@ -54,20 +52,6 @@ router.post(
   }
 )
 
-const getTotalOffres = function (result) {
-  let totalOffres = 0
-  if (result && result.filtresPossibles) {
-    const filtresPossibles = result.filtresPossibles
-    const typesContrats = filtresPossibles.find(
-      (filtrePossibles) => filtrePossibles.filtre === 'typeContrat'
-    )
-    typesContrats.agregation.forEach((agregat) => {
-      totalOffres += agregat.nbResultats
-    })
-  }
-  return totalOffres
-}
-
 router.post(
   '/searchCountList',
   async ({
@@ -76,18 +60,16 @@ router.post(
     },
     response,
   }) => {
-    async function callToSearchJobCount(insee) {
-      return {
-        insee: insee,
-        total: getTotalOffres(
-          await searchJobCount({
-            codeRome,
-            insee: getInseeCodesForSearch(insee),
-            distance: 30,
-          })
-        ),
-      }
-    }
+    const callToSearchJobCount = async (insee) => ({
+      insee: insee,
+      total: getTotalOffres(
+        await searchJobCount({
+          codeRome,
+          insee: getInseeCodesForSearch(insee),
+          distance: 30,
+        })
+      ),
+    })
 
     let responseArray = []
     if (inseeList.length > 10) {

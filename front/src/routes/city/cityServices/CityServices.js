@@ -7,9 +7,7 @@ import { KeyFigures, Map } from '../../../components'
 import ElectedContact from './components/ElectedContact'
 import { useWindowSize } from '../../../common/hooks/window-size'
 import { isMobileView } from '../../../constants/mobile'
-import {
-    COLOR_PRIMARY
-} from '../../../constants/colors'
+import { COLOR_PRIMARY } from '../../../constants/colors'
 
 import { ReactComponent as RightChevronIcon } from '../../../assets/images/icons/right_chevron.svg'
 import { ReactComponent as CrowdIcon } from '../../../assets/images/icons/crowd.svg'

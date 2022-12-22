@@ -10,16 +10,10 @@ import { useWindowSize } from '../common/hooks/window-size'
 import Footer from './Footer'
 const Container = styled.div`
   height: 100%;
-  display: flex;
-  flex-direction: column;
 `
 
 const Main = styled.main`
-  display: inline-block;
   width: 100%;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
 `
 
 const GoToMainContent = styled.a`

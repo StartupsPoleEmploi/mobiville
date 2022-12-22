@@ -199,3 +199,17 @@ export function citySizeLabel(city) {
     return 'Petite ville'
   }
 }
+
+export const getTotalOffres = (result) => {
+  let totalOffres = 0
+  if (result && result.filtresPossibles) {
+    const filtresPossibles = result.filtresPossibles
+    const typesContrats = filtresPossibles.find(
+      (filtrePossibles) => filtrePossibles.filtre === 'typeContrat'
+    )
+    typesContrats.agregation.forEach((agregat) => {
+      totalOffres += agregat.nbResultats
+    })
+  }
+  return totalOffres
+}

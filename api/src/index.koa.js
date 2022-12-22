@@ -13,9 +13,11 @@ import * as Sentry from '@sentry/node'
 import db from './models'
 
 import citiesRoutes from './routes/cities'
+import departementsRoutes from './routes/departements'
 import helpsRoutes from './routes/helps'
 import ogrsRoutes from './routes/ogrs'
 import professionsRoutes from './routes/professions'
+import regionsRoutes from './routes/regions'
 
 const app = new Koa()
 
@@ -53,10 +55,12 @@ app.use(
   })
 ) // automatically parses the body of POST/PUT/PATCH requests, and adds it to the koa context
 
-app.use(professionsRoutes.routes()).use(professionsRoutes.allowedMethods())
 app.use(citiesRoutes.routes()).use(citiesRoutes.allowedMethods())
+app.use(departementsRoutes.routes()).use(departementsRoutes.allowedMethods())
 app.use(helpsRoutes.routes()).use(helpsRoutes.allowedMethods())
 app.use(ogrsRoutes.routes()).use(ogrsRoutes.allowedMethods())
+app.use(professionsRoutes.routes()).use(professionsRoutes.allowedMethods())
+app.use(regionsRoutes.routes()).use(regionsRoutes.allowedMethods())
 app.use(compress({}))
 app.use(session(config.SESSION_CONFIG, app))
 

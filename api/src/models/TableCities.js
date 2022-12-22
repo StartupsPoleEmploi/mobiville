@@ -78,7 +78,7 @@ export default (sequelizeInstance, Model) => {
           statut: city.statut,
           z_moyen: city.altitude_moyenne,
           nom_region: city.region,
-          new_code_region:
+          code_region:
             oldRegionsToNewRegionsMap[padLeadingZeros(city.code_region, 2)],
           insee_com: city.code_insee,
           code_dept: city.code_departement,
@@ -301,7 +301,7 @@ export default (sequelizeInstance, Model) => {
         },
         {
           attributes: ['name', 'code'],
-          model: Model.models.newRegions,
+          model: Model.models.regions,
           required: true,
           ...whereRegion,
         },
@@ -331,7 +331,7 @@ export default (sequelizeInstance, Model) => {
   Model.getCity = async ({ insee }) => {
     const city = await Model.findOne({
       where: { insee_com: insee },
-      include: [Model.models.equipments, Model.models.newRegions, Model.models.departements],
+      include: [Model.models.equipments, Model.models.regions, Model.models.departements],
     })
 
     if (city) {
@@ -576,7 +576,7 @@ export default (sequelizeInstance, Model) => {
       include: [
         {
           attributes: ['name'],
-          model: Model.models.newRegions,
+          model: Model.models.regions,
           required: true,
         },
       ],
