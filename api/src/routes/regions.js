@@ -1,3 +1,4 @@
+import Sequelize, { Op } from 'sequelize'
 import Router from '@koa/router'
 import { searchJobCount } from '../utils/pe-api'
 import { getTotalOffres } from '../utils/utils'
@@ -10,6 +11,15 @@ router.get('/', async ({ models, response }) => {
       models.departements,
       {
         model: models.cities,
+        where: {
+          [Op.and]: [
+            Sequelize.where(
+              Sequelize.fn('LOWER', Sequelize.col('nom_comm')),
+              'NOT LIKE',
+              '%-ARRONDISSEMENT'
+            )
+          ]
+        },
         order: [['population', 'DESC']],
         limit: 6
       }
@@ -25,7 +35,16 @@ router.get('/:code', async ({ params: { code }, models, response }) => {
   })
 
   const biggestCities = await models.cities.findAll({
-    where: { code_region: code },
+    where: {
+      [Op.and]: [
+        { code_region: code },
+        Sequelize.where(
+          Sequelize.fn('LOWER', Sequelize.col('nom_comm')),
+          'NOT LIKE',
+          '%-ARRONDISSEMENT'
+        )
+      ]
+    },
     order: [['population', 'DESC']],
     limit: 6,
   })
