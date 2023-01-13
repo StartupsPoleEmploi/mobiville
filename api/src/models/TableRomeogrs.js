@@ -76,7 +76,7 @@ export default (sequelizeInstance, Model) => {
       attributes: ['code_rome', 'ogr_label'],
       include: {
         attributes: ['label'],
-        model: Model.models.romeCodes,
+        model: Model.models.romeCodes, // todo supprimer ici pcq romeCodes n'existe plus
       },
       where: {
         code_rome: availableRomeCodes,

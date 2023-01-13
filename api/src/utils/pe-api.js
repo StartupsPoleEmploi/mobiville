@@ -3,7 +3,7 @@ import axios from 'axios'
 import { stringify } from 'querystring'
 import HttpsProxyAgent from 'https-proxy-agent'
 import { setupCache } from 'axios-cache-adapter'
-import {sleep} from "./utils"
+import { fetchAndRetryIfNecessary } from './utils'
 
 // cache de 15 minutes pour le token
 const cacheToken = setupCache({
@@ -12,7 +12,16 @@ const cacheToken = setupCache({
         query: false
     }
 })
-
+const cache = setupCache({
+    // cache de 24h
+    maxAge: 24 * 60 * 60 * 1000,
+    exclude: {
+        query: false
+    }
+})
+const apiEmploiStore = axios.create({
+    adapter: cache.adapter
+})
 const apiEmploiStoreToken = axios.create({
     adapter: cacheToken.adapter
 })
@@ -40,16 +49,6 @@ export function getAccessToken() {
         .then((data) => data.access_token || null)
 }
 
-// cache de 6 heures, a discuter avec les PO
-const cache = setupCache({
-    maxAge: 24 * 60 * 60 * 1000,
-    exclude: {
-        query: false
-    }
-})
-const apiEmploiStore = axios.create({
-    adapter: cache.adapter
-})
 export async function searchJob({ codeRome = [], insee = [], distance = 30 }) {
     const token = await getAccessToken()
     const callToOffres = function () {
@@ -75,18 +74,6 @@ export async function searchJob({ codeRome = [], insee = [], distance = 30 }) {
     return fetchAndRetryIfNecessary(callToOffres)
 }
 
-const MAX_RETRY_429 = 10
-async function fetchAndRetryIfNecessary (callAPIFn, tryNumber = 1) {
-    const response = await callAPIFn()
-    if (tryNumber <= MAX_RETRY_429 && response.status === 429) {
-        const retryAfter = response.headers['retry-after']
-        await sleep(retryAfter)
-        return fetchAndRetryIfNecessary(callAPIFn, ++tryNumber)
-    }
-    if (tryNumber < MAX_RETRY_429 && response.status === 429)
-        console.log("pe-api.js fetchAndRetryIfNecessary() -->  ERROR : MAX Http 429 RETRY Reached : " + MAX_RETRY_429)
-    return response.data
-}
 
 export async function searchJobCount({ codeRome, insee, region, departement, distance = 10 }) {
     const token = await getAccessToken()
@@ -229,43 +216,4 @@ export async function searchCloseCompanies({ codeRome = '', insee = '', distance
             })
     }
     return fetchAndRetryIfNecessary(callToSearchCloseEnterprises)
-}
-
-export async function getHiringRate({ codeTerritoire, codeRome }) {
-    const token = await getAccessToken()
-    return axios
-        .post(`${config.EMPLOI_STORE_URL}/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-embauches`,
-            {
-                codeTypeTerritoire: "BASBMO",
-                codeTerritoire: `${codeTerritoire}`,
-                codeTypeActivite: "ROME",
-                codeActivite: `${codeRome}`,
-                codeTypePeriode: "TRIMESTRE",
-                codeTypeNomenclature: "CATCANDxDUREEEMP",
-                dernierePeriode: true,
-                sansCaracteristiques: true
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                ...(config.PE_ENV && {proxy: false}),
-                ...(config.PE_ENV && {httpsAgent: new HttpsProxyAgent('http://host.docker.internal:9000')} ),
-            }
-        )
-        .then((result) => result.data)
-        .then(result => {
-            if (!result || !result.listeValeursParPeriode) return null
-            
-            const preferedCategories = [ "ABCDE-SUP1M", "ABCDE-TOUTE", "TOUT-TOUTE" ]
-            const foundCategories = result.listeValeursParPeriode.map(data => data.codeNomenclature);
-
-            const bestCategory = preferedCategories.find(category => (foundCategories.includes(category)))
-            return result.listeValeursParPeriode.find(data => data.codeNomenclature === bestCategory).valeurSecondairePourcentage
-        })
-        .catch(error => {
-            console.log(error)
-            return error.response
-        })
 }

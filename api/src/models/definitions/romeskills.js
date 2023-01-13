@@ -46,10 +46,6 @@ export default (sequelizeInstance) => {
       foreignKey: 'rome',
       sourceKey: 'code_rome',
     })
-    Model.hasOne(models.romeCodes, {
-      foreignKey: 'code',
-      sourceKey: 'code_rome',
-    })
 
     return models
   }

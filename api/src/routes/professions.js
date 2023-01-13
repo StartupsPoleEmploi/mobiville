@@ -7,8 +7,8 @@ import {
   infosTravail,
   infosTensionTravail,
   searchJobCount,
-  getHiringRate,
 } from '../utils/pe-api'
+import { getHiringRate } from '../utils/smart-emploi-api'
 import { getTotalOffres } from '../utils/utils'
 import { meanBy } from 'lodash'
 
@@ -22,7 +22,8 @@ const CODE_INSEE_MARSEILLE = '13055'
 
 // we need special matchings for Marseille, Paris and Lyon, since we cannot search them directly
 // and need to input the insee code of a special district
-const getInseeCodesForSearch = (inseeCodes) => inseeCodes.map((inseeCode) => getInseeCodeUniqueForSearch(inseeCode))
+const getInseeCodesForSearch = (inseeCodes) =>
+  inseeCodes.map((inseeCode) => getInseeCodeUniqueForSearch(inseeCode))
 
 const getInseeCodeUniqueForSearch = (inseeCode) => {
   if (inseeCode === CODE_INSEE_LYON) return CODE_INSEE_LYON_FIRST_DISTRICT
@@ -43,7 +44,7 @@ router.post(
   }) => {
     const result = await searchJob({
       codeRome,
-      insee: getInseeCodesForSearch(insee)
+      insee: getInseeCodesForSearch(insee),
     })
     response.body = {
       resultats: result ? result.resultats : [],
@@ -104,7 +105,7 @@ router.post(
     response,
   }) => {
     const result = await searchJob({
-      insee: getInseeCodesForSearch(insee)
+      insee: getInseeCodesForSearch(insee),
     })
     if (result) {
       const total = result.resultats.length
@@ -124,7 +125,7 @@ router.post(
     response,
   }) => {
     const result = await searchJob({
-      codeRome
+      codeRome,
     })
     if (result) {
       const total = result.resultats.length
@@ -164,7 +165,7 @@ router.post(
               },
             },
           ],
-        }
+        },
       }),
       models.cities.models.tensions.findOne({
         where: {
@@ -181,28 +182,31 @@ router.post(
       return
     }
 
-    const [infosResult, { bassin: bassinStatsResult, dept: deptStatsResult }, hiringRate] =
-      await Promise.all([
-        infosTravail({
-          codeProfession: pcs.pcs,
-          codeDept: city.code_dept,
-          codeRome,
-        }),
-        infosTensionTravail({
-          bassinId,
-          codeRome,
-          codeDept: city.code_dept,
-        }),
-        getHiringRate({
-          codeTerritoire: bassinId,
-          codeRome
-        })
-      ]).catch((err) => {
-        // A better handling of errors should be included, but for now we’ll do with just not screwing the whole app
-        // as this previously did
-        console.error(err)
-        return [null, { bassin: null, dept: null }, null]
-      })
+    const [
+      infosResult,
+      { bassin: bassinStatsResult, dept: deptStatsResult },
+      hiringRate,
+    ] = await Promise.all([
+      infosTravail({
+        codeProfession: pcs.pcs,
+        codeDept: city.code_dept,
+        codeRome,
+      }),
+      infosTensionTravail({
+        bassinId,
+        codeRome,
+        codeDept: city.code_dept,
+      }),
+      getHiringRate({
+        codeTerritoire: bassinId,
+        codeRome,
+      }),
+    ]).catch((err) => {
+      // A better handling of errors should be included, but for now we’ll do with just not screwing the whole app
+      // as this previously did
+      console.error(err)
+      return [null, { bassin: null, dept: null }, null]
+    })
 
     const bassinTension =
       (bassinStatsResult &&
@@ -240,7 +244,7 @@ router.post(
       max,
       bassinTension,
       deptTension,
-      hiringRate
+      hiringRate,
     }
   }
 )

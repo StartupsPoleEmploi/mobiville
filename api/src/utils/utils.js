@@ -213,3 +213,20 @@ export const getTotalOffres = (result) => {
   }
   return totalOffres
 }
+
+export async function fetchAndRetryIfNecessary(callAPIFn, tryNumber = 1) {
+  const MAX_RETRY_429 = 10
+  const response = await callAPIFn()
+  if (tryNumber <= MAX_RETRY_429 && response.status === 429) {
+    const retryAfter = response.headers['retry-after']
+    console.log(`pe.io retry after ${retryAfter}`);
+    await sleep(retryAfter)
+    return fetchAndRetryIfNecessary(callAPIFn, ++tryNumber)
+  }
+  if (tryNumber < MAX_RETRY_429 && response.status === 429)
+    console.log(
+      'fetchAndRetryIfNecessary() -->  ERROR : MAX Http 429 RETRY Reached : ' +
+        MAX_RETRY_429
+    )
+  return response.data
+}

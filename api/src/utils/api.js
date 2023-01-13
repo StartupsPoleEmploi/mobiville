@@ -59,14 +59,15 @@ export function getAllBassins() {
         }
       }
     )
-  }).then((list) => (list.map((c) => ({
+  }).then((list) =>
+    list.map((c) => ({
       ...c,
       code_commune: c.ccommune,
       nom_com: c.nomcom,
       bassin_id: c.be19,
       bassin_name: c.nombe19,
     }))
-  ))
+  )
 }
 
 export function getFranceShape() {
@@ -157,10 +158,54 @@ export const wikipediaDetails = (pageName) =>
     })
     .catch((err) => console.error('ERROR', err))
 
+export const wikipediaDepartementDetails = (departemantName) =>
+  axios
+    .get(
+      `https://api.wikimedia.org/core/v1/wikipedia/fr/search/page?q=${encodeURIComponent(
+        departemantName + ' département'
+      )}&limit=5`,
+      { ...config.proxyPeOverrides }
+    )
+    .then((r) => {
+      const choix1 = r.data.pages.find(
+        (p) => p.key.includes(departemantName) && p.key.includes('département')
+      )
+      const pageDepartements = r.data.pages.filter((page) =>
+        page.description
+          ? page.key.includes('département') ||
+            page.description.includes('département') ||
+            page.excerpt.includes('département')
+          : true
+      )
+      return choix1 ? choix1 : pageDepartements[0]
+    })
+    .then((pageDepartement) =>
+      axios.get(
+        `https://api.wikimedia.org/core/v1/wikipedia/fr/page/${encodeURIComponent(
+          pageDepartement.key
+        )}/html`,
+        { ...config.proxyPeOverrides }
+      )
+    )
+    .then((response) => {
+      const $ = cheerio.load(response.data)
+
+      // Avoir un id equivaut a ne pas etre dans un bandeau d'entete
+      const summary = $('body').find(`section:first-child p:has([id])`)
+
+      const nomPhonetique = /\((\/|)(.*?)\) /g
+      const annotations = /\[(.*?)\]/g
+
+      return summary
+        .text()
+        .replace(nomPhonetique, '')
+        .replace(annotations, '')
+        .substring(0, 4096)
+    })
+    .catch((err) => console.error('ERROR', err))
+
 export const getAllRegions = () => {
-  let rawdata = readFileSync(
-    __dirname + '/../assets/datas/regions.json'
-  )
+  let rawdata = readFileSync(__dirname + '/../assets/datas/regions.json')
   return JSON.parse(rawdata)
 }
 
@@ -336,30 +381,24 @@ export function getPCSByRome(rome) {
 
 export const getAllDepartements = () => {
   return new Promise((resolve, reject) => {
-    readFile(
-      __dirname + '/../assets/datas/departements.csv',
-      (err, data) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(csvToArrayJson(data, { delimiter: ';', emptyAsNull: true }))
-        }
+    readFile(__dirname + '/../assets/datas/departements.csv', (err, data) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(csvToArrayJson(data, { delimiter: ';', emptyAsNull: true }))
       }
-    )
+    })
   })
 }
 
 export const getCitiesRent = () => {
   return new Promise((resolve, reject) => {
-    readFile(
-      __dirname + '/../assets/datas/cities_rent.csv',
-      (err, data) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(csvToArrayJson(data, { delimiter: ';' }))
-        }
+    readFile(__dirname + '/../assets/datas/cities_rent.csv', (err, data) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(csvToArrayJson(data, { delimiter: ';' }))
       }
-    )
+    })
   })
 }
