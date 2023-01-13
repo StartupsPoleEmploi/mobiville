@@ -9,6 +9,7 @@ const City = lazy(() => import('./city/City'))
 const CitySearchPage = lazy(() => import('./city/CitySearchPage'))
 
 const Region = lazy(() => import('./region/Region'))
+const Departement = lazy(() => import('./departement/Departement'))
 
 const Helps = lazy(() => import('./helps/Helps'))
 const HelpDetailsPage = lazy(() => import('./helps/HelpDetailsPage'))
@@ -37,6 +38,7 @@ export const MobivilleRoutes = () => {
       <Route path="/rechercher" element={<CitySearchPage />} />
 
       <Route path="/region/:codeSlug" element={<Region />} />
+      <Route path="/departement/:codeSlug" element={<Departement />} />
 
       <Route path="/aides" element={<Helps />} />
       <Route path="/aides/:slug" element={<HelpDetailsPage />} />

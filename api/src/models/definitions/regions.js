@@ -46,7 +46,7 @@ export default (sequelizeInstance) => {
 
   Model.associate = function (models) {
     Model.hasMany(models.departements, {
-      foreignKey: 'code_region',
+      foreignKey: 'codeRegion',
       sourceKey: 'code',
     })
     Model.hasMany(models.cities, {

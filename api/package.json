@@ -21,7 +21,9 @@
     "sync:equipments": "babel-node ./src/scripts/syncEquipments.js",
     "sync:equipmentsSpecial": "babel-node ./src/scripts/syncSpecialEquipments.js",
     "sync:helps": "babel-node ./src/scripts/syncHelps.js",
-    "sync:departements": "babel-node ./src/scripts/syncDepartements.js"
+    "sync:departements": "babel-node ./src/scripts/syncDepartements.js",
+    "sync:embaucheDepartements": "babel-node ./src/scripts/syncEmbaucheDepartements.js",
+    "sync:departementsDescriptions": "babel-node ./src/scripts/syncDepartementsDescriptions.js"
   },
   "dependencies": {
     "@koa/cors": "4.0.0",

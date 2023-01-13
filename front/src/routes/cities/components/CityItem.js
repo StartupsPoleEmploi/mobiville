@@ -111,7 +111,7 @@ const CityItem = ({
   onMouseLeave,
   to,
   isLoadingProfessions,
-  onClickTag = ()=>{},
+  onClickTag = () => {},
 }) => {
   const size = useWindowSize()
   const isMobile = isMobileView(size)
@@ -133,6 +133,7 @@ const CityItem = ({
       onClick={onClickTag}
       to={to}
       $isMobile={isMobile}
+      id={`city-item-${city.id}`}
       data-automation-id={`cityItem-${city.nom_comm}`}
     >
       <Image
@@ -174,7 +175,7 @@ CityItem.propTypes = {
   onMouseLeave: PropTypes.func.isRequired,
   to: PropTypes.string.isRequired,
   isLoadingProfessions: PropTypes.any,
-  onClickTag: PropTypes.func
+  onClickTag: PropTypes.func,
 }
 
 export default CityItem

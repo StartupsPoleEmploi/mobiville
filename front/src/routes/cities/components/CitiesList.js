@@ -119,6 +119,16 @@ const CitiesList = ({
   }, [cities])
 
   useEffect(() => {
+    if (selectedCityId) {
+      const cityItem = document.getElementById(`city-item-${selectedCityId}`)
+      window.scrollTo({
+        top: cityItem?.offsetTop - 400,
+        behavior: 'smooth',
+      })
+    }
+  }, [selectedCityId])
+
+  useEffect(() => {
     if (!professionsCountList) return
     let newFormattedCities = formattedCities
     professionsCountList.forEach((professionsCount) => {
@@ -194,7 +204,7 @@ const CitiesList = ({
 CitiesList.propTypes = {
   codeRome: PropTypes.string,
   cities: PropTypes.array.isRequired,
-  selectedCityId: PropTypes.func,
+  selectedCityId: PropTypes.number,
   setHoveredCityId: PropTypes.func,
   onPageChange: PropTypes.func,
 }

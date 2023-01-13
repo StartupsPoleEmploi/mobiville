@@ -723,5 +723,11 @@ export default (sequelizeInstance, Model) => {
     return 0
   }
 
+  Model.getCitiesByCodeRegion = async ({ codeRegion }) => {
+    return await Model.findAll({
+      where: { code_region: parseInt(codeRegion) }
+    })
+  }
+
   return Model
 }

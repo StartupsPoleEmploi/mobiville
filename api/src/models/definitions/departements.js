@@ -26,7 +26,23 @@ export default (sequelizeInstance) => {
           rent_t4: {
             type: Sequelize.FLOAT,
             allowNull: true,
-          }
+          },
+          description: {
+            type: Sequelize.STRING(512),
+            allowNull: true,
+          },
+          population: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+          },
+          superficie: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+          },
+          hiring_rate: {
+            type: Sequelize.FLOAT,
+            allowNull: true,
+          },
     },
     {
       timestamps: false,
@@ -44,7 +60,10 @@ export default (sequelizeInstance) => {
       foreignKey: 'code',
       sourceKey: 'code_region',
     })
-
+    Model.hasMany(models.embaucheDepartements, {
+      foreignKey: 'code_departement',
+      sourceKey: 'code',
+    })
     return models
   }
 
