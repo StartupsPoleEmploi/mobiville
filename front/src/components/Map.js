@@ -116,7 +116,7 @@ const Map = ({
   useEffect(() => {
     if (cities?.length > 1) {
       const computedBounds = cities
-        .map((c) => [c.geo_point_2d_x, c.geo_point_2d_y])
+        .map((c) => [c.geo_point_2d_y, c.geo_point_2d_x])
         .reduce(computeBorders, DEFAULT_BOUND)
       setMapBounds([
         [computedBounds.minX, computedBounds.minY],
