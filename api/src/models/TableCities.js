@@ -93,6 +93,8 @@ export default (sequelizeInstance, Model) => {
         const region = regions.find(r => `${r.code}` === `${codeRegion}`)
         const nomRegion = region ? region.name : city.region
 
+        const postalCode = city.code_postal.split('/')[0]
+
         return {
           code_comm: city.code_commune,
           nom_dept: city.departement,
@@ -108,7 +110,7 @@ export default (sequelizeInstance, Model) => {
           geo_point_2d_y: city.geo_point_2d
             ? city.geo_point_2d.split(',')[1]
             : null,
-          postal_code: city.code_postal,
+          postal_code: postalCode,
           id_geofla: city.id_geofla,
           code_cant: city.code_canton,
           superficie: city.superficie,
@@ -126,6 +128,7 @@ export default (sequelizeInstance, Model) => {
     await Model.bulkCreate(data, {
       updateOnDuplicate: [
         'nom_region',
+        'postal_code',
         'total_social_housing',
         'rent_t2',
         'rent_t4'
