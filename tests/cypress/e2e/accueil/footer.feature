@@ -1,5 +1,5 @@
 # language: fr
-Fonctionnalité: Footer - Disponibilité des liens
+Fonctionnalité: Affichage footer
 
   Contexte:
     Etant donné que je suis sur l'accueil Mobiville

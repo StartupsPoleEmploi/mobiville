@@ -1,5 +1,5 @@
 # language: fr
-Fonctionnalité: Rechercher villes - Offres d'emploi
+Fonctionnalité: Offres d'emploi d'une ville
 
   Contexte:
     Etant donné que je suis sur l'accueil Mobiville
@@ -10,6 +10,11 @@ Fonctionnalité: Rechercher villes - Offres d'emploi
     Et que je choisis "Lille (59000/59160/59260/59777/59800)" dans la liste des villes
     Et que je clique sur rechercher
     Et que je clique sur "Offres d’emploi" dans le fil d'ariane
+
+  Scénario: Affichage des offres et consultation
+    Alors j'affiche les offres de la ville
+    Et le détail de l'offre s'affiche
+    Et le descriptif de l'offre s'affiche
 
   Scénario: Filtre des offres par distance
     Lorsque je clique sur le filtre offre "Distance" et je sélectionne "5 km"
@@ -40,11 +45,8 @@ Fonctionnalité: Rechercher villes - Offres d'emploi
     Alors j'affiche les offres pour lesquelles la date est inférieure au critère
     Lorsque je clique sur le filtre offre "Type de contrat" et je sélectionne "CDI"
     Alors j'affiche les offres qui correspondent aux critères
-
-  Scénario: Affichage des offres avec des opportunités
-    Alors j'affiche les informations sur l'offre avec des opportunités
     
   Scénario: Affichage d'une offre
-    Lorsque je sélectionne la deuxième offre
+    Lorsque je resélectionne la première offre
     Alors le détail de l'offre s'affiche
     Et le descriptif de l'offre s'affiche

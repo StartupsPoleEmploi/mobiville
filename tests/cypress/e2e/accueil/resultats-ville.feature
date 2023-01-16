@@ -1,5 +1,5 @@
 # language: fr
-Fonctionnalité: Rechercher villes - filtre des résultats
+Fonctionnalité: Page de résultats des villes
 
   Contexte:
     Etant donné que je suis sur l'accueil Mobiville
