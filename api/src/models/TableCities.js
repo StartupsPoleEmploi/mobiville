@@ -33,12 +33,6 @@ import {
 import { distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
 
-// function padLeadingZeros(num, size) {
-//   let s = num + ''
-//   while (s.length < size) s = '0' + s
-//   return String(s)
-// }
-
 export default (sequelizeInstance, Model) => {
   Model.franceShape = null
   Model.weatherStationList = null
@@ -51,33 +45,33 @@ export default (sequelizeInstance, Model) => {
   Model.syncCities = async ({ cities }) => {
     const regions = await getAllRegions()
     const oldToNewRegions = [
+      // { old: '01', new: '01', },
+      // { old: '02', new: '02', },
+      // { old: '03', new: '03', },
+      // { old: '04', new: '04', },
+      // { old: '06', new: '06', },
+      // { old: '11', new: '11', },
+      // { old: '24', new: '24', },
+      // { old: '52', new: '52', },
+      // { old: '53', new: '53', },
+      // { old: '93', new: '93', },
+      // { old: '94', new: '94', },
+      { old: '26', new: '27', },
+      { old: '43', new: '27', },
+      { old: '23', new: '28', },
       { old: '25', new: '28', },
-      { old: '83', new: '84', },
       { old: '22', new: '32', },
+      { old: '31', new: '32', },
       { old: '21', new: '44', },
+      { old: '41', new: '44', },
+      { old: '42', new: '44', },
       { old: '72', new: '75', },
       { old: '82', new: '84', },
-      // { old: '94', new: '94', },
-      { old: '31', new: '32', },
-      { old: '43', new: '27', },
-      { old: '42', new: '44', },
-      { old: '73', new: '76', },
-      // { old: '53', new: '53', },
-      { old: '91', new: '76', },
-      // { old: '04', new: '04', },
-      // { old: '03', new: '03', },
-      { old: '74', new: '75', },
-      // { old: '52', new: '52', },
+      { old: '83', new: '84', },
       { old: '54', new: '75', },
-      // { old: '01', new: '01', },
-      // { old: '11', new: '11', },
-      { old: '41', new: '44', },
-      // { old: '02', new: '02', },
-      { old: '26', new: '27', },
-      { old: '23', new: '28', },
-      // { old: '06', new: '06', },
-      // { old: '24', new: '24', },
-      // { old: '93', new: '93', },
+      { old: '74', new: '75', },
+      { old: '73', new: '76', },
+      { old: '91', new: '76', },
     ];
 
     const citiesRent = await getCitiesRent()
@@ -94,9 +88,9 @@ export default (sequelizeInstance, Model) => {
           citiesNotUsedNames = citiesNotUsedNames.filter(cityName => cityName !== cityRent.city)
         }
         
-        const oldNewRegion = oldToNewRegions.find(region => region.old === city.code_region)
+        const oldNewRegion = oldToNewRegions.find(region => region.old === `${city.code_region}`)
         const codeRegion = (oldNewRegion ? oldNewRegion.new : city.code_region)
-        const region = regions.find(r => r.code === codeRegion)
+        const region = regions.find(r => `${r.code}` === `${codeRegion}`)
         const nomRegion = region ? region.name : city.region
 
         return {
@@ -131,6 +125,7 @@ export default (sequelizeInstance, Model) => {
 
     await Model.bulkCreate(data, {
       updateOnDuplicate: [
+        'nom_region',
         'total_social_housing',
         'rent_t2',
         'rent_t4'
