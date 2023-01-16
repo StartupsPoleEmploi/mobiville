@@ -15,12 +15,11 @@ router.get('/:code', async ({ params: { code }, models, response }) => {
   const departement = await models.departements.getDepartement({ code })
 
   // Cas des DOM avec regions uni-départemental
+  let topCities = []
   if (['1', '2', '3', '4', '5', '6'].includes(code)) {
-    departement.dataValues.cities = (
-      await models.cities.getCitiesByCodeRegion({
+    topCities = (await models.cities.getCitiesByCodeRegion({
         codeRegion: code,
-      })
-    )
+      }))
       .sort((d1, d2) => d2.population - d1.population)
       .slice(0, 10)
   }
@@ -28,7 +27,7 @@ router.get('/:code', async ({ params: { code }, models, response }) => {
   response.body = JSON.stringify({
     ...departement.dataValues,
     cities: undefined,
-    topCities: departement.dataValues.cities,
+    topCities: topCities,
   })
 })
 
