@@ -9,7 +9,7 @@ import CityHome from './cityHome/CityHome'
 import CityServices from './cityServices/CityServices'
 import CityCloseCities from './cityCloseCities/CityCloseCities'
 import CityMenuBack from './components/CityMenuBack'
-import { MainLayout } from '../../components'
+import { MainLayout, TopPageButton } from '../../components'
 
 import { useCities } from '../../common/contexts/citiesContext'
 import { useWindowSize } from '../../common/hooks/window-size'
@@ -118,6 +118,8 @@ const CityPage = () => {
       />
 
       {currentSection}
+
+      <TopPageButton />
     </MainLayout>
   )
 }
