@@ -1,5 +1,5 @@
 # language: fr
-Fonctionnalité: Rechercher villes ou aides - Moteur de recherche
+Fonctionnalité: Moteur de recherche hors homepage
 
   Contexte:
     Etant donné que je suis sur l'accueil Mobiville

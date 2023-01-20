@@ -1,5 +1,5 @@
 # language: fr
-Fonctionnalité: Rechercher villes - Affichage simulateur
+Fonctionnalité: Affichage simulateur d'une ville
 
   Contexte:
     Etant donné que je suis sur l'accueil Mobiville

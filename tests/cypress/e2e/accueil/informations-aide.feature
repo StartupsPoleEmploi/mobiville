@@ -1,5 +1,5 @@
 # language: fr
-Fonctionnalité: Rechercher aides - Informations de l'aide
+Fonctionnalité: Informations de l'aide
 
   Contexte:
     Etant donné que je suis sur l'accueil Mobiville
@@ -10,5 +10,5 @@ Fonctionnalité: Rechercher aides - Informations de l'aide
     Et que j'affiche les aides correspondantes
 
   Scénario: Affichage du détail de l'aide
-    Lorsque je clique sur Découvrir l'aide
+    Lorsque je clique sur Découvrir l'aide de la première aide
     Alors j'affiche le détail de l'aide

@@ -1,6 +1,6 @@
 const { When, Then, And } = require('@badeball/cypress-cucumber-preprocessor');
 import { SHORT_WAIT_TIME, MIDDLE_WAIT_TIME, LONG_WAIT_TIME } from "./common/common";
-import { ENDROIT } from './home-page';
+import { ENDROIT_HP } from './home-page';
 
 const rappelCritereServices = "div[tag-page$=city-services] > div > div > h1";
 const infoHabitants = "div[tag-page$=city-services] > div > div > p";
@@ -17,7 +17,7 @@ const boutonContacter = "div[tag-page$=city-services] > div > a[href*=mailto]";
 Then("j'affiche les services de la ville", function () {
   cy.url().should('include', 'services');
   
-  let villeSansCP = ENDROIT.split(' (')[0];
+  let villeSansCP = ENDROIT_HP.split(' (')[0];
   cy.contains(rappelCritereServices, "Vivre à " + villeSansCP,  {timeout: SHORT_WAIT_TIME}).should('exist');
 })
 

@@ -1,5 +1,5 @@
 # language: fr
-Fonctionnalité: Rechercher villes - Affichage fil d'ariane
+Fonctionnalité: Affichage fil d'ariane d'une ville
 
   Contexte:
     Etant donné que je suis sur l'accueil Mobiville

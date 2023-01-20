@@ -1,8 +1,9 @@
 const { When, Then, And } = require('@badeball/cypress-cucumber-preprocessor');
 import { SHORT_WAIT_TIME, MIDDLE_WAIT_TIME, LONG_WAIT_TIME } from "./common/common";
-import { METIER, ENDROIT } from './home-page';
+import { METIER, ENDROIT_HP } from './home-page';
 
-const rappelCritereOffres = "div[tag-page$=city-offres] > h1";
+const rappelCritereVille = "div[tag-page$=city-offres] > h1";
+const rappelCritereMetier = "div[tag-page$=city-offres] > h1";
 const filtreDistance = "div[tag-page$=city-offres] * > div";
 const filtreDatePublication = "div[tag-page$=city-offres] * > div";
 const filtreTypeContrat = "div[tag-page$=city-offres] * > div";
@@ -13,7 +14,7 @@ const selectionCritere = "div[id=menu-] * > ul[role=listbox] > li[role=option] >
 const critereDistanceOffre = "div[tag-page$=city-offres] > div:nth-child(3) > div:nth-child(2) > div";
 const critereTypeDureeOffre = "div[tag-page$=city-offres] > div:nth-child(3) > div:nth-child(2) > div";
 const criterePublicationOffre = "div[tag-page$=city-offres] > div:nth-child(3) > div:nth-child(2) > div > p";
-const InfosPremiereOffre = "div[tag-page$=city-offres] > div:nth-child(3) > div:nth-child(2)  > div:nth-child(1) > div";
+const InfosPremiereOffre = "div[tag-page$=city-offres] > div:nth-child(3) > div:nth-child(2)  > div:nth-child(1)";
 const InfosDeuxiemeOffre = "div[tag-page$=city-offres] > div:nth-child(3) > div:nth-child(2) > div:nth-child(2)";
 const caracteristiquesOffreSelectionnee = "div[tag-page$=city-offres] > div:nth-child(3) > div:nth-child(3)";
 const boutonPostulerOffreSelectionnee = "div[tag-page$=city-offres] * > div > a[href^=\"https://candidat.pole-emploi.fr/offres/recherche/detail\"]";
@@ -62,10 +63,10 @@ function combienJours(critere){
 Then("j'affiche les offres d'emploi de la ville pour le métier", function () {
   cy.url().should('include', 'metier');
 
-  let villeSansCP = ENDROIT.split(' (')[0];
+  let villeSansCP = ENDROIT_HP.split(' (')[0];
   let metierCourt = METIER.split(' (')[0].toLowerCase();
-  cy.contains(rappelCritereOffres, villeSansCP,  {timeout: SHORT_WAIT_TIME}).should('exist');
-  cy.contains(rappelCritereOffres, "pour le métier " + metierCourt,  {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(rappelCritereVille, villeSansCP,  {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(rappelCritereMetier, "pour le métier " + metierCourt,  {timeout: SHORT_WAIT_TIME}).should('exist');
 
   cy.contains(filtreDistance, "Distance",  {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(filtreDatePublication, "Date de publication",  {timeout: SHORT_WAIT_TIME}).should('exist');
@@ -101,25 +102,26 @@ Then("j'affiche les offres pour lesquelles la date est inférieure au critère",
 })
 
 Then("j'affiche les offres pour lesquelles il y a des opportunités", function () {
-  cy.get(InfosPremiereOffre, {timeout: SHORT_WAIT_TIME}).should('have.text',"Offre avec plus d'opportunités");
+  cy.get(InfosPremiereOffre, {timeout: SHORT_WAIT_TIME}).then((desc) => {
+    expect(desc.text()).to.include("Offre avec plus d'opportunités");
+  });
 })
 
 Then("j'affiche les offres de la ville", function () {
-  let villeSansCP = ENDROIT.split(' (')[0];
+  let villeSansCP = ENDROIT_HP.split(' (')[0].toUpperCase();
+  cy.contains("d'emploi dans un rayon de",  {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(critereDistanceOffre, villeSansCP,  {timeout: SHORT_WAIT_TIME}).should('exist');
 })
 
-Then("j'affiche les informations sur l'offre avec des opportunités", function () {
-  cy.contains("Offre avec plus d'opportunités",  {timeout: SHORT_WAIT_TIME}).should('exist');
-})
-
-When("je sélectionne la deuxième offre", function () {
+When("je resélectionne la première offre", function () {
   cy.get(InfosDeuxiemeOffre, {timeout: SHORT_WAIT_TIME}).click();
+  cy.get(InfosPremiereOffre, {timeout: SHORT_WAIT_TIME}).click();
 })
 
 Then("le détail de l'offre s'affiche", function () {
+  let villeSansCP = ENDROIT_HP.split(' (')[0].toUpperCase();
   cy.get(caracteristiquesOffreSelectionnee, {timeout: SHORT_WAIT_TIME}).then((caract) => {
-    expect(caract.text()).to.exist;
+    expect(caract.text()).to.include(villeSansCP);
   });
   cy.get(boutonPostulerOffreSelectionnee, {timeout: SHORT_WAIT_TIME}).should('have.text', "Postuler sur Pôle emploi.fr")
 })

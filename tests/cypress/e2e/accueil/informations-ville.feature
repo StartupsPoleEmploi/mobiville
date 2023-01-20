@@ -1,5 +1,5 @@
 # language: fr
-Fonctionnalité: Rechercher villes - Informations de la ville
+Fonctionnalité: Informations de la ville
 
   Contexte:
     Etant donné que je suis sur l'accueil Mobiville
