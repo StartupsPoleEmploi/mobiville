@@ -7,7 +7,6 @@ import { CircularProgress } from '@mui/material'
 import { useWindowSize } from '../../../common/hooks/window-size'
 import { isMobileView } from '../../../constants/mobile'
 
-import noResultsPic from '../../../assets/images/no_results.svg'
 import { useCities } from '../../../common/contexts/citiesContext'
 import { useEffect, useState } from 'react'
 import {
@@ -18,6 +17,7 @@ import {
 } from '../../../constants/colors'
 import { useProfessions } from '../../../common/contexts/professionsContext'
 import { formatCityUrl } from '../../../utils/utils'
+import { Image } from '../../../components'
 
 // import CityItem from './CityItem'
 const CityItem = loadable(() => import('./CityItem'))
@@ -90,6 +90,10 @@ const PaginationContainer = styled.div`
     background-color: ${COLOR_BUTTON_HOVER};
     color: ${COLOR_WHITE};
   }
+`
+
+const CustomImage = styled(Image)`
+  margin-bottom: 2rem;
 `
 
 const CitiesList = ({
@@ -169,7 +173,7 @@ const CitiesList = ({
       ))}
       {!isLoading && cities.length === 0 && (
         <NotFoundContainer>
-          <img alt="" src={noResultsPic} style={{ marginBottom: '2rem' }} />
+          <CustomImage src="no-results" alt="" />
           Aucune ville correspondante
           <br />
           Modifiez vos critères

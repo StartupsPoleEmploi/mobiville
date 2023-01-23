@@ -53,7 +53,7 @@ const RegionLabel = styled(Link)`
   }
 `
 
-const HomeHelpsBanner = () => {
+const HomeRegionsBanner = () => {
   const { regionsDROMIncluded, formatUrl } = useRegions()
 
   return (
@@ -62,7 +62,7 @@ const HomeHelpsBanner = () => {
 
       <RegionsContainer>
         {splitSort(regionsDROMIncluded.sort(alphabetOrder('name')), 3).map((region) => (
-          <RegionLabel to={formatUrl(region)}>
+          <RegionLabel key={region.name} to={formatUrl(region)}>
             <span>{region.name}</span>
             <RightChevronIcon />
           </RegionLabel>
@@ -72,4 +72,4 @@ const HomeHelpsBanner = () => {
   )
 }
 
-export default HomeHelpsBanner
+export default HomeRegionsBanner

@@ -1,10 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import LOGO from '../assets/images/LogoMobiville_gros.svg'
 import { useNomPage } from '../common/contexts/NomPageContext'
 import { COLOR_VERT_MOBIVILLE } from '../constants/colors'
 import { MOBILE_WIDTH } from '../constants/mobile'
+import Image from './Image'
 
 const MainSpace = styled.div`
   background: white;
@@ -30,9 +30,7 @@ const MainSpace = styled.div`
 const Wrapper = styled.div`
   max-width: 700px;
   margin-top: 0px;
-  &.descriptif img {
-    height: 83px;
-  }
+
   @media (max-width: ${MOBILE_WIDTH}px) {
     &.descriptif {
       display: none;
@@ -131,6 +129,8 @@ const CopyRight = styled.p`
 
 const Footer = () => {
   const { nomPage } = useNomPage()
+  const location = useLocation()
+  const isHome = location.pathname === '/'
 
   return (
     <MainSpace>
@@ -141,7 +141,12 @@ const Footer = () => {
             correspond à votre besoin ainsi que les aides financières à la
             mobilité.
           </p>
-          <img src={LOGO} alt="Retour à la page d’accueil" />
+          <Image
+            src="logo-mobiville"
+            alt={`Mobiville Pôle emploi et Action logement${
+              !isHome ? " - Retour à la page d'accueil" : ''
+            }`}
+          />
         </Wrapper>
         <WrapperLinks>
           <Item>

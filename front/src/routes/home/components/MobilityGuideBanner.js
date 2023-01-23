@@ -3,8 +3,7 @@ import styled from 'styled-components'
 import { useWindowSize } from "../../../common/hooks/window-size"
 import { isMobileView } from "../../../constants/mobile"
 
-import mobilityHomepagePic from '../../../assets/images/mobility-guide.png'
-import { ActionButton, Section } from '../../../components'
+import { ActionButton, Image, Section } from '../../../components'
 import { COLOR_PRIMARY } from '../../../constants/colors'
 
 const Container = styled.div`
@@ -60,7 +59,7 @@ const MobilityGuideBanner = () => {
       <Section isMobileFullWidth={true} isMobile={isMobile}>
         <Container isMobile={isMobile}>
           <ImageContainer>
-            <img src={mobilityHomepagePic} alt="" />
+            <Image src="mobility-guide" />
           </ImageContainer>
           <TextContainer>
             <H2 isMobile={isMobile}>Des conseils et astuces</H2>

@@ -275,7 +275,7 @@ export async function searchCloseCompanies({
                     return {
                         data: {
                             companies: result.data.companies,
-                            companies_count: result.data.companies_coun
+                            companies_count: result.data.companies_count
                         },
                         status: 200
                     }

@@ -8,6 +8,7 @@ import {
   ActionButton,
   HelpsStandOut,
   HorizontalScrollableSection,
+  Image,
   KeyFigures,
   Tag,
 } from '../../../components'
@@ -15,8 +16,6 @@ import {
 import { ReactComponent as MaletteIcon } from '../../../assets/images/icons/malette.svg'
 import { ReactComponent as ProfilEntrepriseIcon } from '../../../assets/images/icons/profil_entreprise.svg'
 import { ReactComponent as HandshakeIcon } from '../../../assets/images/icons/handshake.svg'
-import cityServicesStandOut from '../../../assets/images/cityServicesStandOut.png'
-import eventsCity from '../../../assets/images/events-city.png'
 
 import { capitalize, formatCityTension, formatNumber } from '../../../utils/utils'
 import {
@@ -106,10 +105,7 @@ const EventsContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-`
-
-const EventBannerImage = styled.img`
-  margin-right: 40px;
+  gap: 40px;
 `
 
 const EventBannerContent = styled.div`
@@ -344,7 +340,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
           <Events events={events} />
         </EventsContainer>) */
         (<EventsContainer>
-          {isMobile ? null : <EventBannerImage src={eventsCity} alt="" />}
+          {isMobile ? null : <Image src="events-city" alt="" />}
           <EventBannerContent>
             <EventBannerTitle>Mes évenements emploi</EventBannerTitle>
             <EventBannerText>Pour augmenter votre chance de trouver une emploi dans cette ville</EventBannerText>
@@ -378,7 +374,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
           />
         </ServicesStandOutContent>
         <ServicesStandOutImageContainer>
-          <img src={cityServicesStandOut} alt="" />
+          <Image src="cityServicesStandOut" />
         </ServicesStandOutImageContainer>
       </ServicesStandOut>
 

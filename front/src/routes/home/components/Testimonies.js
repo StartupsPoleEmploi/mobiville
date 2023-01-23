@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 
-import { AppCarousel, Section, SectionTitle } from "../../../components"
+import { AppCarousel, Image, Section, SectionTitle } from "../../../components"
 import { COLOR_PRIMARY, COLOR_SALMON, COLOR_WHITE } from "../../../constants/colors"
-import movingIllustration from '../../../assets/images/moving-illustration.png'
 import { useWindowSize } from "../../../common/hooks/window-size"
 import { isMobileView } from "../../../constants/mobile"
 
@@ -178,7 +177,7 @@ const Testimonies = () => {
 
             </AppCarousel>
             <ImageContainer isMobile={isMobile}>
-              <img src={movingIllustration} alt="Déménagement - illustration" />
+              <Image src="moving-illustration" />
             </ImageContainer>
           </Container>
         </Section>

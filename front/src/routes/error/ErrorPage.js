@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import MainLayout from '../../components/MainLayout'
 
-import techErrorPic from '../../assets/images/technical-error.svg'
+import { Image } from '../../components'
 
 const Container = styled.div`
   display: flex;
@@ -16,10 +16,14 @@ const Container = styled.div`
   color: #657078;
 `
 
+const CustomImage = styled(Image)`
+  margin-bottom: 2rem;
+`
+
 const ErrorPage = () => (
   <MainLayout>
     <Container>
-      <img alt="" src={techErrorPic} style={{ marginBottom: '2rem' }} />
+      <CustomImage src="technical-error" alt="" />
       Problème technique
       <br />
       Veuillez réessayer plus tard
