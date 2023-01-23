@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styled from "styled-components"
-import {COLOR_WHITE} from "../../../constants/colors"
+import styled from 'styled-components'
+import { COLOR_WHITE } from '../../../constants/colors'
 import { BackButton, MenuNavigation } from '../../../components'
 
 const MenuBackContainer = styled.div`
@@ -15,21 +15,24 @@ const MenuBackContainer = styled.div`
 const CityMenuBack = ({
   backLink,
   isMobile,
-  background = COLOR_WHITE
+  background = COLOR_WHITE,
+  showAdvicesButton = false,
 }) => (
-    <MenuBackContainer background={background}>
-        <BackButton
-            libelle={!isMobile ? "Retour aux résultats" : "Retour"}
-            backLink={backLink}
-        />
-        <MenuNavigation isMobile={isMobile}/>
-    </MenuBackContainer>
+  <MenuBackContainer background={background}>
+    <BackButton
+      libelle={!isMobile ? 'Retour aux résultats' : 'Retour'}
+      backLink={backLink}
+      showAdvicesButton={showAdvicesButton}
+    />
+    <MenuNavigation isMobile={isMobile} />
+  </MenuBackContainer>
 )
 
 CityMenuBack.props = {
-    backLink: PropTypes.string,
-    isMobile: PropTypes.bool,
-    background: PropTypes.string
+  backLink: PropTypes.string,
+  isMobile: PropTypes.bool,
+  background: PropTypes.string,
+  showAdvicesButton: PropTypes.bool,
 }
 
 export default CityMenuBack

@@ -11,6 +11,6 @@ export const searchInfosTravail = (body) =>
     .then((response) => response.data || [])
 
 export const searchProfessionsCountList = (body) =>
-    axios
-        .post('/api/professions/searchCountList', body)
-        .then((response) => response.data || [])
+  axios
+    .post('/api/professions/searchCountList', body)
+    .then((response) => response.data || [])

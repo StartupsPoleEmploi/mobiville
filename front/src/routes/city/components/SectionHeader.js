@@ -1,8 +1,7 @@
-import styled from "styled-components"
-import { useWindowSize } from "../../../common/hooks/window-size"
-import { COLOR_PRIMARY } from "../../../constants/colors"
-import { isMobileView } from "../../../constants/mobile"
-
+import styled from 'styled-components'
+import { useWindowSize } from '../../../common/hooks/window-size'
+import { COLOR_PRIMARY } from '../../../constants/colors'
+import { isMobileView } from '../../../constants/mobile'
 
 const Container = styled.div`
   margin: ${({ $isMobile }) => ($isMobile ? '20px auto 0 auto' : 'auto')};
@@ -13,7 +12,7 @@ const Container = styled.div`
 `
 
 const Wrapper = styled.div`
-  margin: ${({ $isMobile }) => ($isMobile ? '0 21px' : '48px 0 0 0')};
+  margin: ${({ $isMobile, $margin }) => ($isMobile ? '0 21px' : ($margin ? '48px 0 0 0' : '0'))};
 `
 
 const Title = styled.h2`
@@ -28,17 +27,17 @@ const SubTitle = styled.p`
   line-height: 24px;
 `
 
-const SectionHeader = ({ title, subTitle }) => {
-    const isMobile = isMobileView(useWindowSize())
+const SectionHeader = ({ title, subTitle, margin = true }) => {
+  const isMobile = isMobileView(useWindowSize())
 
-    return (
-        <Container $isMobile={isMobile}>
-            <Wrapper $isMobile={isMobile}>
-              <Title>{ title }</Title>
-              <SubTitle>{ subTitle }</SubTitle>
-            </Wrapper>
-        </Container>
-    )
+  return (
+    <Container $isMobile={isMobile}>
+      <Wrapper $isMobile={isMobile} $margin={margin}>
+        <Title>{title}</Title>
+        <SubTitle>{subTitle}</SubTitle>
+      </Wrapper>
+    </Container>
+  )
 }
 
 export default SectionHeader

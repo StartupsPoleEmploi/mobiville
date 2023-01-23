@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import loadable from '@loadable/component'
@@ -16,9 +16,11 @@ import { ReactComponent as MaletteIcon } from '../../../assets/images/icons/male
 import { ReactComponent as ProfilEntrepriseIcon } from '../../../assets/images/icons/profil_entreprise.svg'
 import { ReactComponent as HandshakeIcon } from '../../../assets/images/icons/handshake.svg'
 import cityServicesStandOut from '../../../assets/images/cityServicesStandOut.png'
+import eventsCity from '../../../assets/images/events-city.png'
 
-import { capitalize, formatCityTension } from '../../../utils/utils'
+import { capitalize, formatCityTension, formatNumber } from '../../../utils/utils'
 import {
+  COLOR_LIGHT_PURPLE,
   COLOR_PRIMARY,
   COLOR_TEXT_PRIMARY,
   COLOR_WHITE,
@@ -27,7 +29,6 @@ import { useProfessions } from '../../../common/contexts/professionsContext'
 import { useCities } from '../../../common/contexts/citiesContext'
 import { isMobileView } from '../../../constants/mobile'
 import { useWindowSize } from '../../../common/hooks/window-size'
-import { Link } from 'react-router-dom'
 
 const CityHeader = loadable(() => import('../CityHeader'))
 const SectionHeader = loadable(() => import('../components/SectionHeader'))
@@ -51,7 +52,7 @@ const ElementContainer = styled.div`
 `
 
 const JobCardContainer = styled(Link)`
-  width: ${({ $isMobile }) => ($isMobile ? '279px' : '336px')};
+  min-width: 279px;
 `
 
 const TitlesContainer = styled.div`
@@ -94,6 +95,39 @@ const TagsContainer = styled.div`
 
   display: grid;
   place-content: center;
+`
+
+const EventsContainer = styled.div`
+  padding: 32px 0;
+  margin: 16px 0;
+  background: ${COLOR_LIGHT_PURPLE};
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+
+const EventBannerImage = styled.img`
+  margin-right: 40px;
+`
+
+const EventBannerContent = styled.div`
+  color: ${COLOR_PRIMARY};
+  font-size: 22px;
+  font-weight: 700;
+
+  & > p {
+    margin: 0;
+  }
+`
+const EventBannerTitle = styled.p`
+  font-size: 36px;
+  font-weight: 900;
+`
+const EventBannerText = styled.p``
+const EventBannerLink = styled.a`
+  text-decoration: underline;
 `
 
 const ServicesStandOut = styled.div`
@@ -139,7 +173,7 @@ const ServicesStandOutImageContainer = styled.div`
 const CityHome = ({ romeLabel, insee, codeRome }) => {
   const isMobile = isMobileView(useWindowSize())
 
-  const { companiesCount, onSearchCloseCompanies, city } = useCities()
+  const { companiesCount, onSearchCloseCompanies, city, criterions } = useCities()
   const {
     jobsMissingApplicant,
     isMissingApplicants,
@@ -150,22 +184,67 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
     sortByDistanceFromCity,
   } = useProfessions()
 
-  const isDefaultJobsPreview = jobsMissingApplicant.length < 3
+  // const [ events, setEvents ] = useState(null)
+  const [ isDefaultJobsPreview, setIsDefaultJobsPreview ] = useState(true)
+  const [ displayedJobs, setDisplayedJobs ] = useState([])
+
+  useEffect(() => {
+    const isDefaultJobsPreview = jobsMissingApplicant.length < 3
+    setIsDefaultJobsPreview(isDefaultJobsPreview)
+  }, [jobsMissingApplicant])
+
+  useEffect(() => {
+    if (!city || (!jobsMissingApplicant?.length && !professions?.length)) return
+
+    const numberOfJobsShown = (!codeRome
+      && ((isDefaultJobsPreview && professions?.length >= 6)
+        || (!isDefaultJobsPreview && jobsMissingApplicant?.length >= 6))) ? 6 : 3
+
+    setDisplayedJobs((isDefaultJobsPreview ? professions : jobsMissingApplicant)
+      ?.sort(sortByDistanceFromCity(city))
+      .slice(0, numberOfJobsShown))    
+  }, [codeRome, city, isDefaultJobsPreview, jobsMissingApplicant, professions])
+  
   const jobSelectedParam = (job) =>
     isMissingApplicants(job) ? `&jobSelected=${job.id}` : ''
 
   useEffect(() => {
-    if (!city?.insee_com || !codeRome) return
-    onSearchCloseCompanies({
-      codeRome,
-      insee: city.insee_com,
-      sort: 'distance',
-    })
+    if (!city?.insee_com || (!codeRome && !criterions?.codeRomes)) return
+
+    if (!codeRome) {
+      onSearchCloseCompanies({
+        codeRome: criterions.codeRomes
+          .map(codeRome => codeRome.key),
+        insee: city.insee_com,
+        sort: 'distance',
+      })
+    } else {
+      onSearchCloseCompanies({
+        codeRome: [codeRome],
+        insee: city.insee_com,
+        sort: 'distance',
+      })
+    }
+
     onSearchInfosTravail({
-      codeRome: codeRome,
+      ...((codeRome && codeRome !== '') ? {codeRome: codeRome} : null),
       insee: city.insee_com,
     })
-  }, [city?.insee_com, codeRome])
+
+  }, [city?.insee_com, codeRome, criterions])
+
+  // useEffect(() => {
+  //   fetch(`/api/events`)
+  //     .then((r) => r.json())
+  //     .then((events) => setEvents(events.slice(0, 6)))
+  // }, [])
+
+  const Title = () => {
+    return (<CityName $isMobile={isMobile}>
+      {capitalize(city.nom_comm)}
+      {romeLabel ? `${isMobile ? <br /> : ' '}pour le métier ${romeLabel}` : ''}
+    </CityName>)
+  }
 
   return (
     <div tag-page="/city">
@@ -176,10 +255,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
             <RoundSeparator> • </RoundSeparator>
             {capitalize(city.nom_dept)}
           </RegionName>
-          <CityName $isMobile={isMobile}>
-            {capitalize(city.nom_comm)}
-            {isMobile ? <br /> : ' '}pour le métier {romeLabel}
-          </CityName>
+          <Title />
         </TitlesContainer>
       </CityHeader>
 
@@ -191,16 +267,20 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
 
       <KeyFigures
         figures={[
-          {
-            label: "Offres d'emploi",
-            data: totalOffres,
-            icon: <MaletteIcon />,
-          },
-          {
-            label: 'Entreprises',
-            data: companiesCount,
-            icon: <ProfilEntrepriseIcon />,
-          },
+          !totalOffres
+            ? null
+            : {
+              label: "Offres d'emploi",
+              data: formatNumber(totalOffres),
+              icon: <MaletteIcon />,
+            },
+          !companiesCount
+            ? null
+            : {
+              label: 'Entreprises',
+              data: formatNumber(companiesCount),
+              icon: <ProfilEntrepriseIcon />,
+            },
           !infosTravail?.hiringRate
             ? null
             : {
@@ -228,9 +308,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
       />
 
       <HorizontalScrollableSection>
-        {(isDefaultJobsPreview ? professions : jobsMissingApplicant)
-          ?.sort(sortByDistanceFromCity(city))
-          .slice(0, 3)
+        {displayedJobs
           .map((job) => (
             <JobCardContainer
               $isMobile={isMobile}
@@ -242,7 +320,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
             >
               <JobCard job={job} style={{ height: '100%' }} />
             </JobCardContainer>
-          ))}
+        ))}
       </HorizontalScrollableSection>
 
       <ActionButton
@@ -255,6 +333,24 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
 
       <SectionHeader title="Les entreprises qui recrutent à proximité" />
       <CloseCompanies />
+
+      {codeRome
+        ? null
+        : /* (<EventsContainer>
+          <SectionHeader
+            title="Les rencontres professionnelles dans ce département"
+            subTitle="Pour augmenter vos chances de trouver une emploi dans cette ville"
+            margin={false} />
+          <Events events={events} />
+        </EventsContainer>) */
+        (<EventsContainer>
+          {isMobile ? null : <EventBannerImage src={eventsCity} alt="" />}
+          <EventBannerContent>
+            <EventBannerTitle>Mes évenements emploi</EventBannerTitle>
+            <EventBannerText>Pour augmenter votre chance de trouver une emploi dans cette ville</EventBannerText>
+            <EventBannerLink href="https://mesevenementsemploi.pole-emploi.fr/mes-evenements-emploi/evenements" target="_blank">> Découvrez les rencontres professionnelles</EventBannerLink>
+          </EventBannerContent>
+        </EventsContainer>)}
 
       <ElementContainer $isMobile={isMobile}>
         <CityHousingSimulator city={city}></CityHousingSimulator>

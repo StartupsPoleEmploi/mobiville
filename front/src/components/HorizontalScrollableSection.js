@@ -24,9 +24,9 @@ const ScrollingWrapper = styled.div`
   min-width: 100%;
   margin: auto;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: stretch;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
   gap: 16px;
 
   ${({ $isMobile }) =>

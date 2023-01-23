@@ -1,4 +1,5 @@
 import Router from '@koa/router'
+import Sequelize from 'sequelize'
 
 const router = new Router({ prefix: '/professions' })
 
@@ -97,26 +98,6 @@ router.post(
 )
 
 router.post(
-  '/searchInseeonly',
-  async ({
-    request: {
-      body: { insee },
-    },
-    response,
-  }) => {
-    const result = await searchJob({
-      insee: getInseeCodesForSearch(insee),
-    })
-    if (result) {
-      const total = result.resultats.length
-      response.body = '{total:' + total + '}'
-    } else {
-      response.body = []
-    }
-  }
-)
-
-router.post(
   '/searchRomeonly',
   async ({
     request: {
@@ -147,8 +128,39 @@ router.post(
   }) => {
     //https://dares.travail-emploi.gouv.fr/donnees/la-nomenclature-des-familles-professionnelles-fap-2009
 
-    const [city, pcs] = await Promise.all([
-      models.cities.findOne({
+    let city = null
+    let pcs = null
+
+    if (codeRome) {
+      [city, pcs] = await Promise.all([
+        models.cities.findOne({
+          where: { insee_com: insee },
+          raw: true,
+          include: {
+            attributes: ['bassin_id'],
+            model: models.cities.models.bassins,
+            required: false,
+            include: [
+              {
+                attributes: ['ind_t'],
+                model: models.bassins.models.tensions,
+                required: false,
+                where: {
+                  rome: codeRome,
+                },
+              },
+            ],
+          },
+        }),
+        models.cities.models.tensions.findOne({
+          where: {
+            rome: codeRome,
+          },
+          raw: true,
+        })
+      ])
+    } else {
+      city = await models.cities.findOne({
         where: { insee_com: insee },
         raw: true,
         include: {
@@ -157,27 +169,20 @@ router.post(
           required: false,
           include: [
             {
-              attributes: ['ind_t'],
+              attributes: [
+                [Sequelize.fn('AVG', Sequelize.col('ind_t')), 'ind_t'],
+              ],
               model: models.bassins.models.tensions,
               required: false,
-              where: {
-                rome: codeRome,
-              },
             },
           ],
         },
-      }),
-      models.cities.models.tensions.findOne({
-        where: {
-          rome: codeRome,
-        },
-        raw: true,
-      }),
-    ])
+      })
+    }
 
     const bassinId = city && city['bassin.bassin_id']
 
-    if (!bassinId || !pcs) {
+    if (!bassinId || (codeRome && !pcs)) {
       response.body = null
       return
     }
@@ -188,9 +193,8 @@ router.post(
       hiringRate,
     ] = await Promise.all([
       infosTravail({
-        codeProfession: pcs.pcs,
-        codeDept: city.code_dept,
-        codeRome,
+        codeProfession: pcs ? pcs.pcs : null,
+        codeDept: city.code_dept
       }),
       infosTensionTravail({
         bassinId,
@@ -244,7 +248,7 @@ router.post(
       max,
       bassinTension,
       deptTension,
-      hiringRate: (hiringRate && !hiringRate.data) ? hiringRate : null
+      hiringRate: hiringRate ? hiringRate : null,
     }
   }
 )

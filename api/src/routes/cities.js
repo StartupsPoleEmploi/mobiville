@@ -1,7 +1,7 @@
 import { compact } from 'lodash'
 import Router from '@koa/router'
 
-import { searchCloseCompanies } from "../utils/pe-api";
+import { events, searchCloseCompanies } from "../utils/pe-api";
 import { CRITERIONS } from '../constants/criterion'
 
 const router = new Router({ prefix: '/cities' })

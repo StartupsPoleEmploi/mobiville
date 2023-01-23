@@ -44,7 +44,12 @@ const CityPage = () => {
     romeLabel = foundLabel.toLowerCase()
   }
 
-  const backLink = `/villes?codeRome=${ codeRome }${city?.region?.code ? `&codeRegion=${city?.region?.code}` : ''}`
+  const backLink = useMemo(() => {
+    if (!codeRome) return `/departement/${city?.departement?.code}`
+    return `/villes?codeRome=${codeRome}${
+      city?.region?.code ? `&codeRegion=${city?.region?.code}` : ''
+    }`
+  }, [codeRome, city?.departement?.code, city?.region?.code])
 
   useEffect(() => {
     onLoadCity(inseeCode)
@@ -55,10 +60,10 @@ const CityPage = () => {
   }, [inseeCode])
 
   useEffect(() => {
-    if (!city?.insee_com || !codeRome) return
+    if (!city?.insee_com) return
 
     onSearchProfessions({
-      codeRome: [codeRome],
+      ...(codeRome && codeRome !== '' ? { codeRome: [codeRome] } : null),
       insee: [city.insee_com],
     })
   }, [city?.insee_com, codeRome])
@@ -111,9 +116,12 @@ const CityPage = () => {
         backLink={backLink}
         isMobile={isMobile}
         background={
-          [CLOSE_CITIES, JOB].includes(section) && !isMobile
+          [JOB, CLOSE_CITIES].includes(section) && !isMobile
             ? 'none'
             : COLOR_WHITE
+        }
+        showAdvicesButton={
+          !isMobile && ![LIFE, JOB, CLOSE_CITIES].includes(section)
         }
       />
 
