@@ -96,6 +96,12 @@ export const thereAre = (date) => moment(date)
     .subtract(1, "hours")
     .fromNow()
 
+export const formatDateShort = (date) => {
+  const [day, month] = date.split('/')
+  const months = ['dèc.', 'janv.', 'fevr.', 'mars', 'avril', 'mai', 'juin', 'juil.', 'aout', 'sept.', 'oct.', 'nov.', 'dèc.']
+  return `${day} ${months[+month]}`
+}
+
 export const formatDate = (date) => date.toLocaleDateString("fr-FR")
 
 export function getXDaysAgo(date) {

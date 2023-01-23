@@ -18,6 +18,7 @@ import helpsRoutes from './routes/helps'
 import ogrsRoutes from './routes/ogrs'
 import professionsRoutes from './routes/professions'
 import regionsRoutes from './routes/regions'
+import eventsRoutes from './routes/events'
 
 const app = new Koa()
 
@@ -61,6 +62,7 @@ app.use(helpsRoutes.routes()).use(helpsRoutes.allowedMethods())
 app.use(ogrsRoutes.routes()).use(ogrsRoutes.allowedMethods())
 app.use(professionsRoutes.routes()).use(professionsRoutes.allowedMethods())
 app.use(regionsRoutes.routes()).use(regionsRoutes.allowedMethods())
+app.use(eventsRoutes.routes()).use(eventsRoutes.allowedMethods())
 app.use(compress({}))
 app.use(session(config.SESSION_CONFIG, app))
 

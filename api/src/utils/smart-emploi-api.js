@@ -34,15 +34,15 @@ const apiEmploiStore = axios.create({
  * @returns
  */
 export async function getHiringRate({ codeTerritoire, codeRome }) {
-  return fetchAndRetryIfNecessary(async () =>
+  const result = await fetchAndRetryIfNecessary(async () =>
     apiEmploiStore
       .post(
         `${config.EMPLOI_STORE_URL}/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-embauches`,
         {
           codeTypeTerritoire: 'BASBMO',
           codeTerritoire: `${codeTerritoire}`,
-          codeTypeActivite: 'ROME',
-          codeActivite: `${codeRome}`,
+          codeTypeActivite: codeRome ? 'ROME' : 'CUMUL',
+          codeActivite: codeRome ? `${codeRome}` : 'CUMUL',
           codeTypePeriode: 'TRIMESTRE',
           codeTypeNomenclature: 'CATCANDxDUREEEMP',
           dernierePeriode: true,
@@ -50,27 +50,27 @@ export async function getHiringRate({ codeTerritoire, codeRome }) {
         },
         { ...(await axiosCommonOptions()) }
       )
-      .then((result) => result.data)
-      .then((result) => {
-        if (!result || !result.listeValeursParPeriode) return null
-
-        const preferedCategories = ['ABCDE-SUP1M', 'ABCDE-TOUTE', 'TOUT-TOUTE']
-        const foundCategories = result.listeValeursParPeriode.map(
-          (data) => data.codeNomenclature
-        )
-
-        const bestCategory = preferedCategories.find((category) =>
-          foundCategories.includes(category)
-        )
-        return result.listeValeursParPeriode.find(
-          (data) => data.codeNomenclature === bestCategory
-        ).valeurSecondairePourcentage
-      })
       .catch((error) => {
-        console.log(error)
+        console.error(error)
         return error.response
-      })
-  )
+      }))
+
+    if (!result || !result.listeValeursParPeriode) return null
+
+    const preferedCategories = ['ABCDE-SUP1M', 'ABCDE-TOUTE', 'TOUT-TOUTE']
+    const foundCategories = result.listeValeursParPeriode.map(
+      (data) => data.codeNomenclature
+    )
+
+    const bestCategory = preferedCategories.find((category) =>
+      foundCategories.includes(category)
+    )
+
+    const hiringRate = result.listeValeursParPeriode.find(
+      (data) => data.codeNomenclature === bestCategory
+    ).valeurSecondairePourcentage
+
+    return hiringRate
 }
 
 /** Total d'embauche par departement par métier au dernier trimestre
@@ -101,7 +101,7 @@ export async function getEmbaucheByDepartement(codeDepartement, codeRome) {
         { ...(await axiosCommonOptions()) }
       )
       .catch((error) => {
-        console.log(error)
+        console.error(error)
         return error.response
       })
   ).then((data) => mapEmbaucheData(codeDepartement, codeRome, data))

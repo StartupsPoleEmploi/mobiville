@@ -50,7 +50,7 @@ const MenuNavigation = ({ isMobile = false }) => {
 
   const MENU_LINK = [
     {
-      path: `/ville/${insee}?codeRome=${codeRome}`,
+      path: `/ville/${insee}${(!!codeRome && codeRome !== '') ? `?codeRome=${codeRome}` : ''}`,
       label: 'Emploi et logement',
       selected:
         !location.pathname.includes('metier') &&
@@ -58,33 +58,33 @@ const MenuNavigation = ({ isMobile = false }) => {
         !location.pathname.includes('villes-proches'),
     },
     {
-      path: `/ville/${insee}/metier?codeRome=${codeRome}`,
+      path: `/ville/${insee}/metier${(!!codeRome && codeRome !== '') ? `?codeRome=${codeRome}` : ''}`,
       label: 'Offres d’emploi',
       selected: location.pathname.includes('metier'),
     },
     {
-      path: `/ville/${insee}/services?codeRome=${codeRome}`,
+      path: `/ville/${insee}/services${(!!codeRome && codeRome !== '') ? `?codeRome=${codeRome}` : ''}`,
       label: 'Services de la ville',
       selected: location.pathname.includes('services'),
     },
-    {
+    ((!!codeRome && codeRome !== '') ? {
       path: `/ville/${insee}/villes-proches?codeRome=${codeRome}`,
       label: isMobile
         ? 'Villes similaires'
         : 'Villes similaires ou à proximité',
       selected: location.pathname.includes('villes-proches'),
-    },
-  ]
+    } : null),
+  ].filter(e => !!e)
 
   return (
     <Nav $isMobile={isMobile}>
       <Container>
-        {MENU_LINK.map((menu, key) => (
+        {MENU_LINK.map((menu) => (
           <MenuItem
             $isMobile={isMobile}
             $disabled={menu.disabled}
             $selected={menu.selected}
-            key={key}
+            key={menu.label}
             to={menu.path}
           >
             {menu.label}

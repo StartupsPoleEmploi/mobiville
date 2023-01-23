@@ -1,11 +1,9 @@
 import config from 'config'
 import axios from 'axios'
 import { ungzip } from 'node-gzip'
-import { decompress as decompressBZ2 } from 'bz2'
 import { csvToArrayJson } from './csv'
-import { readFile, readFileSync, statSync, readdirSync } from 'fs'
+import { readFile, readFileSync } from 'fs'
 import parser from 'xml2json'
-import { parse } from 'csv-parse'
 
 let romeLabelFile = null
 const cheerio = require('cheerio')

@@ -21,8 +21,6 @@ const Container = styled.div`
 
 const Card = styled(Link)`
   min-width: 315px;
-  flex-grow: 1;
-  flex-basis: 0%;
   padding: 20px;
   border-radius: 8px;
 
