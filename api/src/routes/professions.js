@@ -244,7 +244,7 @@ router.post(
       max,
       bassinTension,
       deptTension,
-      hiringRate,
+      hiringRate: (hiringRate && !hiringRate.data) ? hiringRate : null
     }
   }
 )
