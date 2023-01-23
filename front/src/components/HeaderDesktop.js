@@ -9,10 +9,9 @@ import {
   COLOR_TEXT_SECONDARY,
   COLOR_WHITE,
 } from '../constants/colors'
-import LOGO from '../assets/images/LogoMobiville_gros.svg'
-import LOGO_FR from '../assets/images/marianne-logo.png'
 import LOGO_AL from '../assets/images/logo-action-logement.png'
 import LOGO_PE from '../assets/images/logo-pole-emploi.png'
+import Image from './Image'
 
 const Container = styled.header`
   height: 100px;
@@ -35,7 +34,7 @@ const HomeLink = styled(Link)`
   align-items: center;
   gap: 12px;
 
-  & > img {
+  & > img, & > picture {
     height: 100%;
   }
 `
@@ -101,6 +100,8 @@ const HeaderDesktop = ({
   const searchSelected = location.pathname.includes('rechercher')
   const helpSelected = location.pathname.includes('aides')
 
+  const isHome = location.pathname === '/'
+
   return (
     <Container>
       <HomeLink
@@ -108,14 +109,15 @@ const HeaderDesktop = ({
         className="taille-fixe"
         title="Retour à l’accueil"
       >
-        <img
-          src={LOGO_FR}
-          alt="Retour à la page d’accueil"
-        />
-        <img
-          src={LOGO}
-          alt="Retour à la page d’accueil"
-        />
+        <Image
+          src="marianne-logo"
+          alt={`République Française - Liberté, Égalité, Fraternité${!isHome ? " - Retour à la page d'accueil" : ''}`} />
+
+        <Image
+          src="logo-mobiville"
+          alt={`Mobiville Pôle emploi et Action logement${
+            !isHome ? " - Retour à la page d'accueil" : ''
+          }`} />
       </HomeLink>
 
       {displaySearch

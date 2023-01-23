@@ -8,11 +8,9 @@ import { isMobileView } from '../../../../constants/mobile'
 import { formatNumber } from '../../../../utils/utils'
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import logoALin from '../../../../assets/images/logo-ALin.png'
-import logoLogementSocial from '../../../../assets/images/logo-logement-social.png'
 
 import HousingSimulator from '../../components/HousingSimulator'
-import { KeyFigures, Tag } from '../../../../components'
+import { Image, KeyFigures, Tag } from '../../../../components'
 
 import { ReactComponent as BuildingIcon } from '../../../../assets/images/icons/building.svg'
 
@@ -99,7 +97,7 @@ const HousingActorLink = styled.a`
   }
 `
 
-const HousingActorImage = styled.img`
+const HousingActorImage = styled(Image)`
   max-height: 70px;
   max-width: 100%;
   align-self: center;
@@ -150,7 +148,7 @@ const CityHousingSimulator = ({ city }) => {
       <HousingSearchContainer $isMobile={isMobile}>
         <HousingActorsContainer>
           <HousingActor $isMobile={isMobile}>
-            <HousingActorImage src={logoLogementSocial} />
+            <HousingActorImage src="logo-logement-social" alt="Ma demande de logement social" />
             <div>
               <HousingActorTitle>Demandez un logement social</HousingActorTitle>
               <HousingActorDescription>
@@ -165,7 +163,7 @@ const CityHousingSimulator = ({ city }) => {
           </HousingActor>
 
           <HousingActor>
-            <HousingActorImage src={logoALin} />
+            <HousingActorImage src="logo-ALin" alt="AL'in.fr offres de logement" />
             <div>
               <HousingActorTitle>Offres de logement</HousingActorTitle>
               <HousingActorDescription>

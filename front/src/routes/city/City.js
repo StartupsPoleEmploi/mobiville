@@ -102,7 +102,7 @@ const CityPage = () => {
     <MainLayout menu={{ visible: !isMobile }}>
       <Helmet>
         <title>
-          {ucFirst(romeLabel)} à {capitalize(city.nom_comm)} | Mobiville
+          {!!romeLabel ? `${ucFirst(romeLabel)} à ` : ''}{capitalize(city.nom_comm)} | Mobiville
         </title>
         <meta
           name="description"

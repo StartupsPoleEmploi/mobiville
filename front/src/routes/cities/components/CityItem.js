@@ -121,7 +121,9 @@ const CityItem = ({
   }
 
   if (city.photo) {
-    city.photo = city.photo.replace('/2000px', '/500px')
+    city.photo = isMobile
+      ? city.photo.replace('/2000px', '/160px')
+      : city.photo.replace('/2000px', '/400px')
   } else {
     city.photo = `/regions/region-${city.region?.code}.jpg`
   }

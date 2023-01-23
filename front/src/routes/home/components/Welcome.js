@@ -4,9 +4,7 @@ import loadable from '@loadable/component'
 import { useWindowSize } from '../../../common/hooks/window-size'
 import { isMobileView } from '../../../constants/mobile'
 import { COLOR_PRIMARY } from '../../../constants/colors'
-import { Section } from '../../../components'
-
-import heroHomepagePic from '../../../assets/images/hero-homepage.png'
+import { Image, Section } from '../../../components'
 
 const WelcomeSearchForm = loadable(() => import('./WelcomeSearchForm'))
 
@@ -53,7 +51,7 @@ const SubTitle = styled.h2`
   margin: 0;
 `
 
-const HeroImage = styled.img`
+const HeroImage = styled(Image)`
   align-self: center;
 
   padding-right: 64px;
@@ -76,7 +74,7 @@ const Welcome = () => {
             </SubTitle>
           </TitleWrapper>
 
-          <HeroImage src={heroHomepagePic} alt="" />
+          <HeroImage src="hero-homepage" alt="" />
         </TitleContainer>
 
         <WelcomeSearchForm></WelcomeSearchForm>
