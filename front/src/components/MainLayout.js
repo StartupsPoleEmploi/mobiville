@@ -18,6 +18,7 @@ const Container = styled.div`
 `
 
 const Main = styled.main`
+  position: relative;
   width: 100%;
 `
 

@@ -190,10 +190,6 @@ export default (sequelizeInstance) => {
       foreignKey: 'depcom',
       sourceKey: 'insee_com',
     })
-    Model.hasMany(models.citiesJobs, {
-      foreignKey: 'insee_code',
-      sourceKey: 'insee_com',
-    })
     Model.hasOne(models.departements, {
       foreignKey: 'code',
       sourceKey: 'code_dept',

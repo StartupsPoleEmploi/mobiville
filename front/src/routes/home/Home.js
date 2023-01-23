@@ -4,7 +4,7 @@ import loadable from '@loadable/component'
 
 import { COLOR_BACKGROUND } from '../../constants/colors'
 
-import { MainLayout } from '../../components/'
+import { MainLayout, TopPageButton } from '../../components/'
 import Welcome from './components/Welcome'
 
 const Advantages = loadable(() => import('./components/Advantages'))
@@ -36,6 +36,8 @@ const HomePage = () => (
     <MobilityGuideBanner />
 
     <Advantages />
+
+    <TopPageButton />
 
     <Testimonies />
   </MainLayout>

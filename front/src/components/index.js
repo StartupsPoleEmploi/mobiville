@@ -25,6 +25,7 @@ export { default as CloseButton } from './buttons/CloseButton.js'
 export { default as FiltersButton } from './buttons/FiltersButton.js'
 export { default as BackButton } from './buttons/BackButton.js'
 export { default as ButtonGroup } from './buttons/ButtonGroup.js'
+export { default as TopPageButton } from './TopPageButton.js'
 
 // INPUTS
 export { default as Select } from './inputs/Select.js'

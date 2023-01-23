@@ -141,7 +141,7 @@ const Departement = () => {
   const [hiringRate, setHiringRate] = useState()
 
   const showFullText = useCallback(
-    () => isTextExpended || departement?.description.length < 521,
+    () => isTextExpended || !(departement?.description?.length >= 521),
     [isTextExpended, departement]
   )
 

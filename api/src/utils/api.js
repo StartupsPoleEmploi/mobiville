@@ -263,55 +263,6 @@ export function getEquipmentsDatas() {
   })
 }
 
-export function getCitiesJobsCount() {
-  const fromDatalakeDir = '/mnt/datalakepe/depuis_datalake'
-  const files = readdirSync(fromDatalakeDir)
-
-  const filesSortedByDate = files
-    .map((fileName) => ({
-      name: fileName,
-      time: statSync(`${fromDatalakeDir}/${fileName}`).mtime.getTime(),
-    }))
-    .sort((a, b) => b.time - a.time)
-    .map((file) => file.name)
-    // multiple files can be here, this one has "offre" in its name (at the time of writing, the complete name
-    // of the files is still subject to change)
-    .filter((filename) => filename.includes('offre'))
-
-  if (filesSortedByDate.length === 0)
-    return Promise.reject(new Error('No eligible file'))
-
-  return new Promise((resolve, reject) => {
-    readFile(
-      `${fromDatalakeDir}/${filesSortedByDate[0]}`,
-      (err, bufferData) => {
-        if (err) return reject(err)
-
-        let csvData
-        try {
-          const csvDataUIntArray = decompressBZ2(bufferData)
-          csvData = new TextDecoder().decode(csvDataUIntArray)
-        } catch (err) {
-          return reject(err)
-        }
-
-        parse(
-          csvData,
-          {
-            skip_empty_lines: true,
-            delimiter: ';',
-            trim: true,
-          },
-          (err, output) => {
-            if (err) return reject(err)
-            resolve(output)
-          }
-        )
-      }
-    )
-  })
-}
-
 export function getRomeLabel(rome) {
   return new Promise((resolve, reject) => {
     if (romeLabelFile) {

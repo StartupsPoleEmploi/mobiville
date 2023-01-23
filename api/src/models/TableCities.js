@@ -33,12 +33,6 @@ import {
 import { distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
 
-function padLeadingZeros(num, size) {
-  let s = num + ''
-  while (s.length < size) s = '0' + s
-  return String(s)
-}
-
 export default (sequelizeInstance, Model) => {
   Model.franceShape = null
   Model.weatherStationList = null
@@ -49,14 +43,36 @@ export default (sequelizeInstance, Model) => {
   Model.cacheLoadAverageHouseRent = null
 
   Model.syncCities = async ({ cities }) => {
-    const oldRegions = await getAllRegions()
-    const oldRegionsToNewRegionsMap = oldRegions.reduce((prev, oldRegion) => ({
-        ...prev,
-        [padLeadingZeros(oldRegion.former_code, 2)]: padLeadingZeros(
-          oldRegion.new_code,
-          2
-        ),
-      }), {})
+    const regions = await getAllRegions()
+    const oldToNewRegions = [
+      // { old: '01', new: '01', },
+      // { old: '02', new: '02', },
+      // { old: '03', new: '03', },
+      // { old: '04', new: '04', },
+      // { old: '06', new: '06', },
+      // { old: '11', new: '11', },
+      // { old: '24', new: '24', },
+      // { old: '52', new: '52', },
+      // { old: '53', new: '53', },
+      // { old: '93', new: '93', },
+      // { old: '94', new: '94', },
+      { old: '26', new: '27', },
+      { old: '43', new: '27', },
+      { old: '23', new: '28', },
+      { old: '25', new: '28', },
+      { old: '22', new: '32', },
+      { old: '31', new: '32', },
+      { old: '21', new: '44', },
+      { old: '41', new: '44', },
+      { old: '42', new: '44', },
+      { old: '72', new: '75', },
+      { old: '82', new: '84', },
+      { old: '83', new: '84', },
+      { old: '54', new: '75', },
+      { old: '74', new: '75', },
+      { old: '73', new: '76', },
+      { old: '91', new: '76', },
+    ];
 
     const citiesRent = await getCitiesRent()
     let citiesNotUsedNames = citiesRent.map(city => city.city)
@@ -71,15 +87,21 @@ export default (sequelizeInstance, Model) => {
           cityRent = citiesRent.find(r => (r.city === city.commune.replaceAll('-', ' ')))
           citiesNotUsedNames = citiesNotUsedNames.filter(cityName => cityName !== cityRent.city)
         }
+        
+        const oldNewRegion = oldToNewRegions.find(region => region.old === `${city.code_region}`)
+        const codeRegion = (oldNewRegion ? oldNewRegion.new : city.code_region)
+        const region = regions.find(r => `${r.code}` === `${codeRegion}`)
+        const nomRegion = region ? region.name : city.region
+
+        const postalCode = city.code_postal.split('/')[0]
 
         return {
           code_comm: city.code_commune,
           nom_dept: city.departement,
           statut: city.statut,
           z_moyen: city.altitude_moyenne,
-          nom_region: city.region,
-          code_region:
-            oldRegionsToNewRegionsMap[padLeadingZeros(city.code_region, 2)],
+          nom_region: nomRegion,
+          code_region: codeRegion,
           insee_com: city.code_insee,
           code_dept: city.code_departement,
           geo_point_2d_x: city.geo_point_2d
@@ -88,7 +110,7 @@ export default (sequelizeInstance, Model) => {
           geo_point_2d_y: city.geo_point_2d
             ? city.geo_point_2d.split(',')[1]
             : null,
-          postal_code: city.code_postal,
+          postal_code: postalCode,
           id_geofla: city.id_geofla,
           code_cant: city.code_canton,
           superficie: city.superficie,
@@ -105,6 +127,8 @@ export default (sequelizeInstance, Model) => {
 
     await Model.bulkCreate(data, {
       updateOnDuplicate: [
+        'nom_region',
+        'postal_code',
         'total_social_housing',
         'rent_t2',
         'rent_t4'
@@ -186,7 +210,7 @@ export default (sequelizeInstance, Model) => {
   }
 
   Model.search = async ({
-    codeRegion = [],
+    codeRegion,
     codeCriterion = [],
     codeRome = [],
     onlySearchInTension = true,
@@ -266,13 +290,8 @@ export default (sequelizeInstance, Model) => {
       }
     }, [])
 
-    let whereRegion = {}
-    if (codeRegion.length) {
-      whereRegion = {
-        where: {
-          code: codeRegion,
-        },
-      }
+    if (codeRegion) {
+      whereAnd.push({ code_region: { [Op.eq]: codeRegion } })
     }
 
     let bassinsToInclude = []
@@ -290,7 +309,9 @@ export default (sequelizeInstance, Model) => {
     }
 
     const result = await Model.findAll({
-      where: { [Op.and]: whereAnd },
+      where: {
+        [Op.and]: whereAnd,
+      },
       logging: process.env.ENABLE_DB_LOGGING ? console.log : false,
       include: [
         {
@@ -298,20 +319,6 @@ export default (sequelizeInstance, Model) => {
           model: Model.models.bassins,
           required: true,
           include: bassinsToInclude,
-        },
-        {
-          attributes: ['name', 'code'],
-          model: Model.models.regions,
-          required: true,
-          ...whereRegion,
-        },
-        {
-          attributes: ['number'],
-          model: Model.models.citiesJobs,
-          required: false,
-          where: {
-            rome_id: codeRome,
-          },
         },
       ],
       // order : 1 - tension sur le métier > 2 - custom order (montagne, mer...) > 3 - population
