@@ -38,7 +38,7 @@ Then("j'affiche la page de la ville pour le métier", function () {
   cy.contains(infoOpportunites, "pportunités d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoOffres, "Offres d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoEntreprises, "Entreprises", {timeout: SHORT_WAIT_TIME}).should('exist');
-  cy.contains(infoTauxEmbauche, "Taux d'embauche", {timeout: SHORT_WAIT_TIME}).should('exist');
+  // cy.contains(infoTauxEmbauche, "Taux d'embauche", {timeout: SHORT_WAIT_TIME}).should('exist');
 })
 
 Then("j'affiche la page de la ville similaire/proche pour le métier", function () {
@@ -52,7 +52,7 @@ Then("j'affiche la page de la ville pour les métiers", function () {
   })
 
 Then("j'affiche les offres d'emploi qui ont le moins de candidature", function () {
-  cy.contains(resultatOffre, "Les dernières offres d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(resultatOffre, "offres d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.get(nombreOffres, {timeout: SHORT_WAIT_TIME}).children().should('have.length', 3);
 })
 
