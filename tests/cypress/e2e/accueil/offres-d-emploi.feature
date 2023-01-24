@@ -7,7 +7,7 @@ Fonctionnalité: Offres d'emploi d'une ville
     Et que je saisis "boulanger" dans le métier
     Et que je choisis "Boulangerie - viennoiserie (Aide-boulanger / Aide-boulangère, …)" dans la liste des métiers
     Et que je saisis "Lille" dans la ville
-    Et que je choisis "Lille (59000/59160/59260/59777/59800)" dans la liste des villes
+    Et que je choisis "Lille (59000)" dans la liste des villes
     Et que je clique sur rechercher
     Et que je clique sur "Offres d’emploi" dans le fil d'ariane
 
