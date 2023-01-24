@@ -13,9 +13,9 @@ router.get('/:code/jobs', async ({ params: { code }, response }) => {
 })
 router.get('/:code', async ({ params: { code }, models, response }) => {
   const departement = await models.departements.getDepartement({ code })
-
+  
+  let topCities = departement.dataValues.cities
   // Cas des DOM avec regions uni-départemental
-  let topCities = []
   if (['1', '2', '3', '4', '5', '6'].includes(code)) {
     topCities = (await models.cities.getCitiesByCodeRegion({
         codeRegion: code,
