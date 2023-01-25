@@ -1,3 +1,4 @@
+import Sequelize from 'sequelize'
 import { wikipediaDepartementDetails } from '../utils/api'
 
 export default (sequelizeInstance, Model) => {
@@ -16,6 +17,13 @@ export default (sequelizeInstance, Model) => {
           required: true,
           order: [['population', 'DESC']],
           limit: 10,
+          where: {
+            nom_comm: Sequelize.where(
+              Sequelize.fn('LOWER', Sequelize.col('nom_comm')),
+              'NOT LIKE',
+              '%-ARRONDISSEMENT'
+            )
+          }
         },
         {
           model: Model.models.regions,

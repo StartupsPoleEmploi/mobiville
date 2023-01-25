@@ -56,7 +56,7 @@ const BackButton = ({ libelle = 'Retour', backLink = '/', showAdvicesButton = fa
 
   return (
     <BackContainer>
-      <HeaderArrowLink to={backLink} title="Retour" $isMobile={isMobile}>
+      <HeaderArrowLink to={backLink} title={libelle} $isMobile={isMobile}>
         <ArrowBackIcon color="primary" />
         <BackText $isMobile={isMobile}>{libelle}</BackText>
       </HeaderArrowLink>

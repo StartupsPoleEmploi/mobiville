@@ -160,4 +160,16 @@ router.post(
   }
 )
 
+/** Top 10 des métiers en tension sur la ville */
+router.get('/:insee/topJobs', async ({
+    params: { insee },
+    models,
+    response,
+  }) => {
+    const result = await models.tensions.findTopJobs({
+      insee
+    })
+    response.body = result
+  })
+
 export default router
