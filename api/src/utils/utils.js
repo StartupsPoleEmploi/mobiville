@@ -232,3 +232,26 @@ export async function fetchAndRetryIfNecessary(callAPIFn, tryNumber = 1) {
   }
   return response ? response.data : null
 }
+
+
+// we need special matchings for Marseille, Paris and Lyon, since we cannot search them directly
+// and need to input the insee code of a special district
+const CODE_INSEE_LYON_FIRST_DISTRICT = '69381'
+const CODE_INSEE_PARIS_FIRST_DISTRICT = '75101'
+const CODE_INSEE_MARSEILLE_FIRST_DISTRICT = '13201'
+
+const CODE_INSEE_LYON = '69123'
+const CODE_INSEE_PARIS = '75056'
+const CODE_INSEE_MARSEILLE = '13055'
+
+export const getInseeCodesForSearch = (inseeCodes) =>
+  inseeCodes.map((inseeCode) => getInseeCodeUniqueForSearch(inseeCode))
+
+export const getInseeCodeUniqueForSearch = (inseeCode) => {
+  if (inseeCode === CODE_INSEE_LYON) return CODE_INSEE_LYON_FIRST_DISTRICT
+  if (inseeCode === CODE_INSEE_PARIS) return CODE_INSEE_PARIS_FIRST_DISTRICT
+  if (inseeCode === CODE_INSEE_MARSEILLE)
+    return CODE_INSEE_MARSEILLE_FIRST_DISTRICT
+
+  return inseeCode
+}

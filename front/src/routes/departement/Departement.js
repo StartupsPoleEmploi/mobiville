@@ -17,12 +17,12 @@ import {
   Map,
   SectionTitle,
   TopPageButton,
+  TopJobs,
 } from '../../components'
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { formatNumber, wordsCapitalize } from '../../utils/utils'
 
-const TopJobs = loadable(() => import('./components/TopJobs'))
 const TopCities = loadable(() => import('./components/TopCities'))
 
 const WelcomeContainer = styled.div`

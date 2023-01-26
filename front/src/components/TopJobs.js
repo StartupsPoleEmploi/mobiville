@@ -1,14 +1,15 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-
-import { ReactComponent as RightChevronIcon } from '../../../assets/images/icons/right_chevron.svg'
-
 import { Chip } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { COLOR_PRIMARY, COLOR_WHITE } from '../../../constants/colors'
+
+import { ReactComponent as RightChevronIcon } from '../assets/images/icons/right_chevron.svg'
+
+import { COLOR_PRIMARY, COLOR_WHITE } from '../constants/colors'
+import { formatCityUrl } from '../utils/utils'
 
 const Container = styled.div`
-  color: ${COLOR_PRIMARY};'
+  color: ${COLOR_PRIMARY};
 `
 
 const Title = styled.h2`
@@ -56,34 +57,42 @@ const JobLabel = styled(Link)`
   }
 `
 
-const TopJobs = ({ departement }) => {
+const TopJobs = ({ departement, city }) => {
   const [topJobs, setTopJobs] = useState(null)
 
-  const getTopJobs = (dept) => {
-    return fetch(`/api/departement/${dept.code}/topJobs`)
+  useEffect(() => {
+    if (!departement && !city?.insee_com) return
+
+    fetch(
+      !!city?.insee_com
+        ? `/api/cities/${city?.insee_com}/topJobs`
+        : `/api/departement/${departement.code}/topJobs`
+    )
       .then((response) => response.json())
       .then((jobOffers) => setTopJobs(jobOffers))
-  }
-
-  useEffect(() => {
-    getTopJobs(departement)
-  }, [departement])
+  }, [departement, city?.insee_com])
 
   return (
     <Container>
       <Title>
-        Les métiers avec le plus d'offres dans le département {departement.name}
+        {!!departement?.name
+          ? `Les métiers avec le plus d'offres dans le département ${departement?.name}`
+          : `Les métiers avec le plus d'offres à ${city?.name}`}
       </Title>
 
       <JobsContainer>
         {topJobs?.map((job) => (
           <JobLabel
-            key={job.codeRome}
-            to={`/villes?codeRome=${job.codeRome}&codeDepartement=${departement.code}`}
+            key={job?.codeRome ?? job?.rome}
+            to={
+              !!departement?.code
+                ? `/villes?codeRome=${job.codeRome}&codeDepartement=${departement.code}`
+                : formatCityUrl(city, job.rome)
+            }
           >
-            <span>{job.libelleRome}</span>
+            <span>{job?.libelleRome ?? job?.rome_label}</span>
             <span style={{ whiteSpace: 'nowrap' }}>
-              <Chip label={job.embauche} />
+              {!!job?.embauche ? <Chip label={job.embauche} /> : null}
               <RightChevronIcon />
             </span>
           </JobLabel>

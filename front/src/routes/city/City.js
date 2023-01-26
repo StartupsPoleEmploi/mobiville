@@ -113,6 +113,7 @@ const CityPage = () => {
       </Helmet>
 
       <CityMenuBack
+        codeRome={codeRome}
         backLink={backLink}
         isMobile={isMobile}
         background={

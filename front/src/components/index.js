@@ -16,6 +16,7 @@ export { default as KeyFigures } from './KeyFigures.js'
 export { default as Map } from './Map.js'
 export { default as Tag } from './Tag.js'
 export { Accordion, Pane } from './Accordion.js'
+export { default as TopJobs } from './TopJobs.js'
 
 // BUTTONS
 export { default as Button } from './buttons/Button.js'

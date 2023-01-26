@@ -11,6 +11,8 @@ import {
   Image,
   KeyFigures,
   Tag,
+  TopPageButton,
+  TopJobs
 } from '../../../components'
 
 import { ReactComponent as MaletteIcon } from '../../../assets/images/icons/malette.svg'
@@ -33,9 +35,7 @@ const CityHeader = loadable(() => import('../CityHeader'))
 const SectionHeader = loadable(() => import('../components/SectionHeader'))
 const JobCard = loadable(() => import('../cityJobs/components/JobCard'))
 const CloseCompanies = loadable(() => import('./components/CloseCompanies'))
-const CityHousingSimulator = loadable(() =>
-  import('./components/CityHousingSimulator')
-)
+const CityHousingSimulator = loadable(() => import('./components/CityHousingSimulator'))
 
 const ElementContainer = styled.div`
   display: flex;
@@ -192,13 +192,9 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
   useEffect(() => {
     if (!city || (!jobsMissingApplicant?.length && !professions?.length)) return
 
-    const numberOfJobsShown = (!codeRome
-      && ((isDefaultJobsPreview && professions?.length >= 6)
-        || (!isDefaultJobsPreview && jobsMissingApplicant?.length >= 6))) ? 6 : 3
-
     setDisplayedJobs((isDefaultJobsPreview ? professions : jobsMissingApplicant)
       ?.sort(sortByDistanceFromCity(city))
-      .slice(0, numberOfJobsShown))    
+      .slice(0, 3))    
   }, [codeRome, city, isDefaultJobsPreview, jobsMissingApplicant, professions])
   
   const jobSelectedParam = (job) =>
@@ -291,6 +287,10 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
         ]}
       />
 
+      {!!codeRome
+        ? null
+        : <TopJobs city={city} />}
+
       <SectionHeader
         title={
           isDefaultJobsPreview
@@ -330,7 +330,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
       <SectionHeader title="Les entreprises qui recrutent à proximité" />
       <CloseCompanies />
 
-      {codeRome
+      {!!codeRome
         ? null
         : /* (<EventsContainer>
           <SectionHeader
@@ -352,40 +352,51 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
         <CityHousingSimulator city={city}></CityHousingSimulator>
       </ElementContainer>
 
-      <SectionHeader title="Les aides pour vous accompagner dans votre projet" />
-      <HelpsStandOut />
+      {!!codeRome
+        ? (<>
+          <SectionHeader title="Les aides pour vous accompagner dans votre projet" />
+          <HelpsStandOut />
+        </>) : null}
 
-      <ServicesStandOut $isMobile={isMobile}>
-        <ServicesStandOutContent>
-          <ServicesStandOutTitle>
-            Découvrez les services de la ville
-          </ServicesStandOutTitle>
-          <ServicesStandOutDescription>
-            Tout savoir sur les transports, la santé, l’éducation, la culture et
-            les loisirs
-          </ServicesStandOutDescription>
+      {!!codeRome
+        ? (
+          <ServicesStandOut $isMobile={isMobile}>
+            <ServicesStandOutContent>
+              <ServicesStandOutTitle>
+                Découvrez les services de la ville
+              </ServicesStandOutTitle>
+              <ServicesStandOutDescription>
+                Tout savoir sur les transports, la santé, l’éducation, la culture et
+                les loisirs
+              </ServicesStandOutDescription>
+              <ActionButton
+                style={{ marginTop: 16, width: 'fit-content' }}
+                path={`/ville/${insee}/services?codeRome=${codeRome}`}
+                libelle={`Voir tous les services`}
+                isMobile={isMobile}
+                isBlue={false}
+                isWhite={true}
+              />
+            </ServicesStandOutContent>
+            <ServicesStandOutImageContainer>
+              <Image src="cityServicesStandOut" />
+            </ServicesStandOutImageContainer>
+          </ServicesStandOut>
+        ) : null}
+
+      {!!codeRome
+        ? (
           <ActionButton
-            style={{ marginTop: 16, width: 'fit-content' }}
-            path={`/ville/${insee}/services?codeRome=${codeRome}`}
-            libelle={`Voir tous les services`}
+            path={'/conseils-et-astuces'}
+            libelle={`Consultez nos conseils pour votre projet`}
             isMobile={isMobile}
             isBlue={false}
             isWhite={true}
+            centered
           />
-        </ServicesStandOutContent>
-        <ServicesStandOutImageContainer>
-          <Image src="cityServicesStandOut" />
-        </ServicesStandOutImageContainer>
-      </ServicesStandOut>
+        ) : null}
 
-      <ActionButton
-        path={'/conseils-et-astuces'}
-        libelle={`Consultez nos conseils pour votre projet`}
-        isMobile={isMobile}
-        isBlue={false}
-        isWhite={true}
-        centered
-      />
+        <TopPageButton />
     </div>
   )
 }
