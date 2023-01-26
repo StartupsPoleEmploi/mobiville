@@ -15,14 +15,17 @@ Mobiville est un outil d’aide à la décision pour orienter les candidats à l
 Pré-requis: [docker, docker-compose](https://www.docker.com/get-started) et [yarn](https://yarnpkg.com/getting-started/install)
 
 ### Version de nodeJS
+
 Il faut s'assurer d'etre sous **node 16.16.0**
 Avec [nvm](https://github.com/nvm-sh/nvm) pour Windows et un poste PE il faut ouvrir un cmd en self élévation:
+
 ```bash
 nvm install 16.16.0
 nvm use 16.16.0
-``` 
+```
 
 ### Construire et démarrer les conteneurs
+
 1. Remplir les données .env (exemple voir .env.exemple dans le repo)
 2. `yarn build` (toute modification du .env demandera un nouveau build)
 3. `yarn start`
@@ -74,6 +77,7 @@ Les tables suivantes sont présentes dans la base :
 Dans le répertoire `~/api/src/db`, exécuter `npx sequelize-cli migration:generate --name migration-skeleton`
 
 ## Notes sur la génération des equiments
+
 Les données sont issu de [l'insee](https://www.insee.fr/fr/statistiques/3568638?sommaire=3568656), celle géolocalisé sont utilisé c'est à dire une ligne une entrée sequelize fait la somme pour nous
 `bpe21_xy.csv` est a placé dans le répertoire `api/src/assets/datas`
 En lancant le script : `node api/src/scripts/equipmentsFileBuilder` on converti le csv en json,
@@ -234,18 +238,25 @@ mobiville --> [Docker Backup]
 Data --> [Docker API]
 [datalake] -l--> datalakefile
 ```
+
 ### Comment récuperer et appliquer un backup de bdd ?
-##### Récupération du backup 
+
+##### Récupération du backup
+
 Pour télécharger le backup avec le nom `mobivillerecette_dimanche` :
 Sur le serveur distant :
+
 - `docker cp mobiville-backup:/backups/mobivillerecette_dimanche.sql.bz2 /tmp/`
 
 Sur son poste ensuite :
+
 - `scp $USER@$IP_DU_SERVEUR_DISTANT:/tmp/mobivillerecette_dimanche.sql.bz2 ./`
 
 ##### Procedure de restore
-Pour un environnement de recette (sinon le prefixe du fichier sera mobivilleproduction_*):
-On récupere le backup de la veille: `export BACKUP_FILE_NAME=mobivillerecette_$(LC_ALL="fr_FR.utf8" date -d 'yesterday' +'%A')`
+
+Pour un environnement de recette (sinon le prefixe du fichier sera mobivilleproduction*\*):
+On récupere le backup de la veille: `export BACKUP_FILE_NAME=mobivillerecette*$(LC_ALL="fr_FR.utf8" date -d 'yesterday' +'%A')`
+
 ```bash
 cp /home/docker/mobiville/backups/$BACKUP_FILE_NAME.sql.bz2 ~/
 bzip2 -d $BACKUP_FILE_NAME.sql.bz2
@@ -255,6 +266,7 @@ docker exec -it mobiville_db_1 mariadb -u $MYSQL_USER -p$MYSQL_PASSWORD mobivill
 docker exec -it mobiville_db_1 mariadb -u $MYSQL_USER -p$MYSQL_PASSWORD -e "CREATE DATABASE mobiville"
 docker exec -it mobiville_db_1 bash -c "mysql -u $MYSQL_USER -p$MYSQL_PASSWORD mobiville < "$BACKUP_FILE_NAME".sql"
 ```
+
 TADA !
 
 ##### Test E2E
@@ -264,3 +276,7 @@ TADA !
 Sous Windows : `mkdir %USERPROFILE%\Bin & curl https://github.com/cucumber/json-formatter/releases/download/v19.0.0/cucumber-json-formatter-windows-amd64 >  %USERPROFILE%\Bin\cucumber-json-formatter.exe `
 
 Sous Linux : `curl https://github.com/cucumber/json-formatter/releases/download/v19.0.0/cucumber-json-formatter-linux-amd64 > ~/bin/cucumber-json-formatter`
+
+### minification d'images
+
+pour minifié les images des pages régions la commande suivante est utilisé dans ./front/public/regions/ : `magick mogrify -path ./tranform -format webp -resize '600x400' -quality 75 -trim +repage *.jpg`

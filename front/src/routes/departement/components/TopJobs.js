@@ -72,7 +72,7 @@ const TopJobs = ({ departement }) => {
   return (
     <Container>
       <Title>
-        Les Métiers avec le plus d'offres dans le département {departement.name}
+        Les métiers avec le plus d'offres dans le département {departement.name}
       </Title>
 
       <JobsContainer>

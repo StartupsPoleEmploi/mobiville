@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-const Image = ({ src = '', alt = '', className }) => {
+const Image = ({ src = '', alt = '', className, isUrlSrc = false }) => {
   const [files, setFiles] = useState([])
 
   const requireFile = useCallback((src, type) => {
@@ -15,8 +15,9 @@ const Image = ({ src = '', alt = '', className }) => {
   useEffect(() => {
     ;['avif', 'webp']
       .map((type) => ({
-        src: requireFile(src, type),
-        type: `image/${type}`,
+        src: isUrlSrc ? src.split('.')[0] : requireFile(src, type),
+        type,
+        mimeType: `image/${type}`,
       }))
       .filter((e) => !!e.src)
       .forEach((file) => {
@@ -30,10 +31,18 @@ const Image = ({ src = '', alt = '', className }) => {
   return (
     <picture className={className}>
       {files.map((file) => (
-        <source key={file.src} srcSet={file.src} alt={alt} type={file.type} />
+        <source
+          key={file.src + file.type}
+          srcSet={isUrlSrc ? `${file.src}.${file.type}` : file.src}
+          alt={alt}
+          type={file.mimeType}
+        />
       ))}
 
-      <img src={require(`../assets/images/${src}.png`)} alt={alt} />
+      <img
+        src={isUrlSrc ? src : require(`../assets/images/${src}.png`)}
+        alt={alt}
+      />
     </picture>
   )
 }
