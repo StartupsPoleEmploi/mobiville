@@ -732,7 +732,14 @@ export default (sequelizeInstance, Model) => {
 
   Model.getCitiesByCodeRegion = async ({ codeRegion }) => {
     return await Model.findAll({
-      where: { code_region: parseInt(codeRegion) }
+      where: {
+        code_region: parseInt(codeRegion),
+        nom_comm: Sequelize.where(
+          Sequelize.fn('LOWER', Sequelize.col('nom_comm')),
+          'NOT LIKE',
+          '%-ARRONDISSEMENT'
+        )
+      }
     })
   }
 

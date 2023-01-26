@@ -21,7 +21,7 @@ const Image = ({ src = '', alt = '', className }) => {
       .filter((e) => !!e.src)
       .forEach((file) => {
         setFiles((oldFiles) => {
-          if (oldFiles.includes(file)) return oldFiles
+          if (oldFiles.map(oldFile => oldFile.src).includes(file.src)) return oldFiles
           return [...oldFiles, file]
         })
       })

@@ -81,5 +81,20 @@ export default (sequelizeInstance, Model) => {
       }))
     )
   }
+
+  Model.findTopJobs = async ({
+    insee
+  }) => {
+    return Model.findAll({
+      include: {
+        model: Model.models.bassins,
+        attributes: [ 'bassin_id' ],
+        where: { code_commune: insee },
+      },
+      order: [[ 'ind_t', 'DESC' ]],
+      limit: 10
+    })
+  }
+
   return Model
 }
