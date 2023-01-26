@@ -255,7 +255,7 @@ Sur son poste ensuite :
 ##### Procedure de restore
 
 Pour un environnement de recette (sinon le prefixe du fichier sera mobivilleproduction*\*):
-On récupere le backup de la veille: `export BACKUP_FILE_NAME=mobivillerecette*$(LC_ALL="fr_FR.utf8" date -d 'yesterday' +'%A')`
+On récupere le backup de la veille: `export BACKUP_FILE_NAME=mobivillerecette_$(LC_ALL="fr_FR.utf8" date -d 'yesterday' +'%A')`
 
 ```bash
 cp /home/docker/mobiville/backups/$BACKUP_FILE_NAME.sql.bz2 ~/
@@ -279,4 +279,10 @@ Sous Linux : `curl https://github.com/cucumber/json-formatter/releases/download/
 
 ### minification d'images
 
-pour minifié les images des pages régions la commande suivante est utilisé dans ./front/public/regions/ : `magick mogrify -path ./tranform -format webp -resize '600x400' -quality 75 -trim +repage *.jpg`
+pour minifié les images des pages régions les commandes suivantes sont utilisée dans ./front/public/regions/original :
+
+```shell
+magick mogrify -path C://chemin_destination -format avif -resize '600x400' -quality 75 -trim +repage *.jpg
+magick mogrify -path C://chemin_destination -format webp -resize '600x400' -quality 75 -trim +repage *.jpg
+magick mogrify -path C://chemin_destination -format jpg -resize '600x400' -quality 90 -trim +repage *.jpg
+```
