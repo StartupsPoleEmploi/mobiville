@@ -57,42 +57,42 @@ const JobLabel = styled(Link)`
   }
 `
 
-const TopJobs = ({
-  departement,
-  city
-}) => {
-  const [ topJobs, setTopJobs ] = useState(null)
+const TopJobs = ({ departement, city }) => {
+  const [topJobs, setTopJobs] = useState(null)
 
   useEffect(() => {
     if (!departement && !city?.insee_com) return
 
-    fetch((!!city?.insee_com) ? `/api/cities/${city?.insee_com}/topJobs` : `/api/departement/${departement.code}/topJobs`)
-      .then(response => response.json())
-      .then(jobOffers => setTopJobs(jobOffers))
+    fetch(
+      !!city?.insee_com
+        ? `/api/cities/${city?.insee_com}/topJobs`
+        : `/api/departement/${departement.code}/topJobs`
+    )
+      .then((response) => response.json())
+      .then((jobOffers) => setTopJobs(jobOffers))
   }, [departement, city?.insee_com])
 
   return (
     <Container>
-
       <Title>
         {!!departement?.name
-          ? `Les Métiers avec le plus d'offres dans le département ${departement?.name}`
-          : `Les Métiers avec le plus d'offres à ${city?.name}`}
+          ? `Les métiers avec le plus d'offres dans le département ${departement?.name}`
+          : `Les métiers avec le plus d'offres à ${city?.name}`}
       </Title>
 
       <JobsContainer>
         {topJobs?.map((job) => (
           <JobLabel
             key={job?.codeRome ?? job?.rome}
-            to={!!departement?.code
-              ? `/villes?codeRome=${job.codeRome}&codeDepartement=${departement.code}`
-              : formatCityUrl(city, job.rome)}
+            to={
+              !!departement?.code
+                ? `/villes?codeRome=${job.codeRome}&codeDepartement=${departement.code}`
+                : formatCityUrl(city, job.rome)
+            }
           >
             <span>{job?.libelleRome ?? job?.rome_label}</span>
             <span style={{ whiteSpace: 'nowrap' }}>
-              { !!job?.embauche
-                ? <Chip label={job.embauche} />
-                : null }
+              {!!job?.embauche ? <Chip label={job.embauche} /> : null}
               <RightChevronIcon />
             </span>
           </JobLabel>

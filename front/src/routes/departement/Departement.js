@@ -16,7 +16,8 @@ import {
   MainLayout,
   Map,
   SectionTitle,
-  TopJobs
+  TopPageButton,
+  TopJobs,
 } from '../../components'
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
@@ -43,7 +44,7 @@ const WelcomeContainer = styled.div`
 
 const Title = styled.h1`
   margin-top: ${({ $isMobile }) => ($isMobile ? '30px' : '0px')};
-  margin-bottom: 15px;
+  margin-bottom: 0px;
   font-weight: 900;
 
   width: ${({ $isMobile }) => ($isMobile ? '100%' : '')};
@@ -74,7 +75,7 @@ const MapContainer = styled.div`
 const Description = styled.p`
   margin: 0;
   overflow: hidden;
-
+  margin-right: 10px;
   font-size: 18px;
   font-weight: 400;
 `
@@ -91,6 +92,7 @@ const ReadMore = styled.p`
 `
 
 const ReadMoreText = styled.span`
+  font-size: 16px;
   padding-left: 10px;
 `
 
@@ -169,7 +171,9 @@ const Departement = () => {
     <MainLayout>
       <WelcomeContainer $isMobile={isMobile}>
         <InfoContainer $isMobile={isMobile}>
-          <BackButton />
+          <BackButton
+            backLink={`/region/${departement.region.code}-${departement.region.slug}`}
+          />
           <Title $isMobile={isMobile}>
             Les opportunités en {wordsCapitalize(departement?.name)}
           </Title>
@@ -198,7 +202,13 @@ const Departement = () => {
           <Map
             departement={departement}
             isZoomBtnShowed={false}
-            style={{ height: '100%', width: '100%', margin: 0 }}
+            style={{
+              minHeight: '200px',
+              height: '100%',
+              width: '100%',
+              margin: 0,
+              borderRadius: '8px',
+            }}
           />
         </MapContainer>
       </WelcomeContainer>
@@ -250,6 +260,7 @@ const Departement = () => {
             </GridItem>
           ))}
       </GridContainer>
+      <TopPageButton />
     </MainLayout>
   )
 }

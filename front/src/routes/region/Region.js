@@ -10,13 +10,29 @@ import { ReactComponent as RightChevronIcon } from '../../assets/images/icons/ri
 
 import { useRegions } from '../../common/contexts/regionsContext'
 import { useWindowSize } from '../../common/hooks/window-size'
-import { BackButton, KeyFigures, MainLayout, SectionTitle, Tag } from '../../components'
+import {
+  BackButton,
+  Image,
+  KeyFigures,
+  MainLayout,
+  SectionTitle,
+  Tag,
+  TopPageButton,
+} from '../../components'
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
-import { alphabetOrder, formatCityUrl, formatNumber, splitSort, wordsCapitalize } from '../../utils/utils'
+import {
+  alphabetOrder,
+  formatCityUrl,
+  formatNumber,
+  splitSort,
+  wordsCapitalize,
+} from '../../utils/utils'
 
 const WelcomeContainer = styled.div`
   max-width: 1040px;
+  display: flex;
+  flex-wrap: wrap;
   margin: ${({ $isMobile }) => ($isMobile ? 'auto' : '0 auto')};
   padding: ${({ $isMobile }) => ($isMobile ? '1px 16px 16px 16px' : '1px 0')};
 
@@ -30,15 +46,13 @@ const WelcomeContainer = styled.div`
 `
 
 const Title = styled.h1`
-  margin-bottom: 12px;
+  margin-top: ${({ $isMobile }) => ($isMobile ? '30px' : '0px')};
+  margin-bottom: 0px;
   font-weight: 900;
 `
 
 const InfoContainer = styled.div`
-  padding: 16px 0;
-  display: flex;
-  flex-direction: ${({ $isMobile }) => ($isMobile ? 'column' : 'row')};
-  gap: 24px;
+  width: ${({ $isMobile }) => ($isMobile ? '100%' : '55%')};
 `
 
 const TextContainer = styled.div`
@@ -55,7 +69,7 @@ const TextContainer = styled.div`
 const Description = styled.p`
   margin: 0;
   overflow: hidden;
-
+  margin-right: 10px;
   font-size: 18px;
   font-weight: 400;
 `
@@ -66,7 +80,7 @@ const ReadMore = styled.p`
   flex-shrink: 0;
 
   color: ${COLOR_PRIMARY};
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 900;
   text-decoration: underline;
 `
@@ -75,7 +89,21 @@ const ReadMoreText = styled.span`
   padding-left: 10px;
 `
 
-const Picture = styled.img``
+const ImageContainer = styled.div`
+  flex: ${({ $isMobile }) => ($isMobile ? 'unset' : '1')};
+  margin-top: ${({ $isMobile }) => ($isMobile ? '15px' : '75px')};
+  margin-bottom: ${({ $isMobile }) => ($isMobile ? '0px' : '10px')};
+  height: ${({ $isMobile }) => ($isMobile ? '255px' : 'auto')};
+  width: 100%;
+`
+const RegionImage = styled(Image)`
+  img {
+    border-radius: 8px;
+    width: 100%;
+    // height: 100%;
+  }
+  width: 100%;
+`
 
 const GridContainer = styled.div`
   max-width: 1072px;
@@ -129,44 +157,50 @@ const Region = () => {
     [isTextExpended, region.description]
   )
 
-  const sortedDepartements = useMemo(() =>
-    (!!departements ? splitSort(departements) : []),
-    [departements])
+  const sortedDepartements = useMemo(
+    () => (!!departements ? splitSort(departements) : []),
+    [departements]
+  )
 
-  const sortedCities = useMemo(() =>
-    (!!region?.cities ? splitSort(region.cities) : []),
-    [region?.cities])
+  const sortedCities = useMemo(
+    () => (!!region?.cities ? splitSort(region.cities) : []),
+    [region?.cities]
+  )
 
   useEffect(() => {
     if (!codeSlug || !regions?.length) return
 
-    const [ code ] = codeSlug.split('-')
+    const [code] = codeSlug.split('-')
 
-    setRegion(regions.find(region => region.code === +code))
+    setRegion(regions.find((region) => region.code === +code))
 
     axios
       .get(`/api/region/${code}/jobs`)
-      .then(response => response.data || null)
-      .then(jobOffers => setJobOffers(jobOffers))
+      .then((response) => response.data || null)
+      .then((jobOffers) => setJobOffers(jobOffers))
   }, [codeSlug, regions])
 
   useEffect(() => {
     if (!region?.departements) return
     setDepartements(region.departements.sort(alphabetOrder('name')))
 
-    region.departements.forEach(departement => {
+    region.departements.forEach((departement) => {
       axios
         .get(`/api/departement/${departement.code}/jobs`)
-        .then(response => response.data || null)
-        .then(jobOffers => {
+        .then((response) => response.data || null)
+        .then((jobOffers) => {
           const updatedDepartement = {
-            ...region?.departements.find(dep => dep.code === departement.code),
-            jobOffers
+            ...region?.departements.find(
+              (dep) => dep.code === departement.code
+            ),
+            jobOffers,
           }
-          setDepartements(departements => ([
-            ...departements.filter(dep => dep.code !== departement.code),
-            updatedDepartement
-          ].sort(alphabetOrder('name'))))
+          setDepartements((departements) =>
+            [
+              ...departements.filter((dep) => dep.code !== departement.code),
+              updatedDepartement,
+            ].sort(alphabetOrder('name'))
+          )
         })
     })
   }, [region?.departements])
@@ -176,10 +210,9 @@ const Region = () => {
   return (
     <MainLayout>
       <WelcomeContainer $isMobile={isMobile}>
-        <BackButton />
-        <Title>Les opportunités en {wordsCapitalize(region.name)}</Title>
-
         <InfoContainer $isMobile={isMobile}>
+          <BackButton />
+          <Title>Les opportunités en {wordsCapitalize(region.name)}</Title>
           {region.description ? (
             <TextContainer $showFullText={showFullText()}>
               <Description>{region.description}</Description>
@@ -202,9 +235,13 @@ const Region = () => {
               </ReadMore>
             </TextContainer>
           ) : null}
-
-          <Picture src={`/regions/${region.code}.jpg`} />
         </InfoContainer>
+
+        {region.code ? (
+          <ImageContainer $isMobile={isMobile}>
+            <RegionImage src={`/regions/${region.code}.jpg`} isUrlSrc={true} />
+          </ImageContainer>
+        ) : null}
       </WelcomeContainer>
 
       <KeyFigures
@@ -227,10 +264,15 @@ const Region = () => {
         ]}
       />
 
-      <SectionTitle style={{ marginTop: 64 }}>Découvrez les départements de la région</SectionTitle>
+      <SectionTitle style={{ marginTop: 64 }}>
+        Découvrez les départements de la région
+      </SectionTitle>
       <GridContainer>
-        {sortedDepartements.map(departement => (
-          <GridItem key={departement.code} to={`/departement/${departement.code}`}>
+        {sortedDepartements.map((departement) => (
+          <GridItem
+            key={departement.code}
+            to={`/departement/${departement.code}`}
+          >
             <GridItemTitle>{departement.name}</GridItemTitle>
             <Tag>{formatNumber(departement.jobOffers)} offres d'emploi</Tag>
             <RightChevronIcon style={{ margin: 16 }} />
@@ -238,9 +280,11 @@ const Region = () => {
         ))}
       </GridContainer>
 
-      <SectionTitle>Découvrez les plus grandes villes de la région</SectionTitle>
+      <SectionTitle>
+        Découvrez les plus grandes villes de la région
+      </SectionTitle>
       <GridContainer>
-        {sortedCities.map(city => (
+        {sortedCities.map((city) => (
           <GridItem key={city.insee_com} to={formatCityUrl(city)}>
             <GridItemTitle>{wordsCapitalize(city.nom_comm)}</GridItemTitle>
             <RightChevronIcon style={{ margin: 16 }} />
@@ -248,6 +292,7 @@ const Region = () => {
         ))}
       </GridContainer>
 
+      <TopPageButton />
     </MainLayout>
   )
 }
