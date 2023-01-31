@@ -34,7 +34,7 @@ function boutonSelectionFiltreOffre(critere){
       return filtreExperience;
     case "Durée hebdomadaire" :
       return filtreDureeHebdomadaire;
-    case "Offres avec plus d'opportunités" :
+    case "Offres avec peu de candidats" :
       return filtreOffresOpportunites;
   }
 }
@@ -73,7 +73,7 @@ Then("j'affiche les offres d'emploi de la ville pour le métier", function () {
   cy.contains(filtreTypeContrat, "Type de contrat",  {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(filtreExperience, "Expérience",  {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(filtreDureeHebdomadaire, "Durée hebdomadaire",  {timeout: SHORT_WAIT_TIME}).should('exist');
-  cy.contains(filtreOffresOpportunites, "Offres avec plus d'opportunités",  {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(filtreOffresOpportunites, "Offres avec peu de candidats",  {timeout: SHORT_WAIT_TIME}).should('exist');
 })
 
 When("je clique sur le filtre offre {string} et je sélectionne {string}", function (filtre, selection) {

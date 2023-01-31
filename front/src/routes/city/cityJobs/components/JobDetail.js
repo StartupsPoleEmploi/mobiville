@@ -63,6 +63,7 @@ const Time = styled(KeyInfo)``
 
 const Description = styled.p`
   font-size: 16px;
+  white-space: pre-line;
 `
 
 const HR = styled.hr`
