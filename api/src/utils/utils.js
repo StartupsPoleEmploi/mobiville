@@ -218,21 +218,29 @@ export async function fetchAndRetryIfNecessary(callAPIFn, tryNumber = 1) {
   const MAX_RETRY_429 = 10
   const response = await callAPIFn()
 
-  if (!Object.hasOwn(response, 'status')) {
-    console.error(response)
-  }
-  if (tryNumber <= MAX_RETRY_429 && response && response.status === 429) {
-    const retryAfter = response.headers['retry-after']
-    console.info(`HTTP 429 retry after ${retryAfter}`)
-    await sleep(retryAfter)
-    return fetchAndRetryIfNecessary(callAPIFn, ++tryNumber)
-  }
-  if (tryNumber > MAX_RETRY_429 && response && response.status === 429) {
-    console.error(`Max 429 retry reached ${response.request.res.responseUrl}`)
-  }
-  return response ? response.data : null
-}
+  if (response) {
+    if (response.errorCode && response.errorCode === 'ECONNRESET') {
+      console.log('errorCode ', response.errorCode)
+      return fetchAndRetryIfNecessary(callAPIFn, ++tryNumber)
+    } else if (response.errorCode) {
+      console.log('erreur non prévu ', response.errorCode)
+    } else if (!Object.hasOwn(response, 'status')) {
+      console.error(response)
+    }
 
+    if (tryNumber <= MAX_RETRY_429 && response.status === 429) {
+      const retryAfter = response.headers['retry-after']
+      console.info(`HTTP 429 retry after ${retryAfter}`)
+      await sleep(retryAfter)
+      return fetchAndRetryIfNecessary(callAPIFn, ++tryNumber)
+    }
+    if (tryNumber > MAX_RETRY_429 && response.status === 429) {
+      console.error(`Max 429 retry reached ${response.request.res.responseUrl}`)
+    }
+    return response.data
+  }
+  return null
+}
 
 // we need special matchings for Marseille, Paris and Lyon, since we cannot search them directly
 // and need to input the insee code of a special district
