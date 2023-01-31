@@ -101,28 +101,28 @@ const HelpForm = ({
 
     const tagSearchAction = () => {
       if (nomPage === 'accueil') {
-        window.smartTag({
+        window.smartTagPiano({
           name: 'rechercher_aide',
           type: 'action',
           chapters: ['accueil'],
         })
       }
       if (projectsSelected?.length > 0) {
-        window.smartTag({
+        window.smartTagPiano({
           name: 'projet',
           type: 'action',
           chapters: ['aides', 'critere_recherche'],
         })
       }
       if (!!jobSituationSelected) {
-        window.smartTag({
+        window.smartTagPiano({
           name: 'situation',
           type: 'action',
           chapters: ['aides', 'critere_recherche'],
         })
       }
       if (!!ageSelected) {
-        window.smartTag({
+        window.smartTagPiano({
           name: 'age',
           type: 'action',
           chapters: ['aides', 'critere_recherche'],

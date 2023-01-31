@@ -178,7 +178,7 @@ const CityCloseCities = ({ codeRome, backLink }) => {
                 }
                 containerProps={{
                   onClick: () => {
-                    window.smartTag({
+                    window.smartTagPiano({
                       name: 'acces_offre',
                       type: 'navigation',
                       chapters: ['city-villes-similaire', 'proximite'],
@@ -202,7 +202,7 @@ const CityCloseCities = ({ codeRome, backLink }) => {
             isWhite
             buttonProps={{
               onClick: () => {
-                window.smartTag({
+                window.smartTagPiano({
                   name: 'voir_toutes_les_villes',
                   type: 'navigation',
                   chapters: ['city-villes-similaire', 'proximite'],
@@ -229,7 +229,7 @@ const CityCloseCities = ({ codeRome, backLink }) => {
                 }
                 containerProps={{
                   onClick: () => {
-                    window.smartTag({
+                    window.smartTagPiano({
                       name: 'acces_offre',
                       type: 'navigation',
                       chapters: ['city-villes-similaire', 'similaires'],
@@ -253,7 +253,7 @@ const CityCloseCities = ({ codeRome, backLink }) => {
             isWhite
             buttonProps={{
               onClick: () => {
-                window.smartTag({
+                window.smartTagPiano({
                   name: 'voir_toutes_les_villes',
                   type: 'navigation',
                   chapters: ['city-villes-similaire', 'similaires'],
