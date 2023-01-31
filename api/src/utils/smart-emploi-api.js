@@ -101,8 +101,8 @@ export async function getEmbaucheByDepartement(codeDepartement, codeRome) {
         { ...(await axiosCommonOptions()) }
       )
       .catch((error) => {
-        console.error(error)
-        return error.response
+        console.log(error.response)
+        return {...error.response, errorCode: error.code}
       })
   ).then((data) => mapEmbaucheData(codeDepartement, codeRome, data))
 }
