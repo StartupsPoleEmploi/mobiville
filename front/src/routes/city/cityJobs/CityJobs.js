@@ -289,6 +289,7 @@ const CityJobs = ({ romeLabel, codeRome }) => {
             filters={filters}
             onFiltersChange={(filters) => updateFilters(filters)}
             onReset={resetFilters}
+            displayOpportunities={topJobsMissingsApplicants?.length > 0}
           />
 
           <BoardContainer $isMobile={isMobile}>

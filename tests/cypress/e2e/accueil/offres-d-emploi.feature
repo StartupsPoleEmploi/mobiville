@@ -37,7 +37,7 @@ Fonctionnalité: Offres d'emploi d'une ville
     Alors j'affiche les offres qui correspondent aux critères
 
   Scénario: Filtre des offres avec des opportunités
-    Lorsque je clique sur le filtre offre "Offres avec plus d'opportunités" et je sélectionne "Offres avec plus d'opportunités"
+    Lorsque je clique sur le filtre offre "Offres avec peu de candidats" et je sélectionne "Offres avec peu de candidats"
     Alors j'affiche les offres pour lesquelles il y a des opportunités
 
   Scénario: Filtre des offres avec plusieurs critères

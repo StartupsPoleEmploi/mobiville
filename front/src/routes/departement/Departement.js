@@ -172,7 +172,7 @@ const Departement = () => {
       <WelcomeContainer $isMobile={isMobile}>
         <InfoContainer $isMobile={isMobile}>
           <BackButton
-            backLink={`/region/${departement.region.code}-${departement.region.slug}`}
+            backLink={!!departement?.region ? `/region/${departement.region.code}-${departement.region.slug}` : '/'}
           />
           <Title $isMobile={isMobile}>
             Les opportunités en {wordsCapitalize(departement?.name)}
