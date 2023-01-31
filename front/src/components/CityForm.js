@@ -79,7 +79,7 @@ const CityForm = ({
 
   const handleClick = () => {
     if (citySelected) {
-      window.smartTag({
+      window.smartTagPiano({
         name: 'rechercher_ville',
         type: 'action',
         chapters: [`${isWelcomeCitySearch ? 'accueil' : 'rechercher'}`],
