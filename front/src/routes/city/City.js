@@ -16,7 +16,7 @@ import { useWindowSize } from '../../common/hooks/window-size'
 import { useProfessions } from '../../common/contexts/professionsContext'
 import { isMobileView } from '../../constants/mobile'
 import { COLOR_WHITE } from '../../constants/colors'
-import { capitalize, ucFirst } from '../../utils/utils'
+import { capitalize, ucFirst, wordsCapitalize } from '../../utils/utils'
 
 const JOB = 'metier'
 const LIFE = 'services'
@@ -102,7 +102,7 @@ const CityPage = () => {
     <MainLayout menu={{ visible: !isMobile }}>
       <Helmet>
         <title>
-          {!!romeLabel ? `${ucFirst(romeLabel)} à ` : ''}{capitalize(city.nom_comm)} | Mobiville
+          {!!romeLabel ? `${ucFirst(romeLabel)} à ` : ''}{wordsCapitalize(city.nom_comm)} | Mobiville
         </title>
         <meta
           name="description"

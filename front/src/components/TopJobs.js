@@ -6,7 +6,7 @@ import { Chip } from '@mui/material'
 import { ReactComponent as RightChevronIcon } from '../assets/images/icons/right_chevron.svg'
 
 import { COLOR_PRIMARY, COLOR_WHITE } from '../constants/colors'
-import { formatCityUrl } from '../utils/utils'
+import { formatCityUrl, wordsCapitalize } from '../utils/utils'
 
 const Container = styled.div`
   color: ${COLOR_PRIMARY};
@@ -77,7 +77,7 @@ const TopJobs = ({ departement, city }) => {
       <Title>
         {!!departement?.name
           ? `Les métiers avec le plus d'offres dans le département ${departement?.name}`
-          : `Les métiers avec le plus d'offres à ${city?.name}`}
+          : `Les métiers avec le plus d'offres à ${wordsCapitalize(city?.nom_comm)}`}
       </Title>
 
       <JobsContainer>

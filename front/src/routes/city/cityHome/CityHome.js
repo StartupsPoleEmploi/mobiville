@@ -19,7 +19,7 @@ import { ReactComponent as MaletteIcon } from '../../../assets/images/icons/male
 import { ReactComponent as ProfilEntrepriseIcon } from '../../../assets/images/icons/profil_entreprise.svg'
 import { ReactComponent as HandshakeIcon } from '../../../assets/images/icons/handshake.svg'
 
-import { capitalize, formatCityTension, formatNumber } from '../../../utils/utils'
+import { capitalize, formatCityTension, formatNumber, wordsCapitalize } from '../../../utils/utils'
 import {
   COLOR_LIGHT_PURPLE,
   COLOR_PRIMARY,
@@ -233,8 +233,9 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
 
   const Title = () => {
     return (<CityName $isMobile={isMobile}>
-      {capitalize(city.nom_comm)}
-      {romeLabel ? `${isMobile ? <br /> : ' '}pour le métier ${romeLabel}` : ''}
+      {wordsCapitalize(city.nom_comm)}
+      {romeLabel && isMobile ? <br /> : ' '}
+      {romeLabel ? `pour le métier ${romeLabel}` : ''}
     </CityName>)
   }
 
