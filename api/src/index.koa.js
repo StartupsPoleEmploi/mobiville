@@ -6,7 +6,7 @@ import helmet from 'koa-helmet'
 import config from 'config'
 import { start as startCrons } from './crons'
 import session from 'koa-session'
-import { RateLimit } from 'koa2-ratelimit'
+// import { RateLimit } from 'koa2-ratelimit'
 
 import * as Sentry from '@sentry/node'
 
@@ -39,13 +39,23 @@ Sentry.init({
   dsn: process.env.SENTRY_DSN,
   tracesSampleRate: 1.0,
   environment: process.env.NODE_ENV,
-  release: "nodejs@" + process.env.CI_COMMIT_SHA,
+  release: 'nodejs@' + process.env.CI_COMMIT_SHA,
 })
 
 // we add the relevant middlewares to our API
 app.use(cors({ credentials: true })) // add cors headers to the requests
 app.use(helmet()) // adds various security headers to our API's responses
-app.use(RateLimit.middleware({ interval: { min: 1 }, max: 100 }))
+
+// gerer par nginx
+// app.use(
+//   RateLimit.middleware({
+//     message: 'Vous avez effectué trop de requete, un peu de patiente.',
+//     interval: { min: 1 },
+//     max: 45,
+//     keyGenerator: async (ctx) =>
+//       `${ctx.originalUrl}|${ctx.header['x-real-ip']}`,
+//   })
+// )
 
 app.use(
   koaBody({

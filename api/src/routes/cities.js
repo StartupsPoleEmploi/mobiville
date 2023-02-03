@@ -1,7 +1,7 @@
 import { compact } from 'lodash'
 import Router from '@koa/router'
 
-import { searchCloseCompanies } from "../utils/pe-api";
+import { searchCloseCompanies } from '../utils/pe-api'
 import { CRITERIONS } from '../constants/criterion'
 
 const router = new Router({ prefix: '/cities' })
@@ -161,15 +161,14 @@ router.post(
 )
 
 /** Top 10 des métiers en tension sur la ville */
-router.get('/:insee/topJobs', async ({
-    params: { insee },
-    models,
-    response,
-  }) => {
+router.get(
+  '/:insee/topJobs',
+  async ({ params: { insee }, models, response }) => {
     const result = await models.tensions.findTopJobs({
-      insee
+      insee,
     })
     response.body = result
-  })
+  }
+)
 
 export default router
