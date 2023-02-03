@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link, useLocation } from 'react-router-dom'
+import LOGO from '../assets/images/logo-mobiville.svg'
 import Image from './Image'
 
 const Header = styled.header`
@@ -14,11 +15,13 @@ const Header = styled.header`
 `
 
 const LogoMarianne = styled(Image)`
-  height: 70px;
-  margin-right: 16px;
+  img {
+    margin-right: 16px;
+    max-height: 90px;
+  }
 `
 
-const LogoMobiville = styled(Image)`
+const LogoMobiville = styled.img`
   width: 100%;
   max-height: 100%;
   object-fit: cover;
@@ -45,7 +48,7 @@ const HeaderMobile = () => {
           }}
         >
           <LogoMobiville
-            src="logo-mobiville"
+            src={LOGO}
             alt={`Mobiville Pôle emploi et Action logement${
               !isHome ? " - Retour à la page d'accueil" : ''
             }`}

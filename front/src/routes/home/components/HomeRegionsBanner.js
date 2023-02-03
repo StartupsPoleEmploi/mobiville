@@ -25,7 +25,7 @@ const RegionsContainer = styled.div`
   width: 100%;
   margin: 25px auto;
   padding: 0 16px;
-
+  overflow: scroll;
   display: grid;
   grid-template-columns: repeat(3, minmax(max-content, 1fr));
   grid-auto-rows: 80px;
