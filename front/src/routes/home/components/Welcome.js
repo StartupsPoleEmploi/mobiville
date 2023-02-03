@@ -53,8 +53,13 @@ const SubTitle = styled.h2`
 
 const HeroImage = styled(Image)`
   align-self: center;
+  img {
+    width: 320px;
+    height: 256px;
+    object-fit: cover;
 
-  padding-right: 64px;
+  }
+  padding-right: 8px;
   max-width: 100vw;
 `
 
@@ -74,7 +79,7 @@ const Welcome = () => {
             </SubTitle>
           </TitleWrapper>
 
-          <HeroImage src="hero-homepage" alt="" />
+          <HeroImage src="hero-homepage" role="presentation" />
         </TitleContainer>
 
         <WelcomeSearchForm></WelcomeSearchForm>

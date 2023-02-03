@@ -94,13 +94,15 @@ const ImageContainer = styled.div`
   margin-top: ${({ $isMobile }) => ($isMobile ? '15px' : '75px')};
   margin-bottom: ${({ $isMobile }) => ($isMobile ? '0px' : '10px')};
   height: ${({ $isMobile }) => ($isMobile ? '255px' : 'auto')};
+  max-height: 300px;
   width: 100%;
 `
 const RegionImage = styled(Image)`
   img {
     border-radius: 8px;
     width: 100%;
-    // height: 100%;
+    height: 100%;
+    // object-fit: cover;
   }
   width: 100%;
 `

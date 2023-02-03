@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useNomPage } from '../common/contexts/NomPageContext'
 import { COLOR_VERT_MOBIVILLE } from '../constants/colors'
 import { MOBILE_WIDTH } from '../constants/mobile'
+import LOGO from '../assets/images/logo-mobiville.svg'
 import Image from './Image'
 
 const MainSpace = styled.div`
@@ -96,13 +97,19 @@ const WrapperLogos = styled(Wrapper)`
   }
 
   .logo-al {
-    width: 170px;
+    img {
+      width: 170px;
+    }
   }
   .logo-pe {
     width: 65px;
   }
   .logo-fse {
-    width: 75px;
+    img {
+      width: 75px;
+      height: 51px;
+      // padding-right: 2px;
+    }
   }
   .europe {
     display: flex;
@@ -141,8 +148,9 @@ const Footer = () => {
             correspond à votre besoin ainsi que les aides financières à la
             mobilité.
           </p>
-          <Image
-            src="logo-mobiville"
+          <img
+            style={{ height: '85px' }}
+            src={LOGO}
             alt={`Mobiville Pôle emploi et Action logement${
               !isHome ? " - Retour à la page d'accueil" : ''
             }`}
@@ -179,6 +187,7 @@ const Footer = () => {
               href="https://www.pole-emploi.fr/"
               target="_blank"
               rel="noreferrer"
+              style={{ justifySelf: 'center', lineHeight: 0 }}
               tag-exit={`${nomPage}/footer/liens-pole-emploi`}
             >
               <img
@@ -193,9 +202,10 @@ const Footer = () => {
               rel="noreferrer"
               tag-exit={`${nomPage}/footer/liens-actionlogement`}
             >
-              <img
+              <Image
+                isUrlSrc
                 className="logo-al"
-                src="/help-logos/action-logement-2.png"
+                src="/logos/logo_action-logement_small.png"
                 alt="action logement"
               />
             </a>
@@ -205,9 +215,10 @@ const Footer = () => {
               target="_blank"
               rel="noreferrer"
             >
-              <img
+              <Image
+                isUrlSrc
                 className="logo-fse"
-                src="/logos/logo_fonds_social_eu.svg"
+                src="/logos/logo_fonds_social_eu.jpg"
                 alt="fond social européen"
               />
             </a>
