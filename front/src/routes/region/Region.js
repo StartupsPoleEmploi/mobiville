@@ -49,6 +49,7 @@ const Title = styled.h1`
   margin-top: ${({ $isMobile }) => ($isMobile ? '30px' : '0px')};
   margin-bottom: 0px;
   font-weight: 900;
+  font-size: ${({ $isMobile }) => ($isMobile ? '24px' : '36px')};
 `
 
 const InfoContainer = styled.div`
@@ -69,6 +70,9 @@ const TextContainer = styled.div`
 const Description = styled.p`
   margin: 0;
   overflow: hidden;
+  line-height: 24px;
+  max-height: ${({ $showFullText }) =>
+    $showFullText ? 'unset' : 'calc(24px * 9)'};
   margin-right: 10px;
   font-size: 18px;
   font-weight: 400;
@@ -217,7 +221,9 @@ const Region = () => {
           <Title>Les opportunités en {wordsCapitalize(region.name)}</Title>
           {region.description ? (
             <TextContainer $showFullText={showFullText()}>
-              <Description>{region.description}</Description>
+              <Description $showFullText={showFullText()}>
+                {region.description}
+              </Description>
               <ReadMore
                 $isMobile={isMobile}
                 onClick={() => setIsTextExpended(!isTextExpended)}
