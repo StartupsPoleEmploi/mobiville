@@ -23,8 +23,8 @@ const Container = styled.div`
 
   ${({ $isMobile }) => $isMobile
     ? css`
-      margin-top: -120px;
-      padding-top: 64px;
+      margin-top: 0px;
+      padding-top: 0px;
       z-index: 101;
     `
     : css`
