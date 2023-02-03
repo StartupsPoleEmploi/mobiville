@@ -7,6 +7,8 @@ import { ReactComponent as RightChevronIcon } from '../../../assets/images/icons
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../../constants/colors'
 import { useRegions } from '../../../common/contexts/regionsContext'
 import { alphabetOrder, splitSort } from '../../../utils/utils'
+import { isMobileView } from '../../../constants/mobile'
+import { useWindowSize } from '../../../common/hooks/window-size'
 
 const Container = styled.div`
   color: ${COLOR_PRIMARY};'
@@ -25,7 +27,8 @@ const RegionsContainer = styled.div`
   width: 100%;
   margin: 25px auto;
   padding: 0 16px;
-  overflow: scroll;
+  overflow-x: ${({ $isMobile }) => ($isMobile ? 'scroll' : 'unset')};
+
   display: grid;
   grid-template-columns: repeat(3, minmax(max-content, 1fr));
   grid-auto-rows: 80px;
@@ -55,12 +58,13 @@ const RegionLabel = styled(Link)`
 
 const HomeRegionsBanner = () => {
   const { regionsDROMIncluded, formatUrl } = useRegions()
+  const isMobile = isMobileView(useWindowSize())
 
   return (
     <Container>
       <Title>Découvrez les opportunités métiers par région</Title>
 
-      <RegionsContainer>
+      <RegionsContainer $isMobile={isMobile}>
         {splitSort(regionsDROMIncluded.sort(alphabetOrder('name')), 3).map((region) => (
           <RegionLabel key={region.name} to={formatUrl(region)}>
             <span>{region.name}</span>

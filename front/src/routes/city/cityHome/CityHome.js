@@ -12,14 +12,19 @@ import {
   KeyFigures,
   Tag,
   TopPageButton,
-  TopJobs
+  TopJobs,
 } from '../../../components'
 
 import { ReactComponent as MaletteIcon } from '../../../assets/images/icons/malette.svg'
 import { ReactComponent as ProfilEntrepriseIcon } from '../../../assets/images/icons/profil_entreprise.svg'
 import { ReactComponent as HandshakeIcon } from '../../../assets/images/icons/handshake.svg'
 
-import { capitalize, formatCityTension, formatNumber, wordsCapitalize } from '../../../utils/utils'
+import {
+  capitalize,
+  formatCityTension,
+  formatNumber,
+  wordsCapitalize,
+} from '../../../utils/utils'
 import {
   COLOR_LIGHT_PURPLE,
   COLOR_PRIMARY,
@@ -35,7 +40,9 @@ const CityHeader = loadable(() => import('../CityHeader'))
 const SectionHeader = loadable(() => import('../components/SectionHeader'))
 const JobCard = loadable(() => import('../cityJobs/components/JobCard'))
 const CloseCompanies = loadable(() => import('./components/CloseCompanies'))
-const CityHousingSimulator = loadable(() => import('./components/CityHousingSimulator'))
+const CityHousingSimulator = loadable(() =>
+  import('./components/CityHousingSimulator')
+)
 
 const ElementContainer = styled.div`
   display: flex;
@@ -44,7 +51,7 @@ const ElementContainer = styled.div`
   width: 100%;
   max-width: 1040px;
   margin: ${({ $isMobile }) =>
-    $isMobile ? '5px auto' : '60px auto 20px auto'};
+    $isMobile ? '5px auto' : '40px auto 20px auto'};
   align-items: center;
   font-size: 16px;
   line-height: 24px;
@@ -71,6 +78,22 @@ const CityName = styled.h1`
   font-weight: 900;
   font-size: ${({ $isMobile }) => ($isMobile ? '24px' : '36px')};
   line-height: ${({ $isMobile }) => ($isMobile ? '36px' : '42px')};
+  color: ${COLOR_PRIMARY};
+`
+const SubCityName = styled.h2`
+  margin: 0px auto;
+  text-align: center;
+  font-weight: 900;
+  font-size: ${({ $isMobile }) => ($isMobile ? '24px' : '36px')};
+  line-height: ${({ $isMobile }) => ($isMobile ? '36px' : '42px')};
+  color: ${COLOR_PRIMARY};
+`
+const SubHeaderHousing = styled.h3`
+  margin: 0px auto;
+  text-align: center;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 36px;
   color: ${COLOR_PRIMARY};
 `
 
@@ -169,7 +192,8 @@ const ServicesStandOutImageContainer = styled.div`
 const CityHome = ({ romeLabel, insee, codeRome }) => {
   const isMobile = isMobileView(useWindowSize())
 
-  const { companiesCount, onSearchCloseCompanies, city, criterions } = useCities()
+  const { companiesCount, onSearchCloseCompanies, city, criterions } =
+    useCities()
   const {
     jobsMissingApplicant,
     isMissingApplicants,
@@ -181,8 +205,8 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
   } = useProfessions()
 
   // const [ events, setEvents ] = useState(null)
-  const [ isDefaultJobsPreview, setIsDefaultJobsPreview ] = useState(true)
-  const [ displayedJobs, setDisplayedJobs ] = useState([])
+  const [isDefaultJobsPreview, setIsDefaultJobsPreview] = useState(true)
+  const [displayedJobs, setDisplayedJobs] = useState([])
 
   useEffect(() => {
     const isDefaultJobsPreview = jobsMissingApplicant.length < 3
@@ -192,11 +216,13 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
   useEffect(() => {
     if (!city || (!jobsMissingApplicant?.length && !professions?.length)) return
 
-    setDisplayedJobs((isDefaultJobsPreview ? professions : jobsMissingApplicant)
-      ?.sort(sortByDistanceFromCity(city))
-      .slice(0, 3))    
+    setDisplayedJobs(
+      (isDefaultJobsPreview ? professions : jobsMissingApplicant)
+        ?.sort(sortByDistanceFromCity(city))
+        .slice(0, 3)
+    )
   }, [codeRome, city, isDefaultJobsPreview, jobsMissingApplicant, professions])
-  
+
   const jobSelectedParam = (job) =>
     isMissingApplicants(job) ? `&jobSelected=${job.id}` : ''
 
@@ -205,8 +231,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
 
     if (!codeRome) {
       onSearchCloseCompanies({
-        codeRome: criterions.codeRomes
-          .map(codeRome => codeRome.key),
+        codeRome: criterions.codeRomes.map((codeRome) => codeRome.key),
         insee: city.insee_com,
         sort: 'distance',
       })
@@ -219,10 +244,9 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
     }
 
     onSearchInfosTravail({
-      ...((codeRome && codeRome !== '') ? {codeRome: codeRome} : null),
+      ...(codeRome && codeRome !== '' ? { codeRome: codeRome } : null),
       insee: city.insee_com,
     })
-
   }, [city?.insee_com, codeRome, criterions])
 
   // useEffect(() => {
@@ -232,11 +256,13 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
   // }, [])
 
   const Title = () => {
-    return (<CityName $isMobile={isMobile}>
-      {wordsCapitalize(city.nom_comm)}
-      {romeLabel && isMobile ? <br /> : ' '}
-      {romeLabel ? `pour le métier ${romeLabel}` : ''}
-    </CityName>)
+    return (
+      <CityName $isMobile={isMobile}>
+        {wordsCapitalize(city.nom_comm)}
+        {romeLabel && isMobile ? <br /> : ' '}
+        {romeLabel ? `pour le métier ${romeLabel}` : ''}
+      </CityName>
+    )
   }
 
   return (
@@ -251,7 +277,8 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
           <Title />
         </TitlesContainer>
       </CityHeader>
-
+      <br />
+      <SubCityName>L'emploi à {wordsCapitalize(city.nom_comm)}</SubCityName>
       <TagsContainer>
         <Tag green={infosTravail?.bassinTensionIndT < 4} size="tall">
           {formatCityTension(infosTravail?.bassinTensionIndT)}
@@ -263,17 +290,17 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
           !totalOffres
             ? null
             : {
-              label: "Offres d'emploi",
-              data: formatNumber(totalOffres),
-              icon: <MaletteIcon />,
-            },
+                label: "Offres d'emploi",
+                data: formatNumber(totalOffres),
+                icon: <MaletteIcon />,
+              },
           !companiesCount
             ? null
             : {
-              label: 'Entreprises',
-              data: formatNumber(companiesCount),
-              icon: <ProfilEntrepriseIcon />,
-            },
+                label: 'Entreprises',
+                data: formatNumber(companiesCount),
+                icon: <ProfilEntrepriseIcon />,
+              },
           !infosTravail?.hiringRate
             ? null
             : {
@@ -288,15 +315,13 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
         ]}
       />
 
-      {!!codeRome
-        ? null
-        : <TopJobs city={city} />}
+      {!!codeRome ? null : <TopJobs city={city} />}
 
       <SectionHeader
         title={
           isDefaultJobsPreview
             ? "Les dernières offres d'emploi"
-            : "Les offres d'emploi avec plus d'opportunités"
+            : "Les offres d'emploi avec peu de candidats"
         }
         subTitle={
           !isDefaultJobsPreview &&
@@ -305,18 +330,17 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
       />
 
       <HorizontalScrollableSection>
-        {displayedJobs
-          .map((job) => (
-            <JobCardContainer
-              $isMobile={isMobile}
-              key={job.id}
-              to={{
-                pathname: `/ville/${insee}/metier`,
-                search: `?codeRome=${codeRome}${jobSelectedParam(job)}`,
-              }}
-            >
-              <JobCard job={job} style={{ height: '100%' }} />
-            </JobCardContainer>
+        {displayedJobs.map((job) => (
+          <JobCardContainer
+            $isMobile={isMobile}
+            key={job.id}
+            to={{
+              pathname: `/ville/${insee}/metier`,
+              search: `?codeRome=${codeRome}${jobSelectedParam(job)}`,
+            }}
+          >
+            <JobCard job={job} style={{ height: '100%' }} />
+          </JobCardContainer>
         ))}
       </HorizontalScrollableSection>
 
@@ -328,76 +352,84 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
         centered
       />
 
-      <SectionHeader title="Les entreprises qui recrutent à proximité" />
+      <SectionHeader title="Top 5 des entreprises susceptibles de recruter" />
       <CloseCompanies />
 
-      {!!codeRome
-        ? null
-        : /* (<EventsContainer>
+      {!!codeRome ? null : (
+        /* (<EventsContainer>
           <SectionHeader
             title="Les rencontres professionnelles dans ce département"
             subTitle="Pour augmenter vos chances de trouver une emploi dans cette ville"
             margin={false} />
           <Events events={events} />
         </EventsContainer>) */
-        (<EventsContainer>
+        <EventsContainer>
           {isMobile ? null : <Image src="events-city" alt="" />}
           <EventBannerContent>
             <EventBannerTitle>Mes évenements emploi</EventBannerTitle>
-            <EventBannerText>Pour augmenter votre chance de trouver une emploi dans cette ville</EventBannerText>
-            <EventBannerLink href="https://mesevenementsemploi.pole-emploi.fr/mes-evenements-emploi/evenements" target="_blank">> Découvrez les rencontres professionnelles</EventBannerLink>
+            <EventBannerText>
+              Pour augmenter votre chance de trouver une emploi dans cette ville
+            </EventBannerText>
+            <EventBannerLink
+              href="https://mesevenementsemploi.pole-emploi.fr/mes-evenements-emploi/evenements"
+              target="_blank"
+            >
+              > Découvrez les rencontres professionnelles
+            </EventBannerLink>
           </EventBannerContent>
-        </EventsContainer>)}
-
+        </EventsContainer>
+      )}
       <ElementContainer $isMobile={isMobile}>
+        <SubHeaderHousing>
+          Et sinon pour vous loger à Trouville sur mer ?
+        </SubHeaderHousing>
         <CityHousingSimulator city={city}></CityHousingSimulator>
       </ElementContainer>
 
-      {!!codeRome
-        ? (<>
+      {!!codeRome ? (
+        <>
           <SectionHeader title="Les aides pour vous accompagner dans votre projet" />
           <HelpsStandOut />
-        </>) : null}
+        </>
+      ) : null}
 
-      {!!codeRome
-        ? (
-          <ServicesStandOut $isMobile={isMobile}>
-            <ServicesStandOutContent>
-              <ServicesStandOutTitle>
-                Découvrez les services de la ville
-              </ServicesStandOutTitle>
-              <ServicesStandOutDescription>
-                Tout savoir sur les transports, la santé, l’éducation, la culture et
-                les loisirs
-              </ServicesStandOutDescription>
-              <ActionButton
-                style={{ marginTop: 16, width: 'fit-content' }}
-                path={`/ville/${insee}/services?codeRome=${codeRome}`}
-                libelle={`Voir tous les services`}
-                isMobile={isMobile}
-                isBlue={false}
-                isWhite={true}
-              />
-            </ServicesStandOutContent>
-            <ServicesStandOutImageContainer>
-              <Image src="cityServicesStandOut" />
-            </ServicesStandOutImageContainer>
-          </ServicesStandOut>
-        ) : null}
+      {!!codeRome ? (
+        <ServicesStandOut $isMobile={isMobile}>
+          <ServicesStandOutContent>
+            <ServicesStandOutTitle>
+              Découvrez les services de la ville
+            </ServicesStandOutTitle>
+            <ServicesStandOutDescription>
+              Tout savoir sur les transports, la santé, l’éducation, la culture
+              et les loisirs
+            </ServicesStandOutDescription>
+            <ActionButton
+              style={{ marginTop: 16, width: 'fit-content' }}
+              path={`/ville/${insee}/services?codeRome=${codeRome}`}
+              libelle={`Voir tous les services`}
+              isMobile={isMobile}
+              isBlue={false}
+              isWhite={true}
+            />
+          </ServicesStandOutContent>
+          <ServicesStandOutImageContainer>
+            <Image src="cityServicesStandOut" />
+          </ServicesStandOutImageContainer>
+        </ServicesStandOut>
+      ) : null}
 
-      {!!codeRome
-        ? (
-          <ActionButton
-            path={'/conseils-et-astuces'}
-            libelle={`Consultez nos conseils pour votre projet`}
-            isMobile={isMobile}
-            isBlue={false}
-            isWhite={true}
-            centered
-          />
-        ) : null}
+      {!!codeRome ? (
+        <ActionButton
+          path={'/conseils-et-astuces'}
+          libelle={`Consultez nos conseils pour votre projet`}
+          isMobile={isMobile}
+          isBlue={false}
+          isWhite={true}
+          centered
+        />
+      ) : null}
 
-        <TopPageButton />
+      <TopPageButton />
     </div>
   )
 }

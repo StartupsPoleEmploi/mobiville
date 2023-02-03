@@ -8,7 +8,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 const Container = styled.a`
   margin: auto;
   z-index: 11;
-
+  cursor: pointer;
   position: absolute;
   right: max(32px, calc(((100vw - min(1040px, 100%)) / 4) - 50px));
   bottom: 64px;
