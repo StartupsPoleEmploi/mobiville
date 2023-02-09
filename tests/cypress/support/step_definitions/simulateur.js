@@ -28,7 +28,7 @@ When("je saisis un budget de {int} euros pour une location", function (budget) {
 })
 
 Then("la surface de logement que je peux occuper s'affiche", function () {
-  cy.contains("Votre pouvez occuper un logement de", { timeout: SHORT_WAIT_TIME }).should('exist');
+  cy.contains("Vous pouvez occuper un logement de", { timeout: SHORT_WAIT_TIME }).should('exist');
   // cy.get(donneeLoyerF2Location, {timeout: SHORT_WAIT_TIME}).then((div) => {
   //   const text = div.text().replace('2 pièces', '').split('€')[0].replace(/,| /gi, '');
   //   const number = parseInt(text)/SurfaceF2;
