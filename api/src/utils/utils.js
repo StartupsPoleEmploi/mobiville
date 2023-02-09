@@ -230,8 +230,8 @@ export async function fetchAndRetryIfNecessary(callAPIFn, tryNumber = 1) {
 
     if (tryNumber <= MAX_RETRY_429 && response.status === 429) {
       const retryAfter = response.headers['retry-after']
-      console.info(`HTTP 429 retry after ${retryAfter}`)
-      await sleep(retryAfter)
+      console.info(`HTTP 429 retry after ${retryAfter}s`)
+      await sleep(retryAfter * 1000)
       return fetchAndRetryIfNecessary(callAPIFn, ++tryNumber)
     }
     if (tryNumber > MAX_RETRY_429 && response.status === 429) {

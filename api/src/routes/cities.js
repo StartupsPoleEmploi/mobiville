@@ -149,7 +149,7 @@ router.post(
     },
     response,
   }) => {
-    response.body = await searchCloseCompanies({
+    const lbbData = await searchCloseCompanies({
       codeRome,
       insee,
       distance: 30,
@@ -157,6 +157,13 @@ router.post(
       pageSize: 10,
       sort: sort,
     })
+    response.body = {
+      companies: lbbData.companies
+        .sort((c1, c2) => c2.stars - c1.stars)
+        .slice(0, 10)
+        .map(({ name, city, url }) => ({ name, city, url })),
+      companies_count: lbbData.companies_count,
+    }
   }
 )
 

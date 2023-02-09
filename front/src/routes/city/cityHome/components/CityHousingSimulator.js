@@ -8,6 +8,7 @@ import { isMobileView } from '../../../../constants/mobile'
 import { formatNumber } from '../../../../utils/utils'
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import Card from '@mui/material/Card'
 
 import HousingSimulator from '../../components/HousingSimulator'
 import { Image, KeyFigures, Tag } from '../../../../components'
@@ -41,28 +42,45 @@ const HousingSearchContainer = styled.div`
   margin: ${({ $isMobile }) => ($isMobile ? '0 21px' : '0 8px')};
 
   display: flex;
+  flex-wrap: wrap;
   flex-direction: ${({ $isMobile }) => ($isMobile ? 'column' : 'row')};
-  gap: 16px;
+  gap: 15px;
 `
 
 const HousingActorsContainer = styled.div`
-  flex: 1;
-  max-width: 440px;
+  flex: 1 1 100%;
 
+  margin-top: 15px;
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 0px 16px;
 
   color: ${COLOR_PRIMARY};
 `
 
-const HousingActor = styled.div`
-  padding: ${({ $isMobile }) => ($isMobile ? '37px' : '44px')};
-  flex: auto;
-
+const HousingActorHeader = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  gap: 10px;
+
+  color: ${COLOR_PRIMARY};
+`
+
+const HousingActor = styled(Card)`
+  padding: ${({ $isMobile }) => ($isMobile ? '25px 30px' : '25px 35px')};
+  flex: auto;
+  width: calc(50% - 8px);
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
   gap: 8px;
+
+  filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.25));
+  box-shadow: unset;
 
   border-radius: 4px;
   background: ${COLOR_WHITE};
@@ -72,12 +90,14 @@ const HousingActorTitle = styled.div`
   font-weight: bold;
   font-size: 24px;
   line-height: 28px;
+  color: ${COLOR_PRIMARY};
 `
 
 const HousingActorDescription = styled.div`
   font-weight: 400;
   font-size: 18px;
   line-height: 24px;
+  color: ${COLOR_PRIMARY};
 `
 
 const HousingActorLink = styled.a`
@@ -96,6 +116,15 @@ const HousingActorLink = styled.a`
     vertical-align: bottom;
   }
 `
+const ContainerHeader = styled.h3`
+  width: 100%;
+
+  margin: 0px;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 36px;
+  color: ${COLOR_PRIMARY};
+`
 
 const HousingActorImage = styled(Image)`
   max-height: 70px;
@@ -110,45 +139,78 @@ const CityHousingSimulator = ({ city }) => {
   return (
     <>
       <HousingMetrics $isMobile={isMobile}>
-        
         <TagsContainer>
-          <Tag green={!city.city_house_tension} size='tall'>{
-            city && city.city_house_tension
-            ? "Tension immobilière a l'achat"
-            : "Pas de tension immobilière a l'achat"
-          }</Tag>
+          <Tag green={!city.city_house_tension} size="tall">
+            {city && city.city_house_tension
+              ? "Tension immobilière a l'achat"
+              : "Pas de tension immobilière a l'achat"}
+          </Tag>
         </TagsContainer>
 
         <KeyFigures
           figures={[
             {
-              label: "Prix d’achat moyen/m2",
-              data: city.average_houseselled ? `${formatNumber(city.average_houseselled)}€` : 'A venir',
+              label: 'Prix d’achat moyen/m2',
+              data: city.average_houseselled
+                ? `${formatNumber(city.average_houseselled)}€`
+                : 'A venir',
               icon: <BuildingIcon />,
             },
             {
               label: 'Loyer moyen en location',
-              data: (city.rent_t2 || city?.departement?.rent_t2) ? `${formatNumber(city.rent_t2 ?? city?.departement?.rent_t2)}€` : 'A venir',
-              icon: (<MetricsTitle className="metrics-title">
-                <span>2</span> pièces
-              </MetricsTitle>),
+              data:
+                city.rent_t2 || city?.departement?.rent_t2
+                  ? `${formatNumber(
+                      city.rent_t2 ?? city?.departement?.rent_t2
+                    )}€`
+                  : 'A venir',
+              icon: (
+                <MetricsTitle className="metrics-title">
+                  <span>2</span> pièces
+                </MetricsTitle>
+              ),
             },
             {
               label: 'Loyer moyen en location',
-              data: (city.rent_t4 || city?.departement?.rent_t4) ? `${formatNumber(city.rent_t4 ?? city?.departement?.rent_t4)}€` : 'A venir',
-              icon: (<MetricsTitle className="metrics-title">
-                <span>4</span> pièces
-              </MetricsTitle>),
+              data:
+                city.rent_t4 || city?.departement?.rent_t4
+                  ? `${formatNumber(
+                      city.rent_t4 ?? city?.departement?.rent_t4
+                    )}€`
+                  : 'A venir',
+              icon: (
+                <MetricsTitle className="metrics-title">
+                  <span>4</span> pièces
+                </MetricsTitle>
+              ),
             },
           ]}
         />
-
       </HousingMetrics>
 
       <HousingSearchContainer $isMobile={isMobile}>
+        {(!!city?.average_houserent || !!city?.average_houseselled) && (
+          <>
+            <ContainerHeader>
+              Calculez votre budget pour un achat ou une location
+            </ContainerHeader>
+            <HousingSimulator city={city} />
+          </>
+        )}
+
         <HousingActorsContainer>
+          <ContainerHeader>Faites vos demandes de logement</ContainerHeader>
+
           <HousingActor $isMobile={isMobile}>
-            <HousingActorImage src="logo-logement-social" alt="Ma demande de logement social" />
+            <HousingActorHeader>
+              <HousingActorImage
+                src="logo-logement-social"
+                alt="Ma demande de logement social"
+              />
+              <Tag green size="normal">
+                Salarié - Demandeur d'emploi
+              </Tag>
+            </HousingActorHeader>
             <div>
               <HousingActorTitle>Demandez un logement social</HousingActorTitle>
               <HousingActorDescription>
@@ -157,13 +219,23 @@ const CityHousingSimulator = ({ city }) => {
                 obtenir un numéro unique de demande de logement social (NUR/NUD)
               </HousingActorDescription>
             </div>
-            <HousingActorLink href="https://www.actionlogement.fr/le-logement-social" target="_blank">
+            <HousingActorLink
+              href="https://www.actionlogement.fr/le-logement-social"
+              target="_blank"
+            >
               Créez ma demande de logement <ArrowForwardIcon />
             </HousingActorLink>
           </HousingActor>
-
           <HousingActor>
-            <HousingActorImage src="logo-ALin" alt="AL'in.fr offres de logement" />
+            <HousingActorHeader>
+              <HousingActorImage
+                src="logo-ALin"
+                alt="AL'in.fr offres de logement"
+              />
+              <Tag green size="normal">
+                Salarié
+              </Tag>
+            </HousingActorHeader>
             <div>
               <HousingActorTitle>Offres de logement</HousingActorTitle>
               <HousingActorDescription>
@@ -176,10 +248,6 @@ const CityHousingSimulator = ({ city }) => {
             </HousingActorLink>
           </HousingActor>
         </HousingActorsContainer>
-
-        {(!!city?.average_houserent || !!city?.average_houseselled) && (
-          <HousingSimulator city={city} />
-        )}
       </HousingSearchContainer>
     </>
   )

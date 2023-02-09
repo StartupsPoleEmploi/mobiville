@@ -11,33 +11,25 @@ import { isMobileView } from '../../../constants/mobile'
 import { useWindowSize } from '../../../common/hooks/window-size'
 
 const Container = styled.div`
-  max-width: 440px;
-  padding: 56px;
+  padding: 50px 0px;
   border-radius: 4px;
-
+  flex: 1 1 100%;
+  flex-wrap: wrap;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  align-content: center;
+  align-items: flex-start;
 
   background: ${COLOR_OTHER_GREEN};
   color: ${COLOR_PRIMARY};
 `
 
-const Title = styled.p`
-  margin: 0;
-
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 28px;
-`
-
-const SubTitle = styled.p`
-  margin: 0 0 8px 0;
-
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  padding-right: ${({ $isMobile }) => ($isMobile ? '0' : '65px')};
+const FormContainer = styled.div`
+  flex: 1 0 auto;
+  padding-left: 30px;
+  width: calc(50% - 30px);
+  display: flex;
+  flex-direction: column;
 `
 
 const InputGroup = styled.div`
@@ -61,7 +53,7 @@ const InputAdornment = styled.p`
 const ResultContainer = styled.div`
   min-height: 1px;
 
-  margin: ${({ $isVisible }) => ($isVisible ? '16px 0' : '0 0 8px 0')};
+  margin: ${({ $isVisible }) => ($isVisible ? '16px 0 0 0' : '0 0 8px 0')};
   line-height: ${({ $isVisible }) => ($isVisible ? '36px' : '0')};
 `
 
@@ -77,14 +69,15 @@ const ResultText = styled.div`
 const Result = styled.span`
   margin: 0;
 
-  font-size: ${({ $isMobile }) => ($isMobile ? '30px' : '36px')};
+  font-size: ${({ $isMobile }) => ($isMobile ? '26px' : '28px')};
   font-weight: 900;
 `
 
 const HR = styled.hr`
-  height: 0;
+  height: 100%;
   border: 1px solid ${COLOR_PRIMARY};
-  width: 100%;
+  margin: unset;
+  width: 0px;
 `
 
 const HousingSimulator = ({ city }) => {
@@ -113,15 +106,15 @@ const HousingSimulator = ({ city }) => {
     <>
       {(!!city?.average_houserent || !!city?.average_houseselled) && (
         <Container>
-          <div>
+          {/* <FormContainer style={{ width: '100%' }}>
             <Title>Simulateur de logement</Title>
             <SubTitle $isMobile={isMobile}>
               Calculer votre budget pour un achat ou une location
             </SubTitle>
-          </div>
-
+          </FormContainer> */}
+          {/* <div> */}
           {!!city?.average_houserent && (
-            <div>
+            <FormContainer>
               <InputLabel>Pour un loyer en location</InputLabel>
               <InputGroup
                 onClick={() => {
@@ -143,7 +136,7 @@ const HousingSimulator = ({ city }) => {
               </InputGroup>
               <ResultContainer $isVisible={!!squareMeters}>
                 <ResultText $isVisible={!!squareMeters}>
-                  Votre pouvez occuper un logement de{' '}
+                  Vous pouvez occuper un logement de{' '}
                   {squareMeters ? (
                     <Result $isMobile={isMobile}>
                       <span data-automation-id="housing-square-meters">
@@ -154,13 +147,13 @@ const HousingSimulator = ({ city }) => {
                   ) : null}
                 </ResultText>
               </ResultContainer>
-            </div>
+            </FormContainer>
           )}
 
           {!!city?.average_houserent && !!city?.average_houseselled && <HR />}
 
           {!!city?.average_houseselled && (
-            <div>
+            <FormContainer>
               <InputLabel>Pour un achat de logement</InputLabel>
               <InputGroup
                 onClick={() => {
@@ -191,8 +184,9 @@ const HousingSimulator = ({ city }) => {
                   ) : null}
                 </ResultText>
               </ResultContainer>
-            </div>
+            </FormContainer>
           )}
+          {/* </div> */}
         </Container>
       )}
     </>

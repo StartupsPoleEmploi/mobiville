@@ -35,6 +35,7 @@ import { useProfessions } from '../../../common/contexts/professionsContext'
 import { useCities } from '../../../common/contexts/citiesContext'
 import { isMobileView } from '../../../constants/mobile'
 import { useWindowSize } from '../../../common/hooks/window-size'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
 const CityHeader = loadable(() => import('../CityHeader'))
 const SectionHeader = loadable(() => import('../components/SectionHeader'))
@@ -352,7 +353,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
         centered
       />
 
-      <SectionHeader title="Top 5 des entreprises susceptibles de recruter" />
+      <SectionHeader title="Top 10 des entreprises susceptibles de recruter" />
       <CloseCompanies />
 
       {!!codeRome ? null : (
@@ -374,14 +375,14 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
               href="https://mesevenementsemploi.pole-emploi.fr/mes-evenements-emploi/evenements"
               target="_blank"
             >
-              > Découvrez les rencontres professionnelles
+              Découvrez les rencontres professionnelles <ArrowForwardIcon />
             </EventBannerLink>
           </EventBannerContent>
         </EventsContainer>
       )}
       <ElementContainer $isMobile={isMobile}>
         <SubHeaderHousing>
-          Et sinon pour vous loger à Trouville sur mer ?
+          Et sinon pour vous loger à {wordsCapitalize(city.nom_comm)} ?
         </SubHeaderHousing>
         <CityHousingSimulator city={city}></CityHousingSimulator>
       </ElementContainer>
