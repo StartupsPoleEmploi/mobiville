@@ -73,3 +73,9 @@ Fonctionnalité: Affichage homepage et moteur de recherche
   Scénario: Affichage de la page de la première des régions
     Lorsque je clique sur la première des régions
     Alors j'affiche la page de la région
+
+  Scénario: Retour haut de page
+    Lorsque je descends en bas
+    Alors j'affiche le retour haut de page
+    Lorsque je clique sur le retour haut de page
+    Alors je suis en haut de la page
