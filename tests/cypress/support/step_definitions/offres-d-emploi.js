@@ -9,8 +9,7 @@ const filtreDatePublication = "div[tag-page$=city-offres] * > div";
 const filtreTypeContrat = "div[tag-page$=city-offres] * > div";
 const filtreExperience = "div[tag-page$=city-offres] * > div";
 const filtreDureeHebdomadaire = "div[tag-page$=city-offres] * > div";
-const filtreOffresOpportunites = "div[tag-page$=city-offres] * > div";
-const selectionCritere = "div[id=menu-] * > ul[role=listbox] > li[role=option] > span";
+const selectionCritere = "div[id=menu-] > div > ul[role=listbox] > li[role=option] > span";
 const critereDistanceOffre = "div[tag-page$=city-offres] > div:nth-child(3) > div:nth-child(2) > div";
 const critereTypeDureeOffre = "div[tag-page$=city-offres] > div:nth-child(3) > div:nth-child(2) > div";
 const criterePublicationOffre = "div[tag-page$=city-offres] > div:nth-child(3) > div:nth-child(2) > div > p";
@@ -34,8 +33,6 @@ function boutonSelectionFiltreOffre(critere){
       return filtreExperience;
     case "Durée hebdomadaire" :
       return filtreDureeHebdomadaire;
-    case "Offres avec peu de candidats" :
-      return filtreOffresOpportunites;
   }
 }
 
@@ -73,7 +70,6 @@ Then("j'affiche les offres d'emploi de la ville pour le métier", function () {
   cy.contains(filtreTypeContrat, "Type de contrat",  {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(filtreExperience, "Expérience",  {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(filtreDureeHebdomadaire, "Durée hebdomadaire",  {timeout: SHORT_WAIT_TIME}).should('exist');
-  cy.contains(filtreOffresOpportunites, "Offres avec peu de candidats",  {timeout: SHORT_WAIT_TIME}).should('exist');
 })
 
 When("je clique sur le filtre offre {string} et je sélectionne {string}", function (filtre, selection) {

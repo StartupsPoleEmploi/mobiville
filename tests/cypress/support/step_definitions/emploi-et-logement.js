@@ -10,48 +10,66 @@ const infoOffres = "div[tag-page$=city] * > div > p";
 const infoEntreprises = "div[tag-page$=city] * > div > p";
 const infoTauxEmbauche = "div[tag-page$=city] * > div > p";
 const resultatOffre = "div[tag-page$=city] * > div > h2";
-const nombreOffres = "div[tag-page$=city] > div:nth-child(5) > div";
-const boutonVoirToutesOffres =  "div[tag-page$=city] > div:nth-child(6) > a";
+const nombreOffres = "div[tag-page$=city] > div:nth-child(7) > div";
+const boutonVoirToutesOffres =  "div[tag-page$=city] > div > a[href*=ville][href*=metier]";
 const resultatEntreprise = "div[tag-page$=city] * > div > h2";
-const donneesTensionImmobiliere = "div[tag-page$=city] > div:nth-child(9) > div > div > div";
-const donneePrixUniteSurfaceAchat = "div[tag-page$=city] > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)";
-const donneeLoyerF2Location = "div[tag-page$=city] > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2)";
-const donneeLoyerF4Location = "div[tag-page$=city] > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3)";
+const donneesTensionImmobiliere = "div[tag-page$=city] * > div";
+const donneePrixUniteSurfaceAchat = "div[tag-page$=city] * > div > p";
+const donneeLoyerF2Location = "div[tag-page$=city] * > div > p";
+const donneeLoyerF4Location = "div[tag-page$=city] * > div > p";
 const aidesVille = "div[tag-page$=city] * > div > h2";
-const nombreAides = "div[tag-page$=city] > div:nth-child(11) > div:nth-child(1) > div";
+const nombreAides = "div[tag-page$=city] > div:nth-child(13) > div:nth-child(1) > div";
 const premiereAide = "a[href*=aide-pour-la-recherche-demploi]";
 const deuxiemeAide = "a[href*=subvention-mobili-pass]";
 const troisiemeAide = "a[href*=garantie-visale]";
-const boutonVoirToutesAides = "div[tag-page$=city] * > div > a";
+const boutonVoirToutesAides = "div[tag-page$=city] * > div > a[href*=aides]";
 const servicesVille = "div[tag-page$=city] * > div > p";
-const boutonVoirTousServices  =  "div[tag-page$=city] * > div > a";
-const nombreBlocsEntreprises = "div[tag-page$=city] > div:nth-child(8) > div > div:nth-child(1)";
+const boutonVoirTousServices  =  "div[tag-page$=city] * > div > a[href*=ville][href*=services]";
+const nombreBlocsEntreprises = "div[tag-page$=city] > div:nth-child(10) > div > div:nth-child(1)";
 
 Then("j'affiche la page de la ville pour le métier", function () {
-  cy.url().should('include', 'ville');
-
   let villeSansCP = ENDROIT_HP.split(' (')[0];
   let metierCourt = METIER.split(' (')[0].toLowerCase();
+  
+  cy.url().should('include', 'ville').and('include', villeSansCP.toUpperCase()).and('include', 'codeRome');
+
   cy.contains(rappelCritereVille, villeSansCP,  {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(rappelCritereMetier, "pour le métier " + metierCourt,  {timeout: SHORT_WAIT_TIME}).should('exist');
 
   cy.contains(infoOpportunites, "pportunités d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoOffres, "Offres d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoEntreprises, "Entreprises", {timeout: SHORT_WAIT_TIME}).should('exist');
-  // cy.contains(infoTauxEmbauche, "Taux d'embauche", {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(infoTauxEmbauche, "Taux d'embauche", {timeout: SHORT_WAIT_TIME}).should('exist');
 })
 
 Then("j'affiche la page de la ville similaire/proche pour le métier", function () {
   let metierCourt = METIER.split(' (')[0].toLowerCase();
+
+  cy.url().should('include', 'ville').and('include', 'codeRome');
+
   cy.contains(rappelCritereMetier, "pour le métier " + metierCourt,  {timeout: SHORT_WAIT_TIME}).should('exist');
+
+  cy.contains(infoOpportunites, "pportunités d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(infoOffres, "Offres d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(infoEntreprises, "Entreprises", {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(infoTauxEmbauche, "Taux d'embauche", {timeout: SHORT_WAIT_TIME}).should('exist');
   })
 
-Then("j'affiche la page de la ville pour les métiers", function () {
+Then("j'affiche la page de la ville pour tous les métiers", function () {
   let villeSansCP = ENDROIT_REGION.split(' (')[0];
+
+  cy.url().should('include', 'ville').and('include', villeSansCP.toUpperCase());
+
   cy.contains(rappelCritereVille, villeSansCP,  {timeout: SHORT_WAIT_TIME}).should('exist');
+
+  cy.contains(infoOpportunites, "pportunités d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(infoOffres, "Offres d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(infoEntreprises, "Entreprises", {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(infoTauxEmbauche, "Taux d'embauche", {timeout: SHORT_WAIT_TIME}).should('exist');
   })
 
 Then("j'affiche les offres d'emploi qui ont le moins de candidature", function () {
+  // Les dernières offres d'emploi OU Les offres d'emploi avec peu de candidats
   cy.contains(resultatOffre, "offres d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.get(nombreOffres, {timeout: SHORT_WAIT_TIME}).children().should('have.length', 3);
 })
@@ -67,7 +85,7 @@ When("je clique sur Voir toutes les offres d’emploi", function () {
 })
 
 Then("j'affiche la liste des entreprises à proximité", function () {
-  cy.contains(resultatEntreprise, "Les entreprises qui recrutent à proximité", {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(resultatEntreprise, "entreprises susceptibles de recruter", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.get(nombreBlocsEntreprises, {timeout: SHORT_WAIT_TIME}).children().should('have.length.lte', 2);
 })
 

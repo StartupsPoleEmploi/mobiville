@@ -2,17 +2,17 @@ const { When, Then, And } = require('@badeball/cypress-cucumber-preprocessor');
 import { SHORT_WAIT_TIME, MIDDLE_WAIT_TIME, LONG_WAIT_TIME } from "./common/common";
 import { ENDROIT_HP } from "./home-page";
 
-const rappelCritereRegion = "main[id=main] > div > h1";
-const descriptifRegion = "main[id=main] > div:nth-child(1) > div:nth-child(3) > div > p";
+const rappelCritereRegion = "main[id=main] * > div > h1";
+const descriptifRegion = "main[id=main] * > div > p";
 const infoHabitants = "main[id=main] * > div > p";
 const infoSuperficie = "main[id=main] * > div > p";
 const infoOffres = "main[id=main] * > div > p";
 const resultatsDepartements = "main[id=main] > h2";
 const listeDepartements = "main[id=main] > div:nth-child(4)";
-const departement = "main[id=main] > div > a[href*=departement]";
+const departement = "main[id=main] > div:nth-child(4) > a[href*=departement]";
 const resultatsVilles = "main[id=main] > h2";
 const listeVilles = "main[id=main] > div:nth-child(6)";
-const ville = "main[id=main] > div > a[href*=ville]";
+const ville = "main[id=main] > div:nth-child(6) > a[href*=ville]";
 
 let ENDROIT_REGION = "";
 export { ENDROIT_REGION };

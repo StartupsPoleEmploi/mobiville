@@ -36,10 +36,6 @@ Fonctionnalité: Offres d'emploi d'une ville
     Lorsque je clique sur le filtre offre "Durée hebdomadaire" et je sélectionne "Temps plein"
     Alors j'affiche les offres qui correspondent aux critères
 
-  Scénario: Filtre des offres avec des opportunités
-    Lorsque je clique sur le filtre offre "Offres avec peu de candidats" et je sélectionne "Offres avec peu de candidats"
-    Alors j'affiche les offres pour lesquelles il y a des opportunités
-
   Scénario: Filtre des offres avec plusieurs critères
     Lorsque je clique sur le filtre offre "Date de publication" et je sélectionne "Un mois"
     Alors j'affiche les offres pour lesquelles la date est inférieure au critère
