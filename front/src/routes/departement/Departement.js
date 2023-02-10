@@ -54,6 +54,9 @@ const Title = styled.h1`
 const InfoContainer = styled.div`
   width: ${({ $isMobile }) => ($isMobile ? '100%' : '55%')};
 `
+const NotWrappableText = styled.span`
+  white-space: nowrap;
+`
 
 const TextContainer = styled.div`
   position: relative;
@@ -75,7 +78,7 @@ const MapContainer = styled.div`
 const Description = styled.p`
   margin: 0;
   overflow: hidden;
-  margin-right: 10px;
+  margin-right: 35px;
   font-size: 18px;
   font-weight: 400;
 `
@@ -172,10 +175,17 @@ const Departement = () => {
       <WelcomeContainer $isMobile={isMobile}>
         <InfoContainer $isMobile={isMobile}>
           <BackButton
-            backLink={!!departement?.region ? `/region/${departement.region.code}-${departement.region.slug}` : '/'}
+            backLink={
+              !!departement?.region
+                ? `/region/${departement.region.code}-${departement.region.slug}`
+                : '/'
+            }
           />
           <Title $isMobile={isMobile}>
-            Les opportunités en {wordsCapitalize(departement?.name)}
+            Les opportunités en{' '}
+            <NotWrappableText>
+              {wordsCapitalize(departement?.name)}
+            </NotWrappableText>
           </Title>
           <TextContainer $showFullText={showFullText()}>
             <Description>{departement?.description}</Description>

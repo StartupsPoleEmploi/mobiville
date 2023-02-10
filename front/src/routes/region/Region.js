@@ -73,7 +73,7 @@ const Description = styled.p`
   line-height: 24px;
   max-height: ${({ $showFullText }) =>
     $showFullText ? 'unset' : 'calc(24px * 9)'};
-  margin-right: 10px;
+  margin-right: 35px;
   font-size: 18px;
   font-weight: 400;
 `
@@ -87,6 +87,10 @@ const ReadMore = styled.p`
   font-size: 16px;
   font-weight: 900;
   text-decoration: underline;
+`
+
+const NotWrappableText = styled.span`
+  white-space: nowrap;
 `
 
 const ReadMoreText = styled.span`
@@ -218,7 +222,10 @@ const Region = () => {
       <WelcomeContainer $isMobile={isMobile}>
         <InfoContainer $isMobile={isMobile}>
           <BackButton />
-          <Title>Les opportunités en {wordsCapitalize(region.name)}</Title>
+          <Title>
+            Les opportunités en{' '}
+            <NotWrappableText>{wordsCapitalize(region.name)}</NotWrappableText>
+          </Title>
           {region.description ? (
             <TextContainer $showFullText={showFullText()}>
               <Description $showFullText={showFullText()}>
