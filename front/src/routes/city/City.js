@@ -102,7 +102,8 @@ const CityPage = () => {
     <MainLayout menu={{ visible: !isMobile }}>
       <Helmet>
         <title>
-          {!!romeLabel ? `${ucFirst(romeLabel)} à ` : ''}{wordsCapitalize(city.nom_comm)} | Mobiville
+          {!!romeLabel ? `${ucFirst(romeLabel)} à ` : ''}
+          {wordsCapitalize(city.nom_comm)} | Mobiville
         </title>
         <meta
           name="description"
@@ -113,7 +114,6 @@ const CityPage = () => {
       </Helmet>
 
       <CityMenuBack
-        codeRome={codeRome}
         backLink={backLink}
         isMobile={isMobile}
         background={
@@ -122,7 +122,8 @@ const CityPage = () => {
             : COLOR_WHITE
         }
         showAdvicesButton={
-          !isMobile && ![LIFE, JOB, CLOSE_CITIES].includes(section)
+          false // désactivé tant que la page n'a pas été refondu
+          // !isMobile && ![LIFE, JOB, CLOSE_CITIES].includes(section)
         }
       />
 
