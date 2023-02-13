@@ -353,33 +353,38 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
         centered
       />
 
-      <SectionHeader title="Top 10 des entreprises susceptibles de recruter" />
+      <SectionHeader
+        title={`A proximité de ${wordsCapitalize(city.nom_comm)}`}
+        subTitle="Top 10 des entreprises susceptibles de recruter"
+      />
       <CloseCompanies />
 
-      {!!codeRome ? null : (
-        /* (<EventsContainer>
+      {/* (<EventsContainer>
           <SectionHeader
             title="Les rencontres professionnelles dans ce département"
             subTitle="Pour augmenter vos chances de trouver une emploi dans cette ville"
             margin={false} />
           <Events events={events} />
-        </EventsContainer>) */
-        <EventsContainer>
-          {isMobile ? null : <Image src="events-city" alt="" />}
-          <EventBannerContent>
-            <EventBannerTitle>Mes évenements emploi</EventBannerTitle>
-            <EventBannerText>
-              Pour augmenter votre chance de trouver une emploi dans cette ville
-            </EventBannerText>
-            <EventBannerLink
-              href="https://mesevenementsemploi.pole-emploi.fr/mes-evenements-emploi/evenements"
-              target="_blank"
-            >
-              Découvrez les rencontres professionnelles <ArrowForwardIcon />
-            </EventBannerLink>
-          </EventBannerContent>
-        </EventsContainer>
-      )}
+        </EventsContainer>)  */}
+
+      <EventsContainer>
+        {isMobile ? null : (
+          <Image src="events-city" alt="" role="presentation" />
+        )}
+        <EventBannerContent>
+          <EventBannerTitle>Mes évenements emploi</EventBannerTitle>
+          <EventBannerText>
+            Pour augmenter votre chance de trouver une emploi dans cette ville
+          </EventBannerText>
+          <EventBannerLink
+            href="https://mesevenementsemploi.pole-emploi.fr/mes-evenements-emploi/evenements"
+            target="_blank"
+          >
+            Découvrez les rencontres professionnelles <ArrowForwardIcon />
+          </EventBannerLink>
+        </EventBannerContent>
+      </EventsContainer>
+
       <ElementContainer $isMobile={isMobile}>
         <SubHeaderHousing>
           Et sinon pour vous loger à {wordsCapitalize(city.nom_comm)} ?

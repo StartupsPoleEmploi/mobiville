@@ -13,7 +13,6 @@ const MenuBackContainer = styled.div`
 `
 
 const CityMenuBack = ({
-  codeRome,
   backLink,
   isMobile,
   background = COLOR_WHITE,
@@ -21,7 +20,7 @@ const CityMenuBack = ({
 }) => (
   <MenuBackContainer background={background}>
     <BackButton
-      libelle={!isMobile && !!codeRome ? 'Retour aux résultats' : 'Retour'}
+      libelle="Retour"
       backLink={backLink}
       showAdvicesButton={showAdvicesButton}
     />
