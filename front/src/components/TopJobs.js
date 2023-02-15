@@ -7,45 +7,43 @@ import { ReactComponent as RightChevronIcon } from '../assets/images/icons/right
 
 import { COLOR_PRIMARY, COLOR_WHITE } from '../constants/colors'
 import { formatCityUrl, wordsCapitalize } from '../utils/utils'
+import SectionHeader from '../routes/city/components/SectionHeader'
+import { isMobileView } from '../constants/mobile'
+import { useWindowSize } from '../common/hooks/window-size'
 
 const Container = styled.div`
   color: ${COLOR_PRIMARY};
-`
-
-const Title = styled.h2`
-  margin: 16px 16px 0 16px;
-
-  text-align: center;
-  font-size: 24px;
-  font-weight: 900;
 `
 
 const JobsContainer = styled.div`
   max-width: 1072px; // 1040px + 2*16px
   width: 100%;
   margin: 25px auto;
-  padding: 0 16px;
-
+  padding: 1px 16px;
+  
+  overflow-x: ${({ $isMobile }) => ($isMobile ? 'scroll' : 'auto')};
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: 80px;
+  // grid-auto-rows: 80px;
   gap: 8px 24px;
 `
 
 const JobLabel = styled(Link)`
   width: 100%;
-  height: 80px;
-  padding: 30px;
+  // height: 100px;
+  height: ${({ $isMobile }) => ($isMobile ? '100px' : '80px')};
+  padding: ${({ $isMobile }) => ($isMobile ? '5px' : '30px')};
   border-radius: 8px;
-
+  
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  
   background: ${COLOR_WHITE};
-  font-size: 18px;
+  font-size: ${({ $isMobile }) => ($isMobile ? '16px' : '18px')};
   font-weight: 700;
-  text-align: start;
+  text-align: ${({ $isMobile }) => ($isMobile ? 'center' : 'start')};
+  overflow: ${({ $isMobile }) => ($isMobile ? 'hidden' : 'auto')};
 
   &&:hover {
     box-shadow: 0px 0px 0px 1px ${COLOR_PRIMARY};
@@ -59,6 +57,7 @@ const JobLabel = styled(Link)`
 
 const TopJobs = ({ departement, city }) => {
   const [topJobs, setTopJobs] = useState(null)
+  const isMobile = isMobileView(useWindowSize())
 
   useEffect(() => {
     if (!departement && !city?.insee_com) return
@@ -74,15 +73,20 @@ const TopJobs = ({ departement, city }) => {
 
   return (
     <Container>
-      <Title>
-        {!!departement?.name
-          ? `Les métiers avec le plus d'offres dans le département ${departement?.name}`
-          : `Les métiers avec le plus d'offres à ${wordsCapitalize(city?.nom_comm)}`}
-      </Title>
+      <SectionHeader
+        title={
+          !!departement?.name
+            ? `Les métiers avec le plus d'offres dans le département ${departement?.name}`
+            : `Les métiers avec le plus d'offres à ${wordsCapitalize(
+                city?.nom_comm
+              )}`
+        }
+      />
 
-      <JobsContainer>
+      <JobsContainer $isMobile={isMobile}>
         {topJobs?.map((job) => (
           <JobLabel
+            $isMobile={isMobile}
             key={job?.codeRome ?? job?.rome}
             to={
               !!departement?.code

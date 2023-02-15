@@ -13,7 +13,8 @@ import { useWindowSize } from '../../../common/hooks/window-size'
 const Container = styled.div`
   padding: 50px 0px;
   border-radius: 4px;
-  flex: 1 1 100%;
+  flex: 2 0 auto;
+  width: 50%;
   flex-wrap: wrap;
   display: flex;
   flex-direction: row;

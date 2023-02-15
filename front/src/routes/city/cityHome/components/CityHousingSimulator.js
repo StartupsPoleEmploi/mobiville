@@ -43,17 +43,17 @@ const HousingSearchContainer = styled.div`
 
   display: flex;
   flex-wrap: wrap;
-  flex-direction: ${({ $isMobile }) => ($isMobile ? 'column' : 'row')};
+  flex-direction: ${({ $isMobile }) => ($isMobile ? 'row': 'column')};
   gap: 15px;
-`
-
-const HousingActorsContainer = styled.div`
+  `
+  
+  const HousingActorsContainer = styled.div`
   flex: 1 1 100%;
-
+  
   margin-top: 15px;
   display: flex;
   flex-wrap: wrap;
-  flex-direction: row;
+  flex-direction: ${({ $isMobile }) => ($isMobile ? 'column': 'row')};
   gap: 0px 16px;
 
   color: ${COLOR_PRIMARY};
@@ -73,7 +73,7 @@ const HousingActorHeader = styled.div`
 const HousingActor = styled(Card)`
   padding: ${({ $isMobile }) => ($isMobile ? '25px 30px' : '25px 35px')};
   flex: auto;
-  width: calc(50% - 8px);
+  width: ${({ $isMobile }) => ($isMobile ? '100%' : 'calc(50% - 8px)')};
   display: flex;
   justify-content: space-evenly;
   flex-direction: column;
@@ -198,7 +198,7 @@ const CityHousingSimulator = ({ city }) => {
           </>
         )}
 
-        <HousingActorsContainer>
+        <HousingActorsContainer $isMobile={isMobile}>
           <ContainerHeader>Faites vos demandes de logement</ContainerHeader>
 
           <HousingActor $isMobile={isMobile}>
@@ -226,7 +226,7 @@ const CityHousingSimulator = ({ city }) => {
               Créez ma demande de logement <ArrowForwardIcon />
             </HousingActorLink>
           </HousingActor>
-          <HousingActor>
+          <HousingActor $isMobile={isMobile}>
             <HousingActorHeader>
               <HousingActorImage
                 src="logo-ALin"
