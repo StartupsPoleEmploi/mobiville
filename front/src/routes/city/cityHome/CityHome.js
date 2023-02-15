@@ -279,7 +279,12 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
         </TitlesContainer>
       </CityHeader>
       <br />
-      <SubCityName>L'emploi à {wordsCapitalize(city.nom_comm)}</SubCityName>
+      <SubCityName>
+        L'emploi à{' '}
+        <span style={{ whiteSpace: 'nowrap' }}>
+          {wordsCapitalize(city.nom_comm)}
+        </span>
+      </SubCityName>
       <TagsContainer>
         <Tag green={infosTravail?.bassinTensionIndT < 4} size="tall">
           {formatCityTension(infosTravail?.bassinTensionIndT)}
