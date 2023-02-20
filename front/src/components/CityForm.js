@@ -44,6 +44,14 @@ const CityForm = ({
   const computeSearchPath = useCallback(() => {
     if (!jobSelected && !!citySelected && citySelected.type === REGION_TYPE) {
       // redirection vers la page région
+      if (['1', '2', '3', '4', '6'].includes(citySelected.id)) {
+        // cas dom-tom unidépartemental
+        return `/departement/${citySelected.id}-${citySelected.label
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(' ', '-')
+          .toLowerCase()}`
+      }
       return `/region/${citySelected.id}`
     }
 
