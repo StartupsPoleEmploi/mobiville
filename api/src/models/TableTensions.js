@@ -1,4 +1,4 @@
-import sequelize from 'sequelize'
+import sequelize, { QueryTypes } from 'sequelize'
 import { getPCSByRome } from '../utils/api'
 
 export default (sequelizeInstance, Model) => {
@@ -82,19 +82,37 @@ export default (sequelizeInstance, Model) => {
     )
   }
 
-  Model.findTopJobs = async ({
-    insee
-  }) => {
+  Model.findTopJobs = async ({ insee }) => {
     return Model.findAll({
       include: {
         model: Model.models.bassins,
-        attributes: [ 'bassin_id' ],
+        attributes: ['bassin_id'],
         where: { code_commune: insee },
       },
-      order: [[ 'ind_t', 'DESC' ]],
-      limit: 10
+      order: [['ind_t', 'DESC']],
+      limit: 10,
     })
   }
-
+  Model.findTopJobsByDepartement = async ({
+    codeDepartement,
+    maxItems = 10,
+  }) => {
+    return await sequelizeInstance.query(
+      ` SELECT t.rome as codeRome, t.rome_label, CAST( AVG(t.ind_t) as FLOAT) as 'avg_ind_t',  COUNT(b.id) as 'count_city' 
+        from tensions t 
+        inner join bassins b on b.bassin_id = t.bassin_id
+        WHERE t.deleted_at is NULL
+        and b.deleted_at is NULL
+        AND b.dep = :codeDep
+        GROUP BY t.rome
+        ORDER BY AVG(t.ind_t) ASC , COUNT(b.id) DESC
+        LIMIT :maxItems ;
+      `,
+      {
+        replacements: { codeDep: String(codeDepartement), maxItems: maxItems },
+        type: QueryTypes.SELECT,
+      }
+    )
+  }
   return Model
 }

@@ -10,6 +10,7 @@ import { COLOR_OTHER_GREEN, COLOR_PRIMARY } from '../../../constants/colors'
 import { isMobileView } from '../../../constants/mobile'
 import { useWindowSize } from '../../../common/hooks/window-size'
 import { useCities } from '../../../common/contexts/citiesContext'
+import { useRegions } from '../../../common/contexts/regionsContext'
 
 const Container = styled.div`
   grid-area: filters;
@@ -71,11 +72,10 @@ const TagsTitle = styled.p`
   color: ${COLOR_PRIMARY};
 `
 
-const CitiesSearchBar = ({
-  params,
-}) => {
+const CitiesSearchBar = ({ params }) => {
   const navigate = useNavigate()
   const { search } = useLocation()
+  const { regions } = useRegions()
 
   const isMobile = isMobileView(useWindowSize())
   const { criterions, totalCities } = useCities()
@@ -83,11 +83,12 @@ const CitiesSearchBar = ({
   const DEFAULT_FILTERS = {
     environment: '',
     citySize: '',
-    opportunity: ''
+    opportunity: '',
   }
-  const [ filters, setFilters ] = useState(DEFAULT_FILTERS)
-  const [ showMobileSearch, setShowMobileSearch ] = useState(false)
+  const [filters, setFilters] = useState(DEFAULT_FILTERS)
+  const [showMobileSearch, setShowMobileSearch] = useState(false)
 
+  const [departementLabel, setDepartementLabel] = useState('')
   const [regionLabel, setRegionLabel] = useState('')
   const [metierLabel, setMetierLabel] = useState('')
 
@@ -99,8 +100,10 @@ const CitiesSearchBar = ({
     urlSearchParams.delete('opportunity')
 
     if (!!filters?.citySize) urlSearchParams.set('codeCity', filters.citySize)
-    if (!!filters?.environment) urlSearchParams.set('codeEnvironment', filters.environment)
-    if (!!filters?.opportunity) urlSearchParams.set('opportunity', filters.opportunity)
+    if (!!filters?.environment)
+      urlSearchParams.set('codeEnvironment', filters.environment)
+    if (!!filters?.opportunity)
+      urlSearchParams.set('opportunity', filters.opportunity)
 
     debounce(() => navigate(`/villes?${urlSearchParams.toString()}`), 50)()
   }, [filters])
@@ -113,21 +116,28 @@ const CitiesSearchBar = ({
         )
         setRegionLabel(region?.label ?? '')
       }
+    } else if (!!params?.codeDepartement) {
+      const selectedDepartement = regions
+        .map((r) => r.departements)
+        .flat()
+        .find((d) => d.code === params.codeDepartement)
+      setDepartementLabel(selectedDepartement?.name)
     } else {
       setRegionLabel('')
+      setDepartementLabel('')
     }
     if (!!params?.codeRome && !!criterions?.codeRomes) {
       const metier = criterions.codeRomes.find(
         (codeRome) => params.codeRome === codeRome.key
       )
-      setMetierLabel(metier.label)
+      setMetierLabel(metier?.label)
     }
   }, [params, criterions])
 
   const updateFilters = (updatedFilters) => {
     setFilters((prev) => ({
       ...prev,
-      ...updatedFilters
+      ...updatedFilters,
     }))
   }
 
@@ -137,19 +147,25 @@ const CitiesSearchBar = ({
 
   return (
     <>
-      { isMobile
-        ? (<Container>
+      {isMobile ? (
+        <Container>
           <MobileSearchInfos>
             <TagsTitle>Ma recherche</TagsTitle>
             <TagsContainer>
-              <Tag size='small'>{ metierLabel }</Tag>
-              <Tag size='small'>{ !!regionLabel ? regionLabel : 'Régions les plus attractives' }</Tag>
+              {metierLabel ? <Tag size="small">{metierLabel}</Tag> : null}
+              <Tag size="small">
+                {!!regionLabel
+                  ? regionLabel
+                  : !!departementLabel
+                  ? departementLabel
+                  : 'Régions les plus attractives'}
+              </Tag>
               {/* todo : refacto in <Button size='small'> */}
               <Button
                 style={{
                   fontSize: 16,
                   fontWeight: '400',
-                  padding: 6
+                  padding: 6,
                 }}
                 onClick={() => setShowMobileSearch(true)}
               >
@@ -165,6 +181,7 @@ const CitiesSearchBar = ({
                 ? ` ville${totalCities > 1 ? 's' : ''} pour ${metierLabel}`
                 : ''}{' '}
               {!!regionLabel ? `en ${regionLabel}` : ''}
+              {!!departementLabel ? `en ${departementLabel}` : ''}
             </Title>
             <SubTitle>Classement des villes par opportunités d'emploi</SubTitle>
           </TitleContainer>
@@ -175,12 +192,14 @@ const CitiesSearchBar = ({
             onReset={resetFilters}
             params={params}
           />
-        </Container>)
-        : <CityFormContainer>
-            <CityFormWrapper>
-              <CityForm />
-            </CityFormWrapper>
-          </CityFormContainer>}
+        </Container>
+      ) : (
+        <CityFormContainer>
+          <CityFormWrapper>
+            <CityForm />
+          </CityFormWrapper>
+        </CityFormContainer>
+      )}
 
       {!isMobile && (
         <Container>
@@ -198,13 +217,15 @@ const CitiesSearchBar = ({
                 ? ` ville${totalCities > 1 ? 's' : ''} pour ${metierLabel}`
                 : ''}{' '}
               {!!regionLabel ? `en ${regionLabel}` : ''}
+              {!!departementLabel ? `en ${departementLabel}` : ''}
             </Title>
             <SubTitle>Classement des villes par opportunités d'emploi</SubTitle>
           </TitleContainer>
-        </Container>)}
+        </Container>
+      )}
 
       <Modale
-        title='Ma recherche'
+        title="Ma recherche"
         onClose={() => setShowMobileSearch(false)}
         show={showMobileSearch}
       >

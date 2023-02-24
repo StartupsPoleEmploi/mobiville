@@ -13,13 +13,15 @@ router.get('/:code/jobs', async ({ params: { code }, response }) => {
 })
 router.get('/:code', async ({ params: { code }, models, response }) => {
   const departement = await models.departements.getDepartement({ code })
-  
+
   let topCities = departement.dataValues.cities
   // Cas des DOM avec regions uni-départemental
   if (['1', '2', '3', '4', '5', '6'].includes(code)) {
-    topCities = (await models.cities.getCitiesByCodeRegion({
+    topCities = (
+      await models.cities.getCitiesByCodeRegion({
         codeRegion: code,
-      }))
+      })
+    )
       .sort((d1, d2) => d2.population - d1.population)
       .slice(0, 10)
   }
@@ -31,17 +33,16 @@ router.get('/:code', async ({ params: { code }, models, response }) => {
   })
 })
 
-/** Top 10 des métiers (code Rome) avec le plus d'offre d'emploi sur le département */
+/** Top 10 des métiers (code Rome) avec le plus de bassin en tension sur le département */
 router.get('/:code/topJobs', async ({ params: { code }, models, response }) => {
-  // todo
-
-  response.body = await models.embaucheDepartements.getTopEmbauche({
+  const result = await models.tensions.findTopJobsByDepartement({
     codeDepartement: code,
     maxItems: 10,
   })
+  response.body = result
 })
 
-/** Top 10 des métiers (code Rome) avec le plus d'offre d'emploi sur le département */
+/** Moyenne du taux d'embauche des 10 métiers (code Rome) avec le plus de bassin en tension sur le département */
 router.get(
   '/:code/hiringRate',
   async ({ params: { code }, models, response }) => {

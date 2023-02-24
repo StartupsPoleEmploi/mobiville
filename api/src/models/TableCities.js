@@ -211,6 +211,7 @@ export default (sequelizeInstance, Model) => {
 
   Model.search = async ({
     codeRegion,
+    codeDepartement,
     codeCriterion = [],
     codeRome = [],
     onlySearchInTension = true,
@@ -292,6 +293,9 @@ export default (sequelizeInstance, Model) => {
 
     if (codeRegion) {
       whereAnd.push({ code_region: { [Op.eq]: codeRegion } })
+    }
+    if (codeDepartement) {
+      whereAnd.push({ code_dept: { [Op.eq]: codeDepartement } })
     }
 
     let bassinsToInclude = []

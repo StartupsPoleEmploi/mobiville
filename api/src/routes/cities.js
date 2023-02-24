@@ -13,6 +13,7 @@ router.post(
       body: {
         codeCity,
         codeRegion,
+        codeDepartement,
         codeEnvironment,
         codeRome,
         index,
@@ -38,6 +39,7 @@ router.post(
 
     const [queryResult, totalResults] = await models.cities.search({
       codeRegion,
+      codeDepartement,
       codeCriterion: compact([codeCity, codeEnvironment]),
       codeRome,
       onlySearchInTension,
