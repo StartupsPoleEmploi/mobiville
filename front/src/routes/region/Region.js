@@ -90,7 +90,7 @@ const ReadMore = styled.p`
 `
 
 const NotWrappableText = styled.span`
-  white-space: nowrap;
+  white-space: ${({ $isMobile }) => ($isMobile ? 'initial' : 'nowrap')};
 `
 
 const ReadMoreText = styled.span`
@@ -235,7 +235,9 @@ const Region = () => {
           <BackButton />
           <Title>
             Les opportunités en{' '}
-            <NotWrappableText>{wordsCapitalize(region.name)}</NotWrappableText>
+            <NotWrappableText $isMobile={isMobile}>
+              {wordsCapitalize(region.name)}
+            </NotWrappableText>
           </Title>
           {region.description ? (
             <TextContainer $showFullText={showFullText()}>
