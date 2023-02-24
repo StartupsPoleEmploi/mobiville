@@ -1,9 +1,13 @@
 import styled from 'styled-components'
 
-import { AppCarousel, Image, Section, SectionTitle } from "../../../components"
-import { COLOR_PRIMARY, COLOR_SALMON, COLOR_WHITE } from "../../../constants/colors"
-import { useWindowSize } from "../../../common/hooks/window-size"
-import { isMobileView } from "../../../constants/mobile"
+import { AppCarousel, Image, Section, SectionTitle } from '../../../components'
+import {
+  COLOR_PRIMARY,
+  COLOR_SALMON,
+  COLOR_WHITE,
+} from '../../../constants/colors'
+import { useWindowSize } from '../../../common/hooks/window-size'
+import { isMobileView } from '../../../constants/mobile'
 
 const Container = styled.div`
   width: 100%;
@@ -50,7 +54,8 @@ const TestimonyHeaderContainer = styled.div`
   min-width: ${({ isMobile }) => (isMobile ? '' : '315px')};
   min-height: ${({ isMobile }) => (isMobile ? '' : '315px')};
   background: ${COLOR_SALMON};
-  border-radius: ${({ isMobile }) => (isMobile ? '4px 4px 0 0' : '4px 0 0 4px')};
+  border-radius: ${({ isMobile }) =>
+    isMobile ? '8px 8px 0 0' : '4px 0 0 4px'};
   padding: 16px;
 
   display: flex;
@@ -90,99 +95,143 @@ const TestimonyBody = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  
+
   padding: 13px;
   padding-bottom: ${({ isMobile }) => (isMobile ? '120px' : '20px')};
-  border-radius: ${({ isMobile }) => (isMobile ? '0 0 4px 4px' : '0 4px 4px 0')};
+  border-radius: ${({ isMobile }) =>
+    isMobile ? '0 0 8px 8px' : '0 4px 4px 0'};
 
   background: ${COLOR_WHITE};
   font-style: italic;
 
   p {
     width: ${({ isMobile }) => (isMobile ? '100%' : '80%')};
-    
+
     font-size: 18px;
   }
 `
 
 const Testimonies = () => {
-    const windowsSize = useWindowSize()
-    const isMobile = isMobileView(windowsSize)
+  const windowsSize = useWindowSize()
+  const isMobile = isMobileView(windowsSize)
 
-    return (
-      <div style={{ overflow: 'hidden' }}>
-        <Section>
-          <SectionTitle>Ils ont déménagé, ils témoignent</SectionTitle>
-          <Container isMobile={isMobile}>
-            <AppCarousel>
+  return (
+    <div style={{ overflow: 'hidden' }}>
+      <Section>
+        <SectionTitle>
+          Ils ont utilisé ont déménagé, ils témoignent
+        </SectionTitle>
+        <Container isMobile={isMobile}>
+          <AppCarousel>
+            {/* Testimony 1 */}
+            <TestimonyContainer isMobile={isMobile}>
+              <TestimonyHeaderContainer isMobile={isMobile}>
+                <TestimonyHeader isMobile={isMobile}>
+                  <TestimonyTitle>Jonathan</TestimonyTitle>
+                  <TestimonyJob>Conseiller technique</TestimonyJob>
+                  <TestimonyDescription>
+                    A déménagé à Rodez
+                    <br />
+                    Utilisation du service en avril
+                    <br />
+                    Déménagement en août
+                  </TestimonyDescription>
+                </TestimonyHeader>
+              </TestimonyHeaderContainer>
+              <TestimonyBody isMobile={isMobile}>
+                <p>
+                  “Faire une recherche de logement ou d’emploi dans une
+                  région/département qu’on ne connaît pas peut s’avérer
+                  difficile.
+                </p>
+                <p>
+                  <strong>
+                    Mobiville m'a permis d'avoir toutes les infos pour lancer
+                    mon projet.
+                  </strong>
+                </p>
+                <p>
+                  Lorsque j'ai obtenu ma promesse d'embauche, j'ai bénéficié
+                  d'un conseiller logement dédié et j’ai déménagé sereinement.”
+                </p>
+              </TestimonyBody>
+            </TestimonyContainer>
 
-              {/* Testimony 1 */}
-              <TestimonyContainer isMobile={isMobile}>
-                <TestimonyHeaderContainer isMobile={isMobile}>
-                  <TestimonyHeader isMobile={isMobile}>
-                    <TestimonyTitle>Jonathan</TestimonyTitle>
-                    <TestimonyJob>Conseiller technique</TestimonyJob>
-                    <TestimonyDescription>
-                      A déménagé à Rodez<br />
-                      Utilisation du service en avril<br />
-                      Déménagement en août
-                    </TestimonyDescription>
-                  </TestimonyHeader>
-                </TestimonyHeaderContainer>
-                <TestimonyBody isMobile={isMobile}>
-                  <p>“Faire une recherche de logement ou d’emploi dans une région/département qu’on ne connaît pas peut s’avérer difficile.</p>
-                  <p><strong>Mobiville m'a permis d'avoir toutes les infos pour lancer mon projet.</strong></p>
-                  <p>Lorsque j'ai obtenu ma promesse d'embauche, j'ai bénéficié d'un conseiller logement dédié et j’ai déménagé sereinement.”</p>
-                </TestimonyBody>
-              </TestimonyContainer>
+            {/* Testimony 2 */}
+            <TestimonyContainer isMobile={isMobile}>
+              <TestimonyHeaderContainer isMobile={isMobile}>
+                <TestimonyHeader isMobile={isMobile}>
+                  <TestimonyTitle>Lucy</TestimonyTitle>
+                  <TestimonyJob>Aide médico psychologique</TestimonyJob>
+                  <TestimonyDescription>
+                    A déménagé avec son mari
+                    <br />à Toulouse
+                    <br />
+                    Utilisation du service en mai
+                    <br />
+                    Déménagement en juillet
+                  </TestimonyDescription>
+                </TestimonyHeader>
+              </TestimonyHeaderContainer>
+              <TestimonyBody isMobile={isMobile}>
+                <p>
+                  “J'avais déjà identifié la ville de Toulouse pour mon projet
+                  de mobilité, mais en la voyant s'afficher sur Mobiville, j'ai
+                  relancé mes démarches.
+                </p>
+                <p>
+                  <strong>
+                    J'ai pu sollicité une aide pour trouver un logement et
+                    voilà, j'ai déménagé!”
+                  </strong>
+                </p>
+              </TestimonyBody>
+            </TestimonyContainer>
 
-              {/* Testimony 2 */}
-              <TestimonyContainer isMobile={isMobile}>
-                <TestimonyHeaderContainer isMobile={isMobile}>
-                  <TestimonyHeader isMobile={isMobile}>
-                    <TestimonyTitle>Lucy</TestimonyTitle>
-                    <TestimonyJob>Aide médico psychologique</TestimonyJob>
-                    <TestimonyDescription>
-                      A déménagé avec son mari<br />à Toulouse<br />
-                      Utilisation du service en mai<br />
-                      Déménagement en juillet
-                    </TestimonyDescription>
-                  </TestimonyHeader>
-                </TestimonyHeaderContainer>
-                <TestimonyBody isMobile={isMobile}>
-                  <p>“J'avais déjà identifié la ville de Toulouse pour mon projet de mobilité, mais en la voyant s'afficher sur Mobiville, j'ai relancé mes démarches.</p>
-                  <p><strong>J'ai pu sollicité une aide pour trouver un logement et voilà, j'ai déménagé!”</strong></p>
-                </TestimonyBody>
-              </TestimonyContainer>
-
-              {/* Testimony 3 */}
-              <TestimonyContainer isMobile={isMobile}>
-                <TestimonyHeaderContainer isMobile={isMobile}>
-                  <TestimonyHeader isMobile={isMobile}>
-                    <TestimonyTitle>Greg</TestimonyTitle>
-                    <TestimonyJob>Technicien de<br />maintenance informatique</TestimonyJob>
-                    <TestimonyDescription>
-                      A déménagé à Chambéry<br />
-                      Utilisation du service en mars<br />
-                      Déménagement en juin
-                    </TestimonyDescription>
-                  </TestimonyHeader>
-                </TestimonyHeaderContainer>
-                <TestimonyBody isMobile={isMobile}>
-                  <p>“Mobiville est une plateforme rassurante pour se lancer dans un nouveau projet professionnel et très intuitive.</p>
-                  <p>C’est vraiment une évolution géniale! Le site est complémentaire à celui de Pôle emploi. Je dirais même que ça le rajeunit, ça le booste.</p>
-                  <p><strong>Mobiville est un réel plus qui correspond à la réalité”</strong></p>
-                </TestimonyBody>
-              </TestimonyContainer>
-
-            </AppCarousel>
-            <ImageContainer isMobile={isMobile}>
-              <Image src="moving-illustration" />
-            </ImageContainer>
-          </Container>
-        </Section>
-      </div>
-    )
+            {/* Testimony 3 */}
+            <TestimonyContainer isMobile={isMobile}>
+              <TestimonyHeaderContainer isMobile={isMobile}>
+                <TestimonyHeader isMobile={isMobile}>
+                  <TestimonyTitle>Greg</TestimonyTitle>
+                  <TestimonyJob>
+                    Technicien de
+                    <br />
+                    maintenance informatique
+                  </TestimonyJob>
+                  <TestimonyDescription>
+                    A déménagé à Chambéry
+                    <br />
+                    Utilisation du service en mars
+                    <br />
+                    Déménagement en juin
+                  </TestimonyDescription>
+                </TestimonyHeader>
+              </TestimonyHeaderContainer>
+              <TestimonyBody isMobile={isMobile}>
+                <p>
+                  “Mobiville est une plateforme rassurante pour se lancer dans
+                  un nouveau projet professionnel et très intuitive.
+                </p>
+                <p>
+                  C’est vraiment une évolution géniale! Le site est
+                  complémentaire à celui de Pôle emploi. Je dirais même que ça
+                  le rajeunit, ça le booste.
+                </p>
+                <p>
+                  <strong>
+                    Mobiville est un réel plus qui correspond à la réalité”
+                  </strong>
+                </p>
+              </TestimonyBody>
+            </TestimonyContainer>
+          </AppCarousel>
+          <ImageContainer isMobile={isMobile}>
+            <Image src="moving-illustration" />
+          </ImageContainer>
+        </Container>
+      </Section>
+    </div>
+  )
 }
 
 export default Testimonies

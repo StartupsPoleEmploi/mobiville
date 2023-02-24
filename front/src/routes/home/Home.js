@@ -9,8 +9,12 @@ import Welcome from './components/Welcome'
 
 const Advantages = loadable(() => import('./components/Advantages'))
 const HomeHelpsBanner = loadable(() => import('./components/HomeHelpsBanner'))
-const HomeRegionsBanner = loadable(() => import('./components/HomeRegionsBanner'))
-const MobilityGuideBanner = loadable(() => import('./components/MobilityGuideBanner'))
+const HomeRegionsBanner = loadable(() =>
+  import('./components/HomeRegionsBanner')
+)
+const MobilityGuideBanner = loadable(() =>
+  import('./components/MobilityGuideBanner')
+)
 const Testimonies = loadable(() => import('./components/Testimonies'))
 
 const HomePage = () => (
@@ -30,15 +34,10 @@ const HomePage = () => (
     <Welcome />
 
     <HomeHelpsBanner />
-
     <HomeRegionsBanner />
-
-    <MobilityGuideBanner />
-
     <Advantages />
-
+    <MobilityGuideBanner />
     <TopPageButton />
-
     <Testimonies />
   </MainLayout>
 )
