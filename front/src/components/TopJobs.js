@@ -29,7 +29,7 @@ const JobsContainer = styled.div`
 `
 
 const JobLabel = styled(Link)`
-  width: 100%;
+  width: ${({ $isMobile }) => ($isMobile ? '270px' : '100%')};
   // height: 100px;
   height: ${({ $isMobile }) => ($isMobile ? '100px' : '80px')};
   padding: ${({ $isMobile }) => ($isMobile ? '5px' : '15px')};
@@ -42,7 +42,8 @@ const JobLabel = styled(Link)`
   background: ${COLOR_WHITE};
   font-size: ${({ $isMobile }) => ($isMobile ? '16px' : '18px')};
   font-weight: 700;
-  text-align: ${({ $isMobile }) => ($isMobile ? 'center' : 'start')};
+  padding-left: ${({ $isMobile }) => ($isMobile ? '10px' : 'unset')};
+  text-align: start;
   overflow: hidden;
 
   &&:hover {
