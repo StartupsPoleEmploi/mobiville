@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -30,15 +29,14 @@ const RegionsContainer = styled.div`
   overflow-x: ${({ $isMobile }) => ($isMobile ? 'scroll' : 'unset')};
 
   display: grid;
-  grid-template-columns: repeat(3, minmax(max-content, 1fr));
-  grid-auto-rows: 80px;
+  grid-template-columns: repeat(3, 300px);
+  grid-auto-rows: 60px;
   gap: 8px 24px;
 `
 
 const RegionLabel = styled(Link)`
   width: 100%;
-  height: 80px;
-  padding: 30px;
+  padding: 0px 15px;
   border-radius: 8px;
 
   display: flex;
@@ -65,12 +63,14 @@ const HomeRegionsBanner = () => {
       <Title>Découvrez les opportunités métiers par région</Title>
 
       <RegionsContainer $isMobile={isMobile}>
-        {splitSort(regionsDROMIncluded.sort(alphabetOrder('name')), 3).map((region) => (
-          <RegionLabel key={region.name} to={formatUrl(region)}>
-            <span>{region.name}</span>
-            <RightChevronIcon />
-          </RegionLabel>
-        ))}
+        {splitSort(regionsDROMIncluded.sort(alphabetOrder('name')), 3).map(
+          (region) => (
+            <RegionLabel key={region.name} to={formatUrl(region)}>
+              <span>{region.name}</span>
+              <RightChevronIcon />
+            </RegionLabel>
+          )
+        )}
       </RegionsContainer>
     </Container>
   )
