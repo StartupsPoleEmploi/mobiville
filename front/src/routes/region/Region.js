@@ -120,16 +120,21 @@ const GridContainer = styled.div`
   width: 100%;
   padding: 0 16px 32px 16px;
   margin: auto;
+  padding-top: 5px;
 
   display: grid;
-  grid-template-columns: repeat(2, minmax(max-content, 1fr));
+  grid-template-columns: repeat(
+    ${({ $columnNumber }) => $columnNumber},
+    minmax(max-content, 1fr)
+  );
   grid-auto-rows: 80px;
   gap: 8px 16px;
+  overflow-x: ${({ $isMobile }) => ($isMobile ? 'scroll' : 'auto')};
 `
 
 const GridItem = styled(Link)`
   min-width: 240px;
-  padding: 0 30px;
+  padding: ${({ $isMobile }) => ($isMobile ? '0 10px' : '0 30px')};
 
   display: flex;
   align-items: center;
@@ -148,6 +153,12 @@ const GridItem = styled(Link)`
   }
 `
 
+const GridItemHeader = styled.div`
+  display: flex;
+  flex-direction: ${({ $isMobile }) => ($isMobile ? 'column' : 'auto')};
+  width: 100%;
+  margin-left: ${({ $isMobile }) => ($isMobile ? '0px' : '10px')};
+`
 const GridItemTitle = styled.div`
   flex: auto;
 `
@@ -282,15 +293,18 @@ const Region = () => {
       <SectionTitle style={{ marginTop: 64 }}>
         Découvrez les départements de la région
       </SectionTitle>
-      <GridContainer>
+      <GridContainer $columnNumber={2} $isMobile={isMobile}>
         {sortedDepartements.map((departement) => (
           <GridItem
+            $isMobile={isMobile}
             key={departement.code}
             to={`/departement/${departement.code}`}
           >
-            <GridItemTitle>{departement.name}</GridItemTitle>
-            <Tag>{formatNumber(departement.jobOffers)} offres d'emploi</Tag>
-            <RightChevronIcon style={{ margin: 16 }} />
+            <GridItemHeader $isMobile={isMobile}>
+              <GridItemTitle>{departement.name}</GridItemTitle>
+              <Tag>{formatNumber(departement.jobOffers)} offres d'emploi</Tag>
+            </GridItemHeader>
+            <RightChevronIcon style={{ margin: isMobile ? 5 : 15 }} />
           </GridItem>
         ))}
       </GridContainer>
@@ -298,7 +312,7 @@ const Region = () => {
       <SectionTitle>
         Découvrez les plus grandes villes de la région
       </SectionTitle>
-      <GridContainer>
+      <GridContainer $columnNumber={isMobile ? 1 : 2} $isMobile={isMobile}>
         {sortedCities.map((city) => (
           <GridItem key={city.insee_com} to={formatCityUrl(city)}>
             <GridItemTitle>{wordsCapitalize(city.nom_comm)}</GridItemTitle>
