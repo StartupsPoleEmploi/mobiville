@@ -29,7 +29,8 @@ const RegionsContainer = styled.div`
   overflow-x: ${({ $isMobile }) => ($isMobile ? 'scroll' : 'unset')};
 
   display: grid;
-  grid-template-columns: repeat(3, 300px);
+  grid-template-columns: ${({ $isMobile }) =>
+    $isMobile ? 'repeat(3, 300px)' : 'repeat(3, 1fr)'};
   grid-auto-rows: 60px;
   gap: 8px 24px;
 `
