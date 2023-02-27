@@ -1,14 +1,14 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import { COLOR_OTHER_GREEN, COLOR_PRIMARY } from '../../../constants/colors'
+import { COLOR_OTHER_GREEN, COLOR_PRIMARY } from '../../../../constants/colors'
 
 import Euro from '@mui/icons-material/Euro'
-import { TextInput } from '../../../components'
-import { formatNumber } from '../../../utils/utils'
-import { isMobileView } from '../../../constants/mobile'
-import { useWindowSize } from '../../../common/hooks/window-size'
+import { TextInput } from '../../../../components'
+import { formatNumber } from '../../../../utils/utils'
+import { isMobileView } from '../../../../constants/mobile'
+import { useWindowSize } from '../../../../common/hooks/window-size'
 
 const Container = styled.div`
   padding: ${({ $isMobile }) => ($isMobile ? '24px 0px' : '50px 0px')};
@@ -52,11 +52,6 @@ const InputLabel = styled.p`
   font-weight: bold;
 `
 
-const InputAdornment = styled.p`
-  font-size: 24px;
-  font-weight: 900;
-`
-
 const ResultContainer = styled.div`
   min-height: 1px;
 
@@ -92,34 +87,37 @@ const HR = styled.div`
 
 const HousingSimulator = ({ city }) => {
   const isMobile = isMobileView(useWindowSize())
-  const [squareMeters, setSquareMeters] = useState(0)
-  const [housingCost, setHousingCost] = useState(0)
+  // const [squareMeters, setSquareMeters] = useState(0)
+  const [rentBudget, setRentBudget] = useState('')
+  const [buyBudget, setBuyBudget] = useState('')
 
-  const calculateSquareMeters = (value) => {
-    if (!!city?.average_houserent) {
-      const result = parseInt(value, 10) / city.average_houserent
-      setSquareMeters(Number.isNaN(result) ? null : result.toFixed())
-    }
-    // else retour utilisateur : information indisponible dans la ville / disabled
-  }
-
-  const calculateHousingCost = (value) => {
-    if (!!city?.average_houseselled) {
-      const result =
-        parseInt(value.replace(/ /g, ''), 10) * city.average_houseselled
-      setHousingCost(Number.isNaN(result) ? null : result.toFixed())
-    }
-    // else retour utilisateur : information indisponible dans la ville / disabled
-  }
+  const rentSquareMeters = useMemo(
+    () =>
+      parseInt(rentBudget.replace(/ /g, ''), 10) /
+      (!!city?.rent_m2 ? city?.rent_m2 : city?.departement?.rent_m2),
+    [rentBudget]
+  )
+  const buySquareMeters = useMemo(
+    () =>
+      parseInt(buyBudget.replace(/ /g, ''), 10) /
+      (!!city?.buy_m2 ? city?.buy_m2 : city?.departement?.buy_m2),
+    [buyBudget]
+  )
 
   return (
     <>
-      {(!!city?.average_houserent || !!city?.average_houseselled) && (
+      {(!!city?.rent_m2 ||
+        !!city?.departement?.rent_m2 ||
+        !!city?.buy_m2 ||
+        !!city?.departement?.buy_m2) && (
         <Container
           $isMobile={isMobile}
-          $is2Forms={city?.average_houserent && city?.average_houseselled}
+          $is2Forms={
+            (!!city?.rent_m2 || !!city?.departement?.rent_m2) &&
+            (!!city?.buy_m2 || !!city?.departement?.buy_m2)
+          }
         >
-          {!!city?.average_houserent && (
+          {(!!city?.rent_m2 || !!city?.departement?.rent_m2) && (
             <FormContainer $isMobile={isMobile}>
               <InputLabel $isMobile={isMobile}>
                 Pour un loyer en location
@@ -136,19 +134,17 @@ const HousingSimulator = ({ city }) => {
                 <TextInput
                   placeholder="Renseigner un budget"
                   type="number"
-                  onChange={(event) =>
-                    calculateSquareMeters(event.target.value)
-                  }
+                  onChange={(event) => setRentBudget(event.target.value)}
                 ></TextInput>
                 <Euro fontSize="large" />
               </InputGroup>
-              <ResultContainer $isVisible={!!squareMeters}>
-                <ResultText $isVisible={!!squareMeters}>
+              <ResultContainer $isVisible={!!rentSquareMeters}>
+                <ResultText $isVisible={!!rentSquareMeters}>
                   Vous pouvez occuper un logement de{' '}
-                  {squareMeters ? (
+                  {rentSquareMeters ? (
                     <Result $isMobile={isMobile}>
                       <span data-automation-id="housing-square-meters">
-                        {formatNumber(squareMeters)}
+                        {formatNumber(rentSquareMeters)}
                       </span>
                       m2
                     </Result>
@@ -158,45 +154,45 @@ const HousingSimulator = ({ city }) => {
             </FormContainer>
           )}
 
-          {!!city?.average_houserent && !!city?.average_houseselled && (
-            <HR $isMobile={isMobile} />
-          )}
+          {(!!city?.buy_m2 || !!city?.departement?.buy_m2) && (
+            <>
+              <HR $isMobile={isMobile} />
+              <FormContainer $isMobile={isMobile}>
+                <InputLabel $isMobile={isMobile}>
+                  Pour un achat de logement
+                </InputLabel>
 
-          {!!city?.average_houseselled && (
-            <FormContainer $isMobile={isMobile}>
-              <InputLabel $isMobile={isMobile}>
-                Pour un achat de logement
-              </InputLabel>
-              <InputGroup
-                onClick={() => {
-                  window.smartTagPiano({
-                    name: 'utilisation',
-                    type: 'action',
-                    chapters: ['city', 'simulateur'],
-                  })
-                }}
-              >
-                <TextInput
-                  placeholder="Renseigner la surface"
-                  type="number"
-                  onChange={(event) => calculateHousingCost(event.target.value)}
-                ></TextInput>
-                <InputAdornment>m2</InputAdornment>
-              </InputGroup>
-              <ResultContainer $isVisible={!!housingCost}>
-                <ResultText $isVisible={!!housingCost}>
-                  Votre logement va vous coûter{' '}
-                  {housingCost ? (
-                    <Result $isMobile={isMobile}>
-                      <span data-automation-id="housing-cost">
-                        {formatNumber(housingCost)}
-                      </span>
-                      <Euro fontSize="large" />
-                    </Result>
-                  ) : null}
-                </ResultText>
-              </ResultContainer>
-            </FormContainer>
+                <InputGroup
+                  onClick={() => {
+                    window.smartTagPiano({
+                      name: 'utilisation',
+                      type: 'action',
+                      chapters: ['city', 'simulateur'],
+                    })
+                  }}
+                >
+                  <TextInput
+                    placeholder="Renseigner un budget"
+                    type="number"
+                    onChange={(event) => setBuyBudget(event.target.value)}
+                  ></TextInput>
+                  <Euro fontSize="large" />
+                </InputGroup>
+                <ResultContainer $isVisible={!!buySquareMeters}>
+                  <ResultText $isVisible={!!buySquareMeters}>
+                    Vous pouvez occuper un logement de{' '}
+                    {buySquareMeters ? (
+                      <Result $isMobile={isMobile}>
+                        <span data-automation-id="housing-square-meters">
+                          {formatNumber(buySquareMeters)}
+                        </span>
+                        m2
+                      </Result>
+                    ) : null}
+                  </ResultText>
+                </ResultContainer>
+              </FormContainer>
+            </>
           )}
         </Container>
       )}

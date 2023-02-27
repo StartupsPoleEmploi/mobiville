@@ -19,11 +19,11 @@ export default (sequelizeInstance) => {
             type: Sequelize.INTEGER,
             allowNull: true,
           },
-          rent_t2: {
+          rent_m2: {
             type: Sequelize.FLOAT,
             allowNull: true,
           },
-          rent_t4: {
+          buy_m2: {
             type: Sequelize.FLOAT,
             allowNull: true,
           },

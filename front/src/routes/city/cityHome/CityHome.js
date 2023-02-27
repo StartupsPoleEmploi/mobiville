@@ -38,12 +38,13 @@ import { useWindowSize } from '../../../common/hooks/window-size'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
 const CityHeader = loadable(() => import('../CityHeader'))
+
 const JobCard = loadable(() => import('../cityJobs/components/JobCard'))
 const CloseCompanies = loadable(() => import('./components/CloseCompanies'))
 //prettier-ignore
 const SectionHeader = loadable(() => import('../../../components/SectionHeader'))
 //prettier-ignore
-const CityHousingSimulator = loadable(() => import('./components/CityHousingSimulator'))
+const CityHousingSection = loadable(() => import('./components/CityHousingSection'))
 
 const ElementContainer = styled.div`
   display: flex;
@@ -414,7 +415,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
         <SubHeaderHousing>
           Et sinon pour vous loger à {wordsCapitalize(city.nom_comm)} ?
         </SubHeaderHousing>
-        <CityHousingSimulator city={city}></CityHousingSimulator>
+        <CityHousingSection city={city}></CityHousingSection>
       </ElementContainer>
 
       {!!codeRome ? (
