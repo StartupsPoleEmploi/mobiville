@@ -25,11 +25,14 @@ const JobsContainer = styled.div`
   display: grid;
   grid-auto-rows: ${({ $isMobile }) => ($isMobile ? '100px' : '80px')};
   gap: 8px 24px;
-  ${({ $isMobile }) => ($isMobile ? css`
-    grid-template-columns: repeat(2, minmax(80vw, 1fr));
-  ` : css`
-    grid-template-columns: repeat(2, 1fr);
-  `)}
+  ${({ $isMobile }) =>
+    $isMobile
+      ? css`
+          grid-template-columns: repeat(2, minmax(80vw, 1fr));
+        `
+      : css`
+          grid-template-columns: repeat(2, 1fr);
+        `}
 `
 
 const JobLabel = styled(Link)`

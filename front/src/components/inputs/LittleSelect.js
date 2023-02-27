@@ -105,7 +105,7 @@ const LittleSelect = ({
         <CustomMenuItem
           key={key}
           value={key}
-          $isSelected={selectedValue?.indexOf(key) > -1}
+          $isSelected={selectedValue?.indexOf(key) === 0}
         >
           {!!multiple ? (
             <Checkbox checked={selectedValue?.indexOf(key) > -1} />

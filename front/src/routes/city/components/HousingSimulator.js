@@ -11,10 +11,14 @@ import { isMobileView } from '../../../constants/mobile'
 import { useWindowSize } from '../../../common/hooks/window-size'
 
 const Container = styled.div`
-  padding: 50px 0px;
+  padding: ${({ $isMobile }) => ($isMobile ? '24px 0px' : '50px 0px')};
   border-radius: 4px;
-  flex: 2 0 auto;
-  width: 50%;
+
+  overflow-x: hidden;
+  max-width: 90vw;
+
+  width: ${({ $isMobile, $is2Forms }) =>
+    $isMobile ? '100%' : $is2Forms ? 'auto' : '50%'};
   flex-wrap: wrap;
   display: flex;
   flex-direction: row;
@@ -27,10 +31,12 @@ const Container = styled.div`
 
 const FormContainer = styled.div`
   flex: 1 0 auto;
-  padding-left: 30px;
-  width: calc(50% - 30px);
+  padding-left: ${({ $isMobile }) => ($isMobile ? 'unset' : '30px')};
+  width: ${({ $isMobile }) => ($isMobile ? '100%' : 'calc(50% - 30px)')};
+
   display: flex;
   flex-direction: column;
+  align-items: ${({ $isMobile }) => ($isMobile ? 'center' : 'start')};
 `
 
 const InputGroup = styled.div`
@@ -41,14 +47,14 @@ const InputGroup = styled.div`
 
 const InputLabel = styled.p`
   margin: 8px 0;
-
+  margin-left: ${({ $isMobile }) => ($isMobile ? '-100px' : 'unset')};
   font-size: 18px;
   font-weight: bold;
 `
 
 const InputAdornment = styled.p`
   font-size: 24px;
-  font-weight: bold;
+  font-weight: 900;
 `
 
 const ResultContainer = styled.div`
@@ -74,11 +80,14 @@ const Result = styled.span`
   font-weight: 900;
 `
 
-const HR = styled.hr`
-  height: 100%;
-  border: 1px solid ${COLOR_PRIMARY};
-  margin: unset;
-  width: 0px;
+const HR = styled.div`
+  border-left: ${({ $isMobile }) =>
+    $isMobile ? 'unset' : `2px solid ${COLOR_PRIMARY}`};
+  border-bottom: ${({ $isMobile }) =>
+    $isMobile ? `2px solid ${COLOR_PRIMARY}` : 'unset'};
+  width: ${({ $isMobile }) => ($isMobile ? '70%' : '0px')};
+  height: ${({ $isMobile }) => ($isMobile ? '0px' : '120px')};
+  margin: ${({ $isMobile }) => ($isMobile ? '40px auto' : 'auto')};
 `
 
 const HousingSimulator = ({ city }) => {
@@ -106,17 +115,15 @@ const HousingSimulator = ({ city }) => {
   return (
     <>
       {(!!city?.average_houserent || !!city?.average_houseselled) && (
-        <Container>
-          {/* <FormContainer style={{ width: '100%' }}>
-            <Title>Simulateur de logement</Title>
-            <SubTitle $isMobile={isMobile}>
-              Calculer votre budget pour un achat ou une location
-            </SubTitle>
-          </FormContainer> */}
-          {/* <div> */}
+        <Container
+          $isMobile={isMobile}
+          $is2Forms={city?.average_houserent && city?.average_houseselled}
+        >
           {!!city?.average_houserent && (
-            <FormContainer>
-              <InputLabel>Pour un loyer en location</InputLabel>
+            <FormContainer $isMobile={isMobile}>
+              <InputLabel $isMobile={isMobile}>
+                Pour un loyer en location
+              </InputLabel>
               <InputGroup
                 onClick={() => {
                   window.smartTagPiano({
@@ -151,11 +158,15 @@ const HousingSimulator = ({ city }) => {
             </FormContainer>
           )}
 
-          {!!city?.average_houserent && !!city?.average_houseselled && <HR />}
+          {!!city?.average_houserent && !!city?.average_houseselled && (
+            <HR $isMobile={isMobile} />
+          )}
 
           {!!city?.average_houseselled && (
-            <FormContainer>
-              <InputLabel>Pour un achat de logement</InputLabel>
+            <FormContainer $isMobile={isMobile}>
+              <InputLabel $isMobile={isMobile}>
+                Pour un achat de logement
+              </InputLabel>
               <InputGroup
                 onClick={() => {
                   window.smartTagPiano({
@@ -187,7 +198,6 @@ const HousingSimulator = ({ city }) => {
               </ResultContainer>
             </FormContainer>
           )}
-          {/* </div> */}
         </Container>
       )}
     </>
