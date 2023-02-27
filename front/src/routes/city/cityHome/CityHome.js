@@ -38,7 +38,7 @@ import { useWindowSize } from '../../../common/hooks/window-size'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
 const CityHeader = loadable(() => import('../CityHeader'))
-const SectionHeader = loadable(() => import('../components/SectionHeader'))
+const SectionHeader = loadable(() => import('../../../components'))
 const JobCard = loadable(() => import('../cityJobs/components/JobCard'))
 const CloseCompanies = loadable(() => import('./components/CloseCompanies'))
 const CityHousingSimulator = loadable(() =>

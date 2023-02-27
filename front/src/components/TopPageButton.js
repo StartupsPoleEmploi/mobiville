@@ -11,7 +11,7 @@ const Container = styled.a`
   cursor: pointer;
   position: absolute;
   right: max(32px, calc(((100vw - min(1040px, 100%)) / 4) - 50px));
-  bottom: 64px;
+  bottom: 32px;
 `
 
 const ArrowContainer = styled.div`
@@ -37,14 +37,12 @@ const Text = styled.p`
 const TopPageButton = () => {
   const isMobile = isMobileView(useWindowSize())
 
-  if (isMobile) return null
-
   return (
     <Container onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
       <ArrowContainer>
         <ArrowUpwardIcon fontSize="large" />
       </ArrowContainer>
-      <Text>Haut de page</Text>
+      { isMobile ? null : <Text>Haut de page</Text> }
     </Container>
   )
 }

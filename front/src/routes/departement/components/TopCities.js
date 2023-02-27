@@ -1,38 +1,37 @@
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { ReactComponent as RightChevronIcon } from '../../../assets/images/icons/right_chevron.svg'
+import { useWindowSize } from '../../../common/hooks/window-size'
+import { SectionTitle } from '../../../components'
 
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../../constants/colors'
+import { isMobileView } from '../../../constants/mobile'
 import { formatCityUrl, wordsCapitalize } from '../../../utils/utils'
 
 const Container = styled.div`
-  color: ${COLOR_PRIMARY};'
+  color: ${COLOR_PRIMARY};
 `
 
-const Title = styled.h2`
-  margin: 16px 16px 0 16px;
-
-  text-align: center;
-  font-size: 24px;
-  font-weight: 900;
-`
-
-const Item = styled.div`
+const ItemsContainer = styled.div`
   max-width: 1072px; // 1040px + 2*16px
   width: 100%;
   margin: 25px auto;
-  padding: 0 16px;
+  padding: 1px 16px;
+  overflow-x: ${({ $isMobile }) => ($isMobile ? 'scroll' : 'auto')};
 
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: 80px;
   gap: 8px 24px;
+  ${({ $isMobile }) => ($isMobile ? css`
+    grid-template-columns: repeat(2, minmax(80vw, 1fr));
+  ` : css`
+    grid-template-columns: repeat(2, 1fr);
+  `)}
 `
 
-const Label = styled(Link)`
+const Item = styled(Link)`
   width: 100%;
-  height: 80px;
   padding: 30px;
   border-radius: 8px;
 
@@ -57,22 +56,24 @@ const Label = styled(Link)`
 `
 
 const TopCities = ({ departement }) => {
+  const isMobile = isMobileView(useWindowSize())
+
   return (
     <Container>
-      <Title>
+      <SectionTitle>
         Découvrez les villes qui recrutent le plus dans le département
-      </Title>
+      </SectionTitle>
 
-      <Item>
+      <ItemsContainer $isMobile={isMobile}>
         {departement?.topCities?.map((city) => (
-          <Label key={city.nom_comm} to={formatCityUrl(city)}>
+          <Item key={city.nom_comm} to={formatCityUrl(city)}>
             <span>{wordsCapitalize(city.nom_comm)}</span>
             <span style={{ whiteSpace: 'nowrap' }}>
               <RightChevronIcon style={{ margin: 16 }} />
             </span>
-          </Label>
+          </Item>
         ))}
-      </Item>
+      </ItemsContainer>
     </Container>
   )
 }
