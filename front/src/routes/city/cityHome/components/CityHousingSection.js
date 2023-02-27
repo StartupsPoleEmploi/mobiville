@@ -15,7 +15,7 @@ import Card from '@mui/material/Card'
 import { Image, KeyFigures, Tag } from '../../../../components'
 
 //prettier-ignore
-const HousingSimulator = loadable(() => import('../../components/HousingSimulator'))
+const HousingSimulator = loadable(() => import('./HousingSimulator'))
 
 const HousingMetrics = styled.div`
   display: flex;
@@ -133,16 +133,15 @@ const HousingActorImage = styled(Image)`
   align-self: center;
 `
 
-const CityHousingSimulator = ({ city }) => {
-  const size = useWindowSize()
-  const isMobile = isMobileView(size)
+const CityHousingSection = ({ city }) => {
+  const isMobile = isMobileView(useWindowSize())
 
   return (
     <>
       <HousingMetrics $isMobile={isMobile}>
         <TagsContainer>
           <Tag green={!city.city_house_tension} size="tall">
-            {city && city.city_house_tension
+            {!!city?.city_house_tension
               ? "Tension immobilière a l'achat"
               : "Pas de tension immobilière a l'achat"}
           </Tag>
@@ -152,17 +151,17 @@ const CityHousingSimulator = ({ city }) => {
           figures={[
             {
               label: 'Prix d’achat moyen/m2',
-              data: city.average_houseselled
-                ? `${formatNumber(city.average_houseselled)}€`
+              data: city?.buy_m2 || city?.departement?.buy_m2
+                ? `${formatNumber(city?.buy_m2 ?? city?.departement?.buy_m2)}€`
                 : 'A venir',
               icon: <BuildingIcon />,
             },
             {
               label: 'Loyer moyen en location',
               data:
-                city.rent_t2 || city?.departement?.rent_t2
+                city.rent_t2 || city?.departement?.rent_m2
                   ? `${formatNumber(
-                      city.rent_t2 ?? city?.departement?.rent_t2
+                      city.rent_t2 ?? city?.departement?.rent_m2 * 45
                     )}€`
                   : 'A venir',
               icon: (
@@ -174,9 +173,9 @@ const CityHousingSimulator = ({ city }) => {
             {
               label: 'Loyer moyen en location',
               data:
-                city.rent_t4 || city?.departement?.rent_t4
+                city.rent_t4 || city?.departement?.rent_m2
                   ? `${formatNumber(
-                      city.rent_t4 ?? city?.departement?.rent_t4
+                      city.rent_t4 ?? city?.departement?.rent_m2 * 80
                     )}€`
                   : 'A venir',
               icon: (
@@ -190,7 +189,7 @@ const CityHousingSimulator = ({ city }) => {
       </HousingMetrics>
 
       <HousingSearchContainer $isMobile={isMobile}>
-        {(!!city?.average_houserent || !!city?.average_houseselled) && (
+        {(!!city?.rent_m2 || !!city?.departement?.rent_m2 || !!city?.buy_m2 || !!city?.departement?.buy_m2) && (
           <>
             <ContainerHeader>
               Calculez votre budget pour un achat ou une location
@@ -254,8 +253,8 @@ const CityHousingSimulator = ({ city }) => {
   )
 }
 
-CityHousingSimulator.propTypes = {
+CityHousingSection.propTypes = {
   city: PropTypes.object.isRequired,
 }
 
-export default CityHousingSimulator
+export default CityHousingSection
