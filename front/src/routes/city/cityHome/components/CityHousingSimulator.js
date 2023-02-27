@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'styled-components'
+import loadable from '@loadable/component'
 
 import { useWindowSize } from '../../../../common/hooks/window-size'
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../../../constants/colors'
@@ -8,12 +9,13 @@ import { isMobileView } from '../../../../constants/mobile'
 import { formatNumber } from '../../../../utils/utils'
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import { ReactComponent as BuildingIcon } from '../../../../assets/images/icons/building.svg'
 import Card from '@mui/material/Card'
 
-import HousingSimulator from '../../components/HousingSimulator'
 import { Image, KeyFigures, Tag } from '../../../../components'
 
-import { ReactComponent as BuildingIcon } from '../../../../assets/images/icons/building.svg'
+//prettier-ignore
+const HousingSimulator = loadable(() => import('../../components/HousingSimulator'))
 
 const HousingMetrics = styled.div`
   display: flex;
@@ -43,17 +45,17 @@ const HousingSearchContainer = styled.div`
 
   display: flex;
   flex-wrap: wrap;
-  flex-direction: ${({ $isMobile }) => ($isMobile ? 'row': 'column')};
+  flex-direction: ${({ $isMobile }) => ($isMobile ? 'row' : 'column')};
   gap: 15px;
-  `
-  
-  const HousingActorsContainer = styled.div`
+`
+
+const HousingActorsContainer = styled.div`
   flex: 1 1 100%;
-  
+
   margin-top: 15px;
   display: flex;
   flex-wrap: wrap;
-  flex-direction: ${({ $isMobile }) => ($isMobile ? 'column': 'row')};
+  flex-direction: ${({ $isMobile }) => ($isMobile ? 'column' : 'row')};
   gap: 0px 16px;
 
   color: ${COLOR_PRIMARY};
@@ -79,9 +81,8 @@ const HousingActor = styled(Card)`
   flex-direction: column;
   gap: 8px;
 
-  filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.25));
   box-shadow: unset;
-
+  margin-bottom: 15px;
   border-radius: 4px;
   background: ${COLOR_WHITE};
 `
@@ -239,8 +240,8 @@ const CityHousingSimulator = ({ city }) => {
             <div>
               <HousingActorTitle>Offres de logement</HousingActorTitle>
               <HousingActorDescription>
-                Salariés, consultez la plateforme d'offres de logements liées à
-                votre situation
+                Consultez la plateforme d'offres de logements liées à votre
+                situation
               </HousingActorDescription>
             </div>
             <HousingActorLink href="https://al-in.fr/" target="_blank">

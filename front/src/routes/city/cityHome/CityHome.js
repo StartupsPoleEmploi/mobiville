@@ -12,7 +12,7 @@ import {
   KeyFigures,
   Tag,
   TopPageButton,
-  TopJobs,
+  TopJobs as Top10Rome,
 } from '../../../components'
 
 import { ReactComponent as MaletteIcon } from '../../../assets/images/icons/malette.svg'
@@ -38,12 +38,12 @@ import { useWindowSize } from '../../../common/hooks/window-size'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
 const CityHeader = loadable(() => import('../CityHeader'))
-const SectionHeader = loadable(() => import('../../../components'))
 const JobCard = loadable(() => import('../cityJobs/components/JobCard'))
 const CloseCompanies = loadable(() => import('./components/CloseCompanies'))
-const CityHousingSimulator = loadable(() =>
-  import('./components/CityHousingSimulator')
-)
+//prettier-ignore
+const SectionHeader = loadable(() => import('../../../components/SectionHeader'))
+//prettier-ignore
+const CityHousingSimulator = loadable(() => import('./components/CityHousingSimulator'))
 
 const ElementContainer = styled.div`
   display: flex;
@@ -129,6 +129,8 @@ const EventsContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  text-align: ${({ $isMobile }) => ($isMobile ? 'center' : 'inherit')};
+
   gap: 40px;
 `
 
@@ -141,12 +143,23 @@ const EventBannerContent = styled.div`
     margin: 0;
   }
 `
+const EventBannerImgContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+`
 const EventBannerTitle = styled.p`
   font-size: 36px;
   font-weight: 900;
 `
-const EventBannerText = styled.p``
+const EventBannerText = styled.p`
+  font-size: 24px;
+  text-align: center;
+  line-height: 33px;
+`
 const EventBannerLink = styled.a`
+  font-size: ${({ $isMobile }) => ($isMobile ? '16px' : '24px')};
+  line-height: ${({ $isMobile }) => ($isMobile ? '19px' : '33px')};
   text-decoration: underline;
 `
 
@@ -320,8 +333,10 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
               },
         ]}
       />
+      <SectionHeader title={`Les entreprises qui recrutent`} />
+      <CloseCompanies />
 
-      {!!codeRome ? null : <TopJobs city={city} />}
+      {!!codeRome ? null : <Top10Rome city={city} />}
 
       <SectionHeader
         title={
@@ -358,12 +373,6 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
         centered
       />
 
-      <SectionHeader
-        title={`A proximité de ${wordsCapitalize(city.nom_comm)}`}
-        subTitle="Top 10 des entreprises susceptibles de recruter"
-      />
-      <CloseCompanies />
-
       {/* (<EventsContainer>
           <SectionHeader
             title="Les rencontres professionnelles dans ce département"
@@ -372,20 +381,31 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
           <Events events={events} />
         </EventsContainer>)  */}
 
-      <EventsContainer>
-        {isMobile ? null : (
-          <Image src="events-city" alt="" role="presentation" />
+      <EventsContainer $isMobile={isMobile}>
+        {!isMobile && (
+          <img src="/logos/events-city-mobile.svg" alt="" role="presentation" />
         )}
         <EventBannerContent>
-          <EventBannerTitle>Mes évenements emploi</EventBannerTitle>
+          <EventBannerTitle>Mes événements emploi</EventBannerTitle>
+          <EventBannerImgContainer>
+            {isMobile && (
+              <img
+                src="/logos/events-city-mobile.svg"
+                alt=""
+                role="presentation"
+              />
+            )}
+          </EventBannerImgContainer>
           <EventBannerText>
             Pour augmenter votre chance de trouver une emploi dans cette ville
           </EventBannerText>
           <EventBannerLink
+            $isMobile={isMobile}
             href="https://mesevenementsemploi.pole-emploi.fr/mes-evenements-emploi/evenements"
             target="_blank"
           >
-            Découvrez les rencontres professionnelles <ArrowForwardIcon />
+            Découvrez les rencontres professionnelles{' '}
+            <ArrowForwardIcon style={{ verticalAlign: 'middle' }} />
           </EventBannerLink>
         </EventBannerContent>
       </EventsContainer>

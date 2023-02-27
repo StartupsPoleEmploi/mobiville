@@ -28,9 +28,7 @@ const RadioGroup = ({
 
 RadioGroup.propTypes = {
   name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  values: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-  ),
+  values: PropTypes.object,
   valuesTips: PropTypes.arrayOf(PropTypes.string),
   selectedButton: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onClick: PropTypes.func,
