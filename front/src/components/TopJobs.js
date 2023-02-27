@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Chip, CircularProgress } from '@mui/material'
 
 import { ReactComponent as RightChevronIcon } from '../assets/images/icons/right_chevron.svg'
 
 import { COLOR_PRIMARY, COLOR_WHITE } from '../constants/colors'
 import { formatCityUrl, wordsCapitalize } from '../utils/utils'
-import SectionHeader from '../routes/city/components/SectionHeader'
 import { isMobileView } from '../constants/mobile'
 import { useWindowSize } from '../common/hooks/window-size'
+import { SectionHeader } from '.'
 
 const Container = styled.div`
   color: ${COLOR_PRIMARY};
@@ -20,19 +20,21 @@ const JobsContainer = styled.div`
   width: 100%;
   margin: 25px auto;
   padding: 1px 16px;
-
   overflow-x: ${({ $isMobile }) => ($isMobile ? 'scroll' : 'auto')};
+
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  // grid-auto-rows: 80px;
+  grid-auto-rows: ${({ $isMobile }) => ($isMobile ? '100px' : '80px')};
   gap: 8px 24px;
+  ${({ $isMobile }) => ($isMobile ? css`
+    grid-template-columns: repeat(2, minmax(80vw, 1fr));
+  ` : css`
+    grid-template-columns: repeat(2, 1fr);
+  `)}
 `
 
 const JobLabel = styled(Link)`
-  width: ${({ $isMobile }) => ($isMobile ? '270px' : '100%')};
-  // height: 100px;
-  height: ${({ $isMobile }) => ($isMobile ? '100px' : '80px')};
-  padding: ${({ $isMobile }) => ($isMobile ? '5px' : '15px')};
+  width: 100%;
+  padding: 30px;
   border-radius: 8px;
 
   display: flex;
@@ -42,7 +44,6 @@ const JobLabel = styled(Link)`
   background: ${COLOR_WHITE};
   font-size: ${({ $isMobile }) => ($isMobile ? '16px' : '18px')};
   font-weight: 700;
-  padding-left: ${({ $isMobile }) => ($isMobile ? '10px' : 'unset')};
   text-align: start;
   overflow: hidden;
 
@@ -99,6 +100,7 @@ const TopJobs = ({ departement, city }) => {
                 city?.nom_comm
               )}`
         }
+        centerOnMobile
       />
 
       {!topJobs ? (

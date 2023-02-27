@@ -1,7 +1,7 @@
 import loadable from '@loadable/component'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { ReactComponent as CalculatorIcon } from '../../assets/images/icons/calculator.svg'
 import { ReactComponent as CrowdIcon } from '../../assets/images/icons/crowd.svg'
@@ -102,13 +102,18 @@ const ReadMoreText = styled.span`
 const GridContainer = styled.div`
   max-width: 1072px;
   width: 100%;
-  padding: 0 16px 32px 16px;
+  padding: 1px 16px 32px 16px;
   margin: auto;
+  overflow-x: ${({ $isMobile }) => ($isMobile ? 'scroll' : 'auto')};
 
   display: grid;
-  grid-template-columns: repeat(2, minmax(max-content, 1fr));
   grid-auto-rows: 80px;
   gap: 8px 16px;
+  ${({ $isMobile }) => ($isMobile ? css`
+    grid-template-columns: repeat(2, minmax(80vw, 1fr));
+  ` : css`
+    grid-template-columns: repeat(2, minmax(max-content, 1fr));
+  `)}
 `
 
 const GridItem = styled(Link)`
@@ -256,7 +261,7 @@ const Departement = () => {
       {departement.region?.departements && (
         <SectionTitle>Autres départements de la région</SectionTitle>
       )}
-      <GridContainer>
+      <GridContainer $isMobile={isMobile}>
         {departement.region?.departements
           ?.filter((d) => d.code !== departement.code)
           .slice(0, 8)

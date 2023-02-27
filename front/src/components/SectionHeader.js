@@ -1,7 +1,7 @@
-import styled from 'styled-components'
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { COLOR_PRIMARY } from '../../../constants/colors'
-import { isMobileView } from '../../../constants/mobile'
+import styled, { css } from 'styled-components'
+import { useWindowSize } from '../common/hooks/window-size'
+import { COLOR_PRIMARY } from '../constants/colors'
+import { isMobileView } from '../constants/mobile'
 
 const Container = styled.div`
   margin: ${({ $isMobile }) => ($isMobile ? '20px auto 0 auto' : 'auto')};
@@ -9,6 +9,10 @@ const Container = styled.div`
   max-width: 1040px;
 
   color: ${COLOR_PRIMARY};
+
+  ${({ $centerOnMobile }) => $centerOnMobile && css`
+    text-align: center;
+  `}
 `
 
 const Wrapper = styled.div`
@@ -27,11 +31,11 @@ const SubTitle = styled.p`
   line-height: 24px;
 `
 
-const SectionHeader = ({ title, subTitle, margin = true }) => {
+const SectionHeader = ({ title, subTitle, margin = true, centerOnMobile = false }) => {
   const isMobile = isMobileView(useWindowSize())
 
   return (
-    <Container $isMobile={isMobile}>
+    <Container $isMobile={isMobile} $centerOnMobile={centerOnMobile}>
       <Wrapper $isMobile={isMobile} $margin={margin}>
         <Title>{title}</Title>
         <SubTitle>{subTitle}</SubTitle>
