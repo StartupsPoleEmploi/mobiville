@@ -13,8 +13,8 @@ Fonctionnalité: Affichage simulateur d'une ville
 
   Scénario: Affichage de la surface de logement à partir d'un budget pour une location
     Lorsque je saisis un budget de 1000 euros pour une location
-    Alors la surface de logement que je peux occuper s'affiche
+    Alors la surface de logement que je peux occuper en location s'affiche
 
-  Scénario: Affichage du prix d'un logement à partir de la surface pour un achat
-    Lorsque je saisis la surface de 100 m² pour un achat
-    Alors le prix que le logement va me coûter s'affiche
+  Scénario: Affichage de la surface de logement à partir d'un budget pour un achat
+    Lorsque je saisis un budget de 420800 euros pour un achat
+    Alors la surface de logement que je peux occuper à l'achat s'affiche
