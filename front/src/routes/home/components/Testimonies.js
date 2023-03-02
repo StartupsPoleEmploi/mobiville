@@ -1,6 +1,7 @@
 import styled from 'styled-components'
+import loadable from '@loadable/component'
 
-import { AppCarousel, Image, Section, SectionTitle } from '../../../components'
+import { Image, Section, SectionTitle } from '../../../components'
 import {
   COLOR_PRIMARY,
   COLOR_SALMON,
@@ -8,6 +9,8 @@ import {
 } from '../../../constants/colors'
 import { useWindowSize } from '../../../common/hooks/window-size'
 import { isMobileView } from '../../../constants/mobile'
+
+const AppCarousel = loadable(() => import('../../../components/AppCarousel'))
 
 const Container = styled.div`
   width: 100%;

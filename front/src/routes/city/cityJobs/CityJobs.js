@@ -4,10 +4,7 @@ import styled, { css } from 'styled-components'
 import { Helmet } from 'react-helmet-async'
 import moment from 'moment'
 
-import {
-  COLOR_GRAY,
-  COLOR_PRIMARY,
-} from '../../../constants/colors'
+import { COLOR_GRAY, COLOR_PRIMARY } from '../../../constants/colors'
 import { capitalize, distance, formatDate } from '../../../utils/utils'
 import { useWindowSize } from '../../../common/hooks/window-size'
 import { isMobileView } from '../../../constants/mobile'

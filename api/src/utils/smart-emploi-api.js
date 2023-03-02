@@ -51,26 +51,33 @@ export async function getHiringRate({ codeTerritoire, codeRome }) {
         { ...(await axiosCommonOptions()) }
       )
       .catch((error) => {
-        console.error(error)
+        if (error.response?.data?.message.includes('Status code = 404')) {
+          console.info(
+            `api StatEmbauche: 404 pour ${codeTerritoire},${codeRome}`
+          )
+          return null
+        }
+        console.log(error)
         return error.response
-      }))
+      })
+  )
 
-    if (!result || !result.listeValeursParPeriode) return null
+  if (!result || !result.listeValeursParPeriode) return null
 
-    const preferedCategories = ['ABCDE-SUP1M', 'ABCDE-TOUTE', 'TOUT-TOUTE']
-    const foundCategories = result.listeValeursParPeriode.map(
-      (data) => data.codeNomenclature
-    )
+  const preferedCategories = ['ABCDE-SUP1M', 'ABCDE-TOUTE', 'TOUT-TOUTE']
+  const foundCategories = result.listeValeursParPeriode.map(
+    (data) => data.codeNomenclature
+  )
 
-    const bestCategory = preferedCategories.find((category) =>
-      foundCategories.includes(category)
-    )
+  const bestCategory = preferedCategories.find((category) =>
+    foundCategories.includes(category)
+  )
 
-    const hiringRate = result.listeValeursParPeriode.find(
-      (data) => data.codeNomenclature === bestCategory
-    ).valeurSecondairePourcentage
+  const hiringRate = result.listeValeursParPeriode.find(
+    (data) => data.codeNomenclature === bestCategory
+  ).valeurSecondairePourcentage
 
-    return hiringRate
+  return hiringRate
 }
 
 /** Total d'embauche par departement par métier au dernier trimestre
@@ -102,7 +109,7 @@ export async function getEmbaucheByDepartement(codeDepartement, codeRome) {
       )
       .catch((error) => {
         console.log(error.response)
-        return {...error.response, errorCode: error.code}
+        return { ...error.response, errorCode: error.code }
       })
   ).then((data) => mapEmbaucheData(codeDepartement, codeRome, data))
 }
