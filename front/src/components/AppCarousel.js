@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import "react-responsive-carousel/lib/styles/carousel.min.css"
 import styled from 'styled-components'
 import { COLOR_PRIMARY } from '../constants/colors'
 import { Carousel } from 'react-responsive-carousel'
 import { useWindowSize } from '../common/hooks/window-size'
 import { isMobileView } from '../constants/mobile'
+
+import "react-responsive-carousel/lib/styles/carousel.min.css"
 
 const AppCarouselDot = styled.li`
   display: inline-block;

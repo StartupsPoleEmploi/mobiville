@@ -1,6 +1,5 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { ToastContainer } from 'react-toastify'
 import { ThemeProvider, createTheme } from '@mui/material'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
@@ -11,7 +10,6 @@ import Providers from './common/contexts'
 import { HelmetProvider } from 'react-helmet-async'
 
 import './assets/styles/main.scss'
-import 'react-toastify/dist/ReactToastify.css'
 
 import { COLOR_PRIMARY, COLOR_SECONDARY } from './constants/colors'
 
@@ -21,14 +19,23 @@ Sentry.init({
   // (and at the time of writing, the setup of this project makes setting it up
   // as an env variable a bit of a headache)
   dsn: 'https://3f96b9a63f114a8c80c86321ab7bd474@o1070672.ingest.sentry.io/6164584',
-  integrations: [new Integrations.BrowserTracing()],
   tracesSampleRate: 1.0,
+  replaysOnErrorSampleRate: 0.8,
+  replaysSessionSampleRate: 0.1,
   environment:
     window.location.hostname === 'mobiville.pole-emploi.fr'
       ? 'production'
       : window.location.hostname === 'mobiville.beta.pole-emploi.fr'
       ? 'staging'
       : 'development',
+  integrations: [
+    new Integrations.BrowserTracing(),
+    new Sentry.Replay({
+      // Additional SDK configuration goes in here, for example:
+      maskAllText: false,
+      blockAllMedia: true,
+    }),
+  ],
 })
 
 const theme = createTheme({
@@ -47,7 +54,6 @@ createRoot(document.getElementById('root')).render(
       <HelmetProvider>
         <Providers>
           <App />
-          <ToastContainer />
         </Providers>
       </HelmetProvider>
     </ThemeProvider>

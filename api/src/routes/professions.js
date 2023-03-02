@@ -110,7 +110,7 @@ router.post(
     let pcs = null
 
     if (codeRome) {
-      [city, pcs] = await Promise.all([
+      ;[city, pcs] = await Promise.all([
         models.cities.findOne({
           where: { insee_com: insee },
           raw: true,
@@ -135,7 +135,7 @@ router.post(
             rome: codeRome,
           },
           raw: true,
-        })
+        }),
       ])
     } else {
       city = await models.cities.findOne({
@@ -172,7 +172,7 @@ router.post(
     ] = await Promise.all([
       infosTravail({
         codeProfession: pcs ? pcs.pcs : null,
-        codeDept: city.code_dept
+        codeDept: city.code_dept,
       }),
       infosTensionTravail({
         bassinId,
@@ -186,7 +186,7 @@ router.post(
     ]).catch((err) => {
       // A better handling of errors should be included, but for now we’ll do with just not screwing the whole app
       // as this previously did
-      console.error(err)
+      console.error(err.response.data)
       return [null, { bassin: null, dept: null }, null]
     })
 
