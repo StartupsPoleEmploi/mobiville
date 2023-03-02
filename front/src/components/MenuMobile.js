@@ -80,7 +80,7 @@ const MENU_LINK = [
     path: '/rechercher',
     icon: HouseOutlineIcon,
     label: 'Villes',
-    activePaths: ['rechercher', 'cities'],
+    activePaths: ['rechercher', 'villes', 'region', 'departement'],
   },
   {
     path: '/aides',

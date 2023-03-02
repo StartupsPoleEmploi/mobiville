@@ -58,7 +58,8 @@ const Header = styled.div`
   align-items: center;
 
   font-weight: bold;
-  background-color: ${({ $isMobile }) => $isMobile ? 'none' : COLOR_OTHER_GREEN};
+  background-color: ${({ $isMobile }) =>
+    $isMobile ? 'none' : COLOR_OTHER_GREEN};
 
   ${({ $isMobile }) =>
     !$isMobile &&
@@ -131,8 +132,11 @@ const HelpTypeTitleContainer = styled.div`
 `
 
 const CustomGridContainer = styled(Grid)`
-  width: ${({ $isMobile }) => ($isMobile ? '350px' : '1050px')};
-  margin: auto;
+  width: ${({ $isMobile }) =>
+    $isMobile ? 'calc(100vw - 2 * 16px )' : '1050px'};
+  // 100vw - 2x le padding du parent
+  
+  margin: ${({ $isMobile }) => ($isMobile ? 'auto 0px' : 'auto')};
 `
 
 const Anchors = styled.div`
@@ -375,6 +379,7 @@ const Helps = () => {
 
   const HelpList = ({ items }) => (
     <CustomGridContainer
+      $isMobile={isMobile}
       container
       justifyContent={isMobile ? 'center' : 'start'}
       columnSpacing={{
