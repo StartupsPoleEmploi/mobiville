@@ -70,6 +70,10 @@ export default (sequelizeInstance) => {
       foreignKey: 'bassin_id',
       sourceKey: 'bassin_id',
     })
+    Model.hasMany(models.secteursBassins, {
+      foreignKey: 'code_bassin',
+      sourceKey: 'bassin_id',
+    })
 
     return models
   }
