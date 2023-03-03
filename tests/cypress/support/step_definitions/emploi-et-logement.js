@@ -5,14 +5,16 @@ import { ENDROIT_REGION } from "./region";
 
 const rappelCritereVille = "div[tag-page$=city] * > div > h1";
 const rappelCritereMetier = "div[tag-page$=city] * > div > h1";
+const infoVille = "div[tag-page$=city] > h2 ";
 const infoOpportunites = "div[tag-page$=city] > div ";
 const infoOffres = "div[tag-page$=city] * > div > p";
 const infoEntreprises = "div[tag-page$=city] * > div > p";
 const infoTauxEmbauche = "div[tag-page$=city] * > div > p";
 const resultatOffre = "div[tag-page$=city] * > div > h2";
-const nombreOffres = "div[tag-page$=city] > div:nth-child(7) > div";
+const nombreOffres = "div[tag-page$=city] > div:nth-child(9) > div";
 const boutonVoirToutesOffres =  "div[tag-page$=city] > div > a[href*=ville][href*=metier]";
-const resultatEntreprise = "div[tag-page$=city] * > div > p";
+const resultatEntreprise = "div[tag-page$=city] * > div > h2";
+const infoSimulateur = "div[tag-page$=city] * > h3";
 const donneesTensionImmobiliere = "div[tag-page$=city] * > div";
 const donneePrixUniteSurfaceAchat = "div[tag-page$=city] * > div > p";
 const donneeLoyerF2Location = "div[tag-page$=city] * > div > p";
@@ -25,7 +27,7 @@ const troisiemeAide = "a[href*=garantie-visale]";
 const boutonVoirToutesAides = "div[tag-page$=city] * > div > a[href*=aides]";
 const servicesVille = "div[tag-page$=city] * > div > p";
 const boutonVoirTousServices  =  "div[tag-page$=city] * > div > a[href*=ville][href*=services]";
-const nombreBlocsEntreprises = "div[tag-page$=city] > div:nth-child(10) > div > div:nth-child(1)";
+const nombreBlocsEntreprises = "div[tag-page$=city] > div:nth-child(7) > div > div:nth-child(1)";
 
 Then("j'affiche la page de la ville pour le métier", function () {
   let villeSansCP = ENDROIT_HP.split(' (')[0];
@@ -36,6 +38,7 @@ Then("j'affiche la page de la ville pour le métier", function () {
   cy.contains(rappelCritereVille, villeSansCP,  {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(rappelCritereMetier, "pour le métier " + metierCourt,  {timeout: SHORT_WAIT_TIME}).should('exist');
 
+  cy.contains(infoVille, "L'emploi à " + villeSansCP, {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoOpportunites, "pportunités d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoOffres, "Offres d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoEntreprises, "Entreprises", {timeout: SHORT_WAIT_TIME}).should('exist');
@@ -49,6 +52,7 @@ Then("j'affiche la page de la ville similaire/proche pour le métier", function 
 
   cy.contains(rappelCritereMetier, "pour le métier " + metierCourt,  {timeout: SHORT_WAIT_TIME}).should('exist');
 
+  cy.contains(infoVille, "L'emploi à ", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoOpportunites, "pportunités d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoOffres, "Offres d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoEntreprises, "Entreprises", {timeout: SHORT_WAIT_TIME}).should('exist');
@@ -62,6 +66,7 @@ Then("j'affiche la page de la ville pour tous les métiers", function () {
 
   cy.contains(rappelCritereVille, villeSansCP,  {timeout: SHORT_WAIT_TIME}).should('exist');
 
+  cy.contains(infoVille, "L'emploi à " + villeSansCP, {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoOpportunites, "pportunités d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoOffres, "Offres d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(infoEntreprises, "Entreprises", {timeout: SHORT_WAIT_TIME}).should('exist');
@@ -84,12 +89,15 @@ When("je clique sur Voir toutes les offres d’emploi", function () {
   cy.wait(1000);
 })
 
-Then("j'affiche la liste des entreprises à proximité", function () {
-  cy.contains(resultatEntreprise, "entreprises susceptibles de recruter", {timeout: SHORT_WAIT_TIME}).should('exist');
+Then("j'affiche la liste des entreprises qui recrutent", function () {
+  cy.contains(resultatEntreprise, "Les entreprises qui recrutent", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.get(nombreBlocsEntreprises, {timeout: SHORT_WAIT_TIME}).children().should('have.length.lte', 2);
 })
 
 Then("j'affiche le prix d'achat moyen au m²", function () {
+  let villeSansCP = ENDROIT_HP.split(' (')[0];
+
+  cy.contains(infoSimulateur, "Et sinon pour vous loger à " + villeSansCP + " ?", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(donneesTensionImmobiliere, "Tension immobilière a l'achat", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(donneePrixUniteSurfaceAchat, "Prix d’achat moyen/m2", {timeout: SHORT_WAIT_TIME}).should('exist');
 })

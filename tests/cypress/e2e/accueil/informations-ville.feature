@@ -21,7 +21,7 @@ Fonctionnalité: Informations de la ville
     Alors j'affiche les offres d'emploi de la ville pour le métier
 
   Scénario: Présence des entreprises à proximité
-    Alors j'affiche la liste des entreprises à proximité
+    Alors j'affiche la liste des entreprises qui recrutent
 
   Scénario: Présence des informations sur la tension immobilière
     Alors j'affiche le prix d'achat moyen au m²

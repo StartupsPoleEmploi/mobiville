@@ -50,7 +50,6 @@ When("je clique sur le filtre ville {string} et je sélectionne {string}", funct
   CRITERE = selection;
   cy.contains(boutonSelectionFiltreVille(filtre), filtre, {timeout: SHORT_WAIT_TIME}).click();
   cy.contains(selectionCritere, selection, {timeout: SHORT_WAIT_TIME}).click();
-  cy.contains(selectionCritere, selection, {timeout: SHORT_WAIT_TIME}).click();
   cy.wait(2000);
 })
 
