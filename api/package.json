@@ -23,7 +23,8 @@
     "sync:helps": "babel-node ./src/scripts/syncHelps.js",
     "sync:departements": "babel-node ./src/scripts/syncDepartements.js",
     "sync:embaucheDepartements": "babel-node ./src/scripts/syncEmbaucheDepartements.js",
-    "sync:departementsDescriptions": "babel-node ./src/scripts/syncDepartementsDescriptions.js"
+    "sync:departementsDescriptions": "babel-node ./src/scripts/syncDepartementsDescriptions.js",
+    "sync:secteursBassins": "babel-node ./src/scripts/syncSecteursBassins.js"
   },
   "dependencies": {
     "@babel/cli": "^7.21.0",

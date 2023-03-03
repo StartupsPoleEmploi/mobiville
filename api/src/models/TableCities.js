@@ -345,7 +345,15 @@ export default (sequelizeInstance, Model) => {
       include: [
         Model.models.equipments,
         Model.models.regions,
-        Model.models.departements
+        Model.models.departements,
+        {
+          attributes: ['bassin_name'],
+          model: Model.models.bassins,
+          include: [{
+            attributes: ['demandeurs_emploi', 'secteur_libelle'],
+            model: Model.models.secteursBassins
+          }],
+        },
       ],
     })
 

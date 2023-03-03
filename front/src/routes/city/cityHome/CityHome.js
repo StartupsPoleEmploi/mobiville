@@ -40,7 +40,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 const CityHeader = loadable(() => import('../CityHeader'))
 
 const JobCard = loadable(() => import('../cityJobs/components/JobCard'))
-const CloseCompanies = loadable(() => import('./components/CloseCompanies'))
+const CloseOpportunities = loadable(() => import('./components/CloseOpportunities'))
 //prettier-ignore
 const SectionHeader = loadable(() => import('../../../components/SectionHeader'))
 //prettier-ignore
@@ -334,8 +334,8 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
               },
         ]}
       />
-      <SectionHeader title={`Les entreprises qui recrutent`} />
-      <CloseCompanies />
+      <SectionHeader title={`A proximité`} />
+      <CloseOpportunities secteurs={city?.bassin?.secteursBassins ?? []} />
 
       {!!codeRome ? null : <Top10Rome city={city} />}
 

@@ -321,3 +321,15 @@ export const getCitiesRent = () => {
     })
   })
 }
+
+export const getAllSecteursBassins = () => {
+  return new Promise((resolve, reject) => {
+    readFile(__dirname + '/../assets/datas/secteurs_bassins.csv', (err, data) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(csvToArrayJson(data, { delimiter: ';' }))
+      }
+    })
+  })
+}

@@ -51,6 +51,7 @@ yarn sync:regionsTensionsCriterions # Takes about 5 minutes
 yarn sync:departements # almost instantaneous
 yarn sync:embaucheDepartements # Takes about 5 hours ;) tmux ?
 yarn sync:departementsDescriptions # Takes about 10 minutes
+yarn sync:secteursBassins # almost instantaneous
 ```
 
 ## Structure de données
@@ -71,6 +72,7 @@ Les tables suivantes sont présentes dans la base :
 - **tensions** contient les informations de tensions par code rome et territoire. C’est notamment à partir de cette table qu’est généré le json présent dans regions_tensions_criterions
 - **departements** contient les département de france et dom-tom , l'estimation de population est issu de l'insee a fin 2021
 - **embauche_departements** contient les statistique d'embauche par code rome par département issu de smart-emploi
+- **secteurs_bassins** DPAE et secteurs (du NAF) qui recrute sur un bassin d'emploi donnée issu d'un csv (et par la suite le datalake)
 
 ## Génération de migration
 
