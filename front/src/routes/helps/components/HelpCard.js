@@ -1,18 +1,15 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import _ from 'lodash'
 
 import { Grid } from '@mui/material'
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
 import { Tag } from '../../../components'
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
 import {
-    COLOR_PRIMARY,
-    COLOR_TEXT_PRIMARY,
-    COLOR_WHITE
+  COLOR_PRIMARY,
+  COLOR_TEXT_PRIMARY,
+  COLOR_WHITE
 } from '../../../constants/colors'
 
 const Container = styled(Link)`
@@ -166,10 +163,14 @@ const filterHelpItemWho = function (who) {
     return whoItems
 }
 
+function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+}
+
 const HelpCard = ({
-    help
+    help,
+    isMobile
 }) => {
-    const isMobile = isMobileView(useWindowSize())
 
     return (
         <Grid
@@ -201,16 +202,22 @@ const HelpCard = ({
 
                         <LogoContainer>
                             <Logo
-                                src={`/help-logos/${help.logo}`}
+                                src={`/help-logos/100px/${help.logo}`}
                                 alt=""
+                                srcSet={`
+                                  /help-logos/120px/${help.logo} 1x,
+                                  /help-logos/240px/${help.logo} 2x,
+                                `}
                                 style={
                                     logoStyle[
                                         help.logo in logoStyle
                                             ? help.logo
                                             : 'defaultStyle'
                                         ]
-                                }
-                            ></Logo>
+                                } 
+                            >
+                              
+                            </Logo>
                         </LogoContainer>
 
                     </HeaderContainer>
@@ -220,7 +227,7 @@ const HelpCard = ({
                             dangerouslySetInnerHTML={{
                             __html: filterHelpItemWho(help.who)
                                 .split('^')
-                                .map((t) => _.capitalize(t))
+                                .map((t) => capitalize(t))
                                 .join(' • '),
                             }}
                         ></FiltersText>

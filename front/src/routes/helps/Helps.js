@@ -135,7 +135,7 @@ const CustomGridContainer = styled(Grid)`
   width: ${({ $isMobile }) =>
     $isMobile ? 'calc(100vw - 2 * 16px )' : '1050px'};
   // 100vw - 2x le padding du parent
-  
+
   margin: ${({ $isMobile }) => ($isMobile ? 'auto 0px' : 'auto')};
 `
 
@@ -389,7 +389,7 @@ const Helps = () => {
       rowSpacing={2}
     >
       {items.map((item) => (
-        <HelpCard key={item.id} help={item}></HelpCard>
+        <HelpCard key={item.id} help={item} isMobile={isMobile}></HelpCard>
       ))}
     </CustomGridContainer>
   )
