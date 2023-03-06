@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import _ from 'lodash'
 import styled, { css } from 'styled-components'
 
 import { formatCityTension, formatNumber } from '../../../utils/utils'
@@ -9,8 +8,6 @@ import {
   COLOR_PRIMARY,
   COLOR_WHITE,
 } from '../../../constants/colors'
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
 import selectedMarker from '../../../assets/images/marker-selected.svg'
 import { ReactComponent as RightChevronIcon } from '../../../assets/images/icons/right_chevron.svg'
 
@@ -63,6 +60,17 @@ const Image = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+
+  background-image: image-set(
+    url(${({ $photo1x }) => $photo1x}) 1x,
+    url(${({ $photo2x }) => $photo2x}) 2x,
+    url(${({ $photo3x }) => $photo3x}) 3x
+  );
+  background-image: -webkit-image-set(
+    url(${({ $photo1x }) => $photo1x}) 1x,
+    url(${({ $photo2x }) => $photo2x}) 2x,
+    url(${({ $photo3x }) => $photo3x}) 3x
+  );
 `
 
 const Department = styled.p`
@@ -107,25 +115,27 @@ const RightChevronIconCustom = styled(RightChevronIcon)`
 const CityItem = ({
   city,
   selected,
+  isMobile,
   onMouseOver,
   onMouseLeave,
   to,
   isLoadingProfessions,
   onClickTag = () => {},
 }) => {
-  const size = useWindowSize()
-  const isMobile = isMobileView(size)
-
   if (!city) {
     return <div />
   }
 
   if (city.photo) {
-    city.photo = isMobile
-      ? city.photo.replace('/2000px', '/160px')
-      : city.photo.replace('/2000px', '/400px')
+    city._photo3x = city.photo.replace('/2000px', '/800px')
+    city._photo2x = city.photo.replace('/2000px', '/400px')
+    city._photo = city.photo.replace('/2000px', '/250px')
   } else {
     city.photo = `/regions/region-${city.region?.code}.jpg`
+  }
+
+  function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
   }
 
   return (
@@ -139,16 +149,18 @@ const CityItem = ({
       data-automation-id={`cityItem-${city.nom_comm}`}
     >
       <Image
-        style={{ backgroundImage: `url(${city.photo})` }}
-        $isMobile={isMobileView(size)}
+        $photo1x={city._photo}
+        $photo2x={city._photo2x}
+        $photo3x={city._photo3x}
+        $isMobile={isMobile}
       />
 
       <InformationsContainer>
         <Title>
-          {_.capitalize(city.nom_comm)}
+          {capitalize(city.nom_comm)}
           {selected && <SelectedMarkerImg src={selectedMarker} alt="" />}
         </Title>
-        <Department>{_.capitalize(city.nom_dept)}</Department>
+        <Department>{capitalize(city.nom_dept)}</Department>
 
         <TagsContainer>
           <Tag green={city['bassin.tensions.ind_t'] < 4}>
@@ -165,7 +177,7 @@ const CityItem = ({
         </TagsContainer>
       </InformationsContainer>
 
-      <RightChevronIconCustom $isMobile={isMobileView(size)} />
+      <RightChevronIconCustom $isMobile={isMobile} />
     </CityLink>
   )
 }

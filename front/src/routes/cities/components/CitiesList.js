@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import loadable from '@loadable/component'
+import { useEffect, useState } from 'react'
 
 import { CircularProgress } from '@mui/material'
 
@@ -8,7 +9,6 @@ import { useWindowSize } from '../../../common/hooks/window-size'
 import { isMobileView } from '../../../constants/mobile'
 
 import { useCities } from '../../../common/contexts/citiesContext'
-import { useEffect, useState } from 'react'
 import {
   COLOR_BUTTON_HOVER,
   COLOR_PRIMARY,
@@ -19,7 +19,6 @@ import { useProfessions } from '../../../common/contexts/professionsContext'
 import { formatCityUrl } from '../../../utils/utils'
 import { Image } from '../../../components'
 
-// import CityItem from './CityItem'
 const CityItem = loadable(() => import('./CityItem'))
 const Pagination = loadable(() => import('@mui/material/Pagination'))
 
@@ -155,6 +154,7 @@ const CitiesList = ({
       {formattedCities.map((city) => (
         <CityItem
           city={city}
+          isMobile={isMobile}
           selected={selectedCityId === city.id}
           sortCriterions={sortCriterions}
           key={city.id}
