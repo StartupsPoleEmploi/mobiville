@@ -22,8 +22,8 @@ const LogoMarianne = styled(Image)`
 `
 
 const LogoMobiville = styled.img`
-  width: 100%;
-  max-height: 100%;
+  width: auto;
+  height: 70px;
   object-fit: cover;
 `
 
