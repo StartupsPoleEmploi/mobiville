@@ -151,6 +151,7 @@ const Footer = () => {
           <img
             style={{ height: '85px' }}
             src={LOGO}
+            loading="lazy"
             alt={`Mobiville Pôle emploi et Action logement${
               !isHome ? " - Retour à la page d'accueil" : ''
             }`}
@@ -194,6 +195,7 @@ const Footer = () => {
                 className="logo-pe"
                 src="/logos/logo_pe.svg"
                 alt="pole emploi"
+                loading="lazy"
               />
             </a>
             <a
@@ -229,7 +231,11 @@ const Footer = () => {
               rel="noreferrer"
               tag-exit={`${nomPage}/footer/liens-fse`}
             >
-              <img src="/logos/logo-ue.svg" alt="fond social européen" />
+              <img
+                src="/logos/logo-ue.svg"
+                alt="fond social européen"
+                loading="lazy"
+              />
               <span>
                 Ce dispositif est cofinancé par le Fonds Social Européen dans le
                 cadre du Programme opérationnel national "Emploi et inclusion"
