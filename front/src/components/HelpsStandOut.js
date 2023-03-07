@@ -121,7 +121,14 @@ const HelpsStandOut = ({ buttonLibelle = 'Voir toutes les aides' }) => {
           </Tag>
           <CardTitle>{help.title}</CardTitle>
         </Left>
-        <Logo src={`/help-logos/${help.logo}`} />
+        <Logo
+          src={`/help-logos/100px/${help.logo}`}
+          alt=""
+          srcSet={`
+                    /help-logos/120px/${help.logo} 1x,
+                    /help-logos/240px/${help.logo} 2x,
+                  `}
+        />
       </Content>
       <Discover>
         <DiscoverText>Découvrir l'aide </DiscoverText>
