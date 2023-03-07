@@ -132,8 +132,8 @@ const HelpTypeTitleContainer = styled.div`
 `
 
 const CustomGridContainer = styled(Grid)`
-  width: ${({ $isMobile }) =>
-    $isMobile ? 'calc(100vw - 2 * 16px )' : '1050px'};
+  max-width: ${({ $isMobile }) =>
+    $isMobile ? 'calc(100vw - 2 * 16px )' : '98vw'};
   // 100vw - 2x le padding du parent
 
   margin: ${({ $isMobile }) => ($isMobile ? 'auto 0px' : 'auto')};

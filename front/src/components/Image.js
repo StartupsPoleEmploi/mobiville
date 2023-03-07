@@ -43,6 +43,7 @@ const Image = ({ src = '', alt = '', className, isUrlSrc = false }) => {
       <img
         src={isUrlSrc ? src : require(`../assets/images/${src}.png`)}
         alt={alt}
+        loading="lazy"
       />
     </picture>
   )

@@ -40,7 +40,9 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 const CityHeader = loadable(() => import('../CityHeader'))
 
 const JobCard = loadable(() => import('../cityJobs/components/JobCard'))
-const CloseOpportunities = loadable(() => import('./components/CloseOpportunities'))
+const CloseOpportunities = loadable(() =>
+  import('./components/CloseOpportunities')
+)
 //prettier-ignore
 const SectionHeader = loadable(() => import('../../../components/SectionHeader'))
 //prettier-ignore
@@ -384,7 +386,12 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
 
       <EventsContainer $isMobile={isMobile}>
         {!isMobile && (
-          <img src="/logos/events-city-mobile.svg" alt="" role="presentation" />
+          <img
+            src="/logos/events-city-mobile.svg"
+            alt=""
+            role="presentation"
+            loading="lazy"
+          />
         )}
         <EventBannerContent>
           <EventBannerTitle>Mes événements emploi</EventBannerTitle>
@@ -393,6 +400,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
               <img
                 src="/logos/events-city-mobile.svg"
                 alt=""
+                loading="lazy"
                 role="presentation"
               />
             )}
