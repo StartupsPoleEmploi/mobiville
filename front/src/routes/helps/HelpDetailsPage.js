@@ -49,7 +49,8 @@ const TitleContainer = styled.div`
   border-radius: 8px;
   overflow: hidden;
   background: #fff;
-  border: ${({ $isMobile }) => ($isMobile ? 'none' : `1px solid ${COLOR_GRAY}`)};
+  border: ${({ $isMobile }) =>
+    $isMobile ? 'none' : `1px solid ${COLOR_GRAY}`};
   margin-bottom: ${({ $isMobile }) => ($isMobile ? '8px' : '21px')};
 `
 
@@ -104,7 +105,8 @@ const Panel = styled.div`
   padding: 16px 16px 8px;
   width: 100%;
   margin-bottom: ${({ $isMobile }) => ($isMobile ? '8px' : `16px`)};
-  border: ${({ $isMobile }) => ($isMobile ? 'none' : `1px solid ${COLOR_GRAY}`)};
+  border: ${({ $isMobile }) =>
+    $isMobile ? 'none' : `1px solid ${COLOR_GRAY}`};
 `
 
 const PanelTitle = styled.p`
@@ -238,8 +240,12 @@ const HelpDetailsPage = () => {
               </TitleTextContainer>
               <TitleImgContainer $isMobile={isMobile}>
                 <img
-                  src={`/help-logos/${help.logo}`}
+                  src={`/help-logos/100px/${help.logo}`}
                   alt=""
+                  srcSet={`
+                    /help-logos/120px/${help.logo} 1x,
+                    /help-logos/240px/${help.logo} 2x,
+                  `}
                   style={{
                     width: 96,
                     height: 'auto',
@@ -287,7 +293,9 @@ const HelpDetailsPage = () => {
             </TitleImgContainer>
             <TitleTextContainer $isMobile={isMobile}>
               <HeaderTitle $isMobile={isMobile}>{help.title}</HeaderTitle>
-              <DescriptionAide $isMobile={isMobile}>{help.goal}</DescriptionAide>
+              <DescriptionAide $isMobile={isMobile}>
+                {help.goal}
+              </DescriptionAide>
 
               <DescriptionAideProposee $isMobile={isMobile}>
                 Aide proposée par {help.partner}
