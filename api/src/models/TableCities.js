@@ -295,7 +295,12 @@ export default (sequelizeInstance, Model) => {
       whereAnd.push({ code_region: { [Op.eq]: codeRegion } })
     }
     if (codeDepartement) {
-      whereAnd.push({ code_dept: { [Op.eq]: codeDepartement } })
+      if (['1', '2', '3', '4', '5', '6'].includes(codeDepartement)) {
+        // en bdd tt les dom ont un codeDept a 97
+        whereAnd.push({ code_region: { [Op.eq]: parseInt(codeDepartement) } })
+      } else {
+        whereAnd.push({ code_dept: { [Op.eq]: codeDepartement } })
+      }
     }
 
     let bassinsToInclude = []

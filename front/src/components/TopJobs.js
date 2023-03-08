@@ -93,6 +93,20 @@ const TopJobs = ({ departement, city }) => {
     </div>
   )
 
+  const isOutremer = (codeDepartement) =>
+    ['1', '2', '3', '4', '5', '6'].includes(codeDepartement)
+
+  const urlToSearch = (job) => {
+    if (!!departement?.code) {
+      if (isOutremer(departement.code)) {
+        // les outremer sont considéré comme region dans l'autocomplétion des lieux
+        return `/villes?codeRome=${job.codeRome}&codeRegion=${departement.code}`
+      }
+      return `/villes?codeRome=${job.codeRome}&codeDepartement=${departement.code}`
+    }
+    return formatCityUrl(city, job.rome)
+  }
+
   return (
     <Container>
       <SectionHeader
@@ -114,11 +128,7 @@ const TopJobs = ({ departement, city }) => {
             <JobLabel
               $isMobile={isMobile}
               key={job?.codeRome ?? job?.rome}
-              to={
-                !!departement?.code
-                  ? `/villes?codeRome=${job.codeRome}&codeDepartement=${departement.code}`
-                  : formatCityUrl(city, job.rome)
-              }
+              to={urlToSearch(job)}
             >
               <span>{job?.libelleRome ?? job?.rome_label}</span>
               <span style={{ whiteSpace: 'nowrap' }}>
