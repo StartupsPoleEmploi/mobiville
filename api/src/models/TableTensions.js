@@ -103,7 +103,7 @@ export default (sequelizeInstance, Model) => {
     maxItems = 10,
   }) => {
     return await sequelizeInstance.query(
-      ` select t.rome, t.rome_label ,
+      ` select t.rome as codeRome, t.rome_label ,
         CAST( AVG(t.ind_t) as FLOAT) as 'avg_ind_t',
         ( select COUNT(b.id) from bassins b where b.deleted_at is NULL AND b.bassin_id = t.bassin_id ) as 'count_city'
         -- Attention: count_city ne compte que les villes sur l'un des bassins du code Rome en question et non toute le nb de villes avec du potentiel 

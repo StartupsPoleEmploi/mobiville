@@ -35,6 +35,10 @@ router.get('/:code', async ({ params: { code }, models, response }) => {
 
 /** Top 10 des métiers (code Rome) avec le plus de bassin en tension sur le département */
 router.get('/:code/topJobs', async ({ params: { code }, models, response }) => {
+  // cas département outremer
+  if (['1', '2', '3', '4', '5', '6'].includes(code)) {
+    code = `97${code}`
+  }
   const result = await models.tensions.findTopJobsByDepartement({
     codeDepartement: code,
     maxItems: 10,
