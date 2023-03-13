@@ -23,11 +23,14 @@ const ItemsContainer = styled.div`
   display: grid;
   grid-auto-rows: 80px;
   gap: 8px 24px;
-  ${({ $isMobile }) => ($isMobile ? css`
-    grid-template-columns: repeat(2, minmax(80vw, 1fr));
-  ` : css`
-    grid-template-columns: repeat(2, 1fr);
-  `)}
+  ${({ $isMobile }) =>
+    $isMobile
+      ? css`
+          grid-template-columns: repeat(2, minmax(80vw, 1fr));
+        `
+      : css`
+          grid-template-columns: repeat(2, 1fr);
+        `}
 `
 
 const Item = styled(Link)`
@@ -60,8 +63,10 @@ const TopCities = ({ departement }) => {
 
   return (
     <Container>
-      <SectionTitle>
-        Découvrez les villes qui recrutent le plus dans le département
+      <SectionTitle style={{margin: 'auto 25px'}}>
+        <span style={{ whiteSpace: 'nowrap' }}>Découvrez les villes </span>
+        <span>qui recrutent le plus </span>
+        dans le département
       </SectionTitle>
 
       <ItemsContainer $isMobile={isMobile}>

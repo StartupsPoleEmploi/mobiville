@@ -6,10 +6,8 @@ import { useLocation } from 'react-router-dom'
 import { isMobileView } from '../constants/mobile'
 import { useWindowSize } from '../common/hooks/window-size'
 
-import HeaderMobile from './HeaderMobile'
-import HeaderDesktop from './HeaderDesktop'
-// const HeaderMobile = loadable(() => import('./HeaderMobile'))
-// const HeaderDesktop = loadable(() => import('./HeaderDesktop'))
+const HeaderMobile = loadable(() => import('./HeaderMobile'))
+const HeaderDesktop = loadable(() => import('./HeaderDesktop'))
 const MenuMobile = loadable(() => import('./MenuMobile'))
 const Footer = loadable(() => import('./Footer'))
 
@@ -55,6 +53,7 @@ const MainLayout = ({
   children,
   menu = {
     visible: true,
+    menuMobileVisible: true,
   },
   topMobileMenu = false,
   style = {},
@@ -71,7 +70,9 @@ const MainLayout = ({
     <Container>
       <GoToMainContent href="#main">Aller au contenu</GoToMainContent>
       {ismobile && topMobileMenu && <HeaderMobile />}
-      {ismobile && menu.visible && <MenuMobile {...menu} />}
+      {ismobile && menu.visible && menu.menuMobileVisible && (
+        <MenuMobile {...menu} />
+      )}
       {!ismobile && menu.visible && (
         <HeaderDesktop displaySearch={displaySearch} {...menu} />
       )}

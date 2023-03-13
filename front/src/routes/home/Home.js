@@ -4,24 +4,22 @@ import loadable from '@loadable/component'
 
 import { COLOR_BACKGROUND } from '../../constants/colors'
 
-import { MainLayout, TopPageButton } from '../../components/'
-import Welcome from './components/Welcome'
+import { MainLayout } from '../../components/'
 
+const Welcome = loadable(() => import('./components/Welcome'))
 const Advantages = loadable(() => import('./components/Advantages'))
 const HomeHelpsBanner = loadable(() => import('./components/HomeHelpsBanner'))
-const HomeRegionsBanner = loadable(() =>
-  import('./components/HomeRegionsBanner')
-)
-const MobilityGuideBanner = loadable(() =>
-  import('./components/MobilityGuideBanner')
-)
+const HomeRegionsBanner = loadable(() => import('./components/HomeRegionsBanner'))
+const MobilityGuideBanner = loadable(() =>import('./components/MobilityGuideBanner'))
 const Testimonies = loadable(() => import('./components/Testimonies'))
+const TopPageButton = loadable(() => import('../../components/TopPageButton'))
 
 const HomePage = () => (
   <MainLayout
     topMobileMenu
     style={{ background: COLOR_BACKGROUND }}
     displaySearch={false}
+    menu={{ visible: true, menuMobileVisible: false }}
   >
     <Helmet>
       <title>Trouvez l’emploi et la ville qui va avec ! | Mobiville</title>

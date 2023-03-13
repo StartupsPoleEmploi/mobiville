@@ -18,6 +18,8 @@ const SectionTitle = styled.h2`
   text-align: center;
   font-size: 24px;
   font-weight: 900;
+  line-height: 36px;
+  
   color: ${COLOR_PRIMARY};
 
   ${({ style }) => (!!style && css`${style}`)}

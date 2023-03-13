@@ -288,3 +288,11 @@ magick mogrify -path C://chemin_destination -format avif -resize '600x400' -qual
 magick mogrify -path C://chemin_destination -format webp -resize '600x400' -quality 75 -trim +repage *.jpg
 magick mogrify -path C://chemin_destination -format jpg -resize '600x400' -quality 90 -trim +repage *.jpg
 ```
+
+pour les differentes tailles d'image : 
+```shell
+magick mogrify -path ./60px/ -background none -resize 60x\\> ./original/*
+```
+
+- background none preserve la transparence des png
+- "60x antislash >" retaille la hauteur a 60px mais preserve le ratio en largeur

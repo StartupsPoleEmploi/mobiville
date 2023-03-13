@@ -10,17 +10,20 @@ const Container = styled.div`
 
   color: ${COLOR_PRIMARY};
 
-  ${({ $centerOnMobile }) => $centerOnMobile && css`
-    text-align: center;
-  `}
+  ${({ $centerOnMobile }) =>
+    $centerOnMobile &&
+    css`
+      text-align: center;
+    `}
 `
 
 const Wrapper = styled.div`
-  margin: ${({ $isMobile, $margin }) => ($isMobile ? '0 21px' : ($margin ? '48px 0 0 0' : '0'))};
+  margin: ${({ $isMobile, $margin }) =>
+    $isMobile ? '0 25px' : $margin ? '48px 0 0 0' : '0'};
 `
 
 const Title = styled.h2`
-  margin: 8px 0px;
+  margin: 8px 10px;
   font-weight: 900;
   font-size: 24px;
   line-height: 28px;
@@ -31,13 +34,23 @@ const SubTitle = styled.p`
   line-height: 24px;
 `
 
-const SectionHeader = ({ title, subTitle, margin = true, centerOnMobile = false }) => {
+const SectionHeader = ({
+  title,
+  subTitle,
+  margin = true,
+  centerOnMobile = false,
+}) => {
   const isMobile = isMobileView(useWindowSize())
-
+  const _title = title.split(' ')
   return (
     <Container $isMobile={isMobile} $centerOnMobile={centerOnMobile}>
       <Wrapper $isMobile={isMobile} $margin={margin}>
-        <Title>{title}</Title>
+        <Title>
+          {_title.slice(0, _title.length - 1).join(' ')}{' '}
+          <span style={{ whiteSpace: 'nowrap' }}>
+            {_title[_title.length - 1]}
+          </span>
+        </Title>
         <SubTitle>{subTitle}</SubTitle>
       </Wrapper>
     </Container>

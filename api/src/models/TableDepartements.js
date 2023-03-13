@@ -12,7 +12,8 @@ export default (sequelizeInstance, Model) => {
       where: { code: code },
       include: [
         {
-          // attributes: ['name'],
+          attributes: ['nom_comm', 'insee_com', 'code_dept', 'population'],
+          // attributes: { exclude: ['description'] },
           model: Model.models.cities,
           required: true,
           order: [['population', 'DESC']],
@@ -22,14 +23,25 @@ export default (sequelizeInstance, Model) => {
               Sequelize.fn('LOWER', Sequelize.col('nom_comm')),
               'NOT LIKE',
               '%-ARRONDISSEMENT'
-            )
-          }
+            ),
+          },
         },
         {
           model: Model.models.regions,
+          attributes: { exclude: ['description'] },
           include: [
             {
               model: Model.models.departements,
+              attributes: {
+                exclude: [
+                  'description',
+                  'buy_m2',
+                  'rent_m2',
+                  'superficie',
+                  'population',
+                  'hiring_rate',
+                ],
+              },
             },
           ],
         },

@@ -429,7 +429,7 @@ const CityHome = ({ romeLabel, insee, codeRome }) => {
       {!!codeRome ? (
         <>
           <SectionHeader title="Les aides pour vous accompagner dans votre projet" />
-          <HelpsStandOut />
+          <HelpsStandOut isHorizontalScroll={true} />
         </>
       ) : null}
 
