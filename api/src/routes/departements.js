@@ -1,5 +1,6 @@
 import Router from '@koa/router'
 import { searchJobCount } from '../utils/pe-api'
+import { getHiringRateDept } from '../utils/smart-emploi-api'
 import { getTotalOffres } from '../utils/utils'
 
 const router = new Router({ prefix: '/departement' })
@@ -46,23 +47,13 @@ router.get('/:code/topJobs', async ({ params: { code }, models, response }) => {
   response.body = result
 })
 
-/** Moyenne du taux d'embauche des 10 métiers (code Rome) avec le plus de bassin en tension sur le département */
-router.get(
-  '/:code/hiringRate',
-  async ({ params: { code }, models, response }) => {
-    // todo
-    const jobs = await models.embaucheDepartements.getTopEmbauche({
-      codeDepartement: code,
-      maxItems: 1000,
-    })
-    const hiringRate =
-      jobs.map((j) => j.tauxEmbauche).reduce((t1, t2) => t1 + t2, 0) /
-      jobs.length
-    response.body = {
-      codeDepartement: code,
-      hiringRate: hiringRate ? hiringRate : 0,
-    }
+/** TauxdEmbauche sur mobiville === acces a l'emploi catégorie A et B ACC_1  */
+router.get('/:code/hiringRate', async ({ params: { code }, response }) => {
+  const { tauxEmbauche } = await getHiringRateDept({ codeTerritoire: code })
+  response.body = {
+    codeDepartement: code,
+    hiringRate: tauxEmbauche,
   }
-)
+})
 
 export default router
