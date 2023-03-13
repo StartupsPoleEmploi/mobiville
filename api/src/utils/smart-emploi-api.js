@@ -27,26 +27,26 @@ const apiEmploiStore = axios.create({
   adapter: cache.adapter,
 })
 
-/** Taux d'embauche pour une 'ville' (bassin BMO)
- *  pour un métier (code Rome) donnée sur le dernier trimestre
+/** Pseudo "Taux d'embauche"
+ *  aka ACC_1/Taux d'access a l'emploi categorie a et b
+ *  pour une 'ville' (bassin BMO) pour un métier (code Rome) donnée sur le dernier trimestre
  *  Cette requete est mise en cache 72h
- * @param {*} param0
  * @returns
  */
-export async function getHiringRate({ codeTerritoire, codeRome }) {
+export async function getHiringRate({ codeTerritoire, codeRome = null }) {
   const result = await fetchAndRetryIfNecessary(async () =>
     apiEmploiStore
       .post(
-        `${config.EMPLOI_STORE_URL}/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-embauches`,
+        `${config.EMPLOI_STORE_URL}/partenaire/stats-perspectives-retour-emploi/v1/indicateur/stat-acces-emploi`,
         {
           codeTypeTerritoire: 'BASBMO',
           codeTerritoire: `${codeTerritoire}`,
           codeTypeActivite: codeRome ? 'ROME' : 'CUMUL',
           codeActivite: codeRome ? `${codeRome}` : 'CUMUL',
           codeTypePeriode: 'TRIMESTRE',
-          codeTypeNomenclature: 'CATCANDxDUREEEMP',
           dernierePeriode: true,
           sansCaracteristiques: true,
+          codeTypeNomenclature: 'DUREEEMP',
         },
         { ...(await axiosCommonOptions()) }
       )
@@ -64,64 +64,55 @@ export async function getHiringRate({ codeTerritoire, codeRome }) {
 
   if (!result || !result.listeValeursParPeriode) return null
 
-  const preferedCategories = ['ABCDE-SUP1M', 'ABCDE-TOUTE', 'TOUT-TOUTE']
-  const foundCategories = result.listeValeursParPeriode.map(
-    (data) => data.codeNomenclature
-  )
-
-  const bestCategory = preferedCategories.find((category) =>
-    foundCategories.includes(category)
-  )
-
-  const hiringRate = result.listeValeursParPeriode.find(
-    (data) => data.codeNomenclature === bestCategory
-  ).valeurSecondairePourcentage
-
-  return hiringRate
+  return result.listeValeursParPeriode[0].valeurSecondaireTaux
 }
 
-/** Total d'embauche par departement par métier au dernier trimestre
- *
- * @param {*} param0
+/** Pseudo "Taux d'embauche"
+ *  indicateur ACC_1 smartEmploi
+ *  pour un département pour un métier (code Rome) donnée sur le dernier trimestre
+ *  Cette requete est mise en cache 72h
  * @returns
  */
-export async function getEmbaucheByDepartement(codeDepartement, codeRome) {
+export async function getHiringRateDept({
+  codeTerritoire,
+  codeRome = undefined,
+}) {
   // cas département outremer
-  if (['1', '2', '3', '4', '5', '6'].includes(codeDepartement)) {
-    codeDepartement = `97${codeDepartement}`
+  if (['1', '2', '3', '4', '5', '6'].includes(codeTerritoire)) {
+    codeTerritoire = `97${codeTerritoire}`
   }
-
   return fetchAndRetryIfNecessary(async () =>
-    axios
+    apiEmploiStore
       .post(
-        `${config.EMPLOI_STORE_URL}/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-embauches`,
+        `${config.EMPLOI_STORE_URL}/partenaire/stats-perspectives-retour-emploi/v1/indicateur/stat-acces-emploi`,
         {
           codeTypeTerritoire: 'DEP',
-          codeTerritoire: `${codeDepartement}`,
-          codeTypeActivite: 'ROME',
-          codeActivite: `${codeRome}`,
+          codeTerritoire: `${codeTerritoire}`,
+          codeTypeActivite: codeRome ? 'ROME' : 'CUMUL',
+          codeActivite: codeRome ? `${codeRome}` : 'CUMUL',
           codeTypePeriode: 'TRIMESTRE',
-          codeTypeNomenclature: 'CATCANDxDUREEEMP',
           dernierePeriode: true,
           sansCaracteristiques: true,
+          codeTypeNomenclature: 'DUREEEMP',
         },
         { ...(await axiosCommonOptions()) }
       )
       .catch((error) => {
-        console.log(error.response)
-        return { ...error.response, errorCode: error.code }
+        if (error.response?.data?.message.includes('Status code = 404')) {
+          console.info(
+            `api StatEmbauche: 404 pour ${codeTerritoire},${codeRome}`
+          )
+          return null
+        }
+        console.log(error)
+        return error.response
       })
-  ).then((data) => mapEmbaucheData(codeDepartement, codeRome, data))
+  ).then((data) =>
+    mapEmbaucheData(codeTerritoire, codeRome, data?.listeValeursParPeriode[0])
+  )
 }
 
-async function mapEmbaucheData(codeDept, codeRome, response) {
-  let statFound = null
-
-  if (response && response.listeValeursParPeriode) {
-    statFound = response.listeValeursParPeriode.find(
-      (data) => data.codeNomenclature === 'ABCDE-TOUTE'
-    )
-  }
+function mapEmbaucheData(codeDept, codeRome, stat) {
   // cas département outremer
   if (['971', '972', '973', '974', '975', '976'].includes(codeDept)) {
     codeDept = codeDept.replace('97', '')
@@ -129,10 +120,10 @@ async function mapEmbaucheData(codeDept, codeRome, response) {
   return {
     codeDepartement: codeDept,
     codeRome: codeRome,
-    libelleRome: statFound ? statFound.libActivite : null,
-    codePeriode: statFound ? statFound.codePeriode : null,
-    libellePeriode: statFound ? statFound.libPeriode : null,
-    embauche: statFound ? statFound.valeurPrincipaleNombre : 0,
-    tauxEmbauche: statFound ? statFound.valeurSecondairePourcentage : 0,
+    libelleRome: stat ? stat.libActivite : null,
+    codePeriode: stat ? stat.codePeriode : null,
+    libellePeriode: stat ? stat.libPeriode : null,
+    embauche: stat ? stat.valeurPrincipaleNombre : 0,
+    tauxEmbauche: stat ? stat.valeurSecondaireTaux : 0,
   }
 }

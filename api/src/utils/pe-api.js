@@ -44,7 +44,7 @@ export function getAccessToken() {
                 grant_type: 'client_credentials',
                 client_id: config.EMPLOI_STORE_ID,
                 client_secret: config.EMPLOI_STORE_SECRET,
-                scope: `api_infotravailv1 api_offresdemploiv2 api_romev1 nomenclatureRome application_${config.EMPLOI_STORE_ID} o2dsoffre api_explorateurmetiersv1 explojob api_labonneboitev1 api_stats-offres-demandes-emploiv1 offresetdemandesemploi api_evenementsv1 evenements`,
+                scope: `api_infotravailv1 api_offresdemploiv2 api_romev1 nomenclatureRome application_${config.EMPLOI_STORE_ID} o2dsoffre api_explorateurmetiersv1 explojob api_labonneboitev1 api_stats-offres-demandes-emploiv1 offresetdemandesemploi api_evenementsv1 evenements api_stats-perspectives-retour-emploiv1 retouremploi`,
             })
         )
         .then((result) => result.data)
@@ -189,6 +189,7 @@ export async function getSkillFromLabel(label) {
 }
 
 // Stocké en base mais non utilisé
+// utilisé uniquement sur le pseudo calcul de taux d'embauche par département
 export async function getSkillFromRome(codeRome) {
     const token = await getAccessToken()
     return axios
@@ -289,6 +290,7 @@ export async function searchCloseCompanies({
     return fetchAndRetryIfNecessary(callToSearchCloseEnterprises)
 }
 
+// TODO remplacer par mes événements emploi quand ils auront une API
 export async function events() {
     const token = await getAccessToken()
     const callToSearchCloseEnterprises = function () {

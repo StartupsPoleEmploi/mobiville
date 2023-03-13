@@ -1,16 +1,18 @@
-import Sequelize from 'sequelize'
+'use strict'
 
-export default (sequelizeInstance) => {
-  const Model = sequelizeInstance.define(
-    'embaucheDepartements',
-    {
-      codeRome: {
-        type: Sequelize.STRING(255),
+module.exports = {
+  up: async (queryInterface /*, Sequelize*/) => {
+    await queryInterface.dropTable('embauche_departements')
+  },
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('embauche_departements', {
+      code_departement: {
+        type: Sequelize.STRING(3),
         allowNull: false,
         primaryKey: true,
       },
-      codeDepartement: {
-        type: Sequelize.STRING(3),
+      code_rome: {
+        type: Sequelize.STRING(255),
         allowNull: false,
         primaryKey: true,
       },
@@ -18,19 +20,19 @@ export default (sequelizeInstance) => {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      tauxEmbauche: {
+      taux_embauche: {
         type: Sequelize.FLOAT,
         allowNull: true,
       },
-      libelleRome: {
+      libelle_rome: {
         type: Sequelize.STRING(512),
         allowNull: true,
       },
-      codePeriode: {
+      code_periode: {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      libellePeriode: {
+      libelle_periode: {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
@@ -44,22 +46,6 @@ export default (sequelizeInstance) => {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },
-    },
-    {
-      timestamps: true,
-      paranoid: false,
-      underscored: true,
-    }
-  )
-
-  Model.associate = function (models) {
-    Model.hasMany(models.tensions, {
-      foreignKey: 'rome',
-      sourceKey: 'codeRome',
     })
-
-    return models
-  }
-
-  return Model
+  },
 }

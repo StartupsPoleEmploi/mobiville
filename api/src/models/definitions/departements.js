@@ -60,10 +60,7 @@ export default (sequelizeInstance) => {
       foreignKey: 'code',
       sourceKey: 'code_region',
     })
-    Model.hasMany(models.embaucheDepartements, {
-      foreignKey: 'code_departement',
-      sourceKey: 'code',
-    })
+    
     return models
   }
 
