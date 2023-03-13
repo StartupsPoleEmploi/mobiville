@@ -8,21 +8,22 @@ const router = new Router({ prefix: '/region' })
 router.get('/', async ({ models, response }) => {
   const region = await models.regions.findAll({
     include: [
-      models.departements,
+      { model: models.departements, attributes: { exclude: ['description'] } },
       {
         model: models.cities,
+        attributes: ['nom_comm', 'insee_com', 'code_dept', 'population'],
         where: {
           [Op.and]: [
             Sequelize.where(
               Sequelize.fn('LOWER', Sequelize.col('nom_comm')),
               'NOT LIKE',
               '%-ARRONDISSEMENT'
-            )
-          ]
+            ),
+          ],
         },
         order: [['population', 'DESC']],
-        limit: 6
-      }
+        limit: 6,
+      },
     ],
   })
   response.body = region
@@ -42,8 +43,8 @@ router.get('/:code', async ({ params: { code }, models, response }) => {
           Sequelize.fn('LOWER', Sequelize.col('nom_comm')),
           'NOT LIKE',
           '%-ARRONDISSEMENT'
-        )
-      ]
+        ),
+      ],
     },
     order: [['population', 'DESC']],
     limit: 6,
@@ -55,7 +56,7 @@ router.get('/:code', async ({ params: { code }, models, response }) => {
 
 router.get('/:code/jobs', async ({ params: { code }, response }) => {
   const jobOffers = await searchJobCount({
-    region: code
+    region: code,
   })
 
   response.body = JSON.stringify(getTotalOffres(jobOffers))

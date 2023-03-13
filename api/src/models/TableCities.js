@@ -322,6 +322,18 @@ export default (sequelizeInstance, Model) => {
         [Op.and]: whereAnd,
       },
       logging: process.env.ENABLE_DB_LOGGING ? console.log : false,
+      attributes: {
+        exclude: [
+          'description',
+          'buy_m2',
+          'rent_t2',
+          'rent_t4',
+          'rent_m2',
+          'statut',
+          'total_social_housing',
+          'code_cant',
+        ],
+      },
       include: [
         {
           attributes: [],
@@ -332,9 +344,14 @@ export default (sequelizeInstance, Model) => {
       ],
       // order : 1 - tension sur le métier > 2 - custom order (montagne, mer...) > 3 - population
       order: [
-        [sequelizeInstance.models.bassins, sequelizeInstance.models.tensions, 'ind_t', 'ASC'],
+        [
+          sequelizeInstance.models.bassins,
+          sequelizeInstance.models.tensions,
+          'ind_t',
+          'ASC',
+        ],
         ...(order ? order : []),
-        ['population', 'DESC']
+        ['population', 'DESC'],
       ],
       raw: true,
     })

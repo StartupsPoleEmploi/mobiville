@@ -20,6 +20,11 @@ const Container = styled.div`
   }
 `
 
+const FigureGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
 const Figure = styled.div`
   min-width: 80px;
 
@@ -59,16 +64,31 @@ const Label = styled.p`
 const KeyFigures = ({ figures }) => {
   const isMobile = isMobileView(useWindowSize())
 
+  const groupBy2Element = (acc, figure, index) => {
+    // affichage flex par groupe de 2, TE_MAV-838
+    if (index % 2 === 0) {
+      acc.push([figure])
+    } else {
+      acc[acc.length - 1].push(figure)
+    }
+    return acc
+  }
+
   return (
     <Container $isMobile={isMobile}>
       {figures
         .filter((figure) => !!figure)
-        .map((figure, index) => (
-          <Figure key={`${figure.label}-${index}`}>
-            {figure.icon}
-            <Data>{figure.data}</Data>
-            <Label $isNoWrap={figure.$isNoWrap}>{figure.label}</Label>
-          </Figure>
+        .reduce(groupBy2Element, [])
+        .map((figureGroup, index) => (
+          <FigureGroup>
+            {figureGroup.map((figure, index2) => (
+              <Figure key={`${figure.label}-${index}-${index2}`}>
+                {figure.icon}
+                <Data>{figure.data}</Data>
+                <Label $isNoWrap={figure.$isNoWrap}>{figure.label}</Label>
+              </Figure>
+            ))}
+          </FigureGroup>
         ))}
     </Container>
   )

@@ -293,7 +293,8 @@ const Region = () => {
       />
 
       <SectionTitle style={{ marginTop: 64 }}>
-        Découvrez les départements de la région
+        <span>Découvrez les </span>
+        <span style={{ whiteSpace: 'nowrap' }}>départements de la région</span>
       </SectionTitle>
       <GridContainer $columnNumber={2} $isMobile={isMobile}>
         {sortedDepartements.map((departement) => (
@@ -312,7 +313,8 @@ const Region = () => {
       </GridContainer>
 
       <SectionTitle>
-        Découvrez les plus grandes villes de la région
+        Découvrez les villes qui proposent le plus d’offres{' '}
+        <span style={{ whiteSpace: 'nowrap' }}>dans la région</span>
       </SectionTitle>
       <GridContainer $columnNumber={isMobile ? 1 : 2} $isMobile={isMobile}>
         {sortedCities.map((city) => (

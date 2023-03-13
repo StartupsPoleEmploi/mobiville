@@ -60,8 +60,10 @@ const TopHelpsScrollingWrapper = styled.div`
   margin: auto;
 
   display: grid;
-  grid-template-columns: ${({ $isMobile }) =>
-    $isMobile ? '1fr' : 'repeat(3, 1fr)'};
+  grid-template-columns: ${({ $isMobile, $isHorizontalScroll }) =>
+    $isMobile ? 
+      $isHorizontalScroll ? 'repeat(3, 1fr)':  '1fr' 
+      : 'repeat(3, 1fr)'};
   grid-auto-rows: 1fr;
   gap: 16px;
 
@@ -103,7 +105,10 @@ const DiscoverText = styled.p`
   font-weight: 700;
 `
 
-const HelpsStandOut = ({ buttonLibelle = 'Voir toutes les aides' }) => {
+const HelpsStandOut = ({
+  buttonLibelle = 'Voir toutes les aides',
+  isHorizontalScroll = false,
+}) => {
   const isMobile = isMobileView(useWindowSize())
   const { previews, onLoadPreviews } = useHelps()
 
@@ -140,7 +145,10 @@ const HelpsStandOut = ({ buttonLibelle = 'Voir toutes les aides' }) => {
   return (
     <Container>
       <TopHelpsContainer $isMobile={isMobile}>
-        <TopHelpsScrollingWrapper $isMobile={isMobile}>
+        <TopHelpsScrollingWrapper
+          $isMobile={isMobile}
+          $isHorizontalScroll={isHorizontalScroll}
+        >
           {previews
             .sort((a, b) =>
               !b?.visibility_boost
