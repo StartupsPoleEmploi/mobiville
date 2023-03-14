@@ -9,7 +9,6 @@ const Container = styled.div`
 
   display: flex;
   flex-direction: row;
-  gap: ${({ $isMobile }) => ($isMobile ? '30px 0' : '34px')};
   justify-content: center;
   flex-wrap: wrap;
 
@@ -23,11 +22,12 @@ const Container = styled.div`
 const FigureGroup = styled.div`
   display: flex;
   flex-direction: row;
+  margin-top: 10px;
 `
 
 const Figure = styled.div`
   min-width: 80px;
-
+  margin: 0px 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
