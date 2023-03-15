@@ -13,7 +13,7 @@ const infoTauxEmbauche = "div[tag-page$=city] * > div > p";
 const resultatOffre = "div[tag-page$=city] * > div > h2";
 const nombreOffres = "div[tag-page$=city] > div:nth-child(9) > div";
 const boutonVoirToutesOffres =  "div[tag-page$=city] > div > a[href*=ville][href*=metier]";
-const resultatEntreprise = "div[tag-page$=city] * > div > h2";
+const resultatEntreprise = "div[tag-page$=city] * > div > p";
 const infoSimulateur = "div[tag-page$=city] * > h3";
 const donneesTensionImmobiliere = "div[tag-page$=city] * > div";
 const donneePrixUniteSurfaceAchat = "div[tag-page$=city] * > div > p";
@@ -27,7 +27,7 @@ const troisiemeAide = "a[href*=garantie-visale]";
 const boutonVoirToutesAides = "div[tag-page$=city] * > div > a[href*=aides]";
 const servicesVille = "div[tag-page$=city] * > div > p";
 const boutonVoirTousServices  =  "div[tag-page$=city] * > div > a[href*=ville][href*=services]";
-const nombreBlocsEntreprises = "div[tag-page$=city] > div:nth-child(7) > div > div:nth-child(1)";
+const nombreBlocsEntreprises = "div[tag-page$=city] > div:nth-child(7)";
 
 Then("j'affiche la page de la ville pour le métier", function () {
   let villeSansCP = ENDROIT_HP.split(' (')[0];
@@ -91,6 +91,7 @@ When("je clique sur Voir toutes les offres d’emploi", function () {
 
 Then("j'affiche la liste des entreprises qui recrutent", function () {
   cy.contains(resultatEntreprise, "Les entreprises qui recrutent", {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(resultatEntreprise, "Secteurs qui recrutent", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.get(nombreBlocsEntreprises, {timeout: SHORT_WAIT_TIME}).children().should('have.length.lte', 2);
 })
 
