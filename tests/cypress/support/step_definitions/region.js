@@ -50,7 +50,7 @@ Then("j'affiche les départements de la région", function () {
 })
 
 Then("j'affiche les villes de la région", function () {
-  cy.contains(resultatsVilles, "Découvrez les plus grandes villes de la région",  {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(resultatsVilles, "Découvrez les villes qui proposent le plus d’offres",  {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.get(listeVilles, {timeout: SHORT_WAIT_TIME}).children().should('have.length', 6);
   cy.contains(ville, "Lyon",  {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(ville, "Saint-Etienne",  {timeout: SHORT_WAIT_TIME}).should('exist');
