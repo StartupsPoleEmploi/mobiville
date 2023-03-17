@@ -63,8 +63,7 @@ export async function getHiringRate({ codeTerritoire, codeRome = null }) {
   )
 
   if (!result || !result.listeValeursParPeriode) return null
-
-  return result.listeValeursParPeriode[0].valeurSecondaireTaux
+  return Math.round(result.listeValeursParPeriode[0]?.valeurSecondaireTaux)
 }
 
 /** Pseudo "Taux d'embauche"
