@@ -45,11 +45,14 @@ const CityPage = () => {
   }
 
   const backLink = useMemo(() => {
+    if (city?.code_dept === '97') {
+      return `/departement/${city?.code_region}-${city?.nom_dept?.toLowerCase()}`
+    }
     if (!codeRome) return `/departement/${city?.departement?.code}`
     return `/villes?codeRome=${codeRome}${
       city?.region?.code ? `&codeRegion=${city?.region?.code}` : ''
     }`
-  }, [codeRome, city?.departement?.code, city?.region?.code])
+  }, [codeRome, city])
 
   useEffect(() => {
     onLoadCity(inseeCode)
