@@ -1,15 +1,15 @@
 const { When, Then, And } = require('@badeball/cypress-cucumber-preprocessor');
 import { SHORT_WAIT_TIME, MIDDLE_WAIT_TIME, LONG_WAIT_TIME } from "./common/common";
-import { METIER, ENDROIT } from "./home-page";
+import { METIER, ENDROIT_HP } from "./home-page";
 
 const rappelCritereMetierRegion = "main[id=main] * > div > h1";
 const resultatsRechercheVille = "main[id=main] * > div > h2";
-const InfosPremiereVille = "a[data-automation-id^=cityItem-][href*=ville]:nth-child(2) * > div";
+const InfosPremiereVille = "div[data-automation-id=cities-list] > a[data-automation-id^=cityItem-][href*=ville][href*=codeRome]";
 const filtreCadreVie = "main[id=main] * > div";
 const filtreTailleVille = "main[id=main] * > div";
 const filtreOpportunites = "main[id=main] * > div";
 const selectionCritere = "div[id=menu-] * > ul[role=listbox] > li[role=option] > span";
-const listeVillesParPage = "div[data-automation-id=cities-list] > a[data-automation-id^=cityItem]";
+const listeVillesParPage = "div[data-automation-id=cities-list] > a[data-automation-id^=cityItem][href*=ville][href*=codeRome]";
 
 let CRITERE = "";
 
@@ -31,7 +31,7 @@ Then("j'affiche la page de résultats avec une à plusieurs villes correspondant
 
   let metierCourt = METIER.split(' (')[0];
   cy.wait(2000);
-  cy.contains(rappelCritereMetierRegion, "pour " + metierCourt + " en " + ENDROIT,  {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(rappelCritereMetierRegion, "villes pour " + metierCourt + " en " + ENDROIT_HP,  {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(resultatsRechercheVille, "Classement des villes par opportunités d'emploi",  {timeout: SHORT_WAIT_TIME}).should('exist');
 })
 
@@ -41,9 +41,9 @@ Then("j'affiche la page de résultats avec une à plusieurs villes similaires/pr
 })
 
 Then("j'affiche les informations sur le métier dans la page des villes correspondantes", function () {
-  cy.contains(InfosPremiereVille, "Opportunités d'emploi",  {timeout: SHORT_WAIT_TIME}).should('exist');
-  cy.contains(InfosPremiereVille, " habitants",  {timeout: SHORT_WAIT_TIME}).should('exist');
-  cy.contains(InfosPremiereVille, " offres d'emploi",  {timeout: SHORT_WAIT_TIME}).should('exist');
+  cy.contains(InfosPremiereVille, "Opportunités d'emploi",  {timeout: SHORT_WAIT_TIME}).first().should('exist');
+  cy.contains(InfosPremiereVille, " habitants",  {timeout: SHORT_WAIT_TIME}).first().should('exist');
+  cy.contains(InfosPremiereVille, " offres d'emploi",  {timeout: SHORT_WAIT_TIME}).first().should('exist');
 })
 
 When("je clique sur le filtre ville {string} et je sélectionne {string}", function (filtre, selection) {

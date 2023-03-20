@@ -5,8 +5,8 @@ const resultatsVilles = "div[tag-page$=city-villes-similaires] > div > h1";
 const VillesSimilairesProches = "div[tag-page$=city-villes-similaires] > div > div > p";
 const nombreVillesSimilaires = "div[tag-page$=city-villes-similaires] > div > div:nth-child(2) > div";
 const nombreVillesProches = "div[tag-page$=city-villes-similaires] > div > div:nth-child(3) > div";
-const premiereVilleSimilaireProche = "div[tag-page$=city-villes-similaires] > div > div:nth-child(2) > div > a[href*=city]:nth-child(1)";
-const boutonvoirtToutesVilles  =  "div[tag-page$=city-villes-similaires] * > div > a[href*=cities]";
+const premiereVilleSimilaireProche = "div[tag-page$=city-villes-similaires] > div > div:nth-child(3) > div > a[href*=ville][href*=codeRome]";
+const boutonvoirtToutesVilles  =  "div[tag-page$=city-villes-similaires] * > div > a[href*=villes][href*=codeRome][href*=codeRegion]";
 
 Then("j'affiche les villes similaires et les villes à proximité", function () {
   cy.url().should('include', 'villes-proches');
@@ -19,9 +19,9 @@ Then("j'affiche les villes similaires et les villes à proximité", function () 
   cy.contains(nombreVillesProches, "offres", {timeout: SHORT_WAIT_TIME}).children().should('have.length.lte', 6);
 })                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 
-When("je clique sur une ville similaire/proche", function () {
+When("je clique sur la première ville similaire/proche", function () {
   cy.wait(SHORT_WAIT_TIME);
-  cy.contains(premiereVilleSimilaireProche, "offres", {timeout: SHORT_WAIT_TIME}).click();
+  cy.contains(premiereVilleSimilaireProche, "offres", {timeout: SHORT_WAIT_TIME}).first().click();
   cy.wait(2000);
 })
 

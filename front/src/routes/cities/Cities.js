@@ -89,14 +89,14 @@ const Cities = () => {
       !!params?.codeRegion &&
       !!cities &&
       !!cities[0] &&
-      !!cities[0]['newRegion.name']
+      !!cities[0]['region.name']
     ) {
       return (
         <Helmet>
-          <title>Où travailler en {cities[0]['newRegion.name']} | Mobiville</title>
+          <title>Où travailler en {cities[0]['region.name']} | Mobiville</title>
           <meta
             name="description"
-            content={`Découvrez les villes qui correspondent le mieux à votre recherche d'emploi dans la région ${cities[0]['newRegion.name']} et la liste des villes les plus attractives pour votre métier`}
+            content={`Découvrez les villes qui correspondent le mieux à votre recherche d'emploi dans la région ${cities[0]['region.name']} et la liste des villes les plus attractives pour votre métier`}
           />
         </Helmet>
       )

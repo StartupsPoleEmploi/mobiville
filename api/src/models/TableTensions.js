@@ -1,4 +1,4 @@
-import sequelize from 'sequelize'
+import sequelize, { QueryTypes } from 'sequelize'
 import { getPCSByRome } from '../utils/api'
 
 export default (sequelizeInstance, Model) => {
@@ -79,6 +79,45 @@ export default (sequelizeInstance, Model) => {
         code_region: v.dataValues.bassins[0].reg,
         opportunite: parseFloat(v.dataValues.opportunite),
       }))
+    )
+  }
+
+  Model.findTopJobs = async ({ insee }) => {
+    return await sequelizeInstance.query(
+      ` select t.rome, t.rome_label, b.nom_com, t.ind_t
+        from bassins b 
+        inner join tensions t on t.bassin_id = b.bassin_id 
+        where b.code_commune_insee = :codeInsee
+        AND b.deleted_at is NULL AND t.deleted_at IS NULL
+        ORDER BY ind_t ASC
+        LIMIT :maxItems ;
+      `,
+      {
+        replacements: { codeInsee: String(insee), maxItems: 10 },
+        type: QueryTypes.SELECT,
+      }
+    )
+  }
+  Model.findTopJobsByDepartement = async ({
+    codeDepartement,
+    maxItems = 10,
+  }) => {
+    return await sequelizeInstance.query(
+      ` select t.rome as codeRome, t.rome_label ,
+        CAST( AVG(t.ind_t) as FLOAT) as 'avg_ind_t',
+        ( select COUNT(b.id) from bassins b where b.deleted_at is NULL AND b.bassin_id = t.bassin_id ) as 'count_city'
+        -- Attention: count_city ne compte que les villes sur l'un des bassins du code Rome en question et non toute le nb de villes avec du potentiel 
+        from tensions t
+        where t.bassin_id in (select b.bassin_id from bassins b where b.deleted_at is NULL AND b.dep = :codeDep)
+        AND t.deleted_at is NULL
+        GROUP BY t.rome
+        ORDER BY AVG(t.ind_t) ASC, 'count_city' DESC
+        LIMIT :maxItems ;
+      `,
+      {
+        replacements: { codeDep: String(codeDepartement), maxItems: maxItems },
+        type: QueryTypes.SELECT,
+      }
     )
   }
   return Model

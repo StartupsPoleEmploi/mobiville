@@ -6,7 +6,8 @@ import EuroIcon from '@mui/icons-material/Euro'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 
 import { COLOR_PRIMARY, COLOR_PURPLE, COLOR_WHITE } from '../../../../constants/colors'
-import { capitalize, thereAre } from '../../../../utils/utils'
+import { capitalize } from '../../../../utils/utils'
+import { thereAre } from '../JobsUtils'
 import { ActionButton, CloseButton } from '../../../../components'
 import { useEffect, useState } from 'react'
 import { isMobileView } from '../../../../constants/mobile'
@@ -23,8 +24,8 @@ const Container = styled.div`
 
   ${({ $isMobile }) => $isMobile
     ? css`
-      margin-top: -120px;
-      padding-top: 64px;
+      margin-top: 0px;
+      padding-top: 0px;
       z-index: 101;
     `
     : css`
@@ -63,6 +64,7 @@ const Time = styled(KeyInfo)``
 
 const Description = styled.p`
   font-size: 16px;
+  white-space: pre-line;
 `
 
 const HR = styled.hr`

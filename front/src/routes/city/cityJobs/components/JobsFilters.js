@@ -18,9 +18,7 @@ import { useWindowSize } from '../../../../common/hooks/window-size'
 import { isDirty } from '../../../../utils/utils'
 
 const Container = styled.div`
-  max-width: 1040px;
-  width: 100%;
-  margin: 0 auto;
+  margin: 8px auto;
 
   display: grid;
   place-content: center;
@@ -42,7 +40,12 @@ const CustomButton = styled(Button)`
   height: 50px;
 `
 
-const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
+const JobsFilters = ({
+  filters,
+  displayOpportunities,
+  onFiltersChange,
+  onReset,
+}) => {
   const isMobile = isMobileView(useWindowSize())
   const [showMobileFilters, setShowMobileFilters] = useState(false)
 
@@ -82,14 +85,11 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
   }
 
   const opportunities = {
-    OPPORTUNITIES: "Offres avec plus d'opportunités",
+    OPPORTUNITIES: 'Offres avec peu de candidats',
     ALL_OFFERS: 'Toutes les offres',
   }
 
-  const showReset = useMemo(
-    () => isDirty(filters),
-    [filters]
-  )
+  const showReset = useMemo(() => isDirty(filters), [filters])
 
   const numbersOfSelectedFilters = useMemo(() => {
     return Object.values(filters).reduce((prev, currFilter) => {
@@ -116,7 +116,7 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
       date: 'date_publication',
     }
     if (!!tagsNames[name]) {
-      (window.smartTagPiano ? window.smartTagPiano : window.smartTag )({
+      window.smartTagPiano({
         name: tagsNames[name],
         type: 'action',
         chapters: ['city-offres', 'filtres'],
@@ -179,7 +179,7 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
                     })
                   }}
                   onClick={() => {
-                    (window.smartTagPiano ? window.smartTagPiano : window.smartTag )({
+                    window.smartTagPiano({
                       name: 'type_contrat',
                       type: 'action',
                       chapters: ['city-offres', 'filtres'],
@@ -211,7 +211,7 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
                     })
                   }}
                   onClick={() => {
-                    (window.smartTagPiano ? window.smartTagPiano : window.smartTag )({
+                    window.smartTagPiano({
                       name: 'experience',
                       type: 'action',
                       chapters: ['city-offres', 'filtres'],
@@ -243,7 +243,7 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
                     })
                   }}
                   onClick={() => {
-                    (window.smartTagPiano ? window.smartTagPiano : window.smartTag )({
+                    window.smartTagPiano({
                       name: 'duree_hebdomadaire',
                       type: 'action',
                       chapters: ['city-offres', 'filtres'],
@@ -268,7 +268,11 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
               Valider
             </CustomButton>
 
-            <ResetButton style={{ margin: 'auto' }} show={showReset} onClick={onReset} />
+            <ResetButton
+              style={{ margin: 'auto' }}
+              show={showReset}
+              onClick={onReset}
+            />
           </ButtonsContainer>
         </Modale>
       </>
@@ -289,7 +293,7 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
             })
           }
           onClickTag={() => {
-            (window.smartTagPiano ? window.smartTagPiano : window.smartTag )({
+            window.smartTagPiano({
               name: 'distance',
               type: 'action',
               chapters: ['city-offres', 'filtres'],
@@ -308,7 +312,7 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
             })
           }
           onClickTag={() => {
-            (window.smartTagPiano ? window.smartTagPiano : window.smartTag )({
+            window.smartTagPiano({
               name: 'date_publication',
               type: 'action',
               chapters: ['city-offres', 'filtres'],
@@ -328,7 +332,7 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
             })
           }
           onClickTag={() => {
-            (window.smartTagPiano ? window.smartTagPiano : window.smartTag )({
+            window.smartTagPiano({
               name: 'type_contrat',
               type: 'action',
               chapters: ['city-offres', 'filtres'],
@@ -348,7 +352,7 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
             })
           }
           onClickTag={() => {
-            (window.smartTagPiano ? window.smartTagPiano : window.smartTag )({
+            window.smartTagPiano({
               name: 'experience',
               type: 'action',
               chapters: ['city-offres', 'filtres'],
@@ -356,48 +360,73 @@ const JobsFilters = ({ filters, onFiltersChange, onReset }) => {
           }}
         />
 
+        {/* Durée hebdomadaire */}
+        {!displayOpportunities ? (
+          <LittleSelect
+            multiple
+            label="Durée hebdomadaire"
+            values={durations}
+            selectedValue={filters.duration}
+            onChange={(value) =>
+              onFiltersChange({
+                duration: value,
+              })
+            }
+            onClickTag={() => {
+              window.smartTagPiano({
+                name: 'duree_hebdomadaire',
+                type: 'action',
+                chapters: ['city-offres', 'filtres'],
+              })
+            }}
+          />
+        ) : null}
+
         <ResetButton show={showReset} onClick={onReset} />
       </Row>
 
-      <Row>
-        {/* Durée hebdomadaire */}
-        <LittleSelect
-          multiple
-          label="Durée hebdomadaire"
-          values={durations}
-          selectedValue={filters.duration}
-          onChange={(value) =>
-            onFiltersChange({
-              duration: value,
-            })
-          }
-          onClickTag={() => {
-            (window.smartTagPiano ? window.smartTagPiano : window.smartTag )({
-              name: 'duree_hebdomadaire',
-              type: 'action',
-              chapters: ['city-offres', 'filtres'],
-            })
-          }}
-        />
+      {displayOpportunities ? (
+        <Row>
+          {/* Durée hebdomadaire */}
+          <LittleSelect
+            multiple
+            label="Durée hebdomadaire"
+            values={durations}
+            selectedValue={filters.duration}
+            onChange={(value) =>
+              onFiltersChange({
+                duration: value,
+              })
+            }
+            onClickTag={() => {
+              window.smartTagPiano({
+                name: 'duree_hebdomadaire',
+                type: 'action',
+                chapters: ['city-offres', 'filtres'],
+              })
+            }}
+          />
 
-        {/* Opportunités */}
-        <LittleSelect
-          label="Offres avec plus d'opportunités"
-          values={opportunities}
-          selectedValue={filters.opportunity}
-          onChange={(value) =>
-            onFiltersChange({
-              opportunity: value,
-            })
-          }
-        />
-      </Row>
+          {/* Opportunités */}
+          <LittleSelect
+            label="Offres avec peu de candidats"
+            values={opportunities}
+            selectedValue={filters.opportunity}
+            onChange={(value) =>
+              onFiltersChange({
+                opportunity: value,
+              })
+            }
+          />
+        </Row>
+      ) : null}
     </Container>
   )
 }
 
 JobsFilters.propTypes = {
   filters: PropTypes.object.isRequired,
+  displayOpportunities: PropTypes.bool.isRequired,
   onFiltersChange: PropTypes.func,
   onReset: PropTypes.func,
 }

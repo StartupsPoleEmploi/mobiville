@@ -1,10 +1,11 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import LOGO from '../assets/images/LogoMobiville_gros.svg'
 import { useNomPage } from '../common/contexts/NomPageContext'
 import { COLOR_VERT_MOBIVILLE } from '../constants/colors'
 import { MOBILE_WIDTH } from '../constants/mobile'
+import LOGO from '../assets/images/logo-mobiville.svg'
+import Image from './Image'
 
 const MainSpace = styled.div`
   background: white;
@@ -30,9 +31,7 @@ const MainSpace = styled.div`
 const Wrapper = styled.div`
   max-width: 700px;
   margin-top: 0px;
-  &.descriptif img {
-    height: 83px;
-  }
+
   @media (max-width: ${MOBILE_WIDTH}px) {
     &.descriptif {
       display: none;
@@ -98,13 +97,19 @@ const WrapperLogos = styled(Wrapper)`
   }
 
   .logo-al {
-    width: 170px;
+    img {
+      width: 170px;
+    }
   }
   .logo-pe {
     width: 65px;
   }
   .logo-fse {
-    width: 75px;
+    img {
+      width: 75px;
+      height: 51px;
+      // padding-right: 2px;
+    }
   }
   .europe {
     display: flex;
@@ -131,6 +136,8 @@ const CopyRight = styled.p`
 
 const Footer = () => {
   const { nomPage } = useNomPage()
+  const location = useLocation()
+  const isHome = location.pathname === '/'
 
   return (
     <MainSpace>
@@ -141,7 +148,14 @@ const Footer = () => {
             correspond à votre besoin ainsi que les aides financières à la
             mobilité.
           </p>
-          <img src={LOGO} alt="Retour à la page d’accueil" />
+          <img
+            style={{ height: '85px' }}
+            src={LOGO}
+            loading="lazy"
+            alt={`Mobiville Pôle emploi et Action logement${
+              !isHome ? " - Retour à la page d'accueil" : ''
+            }`}
+          />
         </Wrapper>
         <WrapperLinks>
           <Item>
@@ -174,12 +188,14 @@ const Footer = () => {
               href="https://www.pole-emploi.fr/"
               target="_blank"
               rel="noreferrer"
+              style={{ justifySelf: 'center', lineHeight: 0 }}
               tag-exit={`${nomPage}/footer/liens-pole-emploi`}
             >
               <img
                 className="logo-pe"
                 src="/logos/logo_pe.svg"
                 alt="pole emploi"
+                loading="lazy"
               />
             </a>
             <a
@@ -188,9 +204,10 @@ const Footer = () => {
               rel="noreferrer"
               tag-exit={`${nomPage}/footer/liens-actionlogement`}
             >
-              <img
+              <Image
+                isUrlSrc
                 className="logo-al"
-                src="/help-logos/action-logement-2.png"
+                src="/logos/logo_action-logement_small.png"
                 alt="action logement"
               />
             </a>
@@ -200,9 +217,10 @@ const Footer = () => {
               target="_blank"
               rel="noreferrer"
             >
-              <img
+              <Image
+                isUrlSrc
                 className="logo-fse"
-                src="/logos/logo_fonds_social_eu.svg"
+                src="/logos/logo_fonds_social_eu.jpg"
                 alt="fond social européen"
               />
             </a>
@@ -213,7 +231,11 @@ const Footer = () => {
               rel="noreferrer"
               tag-exit={`${nomPage}/footer/liens-fse`}
             >
-              <img src="/logos/logo-ue.svg" alt="fond social européen" />
+              <img
+                src="/logos/logo-ue.svg"
+                alt="fond social européen"
+                loading="lazy"
+              />
               <span>
                 Ce dispositif est cofinancé par le Fonds Social Européen dans le
                 cadre du Programme opérationnel national "Emploi et inclusion"

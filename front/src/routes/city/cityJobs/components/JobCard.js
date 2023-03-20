@@ -10,7 +10,8 @@ import {
   COLOR_PRIMARY,
   COLOR_WHITE,
 } from '../../../../constants/colors'
-import { thereAre, wordsCapitalize } from '../../../../utils/utils'
+import { wordsCapitalize } from '../../../../utils/utils'
+import { thereAre } from '../JobsUtils'
 import { Tag } from '../../../../components'
 import { useProfessions } from '../../../../common/contexts/professionsContext'
 

@@ -15,14 +15,17 @@ Mobiville est un outil d’aide à la décision pour orienter les candidats à l
 Pré-requis: [docker, docker-compose](https://www.docker.com/get-started) et [yarn](https://yarnpkg.com/getting-started/install)
 
 ### Version de nodeJS
+
 Il faut s'assurer d'etre sous **node 16.16.0**
 Avec [nvm](https://github.com/nvm-sh/nvm) pour Windows et un poste PE il faut ouvrir un cmd en self élévation:
+
 ```bash
 nvm install 16.16.0
 nvm use 16.16.0
-``` 
+```
 
 ### Construire et démarrer les conteneurs
+
 1. Remplir les données .env (exemple voir .env.exemple dans le repo)
 2. `yarn build` (toute modification du .env demandera un nouveau build)
 3. `yarn start`
@@ -46,6 +49,9 @@ yarn sync:romeSkills # This will take a few minutes
 yarn sync:tensionsPCS # almost instantaneous
 yarn sync:regionsTensionsCriterions # Takes about 5 minutes
 yarn sync:departements # almost instantaneous
+yarn sync:embaucheDepartements # Takes about 5 hours ;) tmux ?
+yarn sync:departementsDescriptions # Takes about 10 minutes
+yarn sync:secteursBassins # almost instantaneous
 ```
 
 ## Structure de données
@@ -54,24 +60,26 @@ Les tables suivantes sont présentes dans la base :
 
 - **bassins** contenant les informations sur les différents bassins d’emploi
 - **cities** contenant les informations sur les différetes villes
-- **cities_jobs** contient les informations sur le nombre d’emploi par ville et par code rome.
 - **equipments** contient les informations sur le nombre de chaque type d’équipements présents dans chaque ville (page « cadre de vie ») [source de 2020](https://www.insee.fr/fr/statistiques/3568638?sommaire=3568656)
 - **helps** contient les informations sur les différentes aides proposées par pôle-emploi
 - **migrations** contient les informations de migration de base de données
 - **new_regions** contient les informations de régions selon le nouveau format (réforme de 2015)
 - ~~**old_regions** contient les informations de régions selon l’ancien format, et une correspondance avec le nouveau format. Cette table est nécessaire car de nombreuses données insee font encore référence à l’ancien format et à ses identifiants~~
 - **regions_tensions_criterions** contient un json permettant au front d’afficher les informations de régions en tension par code rome, et les critères associés.
-- **rome_codes** contient tous les codes romes et leurs libellés
 - **romeogrs** contient tous les code OGR et libellés des métiers, et leurs codes romes associés
 - **romeskills** contient la liste des compétences associée à chaque code rome
 - ~~**socialhousings** contient les informations de logement social disponible par région (ces données devraient être mergées à new_regions)~~
 - **tensions** contient les informations de tensions par code rome et territoire. C’est notamment à partir de cette table qu’est généré le json présent dans regions_tensions_criterions
+- **departements** contient les département de france et dom-tom , l'estimation de population est issu de l'insee a fin 2021
+- ~~**embauche_departements** contient les statistique d'embauche par code rome par département issu de smart-emploi~~
+- **secteurs_bassins** DPAE et secteurs (du NAF) qui recrute sur un bassin d'emploi donnée issu d'un csv (et par la suite le datalake)
 
 ## Génération de migration
 
 Dans le répertoire `~/api/src/db`, exécuter `npx sequelize-cli migration:generate --name migration-skeleton`
 
 ## Notes sur la génération des equiments
+
 Les données sont issu de [l'insee](https://www.insee.fr/fr/statistiques/3568638?sommaire=3568656), celle géolocalisé sont utilisé c'est à dire une ligne une entrée sequelize fait la somme pour nous
 `bpe21_xy.csv` est a placé dans le répertoire `api/src/assets/datas`
 En lancant le script : `node api/src/scripts/equipmentsFileBuilder` on converti le csv en json,
@@ -98,7 +106,7 @@ yarn log:front
 - Liste des villes -> Importé depuis le fichier `cities-france.csv`. Le fichier `cities-france.csv` est issue du site data.gouv.fr et est mis à jours tous les ans.
 - Liste des villes en tensions -> Importée depuis le fichier `cities-tension-utf8.csv`
 - Liste des villes <-> bassins -> Importée depuis le fichier `lexique-bassins.csv`
-- Liste des regions, nouvelle nomenclature -> Importé depuis le fichier `anciennes-nouvelles-regions.json`
+- Liste des regions -> Importé depuis le fichier `regions.json`
 
 ## API externes
 
@@ -232,18 +240,25 @@ mobiville --> [Docker Backup]
 Data --> [Docker API]
 [datalake] -l--> datalakefile
 ```
+
 ### Comment récuperer et appliquer un backup de bdd ?
-##### Récupération du backup 
+
+##### Récupération du backup
+
 Pour télécharger le backup avec le nom `mobivillerecette_dimanche` :
 Sur le serveur distant :
+
 - `docker cp mobiville-backup:/backups/mobivillerecette_dimanche.sql.bz2 /tmp/`
 
 Sur son poste ensuite :
+
 - `scp $USER@$IP_DU_SERVEUR_DISTANT:/tmp/mobivillerecette_dimanche.sql.bz2 ./`
 
 ##### Procedure de restore
-Pour un environnement de recette (sinon le prefixe du fichier sera mobivilleproduction_*):
+
+Pour un environnement de recette (sinon le prefixe du fichier sera mobivilleproduction*\*):
 On récupere le backup de la veille: `export BACKUP_FILE_NAME=mobivillerecette_$(LC_ALL="fr_FR.utf8" date -d 'yesterday' +'%A')`
+
 ```bash
 cp /home/docker/mobiville/backups/$BACKUP_FILE_NAME.sql.bz2 ~/
 bzip2 -d $BACKUP_FILE_NAME.sql.bz2
@@ -253,6 +268,7 @@ docker exec -it mobiville_db_1 mariadb -u $MYSQL_USER -p$MYSQL_PASSWORD mobivill
 docker exec -it mobiville_db_1 mariadb -u $MYSQL_USER -p$MYSQL_PASSWORD -e "CREATE DATABASE mobiville"
 docker exec -it mobiville_db_1 bash -c "mysql -u $MYSQL_USER -p$MYSQL_PASSWORD mobiville < "$BACKUP_FILE_NAME".sql"
 ```
+
 TADA !
 
 ##### Test E2E
@@ -262,3 +278,21 @@ TADA !
 Sous Windows : `mkdir %USERPROFILE%\Bin & curl https://github.com/cucumber/json-formatter/releases/download/v19.0.0/cucumber-json-formatter-windows-amd64 >  %USERPROFILE%\Bin\cucumber-json-formatter.exe `
 
 Sous Linux : `curl https://github.com/cucumber/json-formatter/releases/download/v19.0.0/cucumber-json-formatter-linux-amd64 > ~/bin/cucumber-json-formatter`
+
+### minification d'images
+
+pour minifié les images des pages régions les commandes suivantes sont utilisée dans ./front/public/regions/original :
+
+```shell
+magick mogrify -path C://chemin_destination -format avif -resize '600x400' -quality 75 -trim +repage *.jpg
+magick mogrify -path C://chemin_destination -format webp -resize '600x400' -quality 75 -trim +repage *.jpg
+magick mogrify -path C://chemin_destination -format jpg -resize '600x400' -quality 90 -trim +repage *.jpg
+```
+
+pour les differentes tailles d'image : 
+```shell
+magick mogrify -path ./60px/ -background none -resize 60x\\> ./original/*
+```
+
+- background none preserve la transparence des png
+- "60x antislash >" retaille la hauteur a 60px mais preserve le ratio en largeur

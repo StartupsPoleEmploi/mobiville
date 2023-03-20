@@ -1,4 +1,5 @@
 import Router from '@koa/router'
+import Sequelize from 'sequelize'
 
 const router = new Router({ prefix: '/professions' })
 
@@ -7,33 +8,10 @@ import {
   infosTravail,
   infosTensionTravail,
   searchJobCount,
-  getHiringRate,
 } from '../utils/pe-api'
+import { getHiringRate } from '../utils/smart-emploi-api'
+import { getInseeCodesForSearch, getTotalOffres } from '../utils/utils'
 import { meanBy } from 'lodash'
-
-const CODE_INSEE_LYON_FIRST_DISTRICT = '69381'
-const CODE_INSEE_PARIS_FIRST_DISTRICT = '75101'
-const CODE_INSEE_MARSEILLE_FIRST_DISTRICT = '13201'
-
-const CODE_INSEE_LYON = '69123'
-const CODE_INSEE_PARIS = '75056'
-const CODE_INSEE_MARSEILLE = '13055'
-
-// we need special matchings for Marseille, Paris and Lyon, since we cannot search them directly
-// and need to input the insee code of a special district
-const getInseeCodesForSearch = (inseeCodes) =>
-  inseeCodes.map((inseeCode) => {
-    return getInseeCodeUniqueForSearch(inseeCode)
-  })
-
-const getInseeCodeUniqueForSearch = (inseeCode) => {
-  if (inseeCode === CODE_INSEE_LYON) return CODE_INSEE_LYON_FIRST_DISTRICT
-  if (inseeCode === CODE_INSEE_PARIS) return CODE_INSEE_PARIS_FIRST_DISTRICT
-  if (inseeCode === CODE_INSEE_MARSEILLE)
-    return CODE_INSEE_MARSEILLE_FIRST_DISTRICT
-
-  return inseeCode
-}
 
 router.post(
   '/search',
@@ -45,7 +23,7 @@ router.post(
   }) => {
     const result = await searchJob({
       codeRome,
-      insee: getInseeCodesForSearch(insee)
+      insee: getInseeCodesForSearch(insee),
     })
     response.body = {
       resultats: result ? result.resultats : [],
@@ -53,20 +31,6 @@ router.post(
     }
   }
 )
-
-const getTotalOffres = function (result) {
-  let totalOffres = 0
-  if (result && result.filtresPossibles) {
-    const filtresPossibles = result.filtresPossibles
-    const typesContrats = filtresPossibles.find(
-      (filtrePossibles) => filtrePossibles.filtre === 'typeContrat'
-    )
-    typesContrats.agregation.forEach((agregat) => {
-      totalOffres += agregat.nbResultats
-    })
-  }
-  return totalOffres
-}
 
 router.post(
   '/searchCountList',
@@ -76,18 +40,16 @@ router.post(
     },
     response,
   }) => {
-    async function callToSearchJobCount(insee) {
-      return {
-        insee: insee,
-        total: getTotalOffres(
-          await searchJobCount({
-            codeRome,
-            insee: getInseeCodesForSearch(insee),
-            distance: 30,
-          })
-        ),
-      }
-    }
+    const callToSearchJobCount = async (insee) => ({
+      insee: insee,
+      total: getTotalOffres(
+        await searchJobCount({
+          codeRome,
+          insee: getInseeCodesForSearch(insee),
+          distance: 30,
+        })
+      ),
+    })
 
     let responseArray = []
     if (inseeList.length > 10) {
@@ -114,26 +76,6 @@ router.post(
 )
 
 router.post(
-  '/searchInseeonly',
-  async ({
-    request: {
-      body: { insee },
-    },
-    response,
-  }) => {
-    const result = await searchJob({
-      insee: getInseeCodesForSearch(insee)
-    })
-    if (result) {
-      const total = result.resultats.length
-      response.body = '{total:' + total + '}'
-    } else {
-      response.body = []
-    }
-  }
-)
-
-router.post(
   '/searchRomeonly',
   async ({
     request: {
@@ -142,7 +84,7 @@ router.post(
     response,
   }) => {
     const result = await searchJob({
-      codeRome
+      codeRome,
     })
     if (result) {
       const total = result.resultats.length
@@ -164,8 +106,39 @@ router.post(
   }) => {
     //https://dares.travail-emploi.gouv.fr/donnees/la-nomenclature-des-familles-professionnelles-fap-2009
 
-    const [city, pcs] = await Promise.all([
-      models.cities.findOne({
+    let city = null
+    let pcs = null
+
+    if (codeRome) {
+      ;[city, pcs] = await Promise.all([
+        models.cities.findOne({
+          where: { insee_com: insee },
+          raw: true,
+          include: {
+            attributes: ['bassin_id'],
+            model: models.cities.models.bassins,
+            required: false,
+            include: [
+              {
+                attributes: ['ind_t'],
+                model: models.bassins.models.tensions,
+                required: false,
+                where: {
+                  rome: codeRome,
+                },
+              },
+            ],
+          },
+        }),
+        models.cities.models.tensions.findOne({
+          where: {
+            rome: codeRome,
+          },
+          raw: true,
+        }),
+      ])
+    } else {
+      city = await models.cities.findOne({
         where: { insee_com: insee },
         raw: true,
         include: {
@@ -174,53 +147,48 @@ router.post(
           required: false,
           include: [
             {
-              attributes: ['ind_t'],
+              attributes: [
+                [Sequelize.fn('AVG', Sequelize.col('ind_t')), 'ind_t'],
+              ],
               model: models.bassins.models.tensions,
               required: false,
-              where: {
-                rome: codeRome,
-              },
             },
           ],
-        }
-      }),
-      models.cities.models.tensions.findOne({
-        where: {
-          rome: codeRome,
         },
-        raw: true,
-      }),
-    ])
+      })
+    }
 
     const bassinId = city && city['bassin.bassin_id']
 
-    if (!bassinId || !pcs) {
+    if (!bassinId || (codeRome && !pcs)) {
       response.body = null
       return
     }
 
-    const [infosResult, { bassin: bassinStatsResult, dept: deptStatsResult }, hiringRate] =
-      await Promise.all([
-        infosTravail({
-          codeProfession: pcs.pcs,
-          codeDept: city.code_dept,
-          codeRome,
-        }),
-        infosTensionTravail({
-          bassinId,
-          codeRome,
-          codeDept: city.code_dept,
-        }),
-        getHiringRate({
-          codeTerritoire: bassinId,
-          codeRome
-        })
-      ]).catch((err) => {
-        // A better handling of errors should be included, but for now we’ll do with just not screwing the whole app
-        // as this previously did
-        console.error(err)
-        return [null, { bassin: null, dept: null }, null]
-      })
+    const [
+      infosResult,
+      { bassin: bassinStatsResult, dept: deptStatsResult },
+      hiringRate,
+    ] = await Promise.all([
+      infosTravail({
+        codeProfession: pcs ? pcs.pcs : null,
+        codeDept: city.code_dept,
+      }),
+      infosTensionTravail({
+        bassinId,
+        codeRome,
+        codeDept: city.code_dept,
+      }),
+      getHiringRate({
+        codeTerritoire: bassinId,
+        codeRome,
+      }),
+    ]).catch((err) => {
+      // A better handling of errors should be included, but for now we’ll do with just not screwing the whole app
+      // as this previously did
+      console.error(err.response.data)
+      return [null, { bassin: null, dept: null }, null]
+    })
 
     const bassinTension =
       (bassinStatsResult &&
@@ -258,7 +226,7 @@ router.post(
       max,
       bassinTension,
       deptTension,
-      hiringRate
+      hiringRate: hiringRate ? hiringRate : null,
     }
   }
 )

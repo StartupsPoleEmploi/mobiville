@@ -42,9 +42,11 @@ const Tag = ({
   green = null,
   size = 'normal',
   bold = false,
-  children
+  children,
+  title,
+  style = {}
 }) => (
-  <Container $green={green} $size={size} $bold={bold}>
+  <Container title={title} $green={green} $size={size} $bold={bold} style={{ ...style }}>
     {children}
   </Container>
 )

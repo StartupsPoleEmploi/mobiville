@@ -1,7 +1,7 @@
 import { compact } from 'lodash'
 import Router from '@koa/router'
 
-import { searchCloseCompanies } from "../utils/pe-api";
+import { searchCloseCompanies } from '../utils/pe-api'
 import { CRITERIONS } from '../constants/criterion'
 
 const router = new Router({ prefix: '/cities' })
@@ -13,6 +13,7 @@ router.post(
       body: {
         codeCity,
         codeRegion,
+        codeDepartement,
         codeEnvironment,
         codeRome,
         index,
@@ -38,6 +39,7 @@ router.post(
 
     const [queryResult, totalResults] = await models.cities.search({
       codeRegion,
+      codeDepartement,
       codeCriterion: compact([codeCity, codeEnvironment]),
       codeRome,
       onlySearchInTension,
@@ -149,7 +151,7 @@ router.post(
     },
     response,
   }) => {
-    response.body = await searchCloseCompanies({
+    const lbbData = await searchCloseCompanies({
       codeRome,
       insee,
       distance: 30,
@@ -157,6 +159,24 @@ router.post(
       pageSize: 10,
       sort: sort,
     })
+    response.body = {
+      companies: lbbData.companies
+        .sort((c1, c2) => c2.stars - c1.stars)
+        .slice(0, 10)
+        .map(({ name, city, url }) => ({ name, city, url })),
+      companies_count: lbbData.companies_count,
+    }
+  }
+)
+
+/** Top 10 des métiers en tension sur la ville */
+router.get(
+  '/:insee/topJobs',
+  async ({ params: { insee }, models, response }) => {
+    const result = await models.tensions.findTopJobs({
+      insee,
+    })
+    response.body = result
   }
 )
 

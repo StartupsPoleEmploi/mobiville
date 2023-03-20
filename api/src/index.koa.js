@@ -13,9 +13,12 @@ import * as Sentry from '@sentry/node'
 import db from './models'
 
 import citiesRoutes from './routes/cities'
+import departementsRoutes from './routes/departements'
 import helpsRoutes from './routes/helps'
 import ogrsRoutes from './routes/ogrs'
 import professionsRoutes from './routes/professions'
+import regionsRoutes from './routes/regions'
+import eventsRoutes from './routes/events'
 
 const app = new Koa()
 
@@ -36,13 +39,22 @@ Sentry.init({
   dsn: process.env.SENTRY_DSN,
   tracesSampleRate: 1.0,
   environment: process.env.NODE_ENV,
-  release: "nodejs@" + process.env.CI_COMMIT_SHA,
+  release: 'nodejs@' + process.env.CI_COMMIT_SHA,
 })
 
 // we add the relevant middlewares to our API
 app.use(cors({ credentials: true })) // add cors headers to the requests
 app.use(helmet()) // adds various security headers to our API's responses
-app.use(RateLimit.middleware({ interval: { min: 1 }, max: 1000 }))
+
+// gerer par nginx
+app.use(
+  RateLimit.middleware({
+    message: 'Vous avez effectué trop de requete, un peu de patiente.',
+    interval: { sec: 10 },
+    max: 60,
+    keyGenerator: async (ctx) => `${ctx.header['x-real-ip']}`,
+  })
+)
 
 app.use(
   koaBody({
@@ -53,10 +65,13 @@ app.use(
   })
 ) // automatically parses the body of POST/PUT/PATCH requests, and adds it to the koa context
 
-app.use(professionsRoutes.routes()).use(professionsRoutes.allowedMethods())
 app.use(citiesRoutes.routes()).use(citiesRoutes.allowedMethods())
+app.use(departementsRoutes.routes()).use(departementsRoutes.allowedMethods())
 app.use(helpsRoutes.routes()).use(helpsRoutes.allowedMethods())
 app.use(ogrsRoutes.routes()).use(ogrsRoutes.allowedMethods())
+app.use(professionsRoutes.routes()).use(professionsRoutes.allowedMethods())
+app.use(regionsRoutes.routes()).use(regionsRoutes.allowedMethods())
+app.use(eventsRoutes.routes()).use(eventsRoutes.allowedMethods())
 app.use(compress({}))
 app.use(session(config.SESSION_CONFIG, app))
 

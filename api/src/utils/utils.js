@@ -199,3 +199,67 @@ export function citySizeLabel(city) {
     return 'Petite ville'
   }
 }
+
+export const getTotalOffres = (result) => {
+  let totalOffres = 0
+  if (result && result.filtresPossibles) {
+    const filtresPossibles = result.filtresPossibles
+    const typesContrats = filtresPossibles.find(
+      (filtrePossibles) => filtrePossibles.filtre === 'typeContrat'
+    )
+    typesContrats.agregation.forEach((agregat) => {
+      totalOffres += agregat.nbResultats
+    })
+  }
+  return totalOffres
+}
+
+export async function fetchAndRetryIfNecessary(callAPIFn, tryNumber = 1) {
+  const MAX_RETRY_429 = 10
+  const response = await callAPIFn()
+
+  if (response) {
+    if (response.errorCode && response.errorCode === 'ECONNRESET') {
+      console.log('errorCode ', response.errorCode)
+      return fetchAndRetryIfNecessary(callAPIFn, ++tryNumber)
+    } else if (response.errorCode) {
+      console.log('erreur non prévu ', response.errorCode)
+    } else if (!Object.hasOwn(response, 'status')) {
+      console.error(response)
+    }
+
+    if (tryNumber <= MAX_RETRY_429 && response.status === 429) {
+      const retryAfter = response.headers['retry-after']
+      console.info(`HTTP 429 retry after ${retryAfter}s`)
+      await sleep(retryAfter * 1000)
+      return fetchAndRetryIfNecessary(callAPIFn, ++tryNumber)
+    }
+    if (tryNumber > MAX_RETRY_429 && response.status === 429) {
+      console.error(`Max 429 retry reached ${response.request.res.responseUrl}`)
+    }
+    return response.data
+  }
+  return null
+}
+
+// we need special matchings for Marseille, Paris and Lyon, since we cannot search them directly
+// and need to input the insee code of a special district
+const CODE_INSEE_LYON_FIRST_DISTRICT = '69381'
+const CODE_INSEE_PARIS_FIRST_DISTRICT = '75101'
+const CODE_INSEE_MARSEILLE_FIRST_DISTRICT = '13201'
+
+const CODE_INSEE_LYON = '69123'
+const CODE_INSEE_PARIS = '75056'
+const CODE_INSEE_MARSEILLE = '13055'
+
+export const getInseeCodesForSearch = (inseeCodes) =>
+  inseeCodes.map((inseeCode) => getInseeCodeUniqueForSearch(inseeCode))
+
+export const getInseeCodeUniqueForSearch = (inseeCode) => {
+  if (inseeCode === CODE_INSEE_LYON) return CODE_INSEE_LYON_FIRST_DISTRICT
+  if (inseeCode === CODE_INSEE_PARIS) return CODE_INSEE_PARIS_FIRST_DISTRICT
+  if (inseeCode === CODE_INSEE_MARSEILLE)
+    return CODE_INSEE_MARSEILLE_FIRST_DISTRICT
+
+  return inseeCode
+}

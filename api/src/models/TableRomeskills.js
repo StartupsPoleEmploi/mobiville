@@ -1,4 +1,4 @@
-import { Op } from 'sequelize'
+import  { Op, QueryTypes } from 'sequelize'
 import { getSkillFromRome } from '../utils/pe-api'
 import { sleep } from '../utils/utils'
 
@@ -64,6 +64,20 @@ export default (sequelizeInstance, Model) => {
       return {
         codeRome: e.code_rome,
         label: e.skill_label,
+      }
+    })
+  }
+
+  Model.getAllCodeRome = async () => {
+    return (
+      await sequelizeInstance.query(
+        'SELECT DISTINCT(code_rome) FROM `romeskills`',
+        { type: QueryTypes.SELECT }
+      )
+    ).map((e) => {
+      return {
+        codeRome: e.code_rome,
+        // label: e.skill_label,
       }
     })
   }

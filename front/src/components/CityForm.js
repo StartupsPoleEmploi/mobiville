@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+
 import { useWindowSize } from '../common/hooks/window-size'
 import { isMobileView } from '../constants/mobile'
 import { CITY_TYPE, REGION_TYPE } from '../constants/search'
@@ -43,6 +44,14 @@ const CityForm = ({
   const computeSearchPath = useCallback(() => {
     if (!jobSelected && !!citySelected && citySelected.type === REGION_TYPE) {
       // redirection vers la page région
+      if (['1', '2', '3', '4', '6'].includes(citySelected.id)) {
+        // cas dom-tom unidépartemental
+        return `/departement/${citySelected.id}-${citySelected.label
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(' ', '-')
+          .toLowerCase()}`
+      }
       return `/region/${citySelected.id}`
     }
 
@@ -78,7 +87,7 @@ const CityForm = ({
 
   const handleClick = () => {
     if (citySelected) {
-      (window.smartTagPiano ? window.smartTagPiano : window.smartTag )({
+      window.smartTagPiano({
         name: 'rechercher_ville',
         type: 'action',
         chapters: [`${isWelcomeCitySearch ? 'accueil' : 'rechercher'}`],

@@ -91,7 +91,7 @@ const HomeHelpsBanner = () => (
         <HelpType to="/aides#accompagnement">
           Les aides d'accompagnement
         </HelpType>
-        <HelpType to="/aides#transport">Les aides transports</HelpType>
+        <HelpType to="/aides#transport">Les aides transport</HelpType>
       </HelpTypesSubContainer>
     </HelpTypesContainer>
 

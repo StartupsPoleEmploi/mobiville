@@ -5,7 +5,7 @@ import Sequelize from 'sequelize'
 - statut: Type de commune,
 - z_moyen: Altitude moyenne,
 - nom_region: Nom de région,
-- new_code_region: Code de la région (Ceci est le nouveaux code des régions),
+- code_region: Code de la région,
 - insee_com: Identifiant europeen de la commune,
 - code_dept: Code du département,
 - geo_point_2d_x: Centre de la ville en longitude,
@@ -20,13 +20,12 @@ import Sequelize from 'sequelize'
 - distance_from_sea: Distance par rapport à la mer par rapport au centre. (Valeur à null puis un cron teste le point geographique le plus proche selon le fichier `france-shape-side-sea.geo.json`),
 - average_temperature: Température moyenne de la ville sur toute l'année des 10 dernieres années avec 3 ans de retard. (Valeur à null puis un cron chercher la balise météorologie la plus proche de la ville. Les balises sont issues de `donneespubliques.meteofrance.fr`. Pour info, il n'y a pas beaucoup de balise en France, quelques centaines),
 - description: Description de la ville. (Valeur à null puis un cron demande à l'api wikipedia la description),
-- average_houseselled: Prix moyen du m2 des logements (Valeur à null puis un cron demande au fichier `dvf-communes-2019.csv` issue de data.gouv.fr),
 - city_house_tension: Definition du niveau de tension (Valeur à null puis un cron demande au fichier `dvf-communes-2019.csv` issue de data.gouv.fr),
-- average_houserent: Prix moyen du loyer des appartement au m2 (Value à null puis un demande au fichier `indicateurs-loyers-appartements.csv` issue de data.gouv.fr),
 - rent_t2: Prix moyen du loyer des appartement T2 de la ville (Value à null puis un demande au fichier `cities_rent.csv`),
 - rent_t4: Prix moyen du loyer des appartement T4 de la ville (Value à null puis un demande au fichier `cities_rent.csv`),
+- rent_m2: Prix moyen au m2 du loyer de la ville (Value à null puis un demande au fichier `cities_rent.csv`),
+- buy_m2: Prix moyen au m2 d'achat des appartement de la ville (Value à null puis un demande au fichier `cities_rent.csv`),
 - photo: Url de photo de la ville. (Valeur à null puis un cron demande à l'api wikipedia la photo),
-
 */
 
 export default (sequelizeInstance) => {
@@ -60,7 +59,7 @@ export default (sequelizeInstance) => {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
-      new_code_region: {
+      code_region: {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
@@ -121,16 +120,8 @@ export default (sequelizeInstance) => {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      average_houseselled: {
-        type: Sequelize.FLOAT,
-        allowNull: true,
-      },
       city_house_tension: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-      },
-      average_houserent: {
-        type: Sequelize.FLOAT,
         allowNull: true,
       },
       rent_t2: {
@@ -138,6 +129,14 @@ export default (sequelizeInstance) => {
         allowNull: true,
       },
       rent_t4: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
+      },
+      rent_m2: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
+      },
+      buy_m2: {
         type: Sequelize.FLOAT,
         allowNull: true,
       },
@@ -182,16 +181,12 @@ export default (sequelizeInstance) => {
       foreignKey: 'code_commune_insee',
       sourceKey: 'insee_com',
     })
-    Model.hasOne(models.newRegions, {
+    Model.hasOne(models.regions, {
       foreignKey: 'code',
-      sourceKey: 'new_code_region',
+      sourceKey: 'code_region',
     })
     Model.hasMany(models.equipments, {
       foreignKey: 'depcom',
-      sourceKey: 'insee_com',
-    })
-    Model.hasMany(models.citiesJobs, {
-      foreignKey: 'insee_code',
       sourceKey: 'insee_com',
     })
     Model.hasOne(models.departements, {

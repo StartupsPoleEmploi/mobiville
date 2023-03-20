@@ -1,11 +1,9 @@
 import config from 'config'
 import axios from 'axios'
 import { ungzip } from 'node-gzip'
-import { decompress as decompressBZ2 } from 'bz2'
 import { csvToArrayJson } from './csv'
-import { readFile, readFileSync, statSync, readdirSync } from 'fs'
+import { readFile, readFileSync } from 'fs'
 import parser from 'xml2json'
-import { parse } from 'csv-parse'
 
 let romeLabelFile = null
 const cheerio = require('cheerio')
@@ -59,14 +57,15 @@ export function getAllBassins() {
         }
       }
     )
-  }).then((list) => (list.map((c) => ({
+  }).then((list) =>
+    list.map((c) => ({
       ...c,
       code_commune: c.ccommune,
       nom_com: c.nomcom,
       bassin_id: c.be19,
       bassin_name: c.nombe19,
     }))
-  ))
+  )
 }
 
 export function getFranceShape() {
@@ -157,33 +156,55 @@ export const wikipediaDetails = (pageName) =>
     })
     .catch((err) => console.error('ERROR', err))
 
-export const getAllRegions = () => {
-  let rawdata = readFileSync(
-    __dirname + '/../assets/datas/anciennes-nouvelles-regions.json'
-  )
-  return JSON.parse(rawdata).regions.map((r) => ({ ...r.fields }))
-}
-
-export const getRegionsSocialHousing = () => {
-  let rawdata = readFileSync(
-    __dirname + '/../assets/datas/regions-social-housing.json'
-  )
-  return JSON.parse(rawdata)
-}
-
-export function getAveragePricing() {
-  return new Promise((resolve, reject) => {
-    readFile(
-      __dirname + '/../assets/datas/dvf-communes-2019.csv',
-      (err, data) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(csvToArrayJson(data))
-        }
-      }
+export const wikipediaDepartementDetails = (departemantName) =>
+  axios
+    .get(
+      `https://api.wikimedia.org/core/v1/wikipedia/fr/search/page?q=${encodeURIComponent(
+        departemantName + ' département'
+      )}&limit=5`,
+      { ...config.proxyPeOverrides }
     )
-  })
+    .then((r) => {
+      const choix1 = r.data.pages.find(
+        (p) => p.key.includes(departemantName) && p.key.includes('département')
+      )
+      const pageDepartements = r.data.pages.filter((page) =>
+        page.description
+          ? page.key.includes('département') ||
+            page.description.includes('département') ||
+            page.excerpt.includes('département')
+          : true
+      )
+      return choix1 ? choix1 : pageDepartements[0]
+    })
+    .then((pageDepartement) =>
+      axios.get(
+        `https://api.wikimedia.org/core/v1/wikipedia/fr/page/${encodeURIComponent(
+          pageDepartement.key
+        )}/html`,
+        { ...config.proxyPeOverrides }
+      )
+    )
+    .then((response) => {
+      const $ = cheerio.load(response.data)
+
+      // Avoir un id equivaut a ne pas etre dans un bandeau d'entete
+      const summary = $('body').find(`section:first-child p:has([id])`)
+
+      const nomPhonetique = /\((\/|)(.*?)\) /g
+      const annotations = /\[(.*?)\]/g
+
+      return summary
+        .text()
+        .replace(nomPhonetique, '')
+        .replace(annotations, '')
+        .substring(0, 4096)
+    })
+    .catch((err) => console.error('ERROR', err))
+
+export const getAllRegions = () => {
+  let rawdata = readFileSync(__dirname + '/../assets/datas/regions.json')
+  return JSON.parse(rawdata)
 }
 
 export const getTensionsCities = () => {
@@ -191,21 +212,6 @@ export const getTensionsCities = () => {
     __dirname + '/../assets/datas/donnees-de-reference_zonage-commune.json'
   )
   return JSON.parse(rawdata).zonageCommunes
-}
-
-export function getAverageHouseRent() {
-  return new Promise((resolve, reject) => {
-    readFile(
-      __dirname + '/../assets/datas/indicateurs-loyers-appartements.csv',
-      (err, data) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(csvToArrayJson(data))
-        }
-      }
-    )
-  })
 }
 
 export function getEquipmentsDatas() {
@@ -220,55 +226,6 @@ export function getEquipmentsDatas() {
             resolve(JSON.parse(data.toString()))
           })
           .catch(err)
-      }
-    )
-  })
-}
-
-export function getCitiesJobsCount() {
-  const fromDatalakeDir = '/mnt/datalakepe/depuis_datalake'
-  const files = readdirSync(fromDatalakeDir)
-
-  const filesSortedByDate = files
-    .map((fileName) => ({
-      name: fileName,
-      time: statSync(`${fromDatalakeDir}/${fileName}`).mtime.getTime(),
-    }))
-    .sort((a, b) => b.time - a.time)
-    .map((file) => file.name)
-    // multiple files can be here, this one has "offre" in its name (at the time of writing, the complete name
-    // of the files is still subject to change)
-    .filter((filename) => filename.includes('offre'))
-
-  if (filesSortedByDate.length === 0)
-    return Promise.reject(new Error('No eligible file'))
-
-  return new Promise((resolve, reject) => {
-    readFile(
-      `${fromDatalakeDir}/${filesSortedByDate[0]}`,
-      (err, bufferData) => {
-        if (err) return reject(err)
-
-        let csvData
-        try {
-          const csvDataUIntArray = decompressBZ2(bufferData)
-          csvData = new TextDecoder().decode(csvDataUIntArray)
-        } catch (err) {
-          return reject(err)
-        }
-
-        parse(
-          csvData,
-          {
-            skip_empty_lines: true,
-            delimiter: ';',
-            trim: true,
-          },
-          (err, output) => {
-            if (err) return reject(err)
-            resolve(output)
-          }
-        )
       }
     )
   })
@@ -343,30 +300,36 @@ export function getPCSByRome(rome) {
 
 export const getAllDepartements = () => {
   return new Promise((resolve, reject) => {
-    readFile(
-      __dirname + '/../assets/datas/departements.csv',
-      (err, data) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(csvToArrayJson(data, { delimiter: ';' }))
-        }
+    readFile(__dirname + '/../assets/datas/departements.csv', (err, data) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(csvToArrayJson(data, { delimiter: ';', emptyAsNull: true }))
       }
-    )
+    })
   })
 }
 
 export const getCitiesRent = () => {
   return new Promise((resolve, reject) => {
-    readFile(
-      __dirname + '/../assets/datas/cities_rent.csv',
-      (err, data) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(csvToArrayJson(data, { delimiter: ';' }))
-        }
+    readFile(__dirname + '/../assets/datas/cities_rent.csv', (err, data) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(csvToArrayJson(data, { delimiter: ';' }))
       }
-    )
+    })
+  })
+}
+
+export const getAllSecteursBassins = () => {
+  return new Promise((resolve, reject) => {
+    readFile(__dirname + '/../assets/datas/secteurs_bassins.csv', (err, data) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(csvToArrayJson(data, { delimiter: ';' }))
+      }
+    })
   })
 }

@@ -25,10 +25,62 @@ const PopupLink = styled(Link)`
     color: ${COLOR_BUTTON_HOVER} !important;
   }
 `
+const DEFAULT_BOUND = {
+  minX: Number.POSITIVE_INFINITY,
+  maxX: Number.NEGATIVE_INFINITY,
+  minY: Number.POSITIVE_INFINITY,
+  maxY: Number.NEGATIVE_INFINITY,
+}
+const computeBorders = (prev, coord) => ({
+  minX: prev.minX > coord[1] ? coord[1] : prev.minX,
+  maxX: prev.maxX < coord[1] ? coord[1] : prev.maxX,
+  minY: prev.minY > coord[0] ? coord[0] : prev.minY,
+  maxY: prev.maxY < coord[0] ? coord[0] : prev.maxY,
+})
+
+const DepartementShape = ({ departement, setMapBounds }) => {
+  const map = useMap()
+
+  useEffect(() => {
+    if (departement) {
+      // source : https://www.data.gouv.fr/fr/datasets/carte-des-departements-2-1/#resources
+      fetch('/departement/contour-des-departements.geojson')
+        .then((r) => r.json())
+        .then((shapeFile) => {
+          const departementFeature = shapeFile.features.find(
+            (f) => f.properties.code === departement.code
+          )
+
+          if (departementFeature) {
+            L.geoJSON(departementFeature).addTo(map)
+            const flatCoordinates =
+              departementFeature.geometry.type === 'MultiPolygon'
+                ? departementFeature.geometry.coordinates.flat(2)
+                : departementFeature.geometry.coordinates[0]
+            const computedBounds = flatCoordinates.reduce(
+              computeBorders,
+              DEFAULT_BOUND
+            )
+            setMapBounds([
+              [computedBounds.minX, computedBounds.minY],
+              [computedBounds.maxX, computedBounds.maxY],
+            ])
+          }
+        })
+    }
+
+    return () => {
+      map.eachLayer((l) => {
+        if (l instanceof L.GeoJSON) {
+          map.removeLayer(l)
+        }
+      })
+    }
+  }, [departement])
+}
 
 const BoundsControler = ({ bounds, center, zoom }) => {
   const map = useMap()
-
   useEffect(() => {
     if (!map || !bounds || bounds.length < 1) return
 
@@ -45,7 +97,8 @@ const BoundsControler = ({ bounds, center, zoom }) => {
 }
 
 const Map = ({
-  cities,
+  cities = [],
+  departement = null,
   style,
   zoom = 7,
   popupopen = () => {},
@@ -53,6 +106,7 @@ const Map = ({
   showPopUp = false,
   selectedCityId = null,
   hoveredCityId = null,
+  isZoomBtnShowed = true,
 }) => {
   const [mapBounds, setMapBounds] = useState([
     [51.180623, -5.528866],
@@ -60,25 +114,10 @@ const Map = ({
   ])
 
   useEffect(() => {
-    if (cities.length > 1) {
-      const computedBounds = cities.reduce(
-        (prev, city) => ({
-          minX:
-            prev.minX > city.geo_point_2d_x ? city.geo_point_2d_x : prev.minX,
-          maxX:
-            prev.maxX < city.geo_point_2d_x ? city.geo_point_2d_x : prev.maxX,
-          minY:
-            prev.minY > city.geo_point_2d_y ? city.geo_point_2d_y : prev.minY,
-          maxY:
-            prev.maxY < city.geo_point_2d_y ? city.geo_point_2d_y : prev.maxY,
-        }),
-        {
-          minX: Number.POSITIVE_INFINITY,
-          maxX: Number.NEGATIVE_INFINITY,
-          minY: Number.POSITIVE_INFINITY,
-          maxY: Number.NEGATIVE_INFINITY,
-        }
-      )
+    if (cities?.length > 1) {
+      const computedBounds = cities
+        .map((c) => [c.geo_point_2d_y, c.geo_point_2d_x])
+        .reduce(computeBorders, DEFAULT_BOUND)
       setMapBounds([
         [computedBounds.minX, computedBounds.minY],
         [computedBounds.maxX, computedBounds.maxY],
@@ -88,22 +127,30 @@ const Map = ({
 
   return (
     <StyledMapContainer
-      center={cities.length === 1 ? [cities[0].x, cities[0].y] : null}
-      zoom={cities.length === 1 ? zoom : null}
-      bounds={cities.length === 1 ? null : mapBounds}
+      center={cities?.length === 1 ? [cities[0].x, cities[0].y] : null}
+      zoom={cities?.length === 1 ? zoom : null}
+      bounds={cities?.length === 1 ? null : mapBounds}
       scrollWheelZoom
+      zoomControl={isZoomBtnShowed}
       style={style}
     >
       <BoundsControler
-        bounds={cities.length === 1 ? null : mapBounds}
-        center={cities.length === 1 ? [cities[0].x, cities[0].y] : null}
-        zoom={cities.length === 1 ? zoom : null}
+        bounds={cities?.length === 1 ? null : mapBounds}
+        center={cities?.length === 1 ? [cities[0].x, cities[0].y] : null}
+        zoom={cities?.length === 1 ? zoom : null}
       />
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {cities.map((city, key) => (
+
+      {departement && (
+        <DepartementShape
+          departement={departement}
+          setMapBounds={setMapBounds}
+        />
+      )}
+      {cities?.map((city, key) => (
         <Marker
           key={key}
           position={[city.x, city.y]}
@@ -145,7 +192,8 @@ const Map = ({
 }
 
 Map.propTypes = {
-  cities: PropTypes.arrayOf(PropTypes.object).isRequired,
+  cities: PropTypes.arrayOf(PropTypes.object),
+  departement: PropTypes.object,
   style: PropTypes.any,
   zoom: PropTypes.number,
   popupopen: PropTypes.func,
@@ -153,6 +201,7 @@ Map.propTypes = {
   showPopUp: PropTypes.bool,
   selectedCityId: PropTypes.number,
   hoveredCityId: PropTypes.number,
+  isZoomBtnShowed: PropTypes.bool,
 }
 
 export default Map

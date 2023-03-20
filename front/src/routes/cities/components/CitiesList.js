@@ -1,15 +1,14 @@
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import loadable from '@loadable/component'
+import { useEffect, useState } from 'react'
 
 import { CircularProgress } from '@mui/material'
 
 import { useWindowSize } from '../../../common/hooks/window-size'
 import { isMobileView } from '../../../constants/mobile'
 
-import noResultsPic from '../../../assets/images/no_results.svg'
 import { useCities } from '../../../common/contexts/citiesContext'
-import { useEffect, useState } from 'react'
 import {
   COLOR_BUTTON_HOVER,
   COLOR_PRIMARY,
@@ -18,8 +17,8 @@ import {
 } from '../../../constants/colors'
 import { useProfessions } from '../../../common/contexts/professionsContext'
 import { formatCityUrl } from '../../../utils/utils'
+import { Image } from '../../../components'
 
-// import CityItem from './CityItem'
 const CityItem = loadable(() => import('./CityItem'))
 const Pagination = loadable(() => import('@mui/material/Pagination'))
 
@@ -92,6 +91,10 @@ const PaginationContainer = styled.div`
   }
 `
 
+const CustomImage = styled(Image)`
+  margin-bottom: 2rem;
+`
+
 const CitiesList = ({
   cities,
   codeRome,
@@ -106,7 +109,6 @@ const CitiesList = ({
     useProfessions()
 
   const [formattedCities, setFormattedCities] = useState([])
-  const [_page, _setPage] = useState(page)
 
   const itemsPerPage = 10
   const [noOfPages, setNoOfPages] = useState(0)
@@ -118,6 +120,16 @@ const CitiesList = ({
   useEffect(() => {
     setFormattedCities(cities)
   }, [cities])
+
+  useEffect(() => {
+    if (selectedCityId) {
+      const cityItem = document.getElementById(`city-item-${selectedCityId}`)
+      window.scrollTo({
+        top: cityItem?.offsetTop - 400,
+        behavior: 'smooth',
+      })
+    }
+  }, [selectedCityId])
 
   useEffect(() => {
     if (!professionsCountList) return
@@ -137,21 +149,18 @@ const CitiesList = ({
     setFormattedCities(newFormattedCities)
   }, [professionsCountList])
 
-  useEffect(() => {
-    onPageChange(_page)
-  }, [_page])
-
   return (
     <Container isMobile={isMobile} data-automation-id="cities-list">
       {formattedCities.map((city) => (
         <CityItem
           city={city}
+          isMobile={isMobile}
           selected={selectedCityId === city.id}
           sortCriterions={sortCriterions}
           key={city.id}
           to={formatCityUrl(city, codeRome)}
           onClickTag={() =>
-            (window.smartTagPiano ? window.smartTagPiano : window.smartTag)({
+            window.smartTagPiano({
               name: 'acces_detail_ville',
               type: 'navigation',
               chapters: ['cities'],
@@ -164,7 +173,7 @@ const CitiesList = ({
       ))}
       {!isLoading && cities.length === 0 && (
         <NotFoundContainer>
-          <img alt="" src={noResultsPic} style={{ marginBottom: '2rem' }} />
+          <CustomImage src="no-results" alt="" />
           Aucune ville correspondante
           <br />
           Modifiez vos critères
@@ -179,12 +188,12 @@ const CitiesList = ({
         <Pagination
           count={noOfPages}
           defaultPage={0}
-          page={_page}
+          page={page}
           siblingCount={2}
           boundaryCount={0}
           onChange={(_, value) => {
-            _setPage(value)
-            ;(window.smartTagPiano ? window.smartTagPiano : window.smartTag)({
+            onPageChange(value)
+            window.smartTagPiano({
               name: 'pagination',
               type: 'navigation',
               chapters: ['cities'],
@@ -199,7 +208,7 @@ const CitiesList = ({
 CitiesList.propTypes = {
   codeRome: PropTypes.string,
   cities: PropTypes.array.isRequired,
-  selectedCityId: PropTypes.func,
+  selectedCityId: PropTypes.number,
   setHoveredCityId: PropTypes.func,
   onPageChange: PropTypes.func,
 }

@@ -31,26 +31,27 @@ const HeaderLink = styled(Link)`
   height: 36px;
   border-radius: 50%;
   background: ${COLOR_OTHER_GREEN};
-  margin: ${({ isMobile }) =>
-    isMobile ? '10px 10px 0px auto' : '29px 0px -36px -69px'};
+  margin: ${({ $isMobile }) =>
+    $isMobile ? '10px 10px 0px auto' : '29px 0px -36px -69px'};
 `
 
 const Container = styled.div`
-  display: ${({ isMobile }) => (isMobile ? 'block' : 'flex')};
-  max-width: ${({ isMobile }) => (isMobile ? 'inherit' : '1100px')};
+  display: ${({ $isMobile }) => ($isMobile ? 'block' : 'flex')};
+  max-width: ${({ $isMobile }) => ($isMobile ? 'inherit' : '1100px')};
   margin: 0 auto;
-  align-items: ${({ isMobile }) => (isMobile ? 'flex-start' : 'stretch')};
-  padding: ${({ isMobile }) => (isMobile ? '0' : '0 16px')};
-  flex-direction: ${({ isMobile }) => (isMobile ? 'unset' : 'column')};
+  align-items: ${({ $isMobile }) => ($isMobile ? 'flex-start' : 'stretch')};
+  padding: ${({ $isMobile }) => ($isMobile ? '0' : '0 16px')};
+  flex-direction: ${({ $isMobile }) => ($isMobile ? 'unset' : 'column')};
 `
 
 const TitleContainer = styled.div`
-  display: ${({ isMobile }) => (isMobile ? 'block' : 'flex')};
+  display: ${({ $isMobile }) => ($isMobile ? 'block' : 'flex')};
   border-radius: 8px;
   overflow: hidden;
   background: #fff;
-  border: ${({ isMobile }) => (isMobile ? 'none' : `1px solid ${COLOR_GRAY}`)};
-  margin-bottom: ${({ isMobile }) => (isMobile ? '8px' : '21px')};
+  border: ${({ $isMobile }) =>
+    $isMobile ? 'none' : `1px solid ${COLOR_GRAY}`};
+  margin-bottom: ${({ $isMobile }) => ($isMobile ? '8px' : '21px')};
 `
 
 const TitleImgContainer = styled.div`
@@ -58,14 +59,14 @@ const TitleImgContainer = styled.div`
   justify-content: center;
   align-items: center;
   padding: 16px;
-  width: ${({ isMobile }) => (isMobile ? 'auto' : '15%')};
+  width: ${({ $isMobile }) => ($isMobile ? 'auto' : '15%')};
 `
 
 const TitleTextContainer = styled.div`
-  text-align: ${({ isMobile }) => (isMobile ? 'center' : 'left')};
-  margin: ${({ isMobile }) =>
-    isMobile ? '0px 0px 17px 0px' : '30px 0px 30px 22px'};
-  width: ${({ isMobile }) => (isMobile ? 'auto' : '50%')};
+  text-align: ${({ $isMobile }) => ($isMobile ? 'center' : 'left')};
+  margin: ${({ $isMobile }) =>
+    $isMobile ? '0px 0px 17px 0px' : '30px 0px 30px 22px'};
+  width: ${({ $isMobile }) => ($isMobile ? 'auto' : '50%')};
 `
 
 const TitleDemande = styled.div`
@@ -93,7 +94,7 @@ const HelpItemText = styled.div`
 `
 
 const HeaderTitle = styled.h1`
-  font-weight: ${({ isMobile }) => (isMobile ? '700' : '900')};
+  font-weight: ${({ $isMobile }) => ($isMobile ? '700' : '900')};
   font-size: 24px;
   margin: 0px;
 `
@@ -103,19 +104,20 @@ const Panel = styled.div`
   border-radius: 8px;
   padding: 16px 16px 8px;
   width: 100%;
-  margin-bottom: ${({ isMobile }) => (isMobile ? '8px' : `16px`)};
-  border: ${({ isMobile }) => (isMobile ? 'none' : `1px solid ${COLOR_GRAY}`)};
+  margin-bottom: ${({ $isMobile }) => ($isMobile ? '8px' : `16px`)};
+  border: ${({ $isMobile }) =>
+    $isMobile ? 'none' : `1px solid ${COLOR_GRAY}`};
 `
 
 const PanelTitle = styled.p`
   font-weight: 700;
-  font-size: ${({ isMobile }) => (isMobile ? '18px' : '24px')};
-  margin: ${({ isMobile }) => (isMobile ? '0 0 16px' : '0px')};
+  font-size: ${({ $isMobile }) => ($isMobile ? '18px' : '24px')};
+  margin: ${({ $isMobile }) => ($isMobile ? '0 0 16px' : '0px')};
 `
 
 const DoublePanelsContainer = styled.div`
   display: flex;
-  flex-direction: ${({ isMobile }) => (isMobile ? 'column' : 'row')};
+  flex-direction: ${({ $isMobile }) => ($isMobile ? 'column' : 'row')};
   color: ${COLOR_PRIMARY};
 
   & > *:first-child {
@@ -127,15 +129,15 @@ const PanelsContainer = styled.div`
 `
 
 const DescriptionAide = styled.p`
-  font-size: ${({ isMobile }) => (isMobile ? '16px' : '18px')};
+  font-size: ${({ $isMobile }) => ($isMobile ? '16px' : '18px')};
   font-weight: 700;
-  margin: ${({ isMobile }) => (isMobile ? '8px' : '0px')};
+  margin: ${({ $isMobile }) => ($isMobile ? '8px' : '0px')};
 `
 
 const DescriptionAideProposee = styled.p`
   font-size: 16px;
-  color: ${({ isMobile }) =>
-    isMobile ? COLOR_TEXT_SECONDARY : COLOR_TEXT_PRIMARY};
+  color: ${({ $isMobile }) =>
+    $isMobile ? COLOR_TEXT_SECONDARY : COLOR_TEXT_PRIMARY};
   margin: 8px;
 `
 
@@ -207,18 +209,18 @@ const HelpDetailsPage = () => {
         />
       </Helmet>
 
-      <Container isMobile={isMobile}>
+      <Container $isMobile={isMobile}>
         {!isMobile && (
           <div>
             <HeaderLink
               to={`/aides` + window.location.search}
               title="Fermer"
-              isMobile={isMobile}
+              $isMobile={isMobile}
             >
               <ArrowBackIcon color="primary" fontSize="large" />
             </HeaderLink>
-            <TitleContainer isMobile={isMobile}>
-              <TitleTextContainer isMobile={isMobile}>
+            <TitleContainer $isMobile={isMobile}>
+              <TitleTextContainer $isMobile={isMobile}>
                 <HelpType>
                   {help.type.includes('admin') ? (
                     <ReceiptLongIcon />
@@ -236,10 +238,14 @@ const HelpDetailsPage = () => {
                 <HeaderTitle>{help.title}</HeaderTitle>
                 <DescriptionAide>{help.goal}</DescriptionAide>
               </TitleTextContainer>
-              <TitleImgContainer isMobile={isMobile}>
+              <TitleImgContainer $isMobile={isMobile}>
                 <img
-                  src={`/help-logos/${help.logo}`}
+                  src={`/help-logos/100px/${help.logo}`}
                   alt=""
+                  srcSet={`
+                    /help-logos/120px/${help.logo} 1x,
+                    /help-logos/240px/${help.logo} 2x,
+                  `}
                   style={{
                     width: 96,
                     height: 'auto',
@@ -256,7 +262,7 @@ const HelpDetailsPage = () => {
                     target="_blank"
                     href={help.link}
                     tag-exit={`faire-ma-demande/${help.title}`}
-                    isMobile={isMobile}
+                    $isMobile={isMobile}
                     ref={containerRef}
                   >
                     Demander l'aide
@@ -267,15 +273,15 @@ const HelpDetailsPage = () => {
           </div>
         )}
         {isMobile && (
-          <TitleContainer isMobile={isMobile}>
+          <TitleContainer $isMobile={isMobile}>
             <HeaderLink
               to={`/aides` + window.location.search}
               title="Fermer"
-              isMobile={isMobile}
+              $isMobile={isMobile}
             >
               <CloseIcon color="primary" fontSize="large" />
             </HeaderLink>
-            <TitleImgContainer isMobile={isMobile}>
+            <TitleImgContainer $isMobile={isMobile}>
               <img
                 src={`/help-logos/${help.logo}`}
                 alt=""
@@ -285,18 +291,20 @@ const HelpDetailsPage = () => {
                 }}
               />
             </TitleImgContainer>
-            <TitleTextContainer isMobile={isMobile}>
-              <HeaderTitle isMobile={isMobile}>{help.title}</HeaderTitle>
-              <DescriptionAide isMobile={isMobile}>{help.goal}</DescriptionAide>
+            <TitleTextContainer $isMobile={isMobile}>
+              <HeaderTitle $isMobile={isMobile}>{help.title}</HeaderTitle>
+              <DescriptionAide $isMobile={isMobile}>
+                {help.goal}
+              </DescriptionAide>
 
-              <DescriptionAideProposee isMobile={isMobile}>
+              <DescriptionAideProposee $isMobile={isMobile}>
                 Aide proposée par {help.partner}
               </DescriptionAideProposee>
               <HelpLink
                 target="_blank"
                 href={help.link}
                 tag-exit={`faire-ma-demande/${help.title}`}
-                isMobile={isMobile}
+                $isMobile={isMobile}
                 ref={containerRef}
               >
                 Demander l'aide
@@ -304,10 +312,10 @@ const HelpDetailsPage = () => {
             </TitleTextContainer>
           </TitleContainer>
         )}
-        <PanelsContainer isMobile={isMobile}>
-          <DoublePanelsContainer isMobile={isMobile}>
-            <Panel isMobile={isMobile}>
-              <PanelTitle isMobile={isMobile}>Public concerné</PanelTitle>
+        <PanelsContainer $isMobile={isMobile}>
+          <DoublePanelsContainer $isMobile={isMobile}>
+            <Panel $isMobile={isMobile}>
+              <PanelTitle $isMobile={isMobile}>Public concerné</PanelTitle>
               <Description
                 dangerouslySetInnerHTML={{
                   __html: help.who
@@ -317,8 +325,8 @@ const HelpDetailsPage = () => {
                 }}
               />
             </Panel>
-            <Panel isMobile={isMobile}>
-              <PanelTitle isMobile={isMobile}>Est-elle cumulable ?</PanelTitle>
+            <Panel $isMobile={isMobile}>
+              <PanelTitle $isMobile={isMobile}>Est-elle cumulable ?</PanelTitle>
               <Description
                 dangerouslySetInnerHTML={{
                   __html: help.cumulable,
@@ -327,8 +335,8 @@ const HelpDetailsPage = () => {
             </Panel>
           </DoublePanelsContainer>
 
-          <Panel isMobile={isMobile}>
-            <PanelTitle isMobile={isMobile}>
+          <Panel $isMobile={isMobile}>
+            <PanelTitle $isMobile={isMobile}>
               Descriptif de l{"'"}
               aide
             </PanelTitle>
@@ -338,8 +346,8 @@ const HelpDetailsPage = () => {
               }}
             />
           </Panel>
-          <Panel isMobile={isMobile}>
-            <PanelTitle isMobile={isMobile}>
+          <Panel $isMobile={isMobile}>
+            <PanelTitle $isMobile={isMobile}>
               Quand faire la demande ?
             </PanelTitle>
             <Description
@@ -348,8 +356,8 @@ const HelpDetailsPage = () => {
               }}
             />
           </Panel>
-          <Panel isMobile={isMobile}>
-            <PanelTitle isMobile={isMobile}>Quelles conditions ?</PanelTitle>
+          <Panel $isMobile={isMobile}>
+            <PanelTitle $isMobile={isMobile}>Quelles conditions ?</PanelTitle>
             <Description
               dangerouslySetInnerHTML={{
                 __html: help.conditions,
@@ -365,7 +373,7 @@ const HelpDetailsPage = () => {
             target="_blank"
             href={help.link}
             tag-exit={`faire-ma-demande/${help.title}`}
-            isMobile={isMobile}
+            $isMobile={isMobile}
           >
             Demander l'aide
           </HelpLink>

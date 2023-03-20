@@ -4,10 +4,12 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { useLocation } from 'react-router-dom'
 import { useCities } from '../../common/contexts/citiesContext'
+import { useRegions } from '../../common/contexts/regionsContext'
 import {
   ALL_REGIONS_LABEL,
   ALL_REGION_TYPE,
   CITY_TYPE,
+  DEPARTEMENT_TYPE,
   REGION_TYPE,
 } from '../../constants/search'
 import { alphabetOrder } from '../../utils/utils'
@@ -21,6 +23,7 @@ const CitySelect = ({ value, codeRome, onSelect }) => {
     onAutocomplete,
     // isLoadingAutocomplete
   } = useCities()
+  const { regions } = useRegions()
 
   const { search, pathname } = useLocation()
   const isCitiesPage = pathname === '/villes'
@@ -49,6 +52,21 @@ const CitySelect = ({ value, codeRome, onSelect }) => {
             }
           }
         }
+      } else if (!!search.includes('codeDepartement')) {
+        const codeDepartement = Array.from(
+          new URLSearchParams(search).entries()
+        ).find((kv) => kv[0] === 'codeDepartement')[1]
+        const departement = regions
+          .map((r) => r.departements)
+          .flat()
+          .find((d) => d.code === codeDepartement)
+        if (!!departement) {
+          onSelect({
+            ...departement,
+            label: departement.name,
+            type: DEPARTEMENT_TYPE,
+          })
+        }
       } else {
         onSelect({
           label: ALL_REGIONS_LABEL,
@@ -76,10 +94,16 @@ const CitySelect = ({ value, codeRome, onSelect }) => {
           : criterions.regions.filter(regionFilterByInput)
         : []),
     ]
+    const departementProposee = regions
+      .map((r) => r.departements)
+      .flat()
+      .filter((d) => d.code === value?.code)
+      .map((d) => ({ ...d, label: d.name, type: DEPARTEMENT_TYPE }))
     // format autocompleted cities list item
     setOptions(
       [{ label: ALL_REGIONS_LABEL, type: ALL_REGION_TYPE, style: 'primary' }]
         .concat(
+          departementProposee,
           regionsProposee.map((region) => ({ ...region, type: REGION_TYPE }))
         )
         .concat(
@@ -152,7 +176,7 @@ const CitySelect = ({ value, codeRome, onSelect }) => {
   }
 
   const onClickTag = () => {
-    (window.smartTagPiano ? window.smartTagPiano : window.smartTag )({
+    window.smartTagPiano({
       name: 'modification_ville',
       type: 'action',
       chapters: ['cities', 'recherche'],

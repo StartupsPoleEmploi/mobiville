@@ -15,14 +15,34 @@ export default (sequelizeInstance) => {
             type: Sequelize.STRING(255),
             allowNull: false,
           },
-          rent_t2: {
+          code_region: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+          },
+          rent_m2: {
             type: Sequelize.FLOAT,
             allowNull: true,
           },
-          rent_t4: {
+          buy_m2: {
             type: Sequelize.FLOAT,
             allowNull: true,
-          }
+          },
+          description: {
+            type: Sequelize.STRING(512),
+            allowNull: true,
+          },
+          population: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+          },
+          superficie: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+          },
+          hiring_rate: {
+            type: Sequelize.FLOAT,
+            allowNull: true,
+          },
     },
     {
       timestamps: false,
@@ -36,7 +56,11 @@ export default (sequelizeInstance) => {
       foreignKey: 'code_dept',
       sourceKey: 'code',
     })
-
+    Model.hasOne(models.regions, {
+      foreignKey: 'code',
+      sourceKey: 'code_region',
+    })
+    
     return models
   }
 

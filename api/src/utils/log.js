@@ -1,9 +1,11 @@
 import winston from 'winston'
 
-const logger = winston.createLogger({
+export const logger = winston.createLogger({
   level: 'info',
-  format: winston.format.json(),
-  defaultMeta: { service: 'user-service' },
+  format:
+    process.env.NODE_ENV !== 'production'
+      ? winston.format.simple()
+      : winston.format.json(),
   transports: [
     //
     // - Write all logs with level `error` and below to `error.log`
@@ -28,5 +30,4 @@ logger.add(
   })
 )
 
-export const log = (...args) => console.log(...args)
-export const logError = (...args) => console.error(...args)
+export const log = (...args) => logger.info(...args)

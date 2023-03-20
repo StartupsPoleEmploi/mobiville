@@ -1,5 +1,6 @@
 import { groupBy, uniq, sortBy, toArray } from 'lodash'
 import { CRITERIONS } from '../constants/criterion'
+import { DOMTOM_ID as DOMTOM_CODE, DOMTOM } from '../constants/domTom'
 
 export default (sequelizeInstance, Model) => {
   // crude implementation of what was previously done at app startup, with an intermediate table.
@@ -9,7 +10,7 @@ export default (sequelizeInstance, Model) => {
     console.log('START SYNC REGIONS TENSIONS CRITERIONS')
 
     const jobList = await Model.models.tensions.fetchJobList()
-    const regionsList = await Model.models.newRegions.findAll()
+    const regionsList = await Model.models.regions.findAll()
     const opportuniteMap = await Model.models.tensions.getTauxdOpportunite()
 
     const regionsTensionsTemp = []
@@ -25,7 +26,7 @@ export default (sequelizeInstance, Model) => {
           logging: false,
         })
 
-        const citiesGroupedByRegion = groupBy(searchResult, 'newRegion.code')
+        const citiesGroupedByRegion = groupBy(searchResult, 'code_region')
 
         Object.keys(citiesGroupedByRegion).forEach((regionCode) => {
           if (!romesByRegion[regionCode]) {
@@ -39,9 +40,14 @@ export default (sequelizeInstance, Model) => {
       }
 
       for (const regionCode of Object.keys(romesByRegion)) {
-        const romes = romesByRegion[regionCode]
+        // mayotte n'a pas de métier en tension ?
+        const romes = [...romesByRegion[regionCode]]
 
-        const region = regionsList.find((region) => region.code == regionCode)
+        let region = regionsList.find((region) => region.code == regionCode)
+        if (DOMTOM_CODE.includes(regionCode)) {
+          // FIXME: Cas des DOM avec regions uni-départemental
+          region = DOMTOM.find((region) => region.code == regionCode)
+        }
 
         for (const rome of romes) {
           const opportuniteByKey = opportuniteMap.find(

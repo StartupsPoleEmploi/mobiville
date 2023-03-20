@@ -11,7 +11,7 @@ import {
 } from '../../constants/colors'
 
 const CustomTextFiled = styled(TextField)`
-  width: 100%;
+  width: 297px;
   background: ${COLOR_WHITE} !important;
   border-radius: 20px;
   border: 1px solid ${COLOR_LIGHT_GREY} !important;

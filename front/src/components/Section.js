@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { COLOR_PRIMARY } from "../constants/colors"
 
 const Section = styled.section`
@@ -18,7 +18,11 @@ const SectionTitle = styled.h2`
   text-align: center;
   font-size: 24px;
   font-weight: 900;
+  line-height: 36px;
+  
   color: ${COLOR_PRIMARY};
+
+  ${({ style }) => (!!style && css`${style}`)}
 `
 
 export { Section, SectionTitle }

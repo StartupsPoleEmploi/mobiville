@@ -3,7 +3,7 @@ import axios from 'axios'
 import { stringify } from 'querystring'
 import HttpsProxyAgent from 'https-proxy-agent'
 import { setupCache } from 'axios-cache-adapter'
-import {sleep} from "./utils"
+import { fetchAndRetryIfNecessary } from './utils'
 
 // cache de 15 minutes pour le token
 const cacheToken = setupCache({
@@ -12,9 +12,28 @@ const cacheToken = setupCache({
         query: false
     }
 })
+const cache = setupCache({
+    // cache de 24h
+    maxAge: 24 * 60 * 60 * 1000,
+    exclude: {
+        query: false
+    }
+})
+const apiEmploiStore = axios.create({
+    baseURL: `${config.EMPLOI_STORE_URL}/partenaire/`,
+    ...(config.PE_ENV && {proxy: false}),
+    ...(config.PE_ENV && {httpsAgent: new HttpsProxyAgent('http://host.docker.internal:9000')} ),
+    adapter: cache.adapter,
+})
 
 const apiEmploiStoreToken = axios.create({
-    adapter: cacheToken.adapter
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    // proxy PE + bug d'axios voir: https://github.com/axios/axios/issues/2072#issuecomment-609650888
+    ...(config.PE_ENV && {proxy: false}),
+    ...(config.PE_ENV && {httpsAgent: new HttpsProxyAgent('http://host.docker.internal:9000')} ),
+    adapter: cacheToken.adapter,
 })
 
 export function getAccessToken() {
@@ -25,89 +44,58 @@ export function getAccessToken() {
                 grant_type: 'client_credentials',
                 client_id: config.EMPLOI_STORE_ID,
                 client_secret: config.EMPLOI_STORE_SECRET,
-                scope: `api_infotravailv1 api_offresdemploiv2 api_romev1 nomenclatureRome application_${config.EMPLOI_STORE_ID} o2dsoffre api_explorateurmetiersv1 explojob api_labonneboitev1 api_stats-offres-demandes-emploiv1 offresetdemandesemploi`,
-            }),
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                // proxy PE + bug d'axios voir: https://github.com/axios/axios/issues/2072#issuecomment-609650888
-                ...(config.PE_ENV && {proxy: false}),
-                ...(config.PE_ENV && {httpsAgent: new HttpsProxyAgent('http://host.docker.internal:9000')} ),
-            }
+                scope: `api_infotravailv1 api_offresdemploiv2 api_romev1 nomenclatureRome application_${config.EMPLOI_STORE_ID} o2dsoffre api_explorateurmetiersv1 explojob api_labonneboitev1 api_stats-offres-demandes-emploiv1 offresetdemandesemploi api_evenementsv1 evenements api_stats-perspectives-retour-emploiv1 retouremploi`,
+            })
         )
         .then((result) => result.data)
         .then((data) => data.access_token || null)
 }
 
-// cache de 6 heures, a discuter avec les PO
-const cache = setupCache({
-    maxAge: 24 * 60 * 60 * 1000,
-    exclude: {
-        query: false
-    }
-})
-const apiEmploiStore = axios.create({
-    adapter: cache.adapter
-})
-export async function searchJob({ codeRome = [], insee = [], distance = 30 }) {
+export async function searchJob({ codeRome, insee = [], distance = 30 }) {
     const token = await getAccessToken()
     const callToOffres = function () {
         return apiEmploiStore.get(
-            `${config.EMPLOI_STORE_URL}/partenaire/offresdemploi/v2/offres/search`,
+            `offresdemploi/v2/offres/search`,
             {
                 params: {
-                    codeROME: codeRome.join(','),
+                    ...((codeRome && codeRome.length > 0) ? { codeROME: codeRome.join(',') } : null),
                     commune: insee.join(','),
                     distance
                 },
                 headers: { Authorization: `Bearer ${token}` },
-                ...(config.PE_ENV && {proxy: false}),
-                ...(config.PE_ENV && {httpsAgent: new HttpsProxyAgent('http://host.docker.internal:9000')} ),
             })
             .then(async (result) => result)
             .catch((error) => {
-                console.log("pe-api.js searchJob() --> ERROR. Request : " + error.request.res.responseUrl + ". Error status : " + error.response.status)
-                if(error.response.status !== 429) console.log(error)
+                if(error.response.status !== 429) console.error(error)
                 return error.response
             })
     }
     return fetchAndRetryIfNecessary(callToOffres)
 }
 
-const MAX_RETRY_429 = 10
-async function fetchAndRetryIfNecessary (callAPIFn, tryNumber = 1) {
-    const response = await callAPIFn()
-    if (tryNumber <= MAX_RETRY_429 && response.status === 429) {
-        const retryAfter = response.headers['retry-after']
-        await sleep(retryAfter)
-        return fetchAndRetryIfNecessary(callAPIFn, ++tryNumber)
-    }
-    if (tryNumber < MAX_RETRY_429 && response.status === 429)
-        console.log("pe-api.js fetchAndRetryIfNecessary() -->  ERROR : MAX Http 429 RETRY Reached : " + MAX_RETRY_429)
-    return response.data
-}
 
-export async function searchJobCount({ codeRome = [], insee = [], distance = 10 }) {
+export async function searchJobCount({ codeRome, insee, region, departement, distance = 10 }) {
     const token = await getAccessToken()
+
+    let params = {
+        range: '0-0',
+    }
+    if (codeRome) params.codeROME = codeRome.join(',')
+    if (insee) params.commune = insee.join(',')
+    if (distance) params.distance = distance
+    if (region) params.region = region
+    if (departement) params.departement = departement
+
     const callToOffres = function () {
        return apiEmploiStore.get(
-        `${config.EMPLOI_STORE_URL}/partenaire/offresdemploi/v2/offres/search`,
+        `offresdemploi/v2/offres/search`,
         {
-            params: {
-                range: '0-0',
-                codeROME: codeRome.join(','),
-                commune: insee.join(','),
-                distance,
-            },
+            params,
             headers: { Authorization: `Bearer ${token}` },
-            ...(config.PE_ENV && {proxy: false}),
-            ...(config.PE_ENV && {httpsAgent: new HttpsProxyAgent('http://host.docker.internal:9000')} ),
         })
        .then(async (result) => result)
        .catch((error) => {
-           console.log("pe-api.js searchJobCount() --> ERROR. Request : " + error.request.res.responseUrl + ". Error status : " + error.response.status)
-           if(error.response.status !== 429) console.log(error)
+           if(error.response.status !== 429) console.error(error)
            return error.response
        })
     }
@@ -116,10 +104,16 @@ export async function searchJobCount({ codeRome = [], insee = [], distance = 10 
 
 export async function infosTravail({ codeProfession, codeDept }) {
     const token = await getAccessToken()
+
+    const request = `SELECT * FROM "d9090eaf-65cd-41cb-816f-7249897a3e51"\
+        WHERE "AREA_CODE" = '${codeDept}'\
+            AND "AREA_TYPE_CODE" = 'D'\
+            ${codeProfession ? `AND "PCS_PROFESSION_CODE" = '${codeProfession}'` : ''}`;
+
     // CONVERTIR CODE ROME EN PCS_PROFESSION_CODE
     return axios
         .get(
-            `${config.EMPLOI_STORE_URL}/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "d9090eaf-65cd-41cb-816f-7249897a3e51" WHERE "AREA_CODE" = '${codeDept}' AND "AREA_TYPE_CODE" = 'D' AND "PCS_PROFESSION_CODE" = '${codeProfession}'`,
+            `${config.EMPLOI_STORE_URL}/partenaire/infotravail/v1/datastore_search_sql?sql=${request}`,
             {
                 headers: { Authorization: `Bearer ${token}` },
                 ...(config.PE_ENV && {proxy: false}),
@@ -131,9 +125,20 @@ export async function infosTravail({ codeProfession, codeDept }) {
 
 export async function infosTensionTravail({ codeRome, codeDept, bassinId }) {
     const token = await getAccessToken()
+
+    const requestBassin = `SELECT * FROM "266f691f-bce8-4443-808e-8e5aa125cf17"
+            WHERE ${codeRome ? `"ROME_PROFESSION_CARD_CODE" LIKE '${codeRome}' AND ` : ''}
+            "AREA_TYPE_CODE" = 'B'
+            AND "AREA_CODE" = '${bassinId}'`;
+    
+    const requestDepartement = `SELECT * FROM "266f691f-bce8-4443-808e-8e5aa125cf17"
+        WHERE ${codeRome ? `"ROME_PROFESSION_CARD_CODE" LIKE '${codeRome}' AND ` : ''}
+            "AREA_TYPE_CODE" = 'D'
+            AND "AREA_CODE" = '${codeDept}'`;
+
     return Promise.all([
         axios.get(
-            `${config.EMPLOI_STORE_URL}/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "266f691f-bce8-4443-808e-8e5aa125cf17" WHERE "ROME_PROFESSION_CARD_CODE" LIKE '${codeRome}' AND "AREA_TYPE_CODE" = 'B' AND "AREA_CODE" = '${bassinId}'`,
+            `${config.EMPLOI_STORE_URL}/partenaire/infotravail/v1/datastore_search_sql?sql=${requestBassin}`,
             {
                 headers: { Authorization: `Bearer ${token}` },
                 ...(config.PE_ENV && {proxy: false}),
@@ -141,7 +146,7 @@ export async function infosTensionTravail({ codeRome, codeDept, bassinId }) {
             }
         ),
         axios.get(
-            `${config.EMPLOI_STORE_URL}/partenaire/infotravail/v1/datastore_search_sql?sql=SELECT * FROM "266f691f-bce8-4443-808e-8e5aa125cf17" WHERE "ROME_PROFESSION_CARD_CODE" LIKE '${codeRome}' AND "AREA_TYPE_CODE" = 'D' AND "AREA_CODE" = '${codeDept}'`,
+            `${config.EMPLOI_STORE_URL}/partenaire/infotravail/v1/datastore_search_sql?sql=${requestDepartement}`,
             {
                 headers: { Authorization: `Bearer ${token}` },
                 ...(config.PE_ENV && {proxy: false}),
@@ -184,6 +189,7 @@ export async function getSkillFromLabel(label) {
 }
 
 // Stocké en base mais non utilisé
+// utilisé uniquement sur le pseudo calcul de taux d'embauche par département
 export async function getSkillFromRome(codeRome) {
     const token = await getAccessToken()
     return axios
@@ -198,69 +204,113 @@ export async function getSkillFromRome(codeRome) {
         .then((result) => result.data)
 }
 
-export async function searchCloseCompanies({ codeRome = '', insee = '', distance = 30, page = 1, pageSize = 10, sort = 'score' }) {
+export async function searchCloseCompanies({
+    codeRome = [],
+    insee = '',
+    distance = 30,
+    page = 1,
+    pageSize = 10,
+    sort = 'distance'
+}) {
     const token = await getAccessToken()
     const callToSearchCloseEnterprises = function () {
-        return apiEmploiStore.get(
-            `${config.EMPLOI_STORE_URL}/partenaire/labonneboite/v1/company`,
-            {
-                params: {
-                    rome_codes: codeRome,
-                    commune_id: insee,
-                    distance,
-                    page,
-                    page_size: pageSize,
-                    sort
-                },
-                headers: { Authorization: `Bearer ${token}` },
-                ...(config.PE_ENV && {proxy: false}),
-                ...(config.PE_ENV && {httpsAgent: new HttpsProxyAgent('http://host.docker.internal:9000')} ),
+
+        // Beaucoup de code romes, on sépare la requête en 2
+        if (codeRome.length > 200) {
+            const firstHalf = codeRome.slice(0, Math.floor(codeRome.length / 2))
+            const secondHalf = codeRome.slice(Math.floor(codeRome.length / 2), codeRome.length)
+
+            return Promise.all([
+                apiEmploiStore.get(
+                    `labonneboite/v1/company`, {
+                        params: {
+                            rome_codes: firstHalf.join(','),
+                            commune_id: insee,
+                            distance,
+                            page,
+                            page_size: pageSize,
+                            sort
+                        },
+                        headers: { Authorization: `Bearer ${token}` },
+                    }),
+                apiEmploiStore.get(
+                    `labonneboite/v1/company`, {
+                        params: {
+                            rome_codes: secondHalf.join(','),
+                            commune_id: insee,
+                            distance,
+                            page,
+                            page_size: pageSize,
+                            sort
+                        },
+                        headers: { Authorization: `Bearer ${token}` },
+                    }),
+            ])
+            .then(([r1, r2]) => {
+                return {
+                    data: {
+                        companies: [...r1.data.companies, ...r2.data.companies],
+                        companies_count: r1.data.companies_count + r2.data.companies_count
+                    },
+                    status: 200
+                }
             })
-            .then(async (result) => result)
             .catch((error) => {
-                console.log("pe-api.js searchCloseCompanies() --> ERROR. Request : " + error.request.res.responseUrl + ". Error status : " + error.response.status)
-                if(error.response.status !== 429) console.log(error)
+                if(error.response.status !== 429) console.error(error)
                 return error.response
             })
+        } else {
+            return apiEmploiStore.get(
+                `labonneboite/v1/company`, {
+                    params: {
+                        rome_codes: codeRome.join(','),
+                        commune_id: insee,
+                        distance,
+                        page,
+                        page_size: pageSize,
+                        sort
+                    },
+                    headers: { Authorization: `Bearer ${token}` },
+                })
+                .then(result => {
+                    return {
+                        data: {
+                            companies: result.data.companies,
+                            companies_count: result.data.companies_count
+                        },
+                        status: 200
+                    }
+                })
+                .catch((error) => {
+                    if(error.response.status !== 429) console.error(error)
+                    return error.response
+                })
+        }
     }
     return fetchAndRetryIfNecessary(callToSearchCloseEnterprises)
 }
 
-export async function getHiringRate({ codeTerritoire, codeRome }) {
+// TODO remplacer par mes événements emploi quand ils auront une API
+export async function events() {
     const token = await getAccessToken()
-    return axios
-        .post(`${config.EMPLOI_STORE_URL}/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-embauches`,
+    const callToSearchCloseEnterprises = function () {
+        return apiEmploiStore.get(
+            `evenements/v1/salonsenligne`,
             {
-                codeTypeTerritoire: "BASBMO",
-                codeTerritoire: `${codeTerritoire}`,
-                codeTypeActivite: "ROME",
-                codeActivite: `${codeRome}`,
-                codeTypePeriode: "TRIMESTRE",
-                codeTypeNomenclature: "CATCANDxDUREEEMP",
-                dernierePeriode: true,
-                sansCaracteristiques: true
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                ...(config.PE_ENV && {proxy: false}),
-                ...(config.PE_ENV && {httpsAgent: new HttpsProxyAgent('http://host.docker.internal:9000')} ),
-            }
-        )
-        .then((result) => result.data)
-        .then(result => {
-            if (!result || !result.listeValeursParPeriode) return null
-            
-            const preferedCategories = [ "ABCDE-SUP1M", "ABCDE-TOUTE", "TOUT-TOUTE" ]
-            const foundCategories = result.listeValeursParPeriode.map(data => data.codeNomenclature);
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            .then(result => ({
+                ...result,
+                data: result.data.map(r => ({
+                    ...r,
+                    description: null
+                }))
+            }))
+            .catch((error) => {
+                if(error.response.status !== 429) console.error(error)
+                return error.response
+            })
+}
 
-            const bestCategory = preferedCategories.find(category => (foundCategories.includes(category)))
-            return result.listeValeursParPeriode.find(data => data.codeNomenclature === bestCategory).valeurSecondairePourcentage
-        })
-        .catch(error => {
-            console.log(error)
-            return error.response
-        })
+    return fetchAndRetryIfNecessary(callToSearchCloseEnterprises)
 }

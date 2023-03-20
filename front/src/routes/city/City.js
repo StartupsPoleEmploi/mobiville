@@ -9,14 +9,14 @@ import CityHome from './cityHome/CityHome'
 import CityServices from './cityServices/CityServices'
 import CityCloseCities from './cityCloseCities/CityCloseCities'
 import CityMenuBack from './components/CityMenuBack'
-import { MainLayout } from '../../components'
+import { MainLayout, TopPageButton } from '../../components'
 
 import { useCities } from '../../common/contexts/citiesContext'
 import { useWindowSize } from '../../common/hooks/window-size'
 import { useProfessions } from '../../common/contexts/professionsContext'
 import { isMobileView } from '../../constants/mobile'
 import { COLOR_WHITE } from '../../constants/colors'
-import { capitalize, ucFirst } from '../../utils/utils'
+import { capitalize, ucFirst, wordsCapitalize } from '../../utils/utils'
 
 const JOB = 'metier'
 const LIFE = 'services'
@@ -44,8 +44,13 @@ const CityPage = () => {
     romeLabel = foundLabel.toLowerCase()
   }
 
-  const backLink = `/villes?codeRome=${ codeRome }&codeRegion=${ city?.newRegion?.code ?? '' }`
-  
+  const backLink = useMemo(() => {
+    if (!codeRome) return `/departement/${city?.departement?.code}`
+    return `/villes?codeRome=${codeRome}${
+      city?.region?.code ? `&codeRegion=${city?.region?.code}` : ''
+    }`
+  }, [codeRome, city?.departement?.code, city?.region?.code])
+
   useEffect(() => {
     onLoadCity(inseeCode)
 
@@ -55,10 +60,10 @@ const CityPage = () => {
   }, [inseeCode])
 
   useEffect(() => {
-    if (!city?.insee_com || !codeRome) return
+    if (!city?.insee_com) return
 
     onSearchProfessions({
-      codeRome: [codeRome],
+      ...(codeRome && codeRome !== '' ? { codeRome: [codeRome] } : null),
       insee: [city.insee_com],
     })
   }, [city?.insee_com, codeRome])
@@ -97,7 +102,8 @@ const CityPage = () => {
     <MainLayout menu={{ visible: !isMobile }}>
       <Helmet>
         <title>
-          {ucFirst(romeLabel)} à {capitalize(city.nom_comm)} | Mobiville
+          {!!romeLabel ? `${ucFirst(romeLabel)} à ` : ''}
+          {wordsCapitalize(city.nom_comm)} | Mobiville
         </title>
         <meta
           name="description"
@@ -111,13 +117,19 @@ const CityPage = () => {
         backLink={backLink}
         isMobile={isMobile}
         background={
-          [CLOSE_CITIES, JOB].includes(section) && !isMobile
+          [JOB, CLOSE_CITIES].includes(section) && !isMobile
             ? 'none'
             : COLOR_WHITE
+        }
+        showAdvicesButton={
+          false // désactivé tant que la page n'a pas été refondu
+          // !isMobile && ![LIFE, JOB, CLOSE_CITIES].includes(section)
         }
       />
 
       {currentSection}
+
+      <TopPageButton />
     </MainLayout>
   )
 }

@@ -27,17 +27,9 @@ import {
   getCrawledImageCity,
   getAllRegions,
   getCitiesRent,
-  getAveragePricing,
-  getAverageHouseRent,
 } from '../utils/api'
 import { distanceBetweenToCoordinates, sleep } from '../utils/utils'
 import { NO_DESCRIPTION_MSG } from '../constants/messages'
-
-function padLeadingZeros(num, size) {
-  let s = num + ''
-  while (s.length < size) s = '0' + s
-  return String(s)
-}
 
 export default (sequelizeInstance, Model) => {
   Model.franceShape = null
@@ -49,14 +41,36 @@ export default (sequelizeInstance, Model) => {
   Model.cacheLoadAverageHouseRent = null
 
   Model.syncCities = async ({ cities }) => {
-    const oldRegions = await getAllRegions()
-    const oldRegionsToNewRegionsMap = oldRegions.reduce((prev, oldRegion) => ({
-        ...prev,
-        [padLeadingZeros(oldRegion.former_code, 2)]: padLeadingZeros(
-          oldRegion.new_code,
-          2
-        ),
-      }), {})
+    const regions = await getAllRegions()
+    const oldToNewRegions = [
+      // { old: '01', new: '01', },
+      // { old: '02', new: '02', },
+      // { old: '03', new: '03', },
+      // { old: '04', new: '04', },
+      // { old: '06', new: '06', },
+      // { old: '11', new: '11', },
+      // { old: '24', new: '24', },
+      // { old: '52', new: '52', },
+      // { old: '53', new: '53', },
+      // { old: '93', new: '93', },
+      // { old: '94', new: '94', },
+      { old: '26', new: '27', },
+      { old: '43', new: '27', },
+      { old: '23', new: '28', },
+      { old: '25', new: '28', },
+      { old: '22', new: '32', },
+      { old: '31', new: '32', },
+      { old: '21', new: '44', },
+      { old: '41', new: '44', },
+      { old: '42', new: '44', },
+      { old: '72', new: '75', },
+      { old: '82', new: '84', },
+      { old: '83', new: '84', },
+      { old: '54', new: '75', },
+      { old: '74', new: '75', },
+      { old: '73', new: '76', },
+      { old: '91', new: '76', },
+    ];
 
     const citiesRent = await getCitiesRent()
     let citiesNotUsedNames = citiesRent.map(city => city.city)
@@ -71,15 +85,21 @@ export default (sequelizeInstance, Model) => {
           cityRent = citiesRent.find(r => (r.city === city.commune.replaceAll('-', ' ')))
           citiesNotUsedNames = citiesNotUsedNames.filter(cityName => cityName !== cityRent.city)
         }
+        
+        const oldNewRegion = oldToNewRegions.find(region => region.old === `${city.code_region}`)
+        const codeRegion = (oldNewRegion ? oldNewRegion.new : city.code_region)
+        const region = regions.find(r => `${r.code}` === `${codeRegion}`)
+        const nomRegion = region ? region.name : city.region
+
+        const postalCode = city.code_postal.split('/')[0]
 
         return {
           code_comm: city.code_commune,
           nom_dept: city.departement,
           statut: city.statut,
           z_moyen: city.altitude_moyenne,
-          nom_region: city.region,
-          new_code_region:
-            oldRegionsToNewRegionsMap[padLeadingZeros(city.code_region, 2)],
+          nom_region: nomRegion,
+          code_region: codeRegion,
           insee_com: city.code_insee,
           code_dept: city.code_departement,
           geo_point_2d_x: city.geo_point_2d
@@ -88,7 +108,7 @@ export default (sequelizeInstance, Model) => {
           geo_point_2d_y: city.geo_point_2d
             ? city.geo_point_2d.split(',')[1]
             : null,
-          postal_code: city.code_postal,
+          postal_code: postalCode,
           id_geofla: city.id_geofla,
           code_cant: city.code_canton,
           superficie: city.superficie,
@@ -99,15 +119,21 @@ export default (sequelizeInstance, Model) => {
             ? null
             : parseInt(city.lgt_sociaux, 10),
           rent_t2: ((cityRent && cityRent.rent_t2) ? +(cityRent.rent_t2) : null),
-          rent_t4: ((cityRent && cityRent.rent_t4) ? +(cityRent.rent_t4) : null)
+          rent_t4: ((cityRent && cityRent.rent_t4) ? +(cityRent.rent_t4) : null),
+          rent_m2: ((cityRent && cityRent.rent_m2) ? +(cityRent.rent_m2) : null),
+          buy_m2: ((cityRent && cityRent.buy_m2) ? +(cityRent.buy_m2) : null),
         }
       })
 
     await Model.bulkCreate(data, {
       updateOnDuplicate: [
+        'nom_region',
+        'postal_code',
         'total_social_housing',
         'rent_t2',
-        'rent_t4'
+        'rent_t4',
+        'rent_m2',
+        'buy_m2',
       ],
     }) // updateOnDuplicate == les champs a MaJ si id déja existant
     await Model.addSpecialCities()
@@ -142,10 +168,8 @@ export default (sequelizeInstance, Model) => {
       'average_temperature',
       'description',
       'city_house_tension',
-      'average_houserent',
       'cache_living_environment',
       'photo',
-      'average_houseselled',
       'total_social_housing',
     ].join(', ')
 
@@ -186,7 +210,8 @@ export default (sequelizeInstance, Model) => {
   }
 
   Model.search = async ({
-    codeRegion = [],
+    codeRegion,
+    codeDepartement,
     codeCriterion = [],
     codeRome = [],
     onlySearchInTension = true,
@@ -266,12 +291,15 @@ export default (sequelizeInstance, Model) => {
       }
     }, [])
 
-    let whereRegion = {}
-    if (codeRegion.length) {
-      whereRegion = {
-        where: {
-          code: codeRegion,
-        },
+    if (codeRegion) {
+      whereAnd.push({ code_region: { [Op.eq]: codeRegion } })
+    }
+    if (codeDepartement) {
+      if (['1', '2', '3', '4', '5', '6'].includes(codeDepartement)) {
+        // en bdd tt les dom ont un codeDept a 97
+        whereAnd.push({ code_region: { [Op.eq]: parseInt(codeDepartement) } })
+      } else {
+        whereAnd.push({ code_dept: { [Op.eq]: codeDepartement } })
       }
     }
 
@@ -290,8 +318,22 @@ export default (sequelizeInstance, Model) => {
     }
 
     const result = await Model.findAll({
-      where: { [Op.and]: whereAnd },
+      where: {
+        [Op.and]: whereAnd,
+      },
       logging: process.env.ENABLE_DB_LOGGING ? console.log : false,
+      attributes: {
+        exclude: [
+          'description',
+          'buy_m2',
+          'rent_t2',
+          'rent_t4',
+          'rent_m2',
+          'statut',
+          'total_social_housing',
+          'code_cant',
+        ],
+      },
       include: [
         {
           attributes: [],
@@ -299,26 +341,17 @@ export default (sequelizeInstance, Model) => {
           required: true,
           include: bassinsToInclude,
         },
-        {
-          attributes: ['name', 'code'],
-          model: Model.models.newRegions,
-          required: true,
-          ...whereRegion,
-        },
-        {
-          attributes: ['number'],
-          model: Model.models.citiesJobs,
-          required: false,
-          where: {
-            rome_id: codeRome,
-          },
-        },
       ],
       // order : 1 - tension sur le métier > 2 - custom order (montagne, mer...) > 3 - population
       order: [
-        [sequelizeInstance.models.bassins, sequelizeInstance.models.tensions, 'ind_t', 'ASC'],
-        ...(!!order ? order : []),
-        ['population', 'DESC']
+        [
+          sequelizeInstance.models.bassins,
+          sequelizeInstance.models.tensions,
+          'ind_t',
+          'ASC',
+        ],
+        ...(order ? order : []),
+        ['population', 'DESC'],
       ],
       raw: true,
     })
@@ -331,7 +364,19 @@ export default (sequelizeInstance, Model) => {
   Model.getCity = async ({ insee }) => {
     const city = await Model.findOne({
       where: { insee_com: insee },
-      include: [Model.models.equipments, Model.models.newRegions, Model.models.departements],
+      include: [
+        Model.models.equipments,
+        Model.models.regions,
+        Model.models.departements,
+        {
+          attributes: ['bassin_name'],
+          model: Model.models.bassins,
+          include: [{
+            attributes: ['demandeurs_emploi', 'secteur_libelle'],
+            model: Model.models.secteursBassins
+          }],
+        },
+      ],
     })
 
     if (city) {
@@ -404,18 +449,6 @@ export default (sequelizeInstance, Model) => {
       const { photo, description } = await Model.getDescription(city.nom_comm)
       options.photo = photo
       options.description = description
-
-      if (city.dataValues.average_houseselled === null) {
-        options.average_houseselled = await Model.getAveragePricing(
-          city.insee_com
-        )
-      }
-
-      if (city.dataValues.average_houserent === null) {
-        options.average_houserent = await Model.getAverageHouseRent(
-          city.insee_com
-        )
-      }
 
       if (city.dataValues.city_house_tension === null) {
         options.city_house_tension = await Model.getCityHouseTension(
@@ -581,7 +614,7 @@ export default (sequelizeInstance, Model) => {
       include: [
         {
           attributes: ['name'],
-          model: Model.models.newRegions,
+          model: Model.models.regions,
           required: true,
         },
       ],
@@ -693,34 +726,17 @@ export default (sequelizeInstance, Model) => {
     return 0
   }
 
-  Model.getAveragePricing = async (cityInsee) => {
-    let allIntoFile = Model.cacheLoadAveragePricing
-    if (!allIntoFile) {
-      allIntoFile = await getAveragePricing()
-      Model.cacheLoadAveragePricing = allIntoFile
-    }
-
-    const find = allIntoFile.find((c) => c.insee_com === cityInsee)
-    if (find && Number(find.prixmoyen_m2)) {
-      return find.prixmoyen_m2
-    }
-
-    return 0
-  }
-
-  Model.getAverageHouseRent = async (cityInsee) => {
-    let allIntoFile = Model.cacheLoadAverageHouseRent
-    if (!allIntoFile) {
-      allIntoFile = await getAverageHouseRent()
-      Model.cacheLoadAverageHouseRent = allIntoFile
-    }
-
-    const find = allIntoFile.find((c) => c.insee === +cityInsee + '')
-    if (find && find.loypredm2) {
-      return parseFloat(find.loypredm2.replace(/,/g, '.'))
-    }
-
-    return 0
+  Model.getCitiesByCodeRegion = async ({ codeRegion }) => {
+    return await Model.findAll({
+      where: {
+        code_region: parseInt(codeRegion),
+        nom_comm: Sequelize.where(
+          Sequelize.fn('LOWER', Sequelize.col('nom_comm')),
+          'NOT LIKE',
+          '%-ARRONDISSEMENT'
+        )
+      }
+    })
   }
 
   return Model

@@ -1,0 +1,48 @@
+# language: fr
+Fonctionnalité: Offres d'emploi d'une ville
+
+  Contexte:
+    Etant donné que je suis sur l'accueil Mobiville
+    Et que j'accepte tous les cookies
+    Et que je saisis "boulanger" dans le métier
+    Et que je choisis "Boulangerie - viennoiserie (Aide-boulanger / Aide-boulangère, …)" dans la liste des métiers
+    Et que je saisis "Lille" dans la ville
+    Et que je choisis "Lille (59000)" dans la liste des villes
+    Et que je clique sur rechercher
+    Et que je clique sur "Offres d’emploi" dans le fil d'ariane
+
+  Scénario: Affichage des offres et consultation
+    Alors j'affiche les offres de la ville
+    Et le détail de l'offre s'affiche
+    Et le descriptif de l'offre s'affiche
+
+  Scénario: Filtre des offres par distance
+    Lorsque je clique sur le filtre offre "Distance" et je sélectionne "5 km"
+    Alors j'affiche les offres de la ville
+
+  Scénario: Filtre des offres par date de publication
+    Lorsque je clique sur le filtre offre "Date de publication" et je sélectionne "Un mois"
+    Alors j'affiche les offres pour lesquelles la date est inférieure au critère
+
+  Scénario: Filtre des offres par type de contrat
+    Lorsque je clique sur le filtre offre "Type de contrat" et je sélectionne "CDI"
+    Alors j'affiche les offres qui correspondent aux critères
+
+  Scénario: Filtre des offres par expérience
+    Lorsque je clique sur le filtre offre "Expérience" et je sélectionne "Moins de 1 an"
+    Alors j'affiche les offres de la ville
+
+  Scénario: Filtre des offres par durée hebdomadaire
+    Lorsque je clique sur le filtre offre "Durée hebdomadaire" et je sélectionne "Temps plein"
+    Alors j'affiche les offres qui correspondent aux critères
+
+  Scénario: Filtre des offres avec plusieurs critères
+    Lorsque je clique sur le filtre offre "Date de publication" et je sélectionne "Un mois"
+    Alors j'affiche les offres pour lesquelles la date est inférieure au critère
+    Lorsque je clique sur le filtre offre "Type de contrat" et je sélectionne "CDI"
+    Alors j'affiche les offres qui correspondent aux critères
+    
+  Scénario: Affichage d'une offre
+    Lorsque je resélectionne la première offre
+    Alors le détail de l'offre s'affiche
+    Et le descriptif de l'offre s'affiche

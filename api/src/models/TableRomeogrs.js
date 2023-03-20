@@ -74,10 +74,6 @@ export default (sequelizeInstance, Model) => {
 
     const result = await Model.findAll({
       attributes: ['code_rome', 'ogr_label'],
-      include: {
-        attributes: ['label'],
-        model: Model.models.romeCodes,
-      },
       where: {
         code_rome: availableRomeCodes,
       },
