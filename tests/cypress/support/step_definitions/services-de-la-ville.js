@@ -3,9 +3,9 @@ import { SHORT_WAIT_TIME, MIDDLE_WAIT_TIME, LONG_WAIT_TIME } from "./common/comm
 import { ENDROIT_HP } from './home-page';
 
 const rappelCritereServices = "div[tag-page$=city-services] > div > div > h1";
-const infoHabitants = "div[tag-page$=city-services] * > p";
-const infoSuperficie = "div[tag-page$=city-services] * > p";
-const infoTemperature = "div[tag-page$=city-services] * > p";
+const infoHabitants = "div[tag-page$=city-services] * > div > p";
+const infoSuperficie = "div[tag-page$=city-services] * > div > p";
+const infoTemperature = "div[tag-page$=city-services] * > div > p";
 const infoServices = "div[tag-page$=city-services] > div > h2";
 const infoTransport = "div[tag-page$=city-services] * > div > p";
 const infoEducation = "div[tag-page$=city-services] * > div > p";

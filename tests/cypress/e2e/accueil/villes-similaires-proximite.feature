@@ -1,5 +1,5 @@
 # language: fr
-Fonctionnalité: Villes similaires ou a proximité d'une
+Fonctionnalité: Villes similaires ou a proximité d'une ville
 
   Contexte:
     Etant donné que je suis sur l'accueil Mobiville
