@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import _ from 'lodash'
 
 import {
@@ -82,22 +82,45 @@ const Placeholder = styled(InputLabel)`
 `
 
 const AppMenuItem = styled(MenuItem)`
-  height: 54px;
 
-  margin: 15px !important;
-  border: 1px solid ${COLOR_LIGHT_GREY} !important;
-  color: ${COLOR_PRIMARY} !important;
   border-radius: 8px !important;
 
-  span {
-    font-weight: 700 !important;
-  }
+  ${({ $light }) => $light ? css`
+    border: none !important;
+    height: 20px;
+    margin: 0 8px !important;
 
-  &:hover,
-  &:checked,
-  &.Mui-selected {
-    background-color: ${COLOR_OTHER_GREEN} !important;
-  }
+    color: ${COLOR_TEXT_PRIMARY} !important;
+
+    span {
+      font-weight: inherit;
+    }
+
+    &:hover,
+    &:checked,
+    &.Mui-selected {
+      color: ${COLOR_PRIMARY} !important;
+      background-color: transparent !important;
+      font-weight: 700 !important;
+    }
+  ` : css`
+    border: 1px solid ${COLOR_LIGHT_GREY} !important;
+    height: 54px;
+    margin: 15px !important;
+
+    color: ${COLOR_PRIMARY} !important;
+
+    span {
+      font-weight: 700 !important;
+    }
+
+    &:hover,
+    &:checked,
+    &.Mui-selected {
+      background-color: ${COLOR_OTHER_GREEN} !important;
+    }
+  `}
+
 `
 
 const AppSelect = ({
@@ -108,6 +131,7 @@ const AppSelect = ({
   onChange = () => {},
   renderValue = (selected) => _.capitalize(_.toLower(selected)),
   multiple = false,
+  light = false,
   style = {},
 }) => {
   const isPlaceholderHidden = useCallback(() => {
@@ -151,7 +175,7 @@ const AppSelect = ({
         renderValue={renderValue}
       >
         {options.map((option) => (
-          <AppMenuItem key={option.key} value={option.option}>
+          <AppMenuItem key={option.key} value={option.option} $light={light}>
             {multiple ? (
               <Checkbox checked={value.indexOf(option.option) > -1} />
             ) : null}
@@ -171,6 +195,7 @@ AppSelect.propTypes = {
   onChange: PropTypes.func,
   renderValue: PropTypes.func,
   multiple: PropTypes.bool,
+  light: PropTypes.bool,
   style: PropTypes.object,
 }
 

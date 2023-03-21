@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Link } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
-import { COLOR_PRIMARY, COLOR_TEXT_PRIMARY } from '../../constants/colors'
+import { COLOR_PRIMARY, COLOR_TEXT_PRIMARY, COLOR_WHITE } from '../../constants/colors'
 import { isMobileView } from '../../constants/mobile'
 import { useWindowSize } from '../../common/hooks/window-size'
 import ActionButton from './ActionButton'
@@ -32,10 +32,17 @@ const HeaderArrowLink = styled(Link)`
   justify-content: center;
   gap: 4px;
 
-  &,
-  &:hover {
+  &, &:hover {
     color: ${COLOR_TEXT_PRIMARY};
   }
+
+  ${({ $isWhite }) => $isWhite && css`
+    height: 32px;
+    padding: 8px;
+
+    background-color: ${ COLOR_WHITE };
+    border-radius: 100px;
+  `}
 `
 
 const BackText = styled.p`
@@ -51,12 +58,18 @@ const ActionButtonContainer = styled.div`
   margin-top: 16px;
 `
 
-const BackButton = ({ libelle = 'Retour', backLink = '/', showAdvicesButton = false }) => {
+const BackButton = ({
+  libelle = 'Retour',
+  backLink = '/',
+  showAdvicesButton = false,
+  style = {},
+  white = false,
+}) => {
   const isMobile = isMobileView(useWindowSize())
 
   return (
-    <BackContainer>
-      <HeaderArrowLink to={backLink} title={libelle} $isMobile={isMobile}>
+    <BackContainer style={{ ...style }}>
+      <HeaderArrowLink to={backLink} title={libelle} $isMobile={isMobile} $isWhite={white}>
         <ArrowBackIcon color="primary" />
         <BackText $isMobile={isMobile}>{libelle}</BackText>
       </HeaderArrowLink>
@@ -77,7 +90,9 @@ const BackButton = ({ libelle = 'Retour', backLink = '/', showAdvicesButton = fa
 BackButton.props = {
   libelle: PropTypes.string,
   backLink: PropTypes.string,
-  showAdvicesButton: PropTypes.bool
+  showAdvicesButton: PropTypes.bool,
+  style: PropTypes.object,
+  white: PropTypes.boolean
 }
 
 export default BackButton

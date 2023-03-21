@@ -11,12 +11,13 @@ export const capitalize = (string) => ucFirst(string?.toLowerCase())
 
 export const wordsCapitalize = (s) => {
   if (!s) return ''
-  
+
   const wordBreakerChar = [' ', "'", '-', '.'] // on met une majuscule à la suite de ces caractères
   s = s.toLowerCase()
-  wordBreakerChar.forEach(breaker => {
-    s = s.split(breaker)
-      .map(w => ucFirst(w))
+  wordBreakerChar.forEach((breaker) => {
+    s = s
+      .split(breaker)
+      .map((w) => ucFirst(w))
       .join(breaker)
   })
   return s
@@ -24,28 +25,42 @@ export const wordsCapitalize = (s) => {
 
 // === DATE UTILS ===
 
-
 export const formatDateShort = (date) => {
   const [day, month] = date.split('/')
-  const months = ['dèc.', 'janv.', 'fevr.', 'mars', 'avril', 'mai', 'juin', 'juil.', 'aout', 'sept.', 'oct.', 'nov.', 'dèc.']
+  const months = [
+    'dèc.',
+    'janv.',
+    'fevr.',
+    'mars',
+    'avril',
+    'mai',
+    'juin',
+    'juil.',
+    'aout',
+    'sept.',
+    'oct.',
+    'nov.',
+    'dèc.',
+  ]
   return `${day} ${months[+month]}`
 }
 
-export const formatDate = (date) => date.toLocaleDateString("fr-FR")
-
+export const formatDate = (date) => date.toLocaleDateString('fr-FR')
 
 // === FORMS UTILS
 
-export const isDirty = (filters) => Object.values(filters).reduce((prev, currFilter) => {
-  if (typeof currFilter === 'string') return prev || currFilter !== ''
-  if (Array.isArray(currFilter)) return prev || currFilter?.length > 0
-  return prev || !!currFilter
-}, false)
+export const isDirty = (filters) =>
+  Object.values(filters).reduce((prev, currFilter) => {
+    if (typeof currFilter === 'string') return prev || currFilter !== ''
+    if (Array.isArray(currFilter)) return prev || currFilter?.length > 0
+    return prev || !!currFilter
+  }, false)
 
-// === 
+// ===
 
 const numberFormatter = Intl.NumberFormat()
-export const formatNumber = (number) => numberFormatter.format(Math.floor(number))
+export const formatNumber = (number) =>
+  numberFormatter.format(Math.floor(number))
 
 export const useElementOnScreen = (options) => {
   const containerRef = useRef()
@@ -76,9 +91,20 @@ export const formatCityTension = (tension) => {
 }
 
 // trie selon le boost de visibilité : 5 > 3 > 2 > null > null ...
-export const visibilityBoostSorter = (a, b) => (!b?.visibility_boost ? -1 : b?.visibility_boost - a?.visibility_boost)
+export const visibilityBoostSorter = (a, b) =>
+  !b?.visibility_boost ? -1 : b?.visibility_boost - a?.visibility_boost
 
 // === URL UTILS ===
+
+const isHttpMatched = (str) =>
+  !!str?.match(new RegExp('^(http|https)://'))?.length
+
+export const isExternalLink = (path) =>
+  (!!path &&
+    typeof path == 'object' &&
+    path.hasOwnProperty('pathname') &&
+    isHttpMatched(path.pathname)) ||
+  (typeof path == 'string' && isHttpMatched(path))
 
 export const formatCityUrl = (city, codeRome) => {
   let url = `/ville/${city.insee_com}-${city.nom_comm}`
@@ -89,19 +115,17 @@ export const formatCityUrl = (city, codeRome) => {
   return url
 }
 
-export const alphabetOrder = (key) => (a, b) => a[key].localeCompare(b[key]) 
+export const isPdf = (path) => {
+  return path?.endsWith('.pdf')
+}
+
+export const alphabetOrder = (key) => (a, b) => a[key].localeCompare(b[key])
 
 export const formatHelpUrl = (help) => `/aides/${help.slug}`
 
 // ======
 
-export function distance(
-  lat1,
-  lon1,
-  lat2,
-  lon2,
-  unit = 'K'
-) {
+export function distance(lat1, lon1, lat2, lon2, unit = 'K') {
   if (lat1 === lat2 && lon1 === lon2) {
     return 0
   } else {
@@ -132,15 +156,15 @@ export const splitSort = (array, numberOfSplits = 2) => {
   const splitLength = Math.ceil(array.length / numberOfSplits)
 
   let result = []
-  
+
   let splits = []
-  for (let i = 0 ; i < numberOfSplits ; i++) {
-    splits[i] = array.slice(i * splitLength, (i * splitLength) + splitLength)
+  for (let i = 0; i < numberOfSplits; i++) {
+    splits[i] = array.slice(i * splitLength, i * splitLength + splitLength)
   }
 
-  for (let i = 0 ; i <= splitLength ; i++) {
-    splits.forEach(split => result.push(split[i]))
+  for (let i = 0; i <= splitLength; i++) {
+    splits.forEach((split) => result.push(split[i]))
   }
 
-  return result.filter(v => !!v)
+  return result.filter((v) => !!v)
 }

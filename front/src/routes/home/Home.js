@@ -10,7 +10,7 @@ const Welcome = loadable(() => import('./components/Welcome'))
 const Advantages = loadable(() => import('./components/Advantages'))
 const HomeHelpsBanner = loadable(() => import('./components/HomeHelpsBanner'))
 const HomeRegionsBanner = loadable(() => import('./components/HomeRegionsBanner'))
-const MobilityGuideBanner = loadable(() =>import('./components/MobilityGuideBanner'))
+const GuideBanner = loadable(() =>import('./components/GuideBanner'))
 const Testimonies = loadable(() => import('./components/Testimonies'))
 const TopPageButton = loadable(() => import('../../components/TopPageButton'))
 
@@ -34,7 +34,7 @@ const HomePage = () => (
     <HomeHelpsBanner />
     <HomeRegionsBanner />
     <Advantages />
-    <MobilityGuideBanner />
+    <GuideBanner />
     <TopPageButton />
     <Testimonies />
   </MainLayout>

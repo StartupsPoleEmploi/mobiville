@@ -104,6 +104,7 @@ const HeaderDesktop = ({ displaySearch = true }) => {
 
   const searchSelected = location.pathname.includes('rechercher')
   const helpSelected = location.pathname.includes('aides')
+  const guideSelected = location.pathname.includes('conseils-et-astuces')
 
   const isHome = location.pathname === '/'
 
@@ -128,10 +129,13 @@ const HeaderDesktop = ({ displaySearch = true }) => {
       {displaySearch ? (
         <NavContainer>
           <NavItem to="/rechercher" $isSelected={searchSelected}>
-            Rechercher une ville
+            Villes
           </NavItem>
           <NavItem to="/aides" $isSelected={helpSelected}>
-            Rechercher des aides
+            Aides
+          </NavItem>
+          <NavItem to="/conseils-et-astuces" $isSelected={guideSelected}>
+            Conseils et astuces
           </NavItem>
         </NavContainer>
       ) : null}

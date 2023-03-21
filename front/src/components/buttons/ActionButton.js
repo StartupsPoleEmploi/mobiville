@@ -3,6 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { COLOR_PRIMARY } from '../../constants/colors'
+import { isExternalLink, isPdf } from '../../utils/utils'
 
 const Container = styled.div`
   display: flex;
@@ -90,52 +91,40 @@ const ActionButton = ({
   disabled = false,
   style = {},
   buttonProps = {},
-}) => {
-  const isHttpMatched = (str) =>
-    !!str?.match(new RegExp('^(http|https)://'))?.length
-
-  const isExternalLink =
-    (!!path &&
-      typeof path == 'object' &&
-      path.hasOwnProperty('pathname') &&
-      isHttpMatched(path.pathname)) ||
-    (typeof path == 'string' && isHttpMatched(path))
-
-  return (
-    <Container $isMobile={isMobile} $centered={centered} $disabled={disabled} style={{ ...style }}>
-      {!!isExternalLink ? (
-        <ExternalLinkButton
-          {...buttonProps}
-          data-automation-id={
-            isWelcomeCitySearch || isWelcomeHelpSearch
-              ? 'search-action'
-              : undefined
-          }
-          href={path}
-          $isBlue={isBlue}
-          $isWhite={isWhite}
-          target="_blank"
-        >
-          {libelle}
-        </ExternalLinkButton>
-      ) : (
-        <ActionButtonElement
-          {...buttonProps}
-          data-automation-id={
-            isWelcomeCitySearch || isWelcomeHelpSearch
-              ? 'search-action'
-              : undefined
-          }
-          to={path}
-          $isBlue={isBlue}
-          $isWhite={isWhite}
-        >
-          {libelle}
-        </ActionButtonElement>
-      )}
-    </Container>
-  )
-}
+}) => (
+  <Container $isMobile={isMobile} $centered={centered} $disabled={disabled} style={{ ...style }}>
+    {isExternalLink(path) || isPdf(path) ? (
+      <ExternalLinkButton
+        {...buttonProps}
+        data-automation-id={
+          isWelcomeCitySearch || isWelcomeHelpSearch
+            ? 'search-action'
+            : undefined
+        }
+        href={path}
+        $isBlue={isBlue}
+        $isWhite={isWhite}
+        target="_blank"
+      >
+        {libelle}
+      </ExternalLinkButton>
+    ) : (
+      <ActionButtonElement
+        {...buttonProps}
+        data-automation-id={
+          isWelcomeCitySearch || isWelcomeHelpSearch
+            ? 'search-action'
+            : undefined
+        }
+        to={path}
+        $isBlue={isBlue}
+        $isWhite={isWhite}
+      >
+        {libelle}
+      </ActionButtonElement>
+    )}
+  </Container>
+)
 
 ActionButton.propTypes = {
   path: PropTypes.string.isRequired,
