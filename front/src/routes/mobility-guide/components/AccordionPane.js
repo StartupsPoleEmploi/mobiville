@@ -32,7 +32,7 @@ const Title = styled.p`
 
 const ChevronIcon = styled(RightChevronIcon)`
   transform: ${({ $isOpened }) =>
-    $isOpened ? 'rotate(90deg)' : 'rotate(-90deg)'};
+    $isOpened ? 'rotate(-90deg)' : 'rotate(90deg)'};
 `
 
 const Content = styled.div`
