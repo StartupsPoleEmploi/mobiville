@@ -217,13 +217,13 @@ const GuideStep2 = () => {
         <CenteredCard>
           <CenteredCardTitle>Vous êtes<br />Demandeur d'emploi</CenteredCardTitle>
           <ActionButton libelle="Je prends RDV avec mon conseiller" path="https://candidat.pole-emploi.fr/candidat/espacepersonnel" />
-          <Link to="https://www.pole-emploi.fr/candidat/vos-services-en-ligne/les-pas-a-pas-les-videos-qui-vou/comment-contacter-mon-conseiller.html">Comment prendre RDV ?</Link>
+          <Link to="https://www.pole-emploi.fr/candidat/vos-services-en-ligne/les-pas-a-pas-les-videos-qui-vou/comment-contacter-mon-conseiller.html" target="_blank">Comment prendre RDV ?</Link>
         </CenteredCard>
 
         <CenteredCard>
           <CenteredCardTitle>Vous êtes<br />Salarié</CenteredCardTitle>
           <ActionButton libelle="Je trouve une agence Pôle emploi" path="https://www.pole-emploi.fr/annuaire/votre-pole-emploi.html" />
-          <p>Rendez-vous directement en agence Pôle Emploi</p>
+          <p style={{ textAlign: 'center' }}>Rendez-vous directement en agence Pôle Emploi</p>
         </CenteredCard>
       </CenteredCardsContainer>
     </GuideStepLayout>
