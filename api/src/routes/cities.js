@@ -160,11 +160,11 @@ router.post(
       sort: sort,
     })
     response.body = {
-      companies: lbbData.companies
+      companies: lbbData?.companies ? lbbData.companies
         .sort((c1, c2) => c2.stars - c1.stars)
         .slice(0, 10)
-        .map(({ name, city, url }) => ({ name, city, url })),
-      companies_count: lbbData.companies_count,
+        .map(({ name, city, url }) => ({ name, city, url })) : [],
+      companies_count: lbbData?.companies_count ?? 0,
     }
   }
 )
