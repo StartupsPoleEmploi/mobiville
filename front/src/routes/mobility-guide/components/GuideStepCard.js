@@ -78,7 +78,7 @@ const ChevronIcon = styled(RightChevronIcon)`
   margin-top: 8px;
   
   transform: ${({ $isExpanded }) =>
-    $isExpanded ? 'rotate(90deg)' : 'rotate(-90deg)'};
+    $isExpanded ? 'rotate(-90deg)' : 'rotate(90deg)'};
 `
 
 const GuideStepCard = ({
