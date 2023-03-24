@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
@@ -12,10 +13,8 @@ import {
   RadioGroup,
   ResetButton,
 } from '../../../../components'
-import { useMemo, useState } from 'react'
-import { isMobileView } from '../../../../constants/mobile'
-import { useWindowSize } from '../../../../common/hooks/window-size'
 import { isDirty } from '../../../../utils/utils'
+import { useDevice } from '../../../../common/contexts'
 
 const Container = styled.div`
   margin: 8px auto;
@@ -46,7 +45,8 @@ const JobsFilters = ({
   onFiltersChange,
   onReset,
 }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
+
   const [showMobileFilters, setShowMobileFilters] = useState(false)
 
   const datesPublication = {

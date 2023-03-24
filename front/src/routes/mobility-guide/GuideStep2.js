@@ -6,13 +6,12 @@ import { ReactComponent as LightBulbIcon } from '../../assets/images/icons/light
 import { ReactComponent as CrowdIcon } from '../../assets/images/icons/crowd.svg'
 
 import { COLOR_PRIMARY } from '../../constants/colors'
-import { useWindowSize } from '../../common/hooks/window-size'
-import { isMobileView } from '../../constants/mobile'
 import { Image, ActionButton } from '../../components'
 import GuideStepLayout from './components/GuideStepLayout'
 import GuideStepContentTitle from './components/GuideStepContentTitle'
 import GuideStepCard from './components/GuideStepCard'
 import AccordionPane from './components/AccordionPane'
+import { useDevice } from '../../common/contexts'
 
 const CenteredCardsContainer = styled.div`
   display: flex;
@@ -43,7 +42,7 @@ const CenteredCardTitle = styled.div`
 `
 
 const GuideStep2 = () => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   const [openedPane, setOpenedPane] = useState(0)
 

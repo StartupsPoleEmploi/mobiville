@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
-import { useWindowSize } from '../common/hooks/window-size'
+
+import { useDevice } from '../common/contexts'
 import { COLOR_PRIMARY } from '../constants/colors'
-import { isMobileView } from '../constants/mobile'
 
 const Container = styled.div`
   margin: ${({ $isMobile }) => ($isMobile ? '20px auto 0 auto' : 'auto')};
@@ -40,7 +40,8 @@ const SectionHeader = ({
   margin = true,
   centerOnMobile = false,
 }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
+
   const _title = title.split(' ')
   return (
     <Container $isMobile={isMobile} $centerOnMobile={centerOnMobile}>

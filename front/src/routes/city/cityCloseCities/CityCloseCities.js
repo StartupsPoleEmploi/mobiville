@@ -7,12 +7,9 @@ import { CircularProgress } from '@mui/material'
 
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../../constants/colors'
 import { ReactComponent as RightChevronIcon } from '../../../assets/images/icons/right_chevron.svg'
-import { useCities } from '../../../common/contexts/citiesContext'
 import { capitalize, formatCityUrl } from '../../../utils/utils'
 import { ActionButton } from '../../../components'
-import { useProfessions } from '../../../common/contexts/professionsContext'
-import { isMobileView } from '../../../constants/mobile'
-import { useWindowSize } from '../../../common/hooks/window-size'
+import { useDevice, useProfessions, useCities } from '../../../common/contexts'
 
 const Container = styled.div`
   max-width: 1040px;
@@ -104,8 +101,7 @@ const ButtonContainer = styled.div`
 `
 
 const CityCloseCities = ({ codeRome, backLink }) => {
-  const isMobile = isMobileView(useWindowSize())
-
+  const { isMobile } = useDevice()
   const {
     city,
     similarCities,
@@ -113,7 +109,6 @@ const CityCloseCities = ({ codeRome, backLink }) => {
     closeCities,
     onSearchCloseCities,
   } = useCities()
-
   const { onSearchCountList, professionsCountList } = useProfessions()
 
   useEffect(() => {

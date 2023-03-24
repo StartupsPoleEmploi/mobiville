@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import loadable from '@loadable/component'
 
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+
 import {
   ActionButton,
   HelpsStandOut,
@@ -31,11 +33,7 @@ import {
   COLOR_TEXT_PRIMARY,
   COLOR_WHITE,
 } from '../../../constants/colors'
-import { useProfessions } from '../../../common/contexts/professionsContext'
-import { useCities } from '../../../common/contexts/citiesContext'
-import { isMobileView } from '../../../constants/mobile'
-import { useWindowSize } from '../../../common/hooks/window-size'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import { useDevice, useCities, useProfessions } from '../../../common/contexts'
 
 const CityHeader = loadable(() => import('../CityHeader'))
 
@@ -207,8 +205,7 @@ const ServicesStandOutImageContainer = styled.div`
 `
 
 const CityHome = ({ romeLabel, insee, codeRome }) => {
-  const isMobile = isMobileView(useWindowSize())
-
+  const { isMobile } = useDevice()
   const { companiesCount, onSearchCloseCompanies, city, criterions } =
     useCities()
   const {

@@ -5,8 +5,6 @@ import styled from 'styled-components'
 
 import { KeyFigures, Map } from '../../../components'
 import ElectedContact from './components/ElectedContact'
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
 import { COLOR_PRIMARY } from '../../../constants/colors'
 
 import { ReactComponent as RightChevronIcon } from '../../../assets/images/icons/right_chevron.svg'
@@ -15,7 +13,7 @@ import { ReactComponent as WeatherIcon } from '../../../assets/images/icons/weat
 import { ReactComponent as CalculatorIcon } from '../../../assets/images/icons/calculator.svg'
 import { formatNumber } from '../../../utils/utils'
 import CityServiceInfoCards from './components/CityServiceInfoCards'
-import { useCities } from '../../../common/contexts/citiesContext'
+import { useDevice, useCities } from '../../../common/contexts'
 
 const WelcomeContainer = styled.div`
   background: white;
@@ -81,10 +79,10 @@ const MapContainer = styled.div`
 `
 
 const CityServices = () => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
+  const { city } = useCities()
 
   const [isTextExpended, setIsTextExpended] = useState(false)
-  const { city } = useCities()
 
   const showFullText = useCallback(() => (isTextExpended || city.description.length < 521), [isTextExpended, city.description])
 

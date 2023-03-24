@@ -2,11 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
-import { useWindowSize } from '../../common/hooks/window-size'
-import { isMobileView } from '../../constants/mobile'
 import { COLOR_WHITE, COLOR_PRIMARY } from '../../constants/colors'
 import { MainLayout, Breadcrumbs, Section, Image } from '../../components'
 import StepNumber from './components/StepNumber'
+import { useDevice } from '../../common/contexts'
 
 const Title = styled.h1`
   margin: 24px 0 0 0;
@@ -82,7 +81,7 @@ const CardTracker = ({ number }) => (
 )
 
 const GuideHome = () => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <MainLayout topMobileMenu>

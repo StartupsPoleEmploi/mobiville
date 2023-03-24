@@ -3,16 +3,14 @@ import React from 'react'
 import styled from 'styled-components'
 import loadable from '@loadable/component'
 
-import { useWindowSize } from '../../../../common/hooks/window-size'
-import { COLOR_PRIMARY, COLOR_WHITE } from '../../../../constants/colors'
-import { isMobileView } from '../../../../constants/mobile'
-import { formatNumber } from '../../../../utils/utils'
-
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import { ReactComponent as BuildingIcon } from '../../../../assets/images/icons/building.svg'
 import Card from '@mui/material/Card'
 
+import { COLOR_PRIMARY, COLOR_WHITE } from '../../../../constants/colors'
+import { formatNumber } from '../../../../utils/utils'
+import { ReactComponent as BuildingIcon } from '../../../../assets/images/icons/building.svg'
 import { Image, KeyFigures, Tag } from '../../../../components'
+import { useDevice } from '../../../../common/contexts'
 
 //prettier-ignore
 const HousingSimulator = loadable(() => import('./HousingSimulator'))
@@ -134,7 +132,7 @@ const HousingActorImage = styled(Image)`
 `
 
 const CityHousingSection = ({ city }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <>

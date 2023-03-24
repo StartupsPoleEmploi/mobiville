@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import loadable from '@loadable/component'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
-import { isMobileView } from '../constants/mobile'
-import { useWindowSize } from '../common/hooks/window-size'
+
+import { useDevice } from '../common/contexts'
 
 const HeaderMobile = loadable(() => import('./HeaderMobile'))
 const HeaderDesktop = loadable(() => import('./HeaderDesktop'))
@@ -59,7 +59,7 @@ const MainLayout = ({
   style = {},
   displaySearch = true,
 }) => {
-  const ismobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
   const location = useLocation()
 
   useEffect(() => {
@@ -69,18 +69,18 @@ const MainLayout = ({
   return (
     <Container>
       <GoToMainContent href="#main">Aller au contenu</GoToMainContent>
-      {ismobile && topMobileMenu && <HeaderMobile />}
-      {ismobile && menu.visible && menu.menuMobileVisible && (
+      {isMobile && topMobileMenu && <HeaderMobile />}
+      {isMobile && menu.visible && menu.menuMobileVisible && (
         <MenuMobile {...menu} />
       )}
-      {!ismobile && menu.visible && (
+      {!isMobile && menu.visible && (
         <HeaderDesktop displaySearch={displaySearch} {...menu} />
       )}
       <Main
         id="main"
         tabIndex="-1"
         style={{
-          paddingBottom: ismobile ? 30 : 60,
+          paddingBottom: isMobile ? 30 : 60,
           ...style,
         }}
       >

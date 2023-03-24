@@ -1,16 +1,14 @@
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-import { useCities } from '../../../../common/contexts/citiesContext'
-import { useWindowSize } from '../../../../common/hooks/window-size'
 import {
   COLOR_PRIMARY,
   COLOR_VERT_MOBIVILLE,
   COLOR_WHITE,
 } from '../../../../constants/colors'
-import { isMobileView } from '../../../../constants/mobile'
 import { capitalize, wordsCapitalize } from '../../../../utils/utils'
 import { Tag } from '../../../../components'
+import { useDevice, useCities } from '../../../../common/contexts'
 
 const Container = styled.div`
   max-width: 1072px; // 1040 + 16 * 2
@@ -79,7 +77,7 @@ const Lien = styled.a`
 `
 
 const CloseOpportunities = ({ secteurs }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
   const { closeCompanies } = useCities()
 
   return (

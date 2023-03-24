@@ -5,11 +5,10 @@ import _AccordionSummary from '@mui/material/AccordionSummary'
 import _AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
-import { useWindowSize } from '../../common/hooks/window-size'
-import { isMobileView } from '../../constants/mobile'
 import MainLayout from '../../components/MainLayout'
 import { COLOR_TEXT_PRIMARY } from '../../constants/colors'
 import SubHeader from '../../components/SubHeader'
+import { useDevice } from '../../common/contexts'
 
 const BASE_ACCORDION_DATA = [
   {
@@ -246,8 +245,7 @@ const HelpMoreLink = styled.a`
 `
 
 const Faq = () => {
-  const size = useWindowSize()
-  const isMobile = isMobileView(size)
+  const { isMobile } = useDevice()
 
   return (
     <MainLayout footer>

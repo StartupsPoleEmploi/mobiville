@@ -11,7 +11,6 @@ import {
   TextField,
 } from '@mui/material'
 
-import { useWindowSize } from '../../common/hooks/window-size'
 import {
   COLOR_LIGHT_GREY,
   COLOR_PRIMARY,
@@ -19,7 +18,7 @@ import {
   COLOR_TEXT_SECONDARY,
   COLOR_WHITE,
 } from '../../constants/colors'
-import { isMobileView } from '../../constants/mobile'
+import { useDevice } from '../../common/contexts'
 
 const AppAutocomplete = styled(Autocomplete)`
   flex: 1;
@@ -104,10 +103,10 @@ const TextSearchInput = React.forwardRef(
     },
     ref
   ) => {
+    const { isMobile } = useDevice()
+
     const [open, setOpen] = useState(false)
     const [inputValue, setInputValue] = useState('')
-
-    const isMobile = isMobileView(useWindowSize())
 
     const handleInputChange = (event, value) => {
       onInputChange(event, value)

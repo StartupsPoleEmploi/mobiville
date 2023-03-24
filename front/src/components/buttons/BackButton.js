@@ -5,9 +5,8 @@ import { Link } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 import { COLOR_PRIMARY, COLOR_TEXT_PRIMARY, COLOR_WHITE } from '../../constants/colors'
-import { isMobileView } from '../../constants/mobile'
-import { useWindowSize } from '../../common/hooks/window-size'
 import ActionButton from './ActionButton'
+import { useDevice } from '../../common/contexts'
 
 const BackContainer = styled.div`
   width: 100%;
@@ -65,7 +64,7 @@ const BackButton = ({
   style = {},
   white = false,
 }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <BackContainer style={{ ...style }}>

@@ -5,19 +5,15 @@ import { useEffect, useState } from 'react'
 
 import { CircularProgress } from '@mui/material'
 
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
-
-import { useCities } from '../../../common/contexts/citiesContext'
 import {
   COLOR_BUTTON_HOVER,
   COLOR_PRIMARY,
   COLOR_TEXT_SECONDARY,
   COLOR_WHITE,
 } from '../../../constants/colors'
-import { useProfessions } from '../../../common/contexts/professionsContext'
 import { formatCityUrl } from '../../../utils/utils'
 import { Image } from '../../../components'
+import { useDevice, useCities, useProfessions } from '../../../common/contexts'
 
 const CityItem = loadable(() => import('./CityItem'))
 const Pagination = loadable(() => import('@mui/material/Pagination'))
@@ -103,7 +99,7 @@ const CitiesList = ({
   page = 1,
   onPageChange = () => {},
 }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
   const { totalCities, sortCriterions, isLoading } = useCities()
   const { isLoading: isLoadingProfessions, professionsCountList } =
     useProfessions()

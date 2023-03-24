@@ -1,11 +1,12 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import { useNomPage } from '../common/contexts/NomPageContext'
+
 import { COLOR_VERT_MOBIVILLE } from '../constants/colors'
 import { MOBILE_WIDTH } from '../constants/mobile'
 import LOGO from '../assets/images/logo-mobiville.svg'
 import Image from './Image'
+import { useNomPage } from '../common/contexts'
 
 const MainSpace = styled.div`
   background: white;

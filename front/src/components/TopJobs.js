@@ -7,9 +7,8 @@ import { ReactComponent as RightChevronIcon } from '../assets/images/icons/right
 
 import { COLOR_PRIMARY, COLOR_WHITE } from '../constants/colors'
 import { formatCityUrl, wordsCapitalize } from '../utils/utils'
-import { isMobileView } from '../constants/mobile'
-import { useWindowSize } from '../common/hooks/window-size'
 import { SectionHeader } from '.'
+import { useDevice } from '../common/contexts'
 
 const Container = styled.div`
   color: ${COLOR_PRIMARY};
@@ -61,8 +60,8 @@ const JobLabel = styled(Link)`
 `
 
 const TopJobs = ({ departement, city }) => {
+  const { isMobile } = useDevice()
   const [topJobs, setTopJobs] = useState(null)
-  const isMobile = isMobileView(useWindowSize())
 
   useEffect(() => {
     if (!departement && !city?.insee_com) return

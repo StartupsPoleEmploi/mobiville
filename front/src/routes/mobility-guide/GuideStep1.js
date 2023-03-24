@@ -1,13 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { useWindowSize } from '../../common/hooks/window-size'
-import { isMobileView } from '../../constants/mobile'
 import { COLOR_PRIMARY, COLOR_TEXT_PRIMARY } from '../../constants/colors'
 import { Image } from '../../components'
 import GuideStepLayout from './components/GuideStepLayout'
 import StepNumber from './components/StepNumber'
 import GuideStepContentTitle from './components/GuideStepContentTitle'
+import { useDevice } from '../../common/contexts'
 
 const GuideStepContentText = styled.p`
   font-size: 16px;
@@ -62,7 +61,7 @@ const ListItem = styled.li`
 `
 
 const GuideStep1 = () => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <GuideStepLayout

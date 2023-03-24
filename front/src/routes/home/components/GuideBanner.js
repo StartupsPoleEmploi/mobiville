@@ -1,10 +1,8 @@
 import styled from 'styled-components'
 
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
-
 import { ActionButton, Image, Section } from '../../../components'
 import { COLOR_PRIMARY } from '../../../constants/colors'
+import { useDevice } from '../../../common/contexts'
 
 const Container = styled.div`
   display: flex;
@@ -45,8 +43,7 @@ const TextContainer = styled.div`
 `
 
 const GuideBanner = () => {
-  const windowsSize = useWindowSize()
-  const isMobile = isMobileView(windowsSize)
+  const { isMobile } = useDevice()
 
   return (
     <Section isMobileFullWidth={true} isMobile={isMobile}>

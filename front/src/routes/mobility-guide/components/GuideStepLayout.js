@@ -4,13 +4,12 @@ import styled, { css } from 'styled-components'
 import { Link, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
 import { COLOR_PRIMARY, COLOR_TEXT_PRIMARY } from '../../../constants/colors'
 import { MainLayout, Select } from '../../../components'
 import GuideStepHeader from '../components/GuideStepHeader'
 import BackButton from '../../../components/buttons/BackButton'
 import { capitalize } from '../../../utils/utils'
+import { useDevice } from '../../../common/contexts'
 
 const Container = styled.div`
   display: grid;
@@ -65,7 +64,7 @@ const GuideStepLayout = ({
 }) => {
   const navigate = useNavigate()
   const location = useLocation()
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   const [ value, setValue ] = useState(null)
   const [ stepSelected, setStepSelected ] = useState(null)

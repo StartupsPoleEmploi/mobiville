@@ -4,31 +4,28 @@ import queryString from 'query-string'
 import { Helmet } from 'react-helmet-async'
 import { useLocation } from 'react-router-dom'
 
-import { useHelps } from '../../common/contexts/helpsContext'
-import { useWindowSize } from '../../common/hooks/window-size'
+import EuroIcon from '@mui/icons-material/Euro'
+import HomeWorkIcon from '@mui/icons-material/HomeWork'
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar'
+import PeopleIcon from '@mui/icons-material/People'
+import { Grid } from '@mui/material'
+
 import MainLayout from '../../components/MainLayout'
 import {
   COLOR_OTHER_GREEN,
   COLOR_PRIMARY,
   COLOR_WHITE,
 } from '../../constants/colors'
-import { isMobileView } from '../../constants/mobile'
 import { useScroll } from '../../common/hooks/use-scroll'
-
-import { Grid } from '@mui/material'
 import MobileAppliedFilters from './components/MobileAppliedFilters'
 import HelpCard from './components/HelpCard'
 import { HelpForm } from '../../components'
-
-import EuroIcon from '@mui/icons-material/Euro'
-import HomeWorkIcon from '@mui/icons-material/HomeWork'
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar'
-import PeopleIcon from '@mui/icons-material/People'
 import {
   AGE_SITUATIONS,
   JOB_SITUATIONS,
   PROJECTS,
 } from '../../constants/search'
+import { useDevice, useHelps } from '../../common/contexts'
 
 const TitleContainer = styled.div`
   padding: ${({ $isMobile }) => ($isMobile ? '5px 0px 0px 10px' : '0px')};
@@ -199,8 +196,7 @@ const Helps = () => {
   // contexts
   const { previews, onLoadPreviews } = useHelps()
   const { search, hash } = useLocation()
-  const size = useWindowSize()
-  const isMobile = isMobileView(size)
+  const { isMobile, windowSize } = useDevice()
   const { isScrollingUp, currentScroll } = useScroll()
 
   // scroll gesture
@@ -319,22 +315,22 @@ const Helps = () => {
       setActiveAnchor(null)
     } else if (
       (!isScrollingUp && transportHeaderPositionY < FOCUS_TRIGGER_AREA + 50) ||
-      transportHeaderPositionY < size.height - (FOCUS_TRIGGER_AREA + 50)
+      transportHeaderPositionY < windowSize.height - (FOCUS_TRIGGER_AREA + 50)
     ) {
       setActiveAnchor(TRANSPORT)
     } else if (
       (!isScrollingUp && logementHeaderPositionY < FOCUS_TRIGGER_AREA) ||
-      logementHeaderPositionY < size.height - FOCUS_TRIGGER_AREA
+      logementHeaderPositionY < windowSize.height - FOCUS_TRIGGER_AREA
     ) {
       setActiveAnchor(LOGEMENT)
     } else if (
       (!isScrollingUp && accompagnementHeaderPositionY < FOCUS_TRIGGER_AREA) ||
-      accompagnementHeaderPositionY < size.height - FOCUS_TRIGGER_AREA
+      accompagnementHeaderPositionY < windowSize.height - FOCUS_TRIGGER_AREA
     ) {
       setActiveAnchor(ACCOMPAGNEMENT)
     } else if (
       (!isScrollingUp && financiereHeaderPositionY < FOCUS_TRIGGER_AREA) ||
-      financiereHeaderPositionY < size.height - FOCUS_TRIGGER_AREA
+      financiereHeaderPositionY < windowSize.height - FOCUS_TRIGGER_AREA
     ) {
       setActiveAnchor(FINANCIERE)
     }

@@ -7,10 +7,7 @@ import { debounce } from 'lodash'
 import { Button, CityForm, Modale, Tag } from '../../../components'
 import CitiesFilters from './CitiesFilters'
 import { COLOR_OTHER_GREEN, COLOR_PRIMARY } from '../../../constants/colors'
-import { isMobileView } from '../../../constants/mobile'
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { useCities } from '../../../common/contexts/citiesContext'
-import { useRegions } from '../../../common/contexts/regionsContext'
+import { useDevice, useCities, useRegions } from '../../../common/contexts'
 
 const Container = styled.div`
   grid-area: filters;
@@ -76,8 +73,7 @@ const CitiesSearchBar = ({ params }) => {
   const navigate = useNavigate()
   const { search } = useLocation()
   const { regions } = useRegions()
-
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
   const { criterions, totalCities } = useCities()
 
   const DEFAULT_FILTERS = {
