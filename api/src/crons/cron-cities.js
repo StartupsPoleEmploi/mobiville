@@ -14,7 +14,7 @@ const citiesCron = async (models) => {
     await models.cities.checkAndStartSyncCity()
     syncOneCity.start()
   } else {
-    console.log('NOT STARTED CRONS : CITIES ==> DEV MODE ON')
+    console.log('NOT STARTED CRON : CITIES ==> DEV MODE ON')
   }
 
 
