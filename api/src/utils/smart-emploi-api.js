@@ -106,12 +106,12 @@ export async function getHiringRateDept({
         console.log(error)
         return error.response
       })
-  ).then((data) =>
-    mapEmbaucheData(codeTerritoire, codeRome, data?.listeValeursParPeriode[0])
-  )
+  ).then((data) => mapEmbaucheData(codeTerritoire, codeRome, data))
 }
 
-function mapEmbaucheData(codeDept, codeRome, stat) {
+function mapEmbaucheData(codeDept, codeRome, data) {
+  const stat = (!!data?.listeValeursParPeriode?.length > 0) ? data?.listeValeursParPeriode[0] : null
+
   // cas département outremer
   if (['971', '972', '973', '974', '975', '976'].includes(codeDept)) {
     codeDept = codeDept.replace('97', '')
@@ -122,7 +122,7 @@ function mapEmbaucheData(codeDept, codeRome, stat) {
     libelleRome: stat ? stat.libActivite : null,
     codePeriode: stat ? stat.codePeriode : null,
     libellePeriode: stat ? stat.libPeriode : null,
-    embauche: stat ? stat.valeurPrincipaleNombre : 0,
-    tauxEmbauche: stat ? stat.valeurSecondaireTaux : 0,
+    embauche: stat ? stat.valeurPrincipaleNombre : null,
+    tauxEmbauche: stat ? stat.valeurSecondaireTaux : null,
   }
 }

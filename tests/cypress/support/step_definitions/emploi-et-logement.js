@@ -92,7 +92,7 @@ When("je clique sur Voir toutes les offres d’emploi", function () {
 Then("j'affiche la liste des entreprises qui recrutent", function () {
   cy.contains(resultatEntreprise, "Les entreprises qui recrutent", {timeout: SHORT_WAIT_TIME}).should('exist');
   cy.contains(resultatEntreprise, "Secteurs qui recrutent", {timeout: SHORT_WAIT_TIME}).should('exist');
-  cy.get(nombreBlocsEntreprises, {timeout: SHORT_WAIT_TIME}).children().should('have.length.lte', 2);
+  cy.get(nombreBlocsEntreprises, {timeout: SHORT_WAIT_TIME}).children().should('have.length', 2);
 })
 
 Then("j'affiche le prix d'achat moyen au m²", function () {

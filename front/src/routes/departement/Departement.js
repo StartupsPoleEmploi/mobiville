@@ -245,12 +245,14 @@ const Departement = () => {
             data: formatNumber(jobOffers),
             icon: <MaletteIcon />,
           },
-          {
-            label: "Taux d'embauche",
-            $isNoWrap: true,
-            data: hiringRate > 100 ? '100%' : `${formatNumber(hiringRate)}%`,
-            icon: <HandshakeIcon />,
-          },
+          !hiringRate
+            ? null
+            : {
+              label: "Taux d'embauche",
+              $isNoWrap: true,
+              data: hiringRate > 100 ? '100%' : `${formatNumber(hiringRate)}%`,
+              icon: <HandshakeIcon />,
+            },
         ]}
       />
 

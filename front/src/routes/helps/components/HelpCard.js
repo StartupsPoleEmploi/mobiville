@@ -131,6 +131,7 @@ const logoStyle = {
     'action-logement-2.png': { width: '100px', height: 'auto' },
     'renault-group.png': { width: '110px', height: 'auto', paddingTop: '5px' },
     'pole-emploi.png': { width: 'auto', height: '55px' },
+    'dossier-facile.png': { width: '60px', height: 'auto',  paddingTop: '9px' },
     defaultStyle: { width: 'auto', height: '60px' },
 }
 

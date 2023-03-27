@@ -2,8 +2,10 @@ import config from 'config'
 import axios from 'axios'
 import { ungzip } from 'node-gzip'
 import { csvToArrayJson } from './csv'
-import { readFile, readFileSync } from 'fs'
+import { createReadStream, readFile, readFileSync, statSync } from 'fs'
+import bz2 from 'unbzip2-stream'
 import parser from 'xml2json'
+import { readdir } from 'fs/promises'
 
 let romeLabelFile = null
 const cheerio = require('cheerio')
@@ -323,13 +325,45 @@ export const getCitiesRent = () => {
 }
 
 export const getAllSecteursBassins = () => {
+  const dir = '/mnt/datalakepe/depuis_datalake'
   return new Promise((resolve, reject) => {
-    readFile(__dirname + '/../assets/datas/secteurs_bassins.csv', (err, data) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(csvToArrayJson(data, { delimiter: ';' }))
-      }
-    })
+    readdir(dir)
+      .then(
+        (files) =>
+          files
+            .filter(fileName => fileName.includes('extract_mobiville_dpae_full'))
+            .map((fileName) => ({
+              name: fileName,
+              time: statSync(`${dir}/${fileName}`).mtime.getTime(),
+            }))
+            .sort((a, b) => a.time - b.time)
+            .map(file => file.name)
+          )
+      .then(filesName => {
+        if (!filesName || filesName.length < 1) reject(new Error("Sync secteurs bassins failed : Can't find file"))
+
+        return filesName[0]
+      })
+      .then((fileName) => {
+        const reader = createReadStream(`${dir}/${fileName}`)
+          .pipe(bz2())
+    
+        let fetchData = ''
+        reader.on('data', (chunk) => (fetchData += chunk))
+        reader.on('end', () => {
+          resolve(
+            csvToArrayJson(fetchData, { delimiter: ';' }).then((data) =>
+              data.map((row) => ({
+                code_bassin: row.code_bassinemploi,
+                demandeurs_emploi: row.nb_de,
+                secteur_libelle: row.secteur,
+              }))
+            )
+          )
+        })
+        reader.on('error', (err) => reject(err))
+        
+      })
+      .catch(error => console.error(error))
   })
 }

@@ -42,10 +42,10 @@ const CityForm = ({
   const [citySelected, setCitySelected] = useState('')
 
   const computeSearchPath = useCallback(() => {
+    // redirection page région
     if (!jobSelected && !!citySelected && citySelected.type === REGION_TYPE) {
-      // redirection vers la page région
+      // cas dom-tom unidépartemental
       if (['1', '2', '3', '4', '6'].includes(citySelected.id)) {
-        // cas dom-tom unidépartemental
         return `/departement/${citySelected.id}-${citySelected.label
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
@@ -55,11 +55,17 @@ const CityForm = ({
       return `/region/${citySelected.id}`
     }
 
+    // redirection page ville - avec métier
     if (!!jobSelected && !!citySelected && citySelected.type === CITY_TYPE) {
-      // on va directement sur la page de la ville choisi
       return `/ville/${citySelected.id}-${citySelected.cityName}?codeRome=${jobSelected.key}`
     }
 
+    // redirection page ville - sans métier
+    if (!jobSelected && !!citySelected && citySelected.type === CITY_TYPE) {
+      return `/ville/${citySelected.id}-${citySelected.cityName}`
+    }
+
+    // redirection page recherche de villes
     const urlSearchParams = new URLSearchParams(search)
 
     urlSearchParams.delete('codeRome')
