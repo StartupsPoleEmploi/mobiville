@@ -10,11 +10,11 @@
     "@emotion/styled": "11.10.6",
     "@loadable/component": "^5.15.3",
     "@mui/icons-material": "5.11.11",
-    "@mui/material": "5.11.12",
+    "@mui/material": "5.11.15",
     "@mui/styled-engine-sc": "5.11.11",
-    "@mui/styles": "5.11.12",
-    "@sentry/react": "7.44.0",
-    "@sentry/tracing": "7.44.0",
+    "@mui/styles": "5.11.13",
+    "@sentry/react": "7.45.0",
+    "@sentry/tracing": "7.45.0",
     "axios": "0.27.2",
     "history": "^5.3.0",
     "leaflet": "1.9.3",
@@ -31,7 +31,7 @@
     "react-router-dom": "6.9.0",
     "react-scripts": "5.0.1",
     "react-tag-commander": "^1.1.1",
-    "styled-components": "5.3.8",
+    "styled-components": "5.3.9",
     "web-vitals": "3.3.0",
     "yarn": "1.22.19"
   },
@@ -60,10 +60,10 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "babel-eslint": "10.1.0",
+    "@babel/eslint-parser": "^7.19.1",
     "eslint": "8.36.0",
     "eslint-config-airbnb": "19.0.4",
-    "eslint-config-prettier": "8.7.0",
+    "eslint-config-prettier": "8.8.0",
     "eslint-config-react-app": "7.0.1",
     "eslint-plugin-flowtype": "8.0.3",
     "eslint-plugin-import": "2.27.5",
@@ -71,7 +71,8 @@
     "eslint-plugin-react": "^7.32.1",
     "eslint-plugin-react-hooks": "4.6.0",
     "husky": "8.0.3",
-    "prettier": "2.8.5",
-    "sass": "1.59.2"
+    "prettier": "2.8.7",
+    "prettier-eslint": "15.0.1",
+    "sass": "1.60.0"
   }
 }
