@@ -1,5 +1,5 @@
 import React from 'react'
-import { DeviceProvider } from './deviceContext.js'
+import { DeviceProvider } from './deviceContext'
 import { NomPageProvider } from './NomPageContext'
 import { HelpsProvider } from './helpsContext'
 import { RegionsProvider } from './regionsContext'
