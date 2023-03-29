@@ -108,8 +108,6 @@ const WrapperLogos = styled(Wrapper)`
   .logo-fse {
     img {
       width: 75px;
-      height: 51px;
-      // padding-right: 2px;
     }
   }
   .europe {
@@ -206,9 +204,8 @@ const Footer = () => {
               tag-exit={`${nomPage}/footer/liens-actionlogement`}
             >
               <Image
-                isUrlSrc
                 className="logo-al"
-                src="/logos/logo_action-logement_small.png"
+                src="logos/logo_action-logement_small"
                 alt="action logement"
               />
             </a>
@@ -219,9 +216,8 @@ const Footer = () => {
               rel="noreferrer"
             >
               <Image
-                isUrlSrc
                 className="logo-fse"
-                src="/logos/logo_fonds_social_eu.jpg"
+                src="logos/logo_fonds_social_eu"
                 alt="fond social européen"
               />
             </a>

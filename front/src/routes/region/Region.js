@@ -265,7 +265,7 @@ const Region = () => {
 
         {region.code ? (
           <ImageContainer $isMobile={isMobile}>
-            <RegionImage src={`/regions/${region.code}.jpg`} isUrlSrc />
+            <RegionImage src={`regions/${region.code}`} />
           </ImageContainer>
         ) : null}
       </WelcomeContainer>

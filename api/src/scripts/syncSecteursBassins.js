@@ -3,7 +3,7 @@ import { getAllSecteursBassins } from '../utils/api'
 
 const models = db.initModels()
 
-const doSync = async () => {
+export const doSync = async () => {
   try {
     let secteursBassins = await getAllSecteursBassins()
     secteursBassins = secteursBassins.filter(secteur => !!secteur.code_bassin)
