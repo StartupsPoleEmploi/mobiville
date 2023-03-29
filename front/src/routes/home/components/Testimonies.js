@@ -7,8 +7,7 @@ import {
   COLOR_SALMON,
   COLOR_WHITE,
 } from '../../../constants/colors'
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
+import { useDevice } from '../../../common/contexts'
 
 const AppCarousel = loadable(() => import('../../../components/AppCarousel'))
 
@@ -115,8 +114,7 @@ const TestimonyBody = styled.div`
 `
 
 const Testimonies = () => {
-  const windowsSize = useWindowSize()
-  const isMobile = isMobileView(windowsSize)
+  const { isMobile } = useDevice()
 
   return (
     <div style={{ overflow: 'hidden' }}>

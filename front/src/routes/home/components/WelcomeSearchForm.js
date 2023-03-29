@@ -1,14 +1,12 @@
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-import { ButtonGroup, CityForm, HelpForm } from '../../../components'
+import styled from 'styled-components'
 
 import { ReactComponent as HouseOutlineIcon } from '../../../assets/images/icons/house-outline.svg'
 import { ReactComponent as FinancialHelpIcon } from '../../../assets/images/icons/financial-help.svg'
 
-import { isMobileView } from '../../../constants/mobile'
-import { useWindowSize } from '../../../common/hooks/window-size'
-import styled from 'styled-components'
+import { ButtonGroup, CityForm, HelpForm } from '../../../components'
+import { useDevice } from '../../../common/contexts'
 
 // === SEARCH BLOCK ===
 
@@ -33,8 +31,7 @@ const WelcomeSearchForm = () => {
   const HELPS_BUTTON_ID = 'helps'
   const CITIES_BUTTON_ID = 'cities'
 
-  const windowSize = useWindowSize()
-  const isMobile = isMobileView(windowSize)
+  const { isMobile, windowSize } = useDevice()
   const navigate = useNavigate()
 
   const [selectedSearchMode, setSelectedSearchMode] = useState('city')

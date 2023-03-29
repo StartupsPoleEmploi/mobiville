@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR_OTHER_GREEN, COLOR_PRIMARY } from '../constants/colors'
-import { useWindowSize } from '../common/hooks/window-size'
-import { isMobileView } from '../constants/mobile'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
+
+import { COLOR_OTHER_GREEN, COLOR_PRIMARY } from '../constants/colors'
+import { useDevice } from '../common/contexts'
 
 const Container = styled.a`
   margin: auto;
@@ -35,7 +35,7 @@ const Text = styled.p`
 `
 
 const TopPageButton = () => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <Container onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>

@@ -4,12 +4,10 @@ import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
-import { useHelps } from '../common/contexts/helpsContext'
 import { ActionButton, Tag } from '.'
 import { COLOR_PRIMARY } from '../constants/colors'
 import { formatHelpUrl } from '../utils/utils'
-import { isMobileView } from '../constants/mobile'
-import { useWindowSize } from '../common/hooks/window-size'
+import { useDevice, useHelps } from '../common/contexts'
 
 const Container = styled.div`
   max-width: 1040px;
@@ -109,7 +107,7 @@ const HelpsStandOut = ({
   buttonLibelle = 'Voir toutes les aides',
   isHorizontalScroll = false,
 }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
   const { previews, onLoadPreviews } = useHelps()
 
   useEffect(() => {

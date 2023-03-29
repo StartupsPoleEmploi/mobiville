@@ -1,12 +1,11 @@
 import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
 
-import { useWindowSize } from "../../common/hooks/window-size"
 import { MainLayout, Modale, Section } from "../../components"
 import CityForm from "../../components/CityForm"
 import { COLOR_BACKGROUND, COLOR_PRIMARY } from "../../constants/colors"
-import { isMobileView } from "../../constants/mobile"
 import { Breadcrumbs, Image } from "../../components"
+import { useDevice } from "../../common/contexts"
 
 const Container = styled(Section)`
     display: flex;
@@ -22,7 +21,7 @@ const Title = styled.h1`
 `
 
 const CitySearchPage = () => {
-    const isMobile = isMobileView(useWindowSize())
+    const { isMobile } = useDevice()
     const navigate = useNavigate()
 
     if (isMobile) {

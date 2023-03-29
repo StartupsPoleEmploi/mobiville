@@ -4,13 +4,11 @@ import styled from 'styled-components'
 import { ReactComponent as RightChevronIcon } from '../../../assets/images/icons/right_chevron.svg'
 
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../../constants/colors'
-import { useRegions } from '../../../common/contexts/regionsContext'
 import { alphabetOrder, splitSort } from '../../../utils/utils'
-import { isMobileView } from '../../../constants/mobile'
-import { useWindowSize } from '../../../common/hooks/window-size'
+import { useDevice, useRegions } from '../../../common/contexts'
 
 const Container = styled.div`
-  color: ${COLOR_PRIMARY};'
+  color: ${COLOR_PRIMARY};
 `
 
 const Title = styled.h2`
@@ -57,7 +55,7 @@ const RegionLabel = styled(Link)`
 
 const HomeRegionsBanner = () => {
   const { regionsDROMIncluded, formatUrl } = useRegions()
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <Container>

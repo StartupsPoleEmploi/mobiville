@@ -1,8 +1,7 @@
 import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
 
-import { useWindowSize } from '../common/hooks/window-size'
-import { isMobileView } from '../constants/mobile'
+import { useDevice } from '../common/contexts'
 
 const Container = styled.div`
   max-width: 1040px;
@@ -37,7 +36,7 @@ const ScrollingWrapper = styled.div`
 `
 
 const HorizontalScrollableSection = ({ children }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <Container $isMobile={isMobile}>

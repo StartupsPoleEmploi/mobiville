@@ -9,8 +9,7 @@ import {
 } from '../../../constants/colors'
 import { Image } from '../../../components'
 import BackButton from '../../../components/buttons/BackButton'
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
+import { useDevice } from '../../../common/contexts'
 
 const Container = styled.div`
   grid-area: header;
@@ -65,7 +64,7 @@ const ImageContainer = styled.div`
 `
 
 const GuideStepHeader = ({ number, title, CTA, imageSrc }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <Container $isMobile={isMobile}>

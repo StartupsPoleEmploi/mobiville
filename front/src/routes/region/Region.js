@@ -8,8 +8,6 @@ import { ReactComponent as CalculatorIcon } from '../../assets/images/icons/calc
 import { ReactComponent as MaletteIcon } from '../../assets/images/icons/malette.svg'
 import { ReactComponent as RightChevronIcon } from '../../assets/images/icons/right_chevron.svg'
 
-import { useRegions } from '../../common/contexts/regionsContext'
-import { useWindowSize } from '../../common/hooks/window-size'
 import {
   BackButton,
   Image,
@@ -20,7 +18,6 @@ import {
   TopPageButton,
 } from '../../components'
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../constants/colors'
-import { isMobileView } from '../../constants/mobile'
 import {
   alphabetOrder,
   formatCityUrl,
@@ -28,6 +25,7 @@ import {
   splitSort,
   wordsCapitalize,
 } from '../../utils/utils'
+import { useDevice, useRegions } from '../../common/contexts'
 
 const WelcomeContainer = styled.div`
   max-width: 1040px;
@@ -164,7 +162,7 @@ const GridItemTitle = styled.div`
 `
 
 const Region = () => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
   const { codeSlug } = useParams()
   const { regions } = useRegions()
 

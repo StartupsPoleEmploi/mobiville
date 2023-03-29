@@ -13,9 +13,6 @@ import {
   COLOR_PURPLE,
   COLOR_WHITE,
 } from '../../../../constants/colors'
-import { isMobileView } from '../../../../constants/mobile'
-import { useWindowSize } from '../../../../common/hooks/window-size'
-
 import {
   TRANSPORT_SERVICES,
   EDUCATION_SERVICES,
@@ -23,6 +20,7 @@ import {
   CULTURE_SERVICES,
   ENVIRONMENT_SERVICES,
 } from '../../../../constants/services'
+import { useDevice } from '../../../../common/contexts'
 
 const Container = styled.div`
   max-width: 1036px;
@@ -112,7 +110,7 @@ const CardItemLabel = styled.p`
 `
 
 const CityServiceInfoCards = ({ cityEquipments }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   const [ transportEquipements, setTransportEquipements ] = useState([])
   const [ educationEquipements, setEducationEquipements ] = useState([])

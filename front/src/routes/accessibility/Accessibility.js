@@ -1,8 +1,8 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { useWindowSize } from '../../common/hooks/window-size'
+
+import { useDevice } from '../../common/contexts'
 import { BackButton, MainLayout } from '../../components'
-import { isMobileView } from '../../constants/mobile'
 
 const Container = styled.div`
   > .wrapper {
@@ -14,7 +14,7 @@ const Container = styled.div`
 `
 
 const AccessibilityPage = () => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <MainLayout topMobileMenu>

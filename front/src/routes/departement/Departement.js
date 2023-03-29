@@ -9,7 +9,7 @@ import { ReactComponent as HandshakeIcon } from '../../assets/images/icons/hands
 import { ReactComponent as MaletteIcon } from '../../assets/images/icons/malette.svg'
 import { ReactComponent as RightChevronIcon } from '../../assets/images/icons/right_chevron.svg'
 
-import { useWindowSize } from '../../common/hooks/window-size'
+import { useDevice } from '../../common/contexts'
 import {
   BackButton,
   KeyFigures,
@@ -20,7 +20,6 @@ import {
   TopJobs,
 } from '../../components'
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../constants/colors'
-import { isMobileView } from '../../constants/mobile'
 import { formatNumber, wordsCapitalize } from '../../utils/utils'
 
 const TopCities = loadable(() => import('./components/TopCities'))
@@ -142,7 +141,7 @@ const GridItemTitle = styled.div`
 `
 
 const Departement = () => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
   const { codeSlug } = useParams()
 
   const [isTextExpended, setIsTextExpended] = useState(false)

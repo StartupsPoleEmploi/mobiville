@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import { useWindowSize } from '../common/hooks/window-size'
+
+import { useDevice } from '../common/contexts'
 import { COLOR_PRIMARY } from '../constants/colors'
-import { isMobileView } from '../constants/mobile'
 
 const Container = styled.div`
   margin: 20px auto;
@@ -62,7 +62,7 @@ const Label = styled.p`
 `
 
 const KeyFigures = ({ figures }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   const groupBy2Element = (acc, figure, index) => {
     // affichage flex par groupe de 2, TE_MAV-838

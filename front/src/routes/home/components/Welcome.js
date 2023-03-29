@@ -1,10 +1,9 @@
 import styled from 'styled-components'
 import loadable from '@loadable/component'
 
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
 import { COLOR_PRIMARY } from '../../../constants/colors'
 import { Image, Section } from '../../../components'
+import { useDevice } from '../../../common/contexts'
 
 const WelcomeSearchForm = loadable(() => import('./WelcomeSearchForm'))
 
@@ -64,7 +63,7 @@ const HeroImage = styled(Image)`
 `
 
 const Welcome = () => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <Container $isMobile={isMobile}>

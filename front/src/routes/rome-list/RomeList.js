@@ -4,8 +4,6 @@ import axios from 'axios'
 import { deburr, sortBy } from 'lodash'
 
 import MainLayout from '../../components/MainLayout'
-import { isMobileView } from '../../constants/mobile'
-import { useWindowSize } from '../../common/hooks/window-size'
 
 import aSVG from '../../assets/images/rome/A.svg'
 import bSVG from '../../assets/images/rome/B.svg'
@@ -19,6 +17,7 @@ import jSVG from '../../assets/images/rome/J.svg'
 import kSVG from '../../assets/images/rome/K.svg'
 import mSVG from '../../assets/images/rome/M.svg'
 import nSVG from '../../assets/images/rome/N.svg'
+import { useDevice } from '../../common/contexts'
 
 const PAGE_HEADER_SIZE = 92
 const MAIN_HEADER_SIZE = 0
@@ -109,7 +108,6 @@ const H1 = styled.h1`
   + * {
     margin-top: ${({ isMobile }) => (isMobile ? `${PAGE_HEADER_SIZE}px` : '0')};
   }
-}
 `
 
 const CategoryDiv = styled.div`
@@ -139,8 +137,7 @@ const Li = styled.li`
 `
 
 const RomeList = () => {
-  const size = useWindowSize()
-  const isMobile = isMobileView(size)
+  const { isMobile } = useDevice()
 
   const [isLoading, setIsLoading] = useState(true)
   const [dataByCategory, setDataByCategory] = useState({})

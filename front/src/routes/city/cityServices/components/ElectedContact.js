@@ -1,11 +1,11 @@
 import styled from 'styled-components'
-import { useWindowSize } from '../../../../common/hooks/window-size'
+
+import { useDevice } from '../../../../common/contexts'
 import {
   COLOR_OTHER_GREEN,
   COLOR_PRIMARY,
   COLOR_WHITE,
 } from '../../../../constants/colors'
-import { isMobileView } from '../../../../constants/mobile'
 
 const Container = styled.div`
   width: 100%;
@@ -64,7 +64,7 @@ const CustomButton = styled.a`
 `
 
 const ElectedContact = () => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <Container $isMobile={isMobile}>

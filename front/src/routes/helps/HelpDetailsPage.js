@@ -3,8 +3,14 @@ import styled from 'styled-components'
 import { Link, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 
-import { useHelps } from '../../common/contexts/helpsContext'
-import { useWindowSize } from '../../common/hooks/window-size'
+import CloseIcon from '@mui/icons-material/Close'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
+import HomeWorkIcon from '@mui/icons-material/HomeWork'
+import EuroIcon from '@mui/icons-material/Euro'
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar'
+import PeopleIcon from '@mui/icons-material/People'
+
 import MainLayout from '../../components/MainLayout'
 import {
   COLOR_GRAY,
@@ -13,15 +19,8 @@ import {
   COLOR_TEXT_PRIMARY,
   COLOR_TEXT_SECONDARY,
 } from '../../constants/colors'
-import { isMobileView } from '../../constants/mobile'
 import { ucFirst, useElementOnScreen } from '../../utils/utils'
-import CloseIcon from '@mui/icons-material/Close'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
-import HomeWorkIcon from '@mui/icons-material/HomeWork'
-import EuroIcon from '@mui/icons-material/Euro'
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar'
-import PeopleIcon from '@mui/icons-material/People'
+import { useDevice, useHelps } from '../../common/contexts'
 
 const HeaderLink = styled(Link)`
   display: flex;
@@ -179,15 +178,13 @@ const StickyHelp = styled.div`
 
 const HelpDetailsPage = () => {
   const { slug } = useParams()
+  const { isMobile } = useDevice()
   const { help, onLoadPreview } = useHelps()
-  const size = useWindowSize()
   const [containerRef, isVisibleHelpButton] = useElementOnScreen({
     root: null,
     rootMargin: '0px',
     threshold: 0,
   })
-
-  const isMobile = isMobileView(size)
 
   useEffect(() => {
     if (slug) {
