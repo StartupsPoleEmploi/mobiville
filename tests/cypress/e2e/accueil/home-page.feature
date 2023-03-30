@@ -58,7 +58,7 @@ Fonctionnalité: Affichage homepage et moteur de recherche
       | Je déménage prochainement | Je suis salarié          | J'ai plus de 26 ans    |
       | Je suis alternant         | J'ai plus de 26 ans      |                        |
  
-  Scénario: Retour à la recherche des villes après la recherche d'une 'aide
+  Scénario: Retour à la recherche des villes après la recherche d'une aide
     Lorsque je clique sur le bouton "Aide" sous le texte "que recherchez vous"
     Alors j'affiche les filtres aide
     Lorsque je clique sur le bouton "Ville" sous le texte "que recherchez vous"
@@ -79,3 +79,9 @@ Fonctionnalité: Affichage homepage et moteur de recherche
     Alors j'affiche le retour haut de page
     Lorsque je clique sur le retour haut de page
     Alors je suis en haut de la page
+
+  Scénario: Recherche du métier dans une ville
+    Lorsque je saisis "Lille" dans la ville
+    Et que je choisis "Lille (59000)" dans la liste des villes
+    Et que je clique sur rechercher
+    Alors j'affiche la page de la ville
