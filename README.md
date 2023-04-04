@@ -52,6 +52,7 @@ yarn sync:departements # almost instantaneous
 yarn sync:embaucheDepartements # Takes about 5 hours ;) tmux ?
 yarn sync:departementsDescriptions # Takes about 10 minutes
 yarn sync:secteursBassins # almost instantaneous
+yarn sync:departementsTemperatures # Takes about 2 minutes
 ```
 
 ## Structure de données

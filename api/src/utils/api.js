@@ -77,27 +77,6 @@ export function getFranceShape() {
   return JSON.parse(rawdata).features[0].geometry.coordinates.flat(2)
 }
 
-export function getFrenchWeatherStation() {
-  return new Promise((resolve, reject) => {
-    readFile(
-      __dirname + '/../assets/datas/french-weather-station-list.csv',
-      (err, data) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(csvToArrayJson(data, { delimiter: ',' }))
-        }
-      }
-    )
-  })
-}
-
-export function loadWeatherFile(stationId) {
-  return axios
-    .get(config.weatherFile(stationId), { ...config.proxyPeOverrides })
-    .then((data) => data.data.split('\r\n'))
-}
-
 function customizeImageCity(strImage) {
   if (strImage && strImage.includes('/undefined')) {
     return null
@@ -203,6 +182,22 @@ export const wikipediaDepartementDetails = (departemantName) =>
         .substring(0, 4096)
     })
     .catch((err) => console.error('ERROR', err))
+
+// source : https://www.data.gouv.fr/en/datasets/temperature-quotidienne-departementale-depuis-janvier-2018/
+export const getDepartementTemperatures = () => {
+  return new Promise((resolve, reject) => {
+    readFile(
+      __dirname + '/../assets/datas/temperature-quotidienne-departementale.csv',
+      (err, data) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(csvToArrayJson(data, { delimiter: ';' }))
+        }
+      }
+    )
+  })
+}
 
 export const getAllRegions = () => {
   let rawdata = readFileSync(__dirname + '/../assets/datas/regions.json')

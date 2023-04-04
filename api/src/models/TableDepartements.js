@@ -1,4 +1,5 @@
 import Sequelize from 'sequelize'
+import { getDepartementTemperatures } from '../utils/api'
 import { wikipediaDepartementDetails } from '../utils/api'
 
 export default (sequelizeInstance, Model) => {
@@ -68,6 +69,28 @@ export default (sequelizeInstance, Model) => {
       {
         where: {
           code: departement.code,
+        },
+      }
+    )
+  }
+
+  Model.syncDepartementTemperatures = async ({
+    code,
+    temp_winter,
+    temp_spring,
+    temp_summer,
+    temp_autumn,
+  }) => {
+    await Model.update(
+      {
+        temp_winter,
+        temp_spring,
+        temp_summer,
+        temp_autumn,
+      },
+      {
+        where: {
+          code: code,
         },
       }
     )

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import _ from 'lodash'
 import styled from 'styled-components'
@@ -86,6 +86,16 @@ const CityServices = () => {
 
   const showFullText = useCallback(() => (isTextExpended || city.description.length < 521), [isTextExpended, city.description])
 
+  const currentTemperature = useMemo(() => {
+    const currentDate = new Date()
+    const seasonsDate = [ new Date('2023-03-20'), new Date('2023-06-22'), new Date('2023-09-24'), new Date('2023-12-21') ]
+    seasonsDate.forEach(seasonDate => seasonDate.setFullYear(currentDate.getFullYear()))
+    const seasonsTemperature = [ city?.departement?.temp_winter, city?.departement?.temp_spring, city?.departement?.temp_summer, city?.departement?.temp_autumn ]
+
+    let seasonIndex = seasonsDate.indexOf(seasonsDate.find(seasonsDate => currentDate < seasonsDate))
+    return seasonsTemperature[seasonIndex === -1 ? 0 : seasonIndex]
+  }, [ city?.departement?.temp_winter, city?.departement?.temp_spring, city?.departement?.temp_summer, city?.departement?.temp_autumn ])
+
   return (
     <>
       <Helmet>
@@ -154,7 +164,13 @@ const CityServices = () => {
         figures={[
           { label: "Habitants", data: formatNumber(city.population * 1000), icon: <CrowdIcon /> },
           { label: "Superficie", data: `${formatNumber(city.superficie / 100)} km²`, icon: <CalculatorIcon /> },
-          { label: "Température moyenne", data: `${formatNumber(city.average_temperature)}°`, icon: <WeatherIcon /> },
+          !currentTemperature
+            ? null
+            : {
+              label: "Température moyenne",
+              data: `${formatNumber(currentTemperature)}°`,
+              icon: <WeatherIcon />,
+            },
         ]}
       />
 
