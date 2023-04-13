@@ -9,6 +9,7 @@ tests/cypress/videos/
 tests/cypress/reports/
 /api/src/datas-mnt
 front/dist
+yarn-error.log
 
 **/*lock.json
 **/*.lock

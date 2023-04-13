@@ -26,7 +26,7 @@ export function csvToArrayJson(data, options = {}) {
             .normalize('NFD')
             .replace(/[\u0300-\u036f]/g, '')
             .toLowerCase()
-        ] = (tab[p] === '' && !!options.emptyAsNull) ? null : tab[p]
+        ] = tab[p] === '' && !!options.emptyAsNull ? null : tab[p]
       }
 
       return obj
