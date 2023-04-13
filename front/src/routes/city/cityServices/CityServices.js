@@ -22,7 +22,7 @@ const WelcomeContainer = styled.div`
 
 const WelcomeWrapper = styled.div`
   max-width: 1040px;
-  margin: ${({ $isMobile }) => $isMobile ? 'auto' : '0 auto 50px auto'};
+  margin: ${({ $isMobile }) => ($isMobile ? 'auto' : '0 auto 50px auto')};
   color: ${COLOR_PRIMARY};
   padding: ${({ $isMobile }) => ($isMobile ? '1px 16px 16px 16px' : '1px 0')};
 `
@@ -84,17 +84,39 @@ const CityServices = () => {
 
   const [isTextExpended, setIsTextExpended] = useState(false)
 
-  const showFullText = useCallback(() => (isTextExpended || city.description.length < 521), [isTextExpended, city.description])
+  const showFullText = useCallback(
+    () => isTextExpended || city.description.length < 521,
+    [isTextExpended, city.description]
+  )
 
   const currentTemperature = useMemo(() => {
     const currentDate = new Date()
-    const seasonsDate = [ new Date('2023-03-20'), new Date('2023-06-22'), new Date('2023-09-24'), new Date('2023-12-21') ]
-    seasonsDate.forEach(seasonDate => seasonDate.setFullYear(currentDate.getFullYear()))
-    const seasonsTemperature = [ city?.departement?.temp_winter, city?.departement?.temp_spring, city?.departement?.temp_summer, city?.departement?.temp_autumn ]
+    const seasonsDate = [
+      new Date('2023-03-20'),
+      new Date('2023-06-22'),
+      new Date('2023-09-24'),
+      new Date('2023-12-21'),
+    ]
+    seasonsDate.forEach((seasonDate) =>
+      seasonDate.setFullYear(currentDate.getFullYear())
+    )
+    const seasonsTemperature = [
+      city?.departement?.temp_winter,
+      city?.departement?.temp_spring,
+      city?.departement?.temp_summer,
+      city?.departement?.temp_autumn,
+    ]
 
-    let seasonIndex = seasonsDate.indexOf(seasonsDate.find(seasonsDate => currentDate < seasonsDate))
+    let seasonIndex = seasonsDate.indexOf(
+      seasonsDate.find((seasonsDate) => currentDate < seasonsDate)
+    )
     return seasonsTemperature[seasonIndex === -1 ? 0 : seasonIndex]
-  }, [ city?.departement?.temp_winter, city?.departement?.temp_spring, city?.departement?.temp_summer, city?.departement?.temp_autumn ])
+  }, [
+    city?.departement?.temp_winter,
+    city?.departement?.temp_spring,
+    city?.departement?.temp_summer,
+    city?.departement?.temp_autumn,
+  ])
 
   return (
     <>
@@ -111,72 +133,79 @@ const CityServices = () => {
         />
       </Helmet>
       <div tag-page="/city-services">
-      <WelcomeContainer $isMobile={isMobile}>
-        <WelcomeWrapper $isMobile={isMobile}>
-          <Title>Vivre à {_.capitalize(city.nom_comm)}</Title>
+        <WelcomeContainer $isMobile={isMobile}>
+          <WelcomeWrapper $isMobile={isMobile}>
+            <Title>Vivre à {_.capitalize(city.nom_comm)}</Title>
 
-          <InfoContainer $isMobile={isMobile}>
-            {city.description ? (
-              <TextContainer $showFullText={showFullText()}>
-                <Description>{city.description}</Description>
-                <ReadMore
-                  $isMobile={isMobile}
-                  onClick={() => setIsTextExpended(!isTextExpended)}
-                >
-                  {city.description.length > 521 && (
-                    isTextExpended ? (
-                      <>
-                        <RightChevronIcon />
-                        <ReadMoreText>Réduire le texte</ReadMoreText>
-                      </>
-                    ) : (
-                      <>
-                        <RightChevronIcon />
-                        <ReadMoreText>Lire la suite</ReadMoreText>
-                      </>
-                    )
-                  )}
-                </ReadMore>
-              </TextContainer>
-            ) : null}
+            <InfoContainer $isMobile={isMobile}>
+              {city.description ? (
+                <TextContainer $showFullText={showFullText()}>
+                  <Description>{city.description}</Description>
+                  <ReadMore
+                    $isMobile={isMobile}
+                    onClick={() => setIsTextExpended(!isTextExpended)}
+                  >
+                    {city.description.length > 521 &&
+                      (isTextExpended ? (
+                        <>
+                          <RightChevronIcon />
+                          <ReadMoreText>Réduire le texte</ReadMoreText>
+                        </>
+                      ) : (
+                        <>
+                          <RightChevronIcon />
+                          <ReadMoreText>Lire la suite</ReadMoreText>
+                        </>
+                      ))}
+                  </ReadMore>
+                </TextContainer>
+              ) : null}
 
-            <MapContainer>
-              <Map
-                cities={[
-                  {
-                    ...city,
-                    x: city.geo_point_2d_x ?? 0,
-                    y: city.geo_point_2d_y ?? 0,
-                  },
-                ]}
-                style={{
-                  height: 255, 
-                  borderRadius: 8,
-                  margin: 0
-                }}
-              />
-            </MapContainer>
-          </InfoContainer>
-        </WelcomeWrapper>
-      </WelcomeContainer>
+              <MapContainer>
+                <Map
+                  cities={[
+                    {
+                      ...city,
+                      x: city.geo_point_2d_x ?? 0,
+                      y: city.geo_point_2d_y ?? 0,
+                    },
+                  ]}
+                  style={{
+                    height: 255,
+                    borderRadius: 8,
+                    margin: 0,
+                  }}
+                />
+              </MapContainer>
+            </InfoContainer>
+          </WelcomeWrapper>
+        </WelcomeContainer>
 
-      <KeyFigures
-        figures={[
-          { label: "Habitants", data: formatNumber(city.population * 1000), icon: <CrowdIcon /> },
-          { label: "Superficie", data: `${formatNumber(city.superficie / 100)} km²`, icon: <CalculatorIcon /> },
-          !currentTemperature
-            ? null
-            : {
-              label: "Température moyenne",
-              data: `${formatNumber(currentTemperature)}°`,
-              icon: <WeatherIcon />,
+        <KeyFigures
+          figures={[
+            {
+              label: 'Habitants',
+              data: formatNumber(city.population * 1000),
+              icon: <CrowdIcon />,
             },
-        ]}
-      />
+            {
+              label: 'Superficie',
+              data: `${formatNumber(city.superficie / 100)} km²`,
+              icon: <CalculatorIcon />,
+            },
+            !currentTemperature
+              ? null
+              : {
+                  label: 'Température moyenne',
+                  data: `${formatNumber(currentTemperature)}°`,
+                  icon: <WeatherIcon />,
+                },
+          ]}
+        />
 
-      <CityServiceInfoCards cityEquipments={city.equipments} />
+        <CityServiceInfoCards cityEquipments={city.equipments} />
 
-      <ElectedContact />
+        <ElectedContact />
       </div>
     </>
   )
