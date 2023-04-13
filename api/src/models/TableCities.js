@@ -1,5 +1,5 @@
 import Sequelize, { Op, QueryTypes } from 'sequelize'
-import { compact, mean } from 'lodash'
+import { compact } from 'lodash'
 import {
   ALT_IS_MOUNTAIN,
   CRITERIONS,
@@ -10,18 +10,14 @@ import {
   CRIT_MOUNTAIN,
   CRIT_SIDE_SEA,
   CRIT_SMALL_CITY,
-  CRIT_SUN,
   IS_LARGE_CITY,
   IS_MEDIUM_CITY,
   IS_SMALL_CITY,
-  IS_SUNNY,
   SIDE_SEA,
   HIGH_OPPORTUNITY
 } from '../constants/criterion'
 import {
   getFranceShape,
-  getFrenchWeatherStation,
-  loadWeatherFile,
   wikipediaDetails,
   getTensionsCities,
   getCrawledImageCity,
@@ -33,8 +29,6 @@ import { NO_DESCRIPTION_MSG } from '../constants/messages'
 
 export default (sequelizeInstance, Model) => {
   Model.franceShape = null
-  Model.weatherStationList = null
-  Model.averageTemperatureCache = {}
   Model.cityOnSync = false
   Model.cacheLoadAveragePricing = null
   Model.cacheLoadAverageHouseTension = null
@@ -165,7 +159,6 @@ export default (sequelizeInstance, Model) => {
       'updated_at',
       'deleted_at',
       'distance_from_sea',
-      'average_temperature',
       'description',
       'city_house_tension',
       'cache_living_environment',
@@ -279,11 +272,6 @@ export default (sequelizeInstance, Model) => {
         case CRIT_SIDE_SEA:
           return prev.concat({
             distance_from_sea: { [Op.lte]: SIDE_SEA },
-          })
-
-        case CRIT_SUN:
-          return prev.concat({
-            average_temperature: { [Op.lte]: IS_SUNNY },
           })
 
         default:
@@ -438,13 +426,6 @@ export default (sequelizeInstance, Model) => {
         )
       }
 
-      if (city.dataValues.average_temperature === null) {
-        options.average_temperature = await Model.averageTemperature(
-          city.dataValues.geo_point_2d_x,
-          city.dataValues.geo_point_2d_y
-        )
-      }
-
       // mise à jour systématique
       const { photo, description } = await Model.getDescription(city.nom_comm)
       options.photo = photo
@@ -488,75 +469,6 @@ export default (sequelizeInstance, Model) => {
     })
 
     return minDistance
-  }
-
-  Model.averageTemperature = async (lat, long) => {
-    if (!Model.weatherStationList) {
-      Model.weatherStationList = await getFrenchWeatherStation()
-    }
-
-    let minDistance = null
-    let stationId = null
-    let stationIndex = null
-    Model.weatherStationList.map((station, index) => {
-      let dist = distanceBetweenToCoordinates(
-        +station.latitude.replace(',', '.'),
-        +station.longitude.replace(',', '.'),
-        lat,
-        long,
-        'K'
-      )
-      if (dist < 0) {
-        dist *= -1
-      }
-
-      if (dist < minDistance || !minDistance) {
-        minDistance = dist
-        stationId = station.numero
-        stationIndex = index
-      }
-    })
-
-    // cache http and calcul
-    if (Model.averageTemperatureCache[stationId]) {
-      return Model.averageTemperatureCache[stationId]
-    }
-
-    try {
-      if (stationId) {
-        console.log(`load station file => id: ${stationId}`)
-        const file = await loadWeatherFile(stationId)
-        const findLineIndex = file.findIndex(
-          (l) => l.indexOf('Température moyenne') !== -1
-        )
-        let temperatureLine = file[findLineIndex + 1]
-        if (temperatureLine.indexOf('Statistiques') !== -1) {
-          // escape information line
-          temperatureLine = file[findLineIndex + 2]
-        }
-
-        const allTemps = []
-        temperatureLine
-          .replace(/(\r\n|\n|\r)/gm, '')
-          .split(';')
-          .map((temp) => {
-            if (+temp) {
-              allTemps.push(+temp)
-            }
-          })
-        const meanCalc = mean(allTemps)
-        Model.averageTemperatureCache[stationId] = meanCalc
-        if ((meanCalc || null) === null) {
-          throw 'File not found'
-        } else {
-          return meanCalc
-        }
-      }
-    } catch (err) {
-      // if file is broken or not exist
-      Model.weatherStationList.splice(stationIndex, 1)
-      return await Model.averageTemperature(lat, long)
-    }
   }
 
   Model.getDescription = async (cityName) => {

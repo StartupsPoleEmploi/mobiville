@@ -18,7 +18,6 @@ import Sequelize from 'sequelize'
 - code_arr:
 - population: Population en milier (Info de 2017),
 - distance_from_sea: Distance par rapport à la mer par rapport au centre. (Valeur à null puis un cron teste le point geographique le plus proche selon le fichier `france-shape-side-sea.geo.json`),
-- average_temperature: Température moyenne de la ville sur toute l'année des 10 dernieres années avec 3 ans de retard. (Valeur à null puis un cron chercher la balise météorologie la plus proche de la ville. Les balises sont issues de `donneespubliques.meteofrance.fr`. Pour info, il n'y a pas beaucoup de balise en France, quelques centaines),
 - description: Description de la ville. (Valeur à null puis un cron demande à l'api wikipedia la description),
 - city_house_tension: Definition du niveau de tension (Valeur à null puis un cron demande au fichier `dvf-communes-2019.csv` issue de data.gouv.fr),
 - rent_t2: Prix moyen du loyer des appartement T2 de la ville (Value à null puis un demande au fichier `cities_rent.csv`),
@@ -110,10 +109,6 @@ export default (sequelizeInstance) => {
       },
       distance_from_sea: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-      },
-      average_temperature: {
-        type: Sequelize.FLOAT,
         allowNull: true,
       },
       description: {

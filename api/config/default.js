@@ -12,7 +12,6 @@ module.exports = {
     url: process.env.DATABASE_URL,
     dialect: 'mariadb',
   },
-  weatherFile: (code) => `https://donneespubliques.meteofrance.fr/FichesClim/FICHECLIM_${(code + '').padStart(8, '0')}.data`,
   koaKeys: ['mobiville_for_ever'],
   SESSION_CONFIG: {
     key: 'koa.sess', /** (string) cookie key (default is koa.sess) */

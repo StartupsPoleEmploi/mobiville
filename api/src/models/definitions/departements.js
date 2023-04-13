@@ -43,6 +43,22 @@ export default (sequelizeInstance) => {
             type: Sequelize.FLOAT,
             allowNull: true,
           },
+          temp_winter: {
+            type: Sequelize.FLOAT,
+            allowNull: true,
+          },
+          temp_spring: {
+            type: Sequelize.FLOAT,
+            allowNull: true,
+          },
+          temp_summer: {
+            type: Sequelize.FLOAT,
+            allowNull: true,
+          },
+          temp_autumn: {
+            type: Sequelize.FLOAT,
+            allowNull: true,
+          },
     },
     {
       timestamps: false,
