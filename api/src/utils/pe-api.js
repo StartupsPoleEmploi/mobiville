@@ -293,7 +293,7 @@ export async function searchCloseCompanies({
 // TODO remplacer par mes événements emploi quand ils auront une API
 export async function events() {
     const token = await getAccessToken()
-    const callToSearchCloseEnterprises = function () {
+    const callToSearchCloseEvents = function () {
         return apiEmploiStore.get(
             `evenements/v1/salonsenligne`,
             {
@@ -310,7 +310,7 @@ export async function events() {
                 if(error.response.status !== 429) console.error(error)
                 return error.response
             })
-}
+    }
 
-    return fetchAndRetryIfNecessary(callToSearchCloseEnterprises)
+    return fetchAndRetryIfNecessary(callToSearchCloseEvents)
 }

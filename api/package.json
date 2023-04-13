@@ -24,7 +24,8 @@
     "sync:departements": "babel-node ./src/scripts/syncDepartements.js",
     "sync:departementsDescriptions": "babel-node ./src/scripts/syncDepartementsDescriptions.js",
     "sync:departementsTemperatures": "babel-node ./src/scripts/syncDepartementsTemperatures.js",
-    "sync:secteursBassins": "babel-node ./src/scripts/syncSecteursBassins.js"
+    "sync:secteursBassins": "babel-node ./src/scripts/syncSecteursBassins.js",
+    "report:citiesData": "babel-node ./src/scripts/reportCitiesData.js"
   },
   "dependencies": {
     "@babel/cli": "^7.21.0",
@@ -45,6 +46,7 @@
     "cron": "2.3.0",
     "crypto": "1.0.1",
     "csv-parse": "5.3.6",
+    "csv-stringify": "^6.3.0",
     "dotenv": "16.0.3",
     "fs": "0.0.1-security",
     "html-entities": "2.3.3",

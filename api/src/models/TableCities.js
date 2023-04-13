@@ -376,6 +376,10 @@ export default (sequelizeInstance, Model) => {
     return city
   }
 
+  Model.getCities = async () => await Model.findAll({
+    attributes: ['nom_comm', 'insee_com']
+  })
+
   Model.getCitiesForAutoComplete = async (query) =>
     await Model.findAll({
       attributes: ['nom_comm', 'insee_com', 'postal_code'],
