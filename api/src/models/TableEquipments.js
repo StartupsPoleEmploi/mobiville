@@ -116,5 +116,13 @@ export default (sequelizeInstance, Model) => {
     }
   }
 
+  Model.getEquipments = async ({ insee }) => {
+    return await Model.findAll({
+      where: {
+        depcom: insee,
+      }
+    })
+  }
+
   return Model
 }

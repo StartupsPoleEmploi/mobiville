@@ -3,10 +3,9 @@ import PropTypes from 'prop-types'
 
 import { ReactComponent as RightChevronIcon } from '../../../assets/images/icons/right_chevron.svg'
 
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../../constants/colors'
 import LinkCTA from './LinkCTA'
+import { useDevice } from '../../../common/contexts'
 
 const Container = styled.div`
   margin: 16px 0;
@@ -93,7 +92,7 @@ const GuideStepCard = ({
   onClick,
   children,
 }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <Container $light={light}>

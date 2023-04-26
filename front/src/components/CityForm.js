@@ -3,10 +3,9 @@ import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import { useWindowSize } from '../common/hooks/window-size'
-import { isMobileView } from '../constants/mobile'
 import { CITY_TYPE, REGION_TYPE } from '../constants/search'
 import { isDirty } from '../utils/utils'
+import { useDevice } from '../common/contexts'
 
 import { CitySelect, JobSelect, ActionButton, ResetButton } from './'
 
@@ -35,7 +34,7 @@ const CityForm = ({
   isWelcomeCitySearch = false,
   onClick = () => {},
 }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
   const { search } = useLocation()
 
   const [jobSelected, setJobSelected] = useState('')

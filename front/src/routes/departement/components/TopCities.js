@@ -2,11 +2,10 @@ import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 
 import { ReactComponent as RightChevronIcon } from '../../../assets/images/icons/right_chevron.svg'
-import { useWindowSize } from '../../../common/hooks/window-size'
+import { useDevice } from '../../../common/contexts'
 import { SectionTitle } from '../../../components'
 
 import { COLOR_PRIMARY, COLOR_WHITE } from '../../../constants/colors'
-import { isMobileView } from '../../../constants/mobile'
 import { formatCityUrl, wordsCapitalize } from '../../../utils/utils'
 
 const Container = styled.div`
@@ -59,7 +58,7 @@ const Item = styled(Link)`
 `
 
 const TopCities = ({ departement }) => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   return (
     <Container>

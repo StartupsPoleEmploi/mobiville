@@ -5,14 +5,9 @@ import { Helmet } from 'react-helmet-async'
 import { useLocation } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 
-import { useCities } from '../../common/contexts/citiesContext'
 import { MainLayout } from '../../components'
-
-import { useWindowSize } from '../../common/hooks/window-size'
-import { isMobileView } from '../../constants/mobile'
-
-import { useProfessions } from '../../common/contexts/professionsContext'
 import { formatCityUrl } from '../../utils/utils'
+import { useDevice, useProfessions, useCities } from '../../common/contexts'
 
 const CitiesSearchBar = loadable(() => import('./components/CitiesSearchBar'))
 const CitiesList = loadable(() => import('./components/CitiesList'))
@@ -51,12 +46,10 @@ const MapContainer = styled.div`
 `
 
 const Cities = () => {
-  const isMobile = isMobileView(useWindowSize())
-  const location = useLocation()
-
+  const { isMobile } = useDevice()
   const { onSearchCountList } = useProfessions()
-
   const { cities, sortCriterions, onSearch } = useCities()
+  const location = useLocation()
 
   const [params, setParams] = useState(queryString.parse(location.search))
   const [page, setPage] = useState(1)

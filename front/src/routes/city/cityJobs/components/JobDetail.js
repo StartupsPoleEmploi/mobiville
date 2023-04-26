@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
 
@@ -9,9 +10,7 @@ import { COLOR_PRIMARY, COLOR_PURPLE, COLOR_WHITE } from '../../../../constants/
 import { capitalize } from '../../../../utils/utils'
 import { thereAre } from '../JobsUtils'
 import { ActionButton, CloseButton } from '../../../../components'
-import { useEffect, useState } from 'react'
-import { isMobileView } from '../../../../constants/mobile'
-import { useWindowSize } from '../../../../common/hooks/window-size'
+import { useDevice } from '../../../../common/contexts'
 
 const Container = styled.div`
   top: 8px;
@@ -77,8 +76,9 @@ const HR = styled.hr`
 `
 
 const JobDetail = ({ job, onClose }) => {
+  const { isMobile } = useDevice()
+
   const [displayedDescription, setDisplayedDescription] = useState('')
-  const isMobile = isMobileView(useWindowSize())
 
   const LocateWithMappy = ({ job }) => (
     <a

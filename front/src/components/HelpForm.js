@@ -5,9 +5,7 @@ import PropTypes from 'prop-types'
 
 import { ProjectsSelect, ResetButton, JobSituationSelect, AgeSituationSelect, ActionButton } from '.'
 import { AGE_SITUATIONS, JOB_SITUATIONS, PROJECTS } from '../constants/search'
-import { isMobileView } from '../constants/mobile'
-import { useWindowSize } from '../common/hooks/window-size'
-import { useNomPage } from '../common/contexts/NomPageContext'
+import { useDevice, useNomPage } from '../common/contexts'
 
 const Container = styled.div`
     max-width: 1036px;
@@ -25,8 +23,7 @@ const Container = styled.div`
 const HelpForm = ({
     hidden = false
 }) => {
-
-    const isMobile = isMobileView(useWindowSize())
+    const { isMobile } = useDevice()
     const { search } = useLocation()
     const { nomPage } = useNomPage()
     const [ projectsSelected, setProjectsSelected ] = useState([])

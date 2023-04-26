@@ -6,15 +6,12 @@ import moment from 'moment'
 
 import { COLOR_GRAY, COLOR_PRIMARY } from '../../../constants/colors'
 import { capitalize, distance, formatDate } from '../../../utils/utils'
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
-import { useCities } from '../../../common/contexts/citiesContext'
-import { useProfessions } from '../../../common/contexts/professionsContext'
 
 import JobDetail from './components/JobDetail'
 import JobsList from './components/JobsList'
 import JobsFilters from './components/JobsFilters'
 import { useSearchParams } from 'react-router-dom'
+import { useDevice, useCities, useProfessions } from '../../../common/contexts'
 
 const Title = styled.h1`
   width: ${({ $isMobile }) => ($isMobile ? 'auto' : '100%')};
@@ -80,8 +77,7 @@ const BoardHeader = styled.p`
 `
 
 const CityJobs = ({ romeLabel, codeRome }) => {
-  const windowSize = useWindowSize()
-  const isMobile = isMobileView(windowSize)
+  const { isMobile, windowSize } = useDevice()
 
   const [searchParams] = useSearchParams()
   const [isQueryParamsUsed,  setIsQueryParamsUsed] = useState(false)

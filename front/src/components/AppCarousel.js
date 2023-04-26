@@ -1,12 +1,11 @@
 import React from 'react'
+import { Carousel } from 'react-responsive-carousel'
+import "react-responsive-carousel/lib/styles/carousel.min.css"
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { COLOR_PRIMARY } from '../constants/colors'
-import { Carousel } from 'react-responsive-carousel'
-import { useWindowSize } from '../common/hooks/window-size'
-import { isMobileView } from '../constants/mobile'
 
-import "react-responsive-carousel/lib/styles/carousel.min.css"
+import { COLOR_PRIMARY } from '../constants/colors'
+import { useDevice } from '../common/contexts'
 
 const AppCarouselDot = styled.li`
   display: inline-block;
@@ -55,8 +54,7 @@ const AppCarousel = ({
   swipeScrollTolerance = 40,
   ...props
 }) => {
-  const windowsSize = useWindowSize()
-  const isMobile = isMobileView(windowsSize)
+  const { isMobile } = useDevice()
 
   return (
     <CustomCarousel

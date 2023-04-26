@@ -2,11 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import { useCities } from '../../../common/contexts/citiesContext'
 import { Accordion, Button, FiltersButton, LittleSelect, Modale, Pane, RadioGroup, ResetButton } from '../../../components'
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
 import { isDirty } from '../../../utils/utils'
+import { useDevice, useCities } from '../../../common/contexts'
 
 const Container = styled.div`
   max-width: 1040px;
@@ -34,9 +32,10 @@ const CustomButton = styled(Button)`
 `
 
 const CitiesFilters = ({ filters, onFiltersChange, onReset, params = [] }) => {
-  const isMobile = isMobileView(useWindowSize())
-  const [showMobileFilters, setShowMobileFilters] = useState(false)
+  const { isMobile } = useDevice()
   const { environmentCriterions, cityCriterions } = useCities()
+
+  const [showMobileFilters, setShowMobileFilters] = useState(false)
 
   const opportunities = {
     1: "Opportunités d'emploi",

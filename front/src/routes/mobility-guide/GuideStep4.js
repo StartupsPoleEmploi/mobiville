@@ -3,13 +3,12 @@ import styled from 'styled-components'
 
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 
-import { useWindowSize } from '../../common/hooks/window-size'
-import { isMobileView } from '../../constants/mobile'
 import { COLOR_PRIMARY } from '../../constants/colors'
 import { ActionButton } from '../../components'
 import GuideStepLayout from './components/GuideStepLayout'
 import GuideStepContentTitle from './components/GuideStepContentTitle'
 import GuideStepCard from './components/GuideStepCard'
+import { useDevice } from '../../common/contexts'
 
 const CardSubTitle = styled.p`
   color: ${COLOR_PRIMARY};
@@ -30,7 +29,7 @@ const CheckListItem = ({ children }) => (
 )
 
 const GuideStep4 = () => {
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   const [expandedCard, setExpandedCard] = useState(0)
 

@@ -2,9 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 
-import { isMobileView } from '../constants/mobile'
-import { useWindowSize } from '../common/hooks/window-size'
 import { MOBILE_WIDTH } from '../constants/mobile'
+import { useDevice } from '../common/contexts'
 
 const Picture = styled.picture``
 
@@ -24,7 +23,7 @@ const Image = ({ src, alt = '', className, isUrlSrc = false, style = {} }) => {
   const DESKTOP = 'desktop'
   const MOBILE = 'mobile'
 
-  const isMobile = isMobileView(useWindowSize())
+  const { isMobile } = useDevice()
 
   const [files, setFiles] = useState([])
   const [defaultType, setDefaultType] = useState(null)

@@ -1,6 +1,6 @@
 import React, { lazy, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { useNomPage } from '../common/contexts/NomPageContext'
+import { useNomPage } from '../common/contexts'
 
 const Home = lazy(() => import('./home/Home'))
 

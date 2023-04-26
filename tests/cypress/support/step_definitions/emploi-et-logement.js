@@ -73,6 +73,20 @@ Then("j'affiche la page de la ville pour tous les métiers", function () {
   cy.contains(infoTauxEmbauche, "Taux d'embauche", {timeout: SHORT_WAIT_TIME}).should('exist');
   })
 
+  Then("j'affiche la page de la ville", function () {
+    let villeSansCP = ENDROIT_HP.split(' (')[0];
+  
+    cy.url().should('include', 'ville').and('include', villeSansCP.toUpperCase());
+  
+    cy.contains(rappelCritereVille, villeSansCP,  {timeout: SHORT_WAIT_TIME}).should('exist');
+  
+    cy.contains(infoVille, "L'emploi à " + villeSansCP, {timeout: SHORT_WAIT_TIME}).should('exist');
+    cy.contains(infoOpportunites, "pportunités d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
+    cy.contains(infoOffres, "Offres d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');
+    cy.contains(infoEntreprises, "Entreprises", {timeout: SHORT_WAIT_TIME}).should('exist');
+    cy.contains(infoTauxEmbauche, "Taux d'embauche", {timeout: SHORT_WAIT_TIME}).should('exist');
+    })
+
 Then("j'affiche les offres d'emploi qui ont le moins de candidature", function () {
   // Les dernières offres d'emploi OU Les offres d'emploi avec peu de candidats
   cy.contains(resultatOffre, "offres d'emploi", {timeout: SHORT_WAIT_TIME}).should('exist');

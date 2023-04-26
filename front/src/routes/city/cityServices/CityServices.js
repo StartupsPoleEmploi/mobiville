@@ -1,12 +1,10 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import _ from 'lodash'
 import styled from 'styled-components'
 
 import { KeyFigures, Map } from '../../../components'
 import ElectedContact from './components/ElectedContact'
-import { useWindowSize } from '../../../common/hooks/window-size'
-import { isMobileView } from '../../../constants/mobile'
 import { COLOR_PRIMARY } from '../../../constants/colors'
 
 import { ReactComponent as RightChevronIcon } from '../../../assets/images/icons/right_chevron.svg'
@@ -15,7 +13,7 @@ import { ReactComponent as WeatherIcon } from '../../../assets/images/icons/weat
 import { ReactComponent as CalculatorIcon } from '../../../assets/images/icons/calculator.svg'
 import { formatNumber } from '../../../utils/utils'
 import CityServiceInfoCards from './components/CityServiceInfoCards'
-import { useCities } from '../../../common/contexts/citiesContext'
+import { useDevice, useCities } from '../../../common/contexts'
 
 const WelcomeContainer = styled.div`
   background: white;
@@ -24,7 +22,7 @@ const WelcomeContainer = styled.div`
 
 const WelcomeWrapper = styled.div`
   max-width: 1040px;
-  margin: ${({ $isMobile }) => $isMobile ? 'auto' : '0 auto 50px auto'};
+  margin: ${({ $isMobile }) => ($isMobile ? 'auto' : '0 auto 50px auto')};
   color: ${COLOR_PRIMARY};
   padding: ${({ $isMobile }) => ($isMobile ? '1px 16px 16px 16px' : '1px 0')};
 `
@@ -81,12 +79,44 @@ const MapContainer = styled.div`
 `
 
 const CityServices = () => {
-  const isMobile = isMobileView(useWindowSize())
-
-  const [isTextExpended, setIsTextExpended] = useState(false)
+  const { isMobile } = useDevice()
   const { city } = useCities()
 
-  const showFullText = useCallback(() => (isTextExpended || city.description.length < 521), [isTextExpended, city.description])
+  const [isTextExpended, setIsTextExpended] = useState(false)
+
+  const showFullText = useCallback(
+    () => isTextExpended || city.description.length < 521,
+    [isTextExpended, city.description]
+  )
+
+  const currentTemperature = useMemo(() => {
+    const currentDate = new Date()
+    const seasonsDate = [
+      new Date('2023-03-20'),
+      new Date('2023-06-22'),
+      new Date('2023-09-24'),
+      new Date('2023-12-21'),
+    ]
+    seasonsDate.forEach((seasonDate) =>
+      seasonDate.setFullYear(currentDate.getFullYear())
+    )
+    const seasonsTemperature = [
+      city?.departement?.temp_winter,
+      city?.departement?.temp_spring,
+      city?.departement?.temp_summer,
+      city?.departement?.temp_autumn,
+    ]
+
+    let seasonIndex = seasonsDate.indexOf(
+      seasonsDate.find((seasonsDate) => currentDate < seasonsDate)
+    )
+    return seasonsTemperature[seasonIndex === -1 ? 0 : seasonIndex]
+  }, [
+    city?.departement?.temp_winter,
+    city?.departement?.temp_spring,
+    city?.departement?.temp_summer,
+    city?.departement?.temp_autumn,
+  ])
 
   return (
     <>
@@ -103,66 +133,79 @@ const CityServices = () => {
         />
       </Helmet>
       <div tag-page="/city-services">
-      <WelcomeContainer $isMobile={isMobile}>
-        <WelcomeWrapper $isMobile={isMobile}>
-          <Title>Vivre à {_.capitalize(city.nom_comm)}</Title>
+        <WelcomeContainer $isMobile={isMobile}>
+          <WelcomeWrapper $isMobile={isMobile}>
+            <Title>Vivre à {_.capitalize(city.nom_comm)}</Title>
 
-          <InfoContainer $isMobile={isMobile}>
-            {city.description ? (
-              <TextContainer $showFullText={showFullText()}>
-                <Description>{city.description}</Description>
-                <ReadMore
-                  $isMobile={isMobile}
-                  onClick={() => setIsTextExpended(!isTextExpended)}
-                >
-                  {city.description.length > 521 && (
-                    isTextExpended ? (
-                      <>
-                        <RightChevronIcon />
-                        <ReadMoreText>Réduire le texte</ReadMoreText>
-                      </>
-                    ) : (
-                      <>
-                        <RightChevronIcon />
-                        <ReadMoreText>Lire la suite</ReadMoreText>
-                      </>
-                    )
-                  )}
-                </ReadMore>
-              </TextContainer>
-            ) : null}
+            <InfoContainer $isMobile={isMobile}>
+              {city.description ? (
+                <TextContainer $showFullText={showFullText()}>
+                  <Description>{city.description}</Description>
+                  <ReadMore
+                    $isMobile={isMobile}
+                    onClick={() => setIsTextExpended(!isTextExpended)}
+                  >
+                    {city.description.length > 521 &&
+                      (isTextExpended ? (
+                        <>
+                          <RightChevronIcon />
+                          <ReadMoreText>Réduire le texte</ReadMoreText>
+                        </>
+                      ) : (
+                        <>
+                          <RightChevronIcon />
+                          <ReadMoreText>Lire la suite</ReadMoreText>
+                        </>
+                      ))}
+                  </ReadMore>
+                </TextContainer>
+              ) : null}
 
-            <MapContainer>
-              <Map
-                cities={[
-                  {
-                    ...city,
-                    x: city.geo_point_2d_x ?? 0,
-                    y: city.geo_point_2d_y ?? 0,
-                  },
-                ]}
-                style={{
-                  height: 255, 
-                  borderRadius: 8,
-                  margin: 0
-                }}
-              />
-            </MapContainer>
-          </InfoContainer>
-        </WelcomeWrapper>
-      </WelcomeContainer>
+              <MapContainer>
+                <Map
+                  cities={[
+                    {
+                      ...city,
+                      x: city.geo_point_2d_x ?? 0,
+                      y: city.geo_point_2d_y ?? 0,
+                    },
+                  ]}
+                  style={{
+                    height: 255,
+                    borderRadius: 8,
+                    margin: 0,
+                  }}
+                />
+              </MapContainer>
+            </InfoContainer>
+          </WelcomeWrapper>
+        </WelcomeContainer>
 
-      <KeyFigures
-        figures={[
-          { label: "Habitants", data: formatNumber(city.population * 1000), icon: <CrowdIcon /> },
-          { label: "Superficie", data: `${formatNumber(city.superficie / 100)} km²`, icon: <CalculatorIcon /> },
-          { label: "Température moyenne", data: `${formatNumber(city.average_temperature)}°`, icon: <WeatherIcon /> },
-        ]}
-      />
+        <KeyFigures
+          figures={[
+            {
+              label: 'Habitants',
+              data: formatNumber(city.population * 1000),
+              icon: <CrowdIcon />,
+            },
+            {
+              label: 'Superficie',
+              data: `${formatNumber(city.superficie / 100)} km²`,
+              icon: <CalculatorIcon />,
+            },
+            !currentTemperature
+              ? null
+              : {
+                  label: 'Température moyenne',
+                  data: `${formatNumber(currentTemperature)}°`,
+                  icon: <WeatherIcon />,
+                },
+          ]}
+        />
 
-      <CityServiceInfoCards cityEquipments={city.equipments} />
+        <CityServiceInfoCards cityEquipments={city.equipments} />
 
-      <ElectedContact />
+        <ElectedContact />
       </div>
     </>
   )

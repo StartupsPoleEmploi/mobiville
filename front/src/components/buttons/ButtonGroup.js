@@ -7,8 +7,7 @@ import {
   COLOR_VERT_MOBIVILLE,
   COLOR_WHITE,
 } from '../../constants/colors'
-import { isMobileView } from '../../constants/mobile'
-import { useWindowSize } from '../../common/hooks/window-size'
+import { useDevice } from '../../common/contexts'
 
 const computeButtonBorder = (index, lastIndex) => {
   if (index === 0) {
@@ -60,11 +59,11 @@ const ButtonGroup = ({
   onChange = () => {},
   onClick = () => {},
 }) => {
+  const { isMobile } = useDevice()
+
   const [selected, setSelected] = useState(
     defaultSelected ?? children[0]?.props?.id ?? null
   )
-
-  const isMobile = isMobileView(useWindowSize())
 
   const handleButtonClick = (buttonId) => {
     setSelected(buttonId)

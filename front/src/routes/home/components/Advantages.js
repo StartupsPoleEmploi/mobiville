@@ -1,14 +1,11 @@
 import styled from 'styled-components'
 
-import { useWindowSize } from "../../../common/hooks/window-size"
-import { isMobileView } from "../../../constants/mobile"
-
-import { Section, SectionTitle } from '../../../components'
-import { COLOR_PRIMARY, COLOR_VERT_MOBIVILLE } from '../../../constants/colors'
-
 import { ReactComponent as MapPointerIcon } from '../../../assets/images/icons/map-pointer.svg'
 import { ReactComponent as HouseOutlineIcon } from '../../../assets/images/icons/house-outline.svg'
 import { ReactComponent as FinancialHelpIcon } from '../../../assets/images/icons/financial-help.svg'
+import { Section, SectionTitle } from '../../../components'
+import { COLOR_PRIMARY, COLOR_VERT_MOBIVILLE } from '../../../constants/colors'
+import { useDevice } from '../../../common/contexts'
 
 const Container = styled.div`
   display: flex;
@@ -67,8 +64,7 @@ const AdvantageText = styled.p`
 `
 
 const Advantages = () => {
-    const windowsSize = useWindowSize()
-    const isMobile = isMobileView(windowsSize)
+    const { isMobile } = useDevice()
 
     return (
       <Section>

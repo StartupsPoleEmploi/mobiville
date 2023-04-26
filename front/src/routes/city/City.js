@@ -11,27 +11,23 @@ import CityCloseCities from './cityCloseCities/CityCloseCities'
 import CityMenuBack from './components/CityMenuBack'
 import { MainLayout, TopPageButton } from '../../components'
 
-import { useCities } from '../../common/contexts/citiesContext'
-import { useWindowSize } from '../../common/hooks/window-size'
-import { useProfessions } from '../../common/contexts/professionsContext'
-import { isMobileView } from '../../constants/mobile'
 import { COLOR_WHITE } from '../../constants/colors'
 import { capitalize, ucFirst, wordsCapitalize } from '../../utils/utils'
+import { useDevice, useCities, useProfessions } from '../../common/contexts'
 
 const JOB = 'metier'
 const LIFE = 'services'
 const CLOSE_CITIES = 'villes-proches'
 
 const CityPage = () => {
+  const { isMobile } = useDevice()
   const { onLoadCity, isLoadingCity, city, criterions, unloadCity } =
     useCities()
-
   const { onSearch: onSearchProfessions } = useProfessions()
 
   const location = useLocation()
   const { insee, section } = useParams()
   const [inseeCode] = insee.split('-')
-  const isMobile = isMobileView(useWindowSize())
 
   const params = queryString.parse(location.search)
 

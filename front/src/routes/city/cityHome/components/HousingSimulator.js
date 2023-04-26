@@ -1,14 +1,12 @@
 import { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import Euro from '@mui/icons-material/Euro'
 
 import { COLOR_OTHER_GREEN, COLOR_PRIMARY } from '../../../../constants/colors'
-
-import Euro from '@mui/icons-material/Euro'
 import { TextInput } from '../../../../components'
 import { formatNumber } from '../../../../utils/utils'
-import { isMobileView } from '../../../../constants/mobile'
-import { useWindowSize } from '../../../../common/hooks/window-size'
+import { useDevice } from '../../../../common/contexts'
 
 const Container = styled.div`
   padding: ${({ $isMobile }) => ($isMobile ? '24px 0px' : '50px 0px')};
@@ -86,8 +84,8 @@ const HR = styled.div`
 `
 
 const HousingSimulator = ({ city }) => {
-  const isMobile = isMobileView(useWindowSize())
-  // const [squareMeters, setSquareMeters] = useState(0)
+  const { isMobile } = useDevice()
+
   const [rentBudget, setRentBudget] = useState('')
   const [buyBudget, setBuyBudget] = useState('')
 
